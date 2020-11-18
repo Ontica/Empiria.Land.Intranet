@@ -1,5 +1,9 @@
 # Empiria Land Intranet
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/8196784df6c84aeeba72f688e487900c)](https://www.codacy.com/gh/Ontica/Empiria.Land.Intranet/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Ontica/Empiria.Land.Intranet&amp;utm_campaign=Badge_Grade) &nbsp; &nbsp; [![Maintainability](https://api.codeclimate.com/v1/badges/a244519759af509b7b73/maintainability)](https://codeclimate.com/github/Ontica/Empiria.Land.Intranet/maintainability)
+
+## Overview
+
 Angular-based front-end application for land recording offices.
 
 Empiria Land is a software components suite that provides information services for land recording offices, cadastral departments and other land management government authorities.
