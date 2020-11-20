@@ -1,0 +1,120 @@
+<form class="form-container" [class.submitted]="formHandler.submitted" autocomplete="off"
+      [formGroup]="form" [empNgSpinnerHost]="spinner">
+
+  <emp-ng-spinner #spinner [visible]="formHandler.isLoading"></emp-ng-spinner>
+
+  <fieldset>
+
+    <table class="form-section" *ngIf="!formHandler.readonly">
+      <tr>
+        <td>
+          <button *ngIf="formHandler.canDelete" type="button" class="btn-warning"
+                  (click)="formHandler.onDelete()">Eliminar</button>
+        </td>
+        <td class="text-align-right">
+
+          <button *ngIf="formHandler.editionMode" type="submit" class="btn btn-margin-right"
+                  [class.btn]="!formHandler.isReadyForSave"
+                  [class.btn-action]="formHandler.isReadyForSave"
+                  (click)="onSubmit()">Guardar cambios</button>
+
+          <button *ngIf="formHandler.canEdit" type="button" class="btn-action right"
+                  (click)="onEdit()">Editar</button>
+
+          <button *ngIf="formHandler.editionMode" type="button" class="btn right"
+                  (click)="formHandler.onCancel()">Cancelar edición</button>
+
+        </td>
+      </tr>
+    </table>
+
+    <table class="form-section">
+      <tr>
+        <td class="form-section-title" colspan="2">Aviso preventivo</td>
+      </tr>
+      <tr>
+        <td>Interesado:</td>
+        <td style="width:100%">
+          <input type="text" class="text-box uppercase" disabled [value]="request.requestedBy.name">
+        </td>
+      </tr>
+    </table>
+
+    <table class="form-section">
+      <tr>
+        <td class="form-section-title">Información del predio sobre el que se inscribirá el aviso preventivo</td>
+      </tr>
+      <tr *ngIf="formHandler.editionMode">
+        <td>
+          <br/>
+          <input type="checkbox" class="check-box" [checked]="useRecordingSeekData"
+                 (change)="toggleUseRecordingSeekData()">
+          El predio está registrado en libros y no tiene folio real.
+        </td>
+      </tr>
+    </table>
+
+    <emp-land-real-property-uid-picker *ngIf="!useRecordingSeekData" formControlName="propertyUID">
+    </emp-land-real-property-uid-picker>
+
+    <emp-land-recording-seek-form *ngIf="useRecordingSeekData" formControlName="recordingSeekData">
+    </emp-land-recording-seek-form>
+
+
+    <table class="form-section">
+      <tr>
+        <td class="form-section-title" colspan="5">Partes interesadas y operación proyectada</td>
+      </tr>
+      <tr>
+        <td class="align-top">Otorga:</td>
+        <td colspan="4">
+          <textarea class="text-area uppercase" rows="3" formControlName="grantors"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td class="align-top">A favor de:</td>
+        <td colspan="4">
+          <textarea class="text-area uppercase" rows="3" formControlName="grantees"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td class="align-top">Operación proyectada:</td>
+        <td colspan="4">
+          <textarea class="text-area uppercase" rows="3" formControlName="projectedOperation"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          ¿Aplica a una nueva fracción del predio?:
+        </td>
+        <td>
+          <select class="select-box" style="width:92px" formControlName="createPartition"
+                  (change)="onUpdateUI('createPartition')">
+            <option value="">( ? )</option>
+            <option value="true">Sí</option>
+            <option value="false">No</option>
+          </select>
+        </td>
+        <td>
+          Nombre de la nueva fracción:
+        </td>
+        <td>
+          <input type="text" class="text-box uppercase" formControlName="partitionName">
+        </td>
+      </tr>
+      <tr>
+        <td class="form-section-title" colspan="5">Observaciones para el Registro Público</td>
+      </tr>
+      <tr>
+        <td colspan="5">
+          <textarea class="text-area uppercase" rows="3" formControlName="observations"></textarea>
+        </td>
+      </tr>
+    </table>
+
+  </fieldset>
+
+  <div class="form-errors" *ngIf="formHandler.exceptionMsg">{{formHandler.exceptionMsg}}</div>
+
+</form>

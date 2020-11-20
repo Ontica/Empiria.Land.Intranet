@@ -1,0 +1,41 @@
+<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="8px" fxLayoutGap.gt-xs="32px">
+
+  <div fxFlex="10%">
+    <div class="label">Tipo de trámite</div>
+    <div class="primary-text nowrap"><b>{{request.procedureType}}</b></div>
+    <div>{{preventiveNoteDueDate}}</div>
+  </div>
+
+  <div *ngIf="request?.form?.fields['propertyData']?.propertyUID" fxFlex="auto">
+    <div class="label">Folio real del predio</div>
+    <div class="primary-text nowrap"><b>{{request?.form?.fields['propertyData']?.propertyUID || ''}}</b></div>
+    <div>{{request?.form?.fields['propertyName']}}</div>
+  </div>
+
+  <div fxFlex="15%">
+    <div *ngIf="request?.transaction?.uid">
+      <div class="label">Trámite RPP</div>
+      <div>
+        <div class="primary-text nowrap"><b>{{request?.transaction?.uid}}</b></div>
+        <div>{{request?.transaction?.presentationDate | date:'dd/LLL/yyyy HH:mm'}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div fxFlex="15%">
+    <div *ngIf="request?.transaction?.uid">
+      <div class="label">Pago</div>
+      <div>
+        <div class="primary-text nowrap"><b>Por verificar</b></div>
+        <div>{{request?.paymentOrder?.total | currency}}</div>
+        <div>{{request?.paymentOrder?.receiptNo}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div fxFlex="8%">
+    <div class="label">Estado:</div>
+    <div class="primary-text nowrap"><b>{{request.status.name}}</b></div>
+  </div>
+
+</div>

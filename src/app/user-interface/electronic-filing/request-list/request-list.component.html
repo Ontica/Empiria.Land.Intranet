@@ -1,0 +1,50 @@
+<div class="card card-border">
+
+  <div class="card-header card-header-flat">
+
+    <div class="card-title">
+      {{title}}
+      <div class="card-hint" empNgProgressText
+           loadingText="Cargando trámites"
+           [finalText]="requestList.length + ' trámites encontrados'"
+           [isLoading]="isLoading"></div>
+
+    </div>
+
+    <div class="card-header-options">
+        <div style="width:32px"></div>
+
+        <input type="search" class="text-box" style="width:auto" fxHide.lt-sm="true"
+               placeholder="Buscar trámites"
+               (search)="onFilterChange()" [(ngModel)]="keywords">
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn-action"
+                (click)="onClickCreateRequestButton()">Nuevo</button>
+
+    </div>
+
+  </div>
+
+  <div class="card-body" [empNgSpinnerHost]="spinner">
+    <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+
+    <div *ngFor="let request of requestList"
+          class="list-item" matRipple [matRippleTrigger]="trigger"
+          [class.list-item-selected]="isSelected(request)">
+
+      <div class="list-item-container">
+
+        <div class="list-item-name">
+          <b><a #trigger
+              (click)="onSelect(request)">{{request.requestedBy.name}}</a></b>
+        </div>
+
+        <emp-one-request-list-item [request]="request"></emp-one-request-list-item>
+
+      </div>
+
+    </div>
+
+  </div> <!--card-body-->
+
+</div>

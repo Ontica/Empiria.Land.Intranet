@@ -1,0 +1,85 @@
+<emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+
+<table class="form-section" [empNgSpinnerHost]="spinner" [formGroup]="form">
+  <tr>
+    <td>Distrito:</td>
+    <td>
+      <select #districtControl class="select-box" formControlName="districtUID"
+              (change)="onChangeDistrict(districtControl.value)">
+        <option value="">( Distrito )</option>
+        <option *ngFor="let district of districtList"
+                [value]="district.uid">{{district.name}}</option>
+      </select>
+    </td>
+    <td>Municipio:</td>
+    <td>
+      <select class="select-box" formControlName="municipalityUID">
+        <option value="">( Municipio )</option>
+        <option *ngFor="let municipality of municipalityList"
+                [value]="municipality.uid">{{municipality.name}}</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Sección:</td>
+    <td>
+      <select #sectionControl class="select-box" formControlName="recordingSectionUID"
+              (change)="onChangeRecordingSection(districtControl.value, sectionControl.value)">
+        <option value="">( Sección )</option>
+        <option *ngFor="let recordingSection of recordingSectionList"
+                [value]="recordingSection.uid">{{recordingSection.name}}</option>
+      </select>
+    </td>
+    <td>Volumen:</td>
+    <td>
+      <select class="select-box" formControlName="recordingBookUID">
+        <option value="">( Volumen )</option>
+        <option *ngFor="let recordingBook of recordingBookList"
+                [value]="recordingBook.uid">{{recordingBook.name}}</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Partida:</td>
+    <td>
+      <input type="text" class="text-box uppercase" style="width:80px" maxlength="19"
+             [class.invalid-control]="isDirty && errorMsg"
+             formControlName="recordingNo">
+      Fracción:
+      <input type="text" class="text-box uppercase" style="width:140px" maxlength="48"
+             [class.invalid-control]="isDirty && errorMsg"
+             formControlName="recordingFraction">
+      <div *ngIf="errorMsg" class='warning-text'>{{errorMsg}}</div>
+    </td>
+    <td>Clave catastral:</td>
+    <td>
+      <input type="text" class="text-box uppercase" maxlength="31" formControlName="cadastralKey">
+    </td >
+  </tr>
+  <tr>
+    <td>Tipo de predio:</td>
+    <td>
+      <select class="select-box" formControlName="propertyType">
+          <option value="">( Tipo de predio )</option>
+          <option *ngFor="let propertyType of realEstateTypeList"
+                  [value]="propertyType.uid">{{propertyType.name}}</option>
+        </select>
+    </td>
+    <td>Denominado:</td>
+    <td>
+      <input type="text" class="text-box uppercase" formControlName="propertyName">
+    </td>
+  </tr>
+  <tr>
+    <td class="align-top">Ubicado en:</td>
+    <td colspan="3">
+      <textarea class="text-area uppercase" rows="2" formControlName="location"></textarea>
+    </td>
+  </tr>
+  <tr>
+    <td class="align-top wrap">Notas adicionales para identificar el predio:</td>
+    <td colspan="3">
+      <textarea class="text-area uppercase" rows="3" formControlName="searchNotes"></textarea>
+    </td>
+  </tr>
+</table>
