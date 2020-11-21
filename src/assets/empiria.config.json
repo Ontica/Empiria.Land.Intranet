@@ -1,14 +1,14 @@
 {
   "appName": "Empiria Land Intranet Application",
-  "version": "5.0.0-alpha.0",
-  "date": "2020-11-16",
+  "version": "5.0.0-alpha.1",
+  "date": "2020-11-23",
   "settings": [{
       "key": "APPLICATION_KEY",
-      "value": "devLandIntranetCPvgUHNUzT61mhOKHUPh6juoKPnt8rkc2E91pRfLpecRVz1d"
+      "value": "notDEVaDuOkU3rd7IO5OqIaAdvp7VSe8AZQtLsN4YwP12tUo3igSg10UfLe9RPnP"
     },
     {
       "key": "HTTP_API_BASE_ADDRESS",
-      "value": "http://empiria.land/web.api/"
+      "value": "http://empiria.land/api/"
     },
     {
       "key": "displayVedaElectoralUI",

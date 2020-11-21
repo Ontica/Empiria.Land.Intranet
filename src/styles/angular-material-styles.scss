@@ -1,0 +1,108 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
+// icons
+
+.mat-icon {
+  color: $icon-color;
+  cursor: pointer;
+  font-family: 'Material Icons' !important;
+}
+
+.material-icons-outlined,
+.material-icons.material-icons--outlined {
+  font-family: 'Material Icons Outlined' !important;
+}
+
+//
+// tabs component
+//
+
+.mat-tab-label {
+  height: 42px !important;
+  min-width: 120px !important;
+  padding: 0 20px !important;
+  color: $secondary-color;
+  font-size: 10pt;
+  text-transform: uppercase;
+  opacity: 1 !important;
+}
+
+.mat-step-icon-state-edit {
+  color: $secondary-color;
+}
+
+.mat-tab-label-active {
+  font-weight: 600 !important;
+}
+
+.mat-tab-group {
+  height: 100%;
+}
+
+.mat-tab-body-wrapper {
+  height: 100%;
+}
+
+//
+// stepper
+//
+
+.mat-step-header .mat-step-icon-selected {
+  background-color: $secondary-color-light;
+}
+
+//
+// secondary tabs component
+//
+
+.secondary-mat-tab-group {
+  .mat-tab-label {
+    color: $secondary-color-light;
+    height: 36px !important;
+    text-transform: none;
+  }
+}
+
+//
+// dialog component
+//
+
+.mat-dialog-title {
+  border-bottom: 2px solid $primary-color;
+  color: $primary-color;
+  font-size: 14pt;
+  font-weight: 600;
+  padding: 8pt;
+}
+
+.mat-dialog-actions {
+  justify-content: flex-end;
+  border-top: 1px solid $secondary-color;
+  padding: 12px;
+}
+
+//
+// sidebar components
+//
+
+.mat-drawer-inner-container::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+  scrollbar-color: $primary-color-light;
+  scroll-padding-right: 2px;
+}
+
+.mat-drawer-inner-container::-webkit-scrollbar-thumb {
+  background: $primary-color;
+}
+
+.mat-list-base .mat-list-item .mat-list-item-content,
+.mat-list-base .mat-list-option .mat-list-item-content {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}

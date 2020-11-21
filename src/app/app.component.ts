@@ -20,19 +20,17 @@ export class AppComponent implements OnInit {
 
 
   private preventDragAndDrop() {
-    window.addEventListener('dragover', e => {
-      e.preventDefault();
-      if (e.dataTransfer) {
-        e.dataTransfer.dropEffect = 'none';
-      }
-    }, false);
+    window.addEventListener('dragover', e => this.preventDropEffect(e), false);
+    window.addEventListener('drop', e => this.preventDropEffect(e), false);
+  }
 
-    window.addEventListener('drop', e => {
-      e.preventDefault();
-      if (e.dataTransfer) {
-        e.dataTransfer.dropEffect = 'none';
-      }
-    }, false);
+
+  private preventDropEffect(e: DragEvent) {
+    e.preventDefault();
+
+    if (e.dataTransfer) {
+      e.dataTransfer.dropEffect = 'none';
+    }
   }
 
 }

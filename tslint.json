@@ -139,13 +139,13 @@
     "directive-selector": [
       true,
       "attribute",
-      ["empNg", "empLand"],
+      ["empNg", "empLand", "empOne"],
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      ["emp-ng", "emp-land"],
+      ["emp-ng", "emp-land", "emp-one"],
       "kebab-case"
     ]
   }
