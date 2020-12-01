@@ -39,7 +39,7 @@
               (click)="onSelect(request)">{{request.requestedBy.name}}</a></b>
         </div>
 
-        <emp-one-request-list-item [request]="request"></emp-one-request-list-item>
+        <emp-one-request-list-item [request]="request" (editionEvent)="onSelectRecordingAct(request)"></emp-one-request-list-item>
 
       </div>
 

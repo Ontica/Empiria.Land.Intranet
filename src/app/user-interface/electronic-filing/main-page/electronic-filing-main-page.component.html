@@ -1,6 +1,6 @@
 <div class="explorer" fxLayoutGap="32px">
 
-  <div [fxHide.lt-lg]="displayEditor" class="primary">
+  <div [fxHide.lt-lg]="displayEditor || displayEditorRecordingAct" class="primary">
     <emp-one-request-list
         [requestList]="requestList"
         [selectedRequest]="selectedRequest"
@@ -15,7 +15,14 @@
     <emp-one-request-tabbed-view
         [request]="selectedRequest"
         (closeEvent)="onCloseEditor()">
-    </emp-one-request-tabbed-view>
+    </emp-one-request-tabbed-view >
+  </div>
+
+  <div *ngIf="displayEditorRecordingAct" class="secondary">
+    <emp-recording-acts 
+        [request]="selectedRequest"
+        (closeEvent)="onCloseEditorRecordingAct()">
+    </emp-recording-acts>
   </div>
 
 </div>

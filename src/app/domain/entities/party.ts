@@ -31,12 +31,52 @@ export interface RoledParty {
   role: Role;
 }
 
-
 export interface OwnerParty extends RoledParty {
   ownership: Quantity;
 }
 
 
 export interface PartyOf extends RoledParty {
-  Of: Party;
+  of: Party;
+}
+
+//////////
+//JM: temporal
+//////////
+
+export interface Identification {
+  typeIdentification?: Identifiable;
+  numberIdentification?: string;
+}
+
+export interface ParticipationParty {
+  role: Role;
+  participationType: Identifiable;
+  participationAmount: number;
+  observations: string
+}
+
+export interface RecordingActParty  extends Person, ParticipationParty {
+  identification?: Identification;
+  partiesList?: RecordingActParty[];
+  of?: RecordingActParty[];
+}
+
+//Enums
+export enum RolesGroupEnum {
+  primary = '1',
+  secondary = '2',
+}
+
+export enum PartyTypesEnum {
+  person = '1',
+  Organization = '2',
+}
+
+export enum participationTypeEnum {
+  todo = '1',
+  proIndiviso = '2',
+  porcentaje = '3',
+  m2 = '4',
+  hectarea = '5'
 }

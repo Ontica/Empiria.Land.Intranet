@@ -23,9 +23,13 @@ export class CardComponent {
 
   @Output() cardClose = new EventEmitter<void>();
 
+  @Output() cardScroll = new EventEmitter<void>();
 
   onClose() {
     this.cardClose.emit();
   }
 
+  onWindowScroll($event) {
+    this.cardScroll.emit($event.timeStamp);
+  }
 }

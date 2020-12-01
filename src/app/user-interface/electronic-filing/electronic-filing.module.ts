@@ -23,11 +23,12 @@ import { RequestListComponent } from './request-list/request-list.component';
 import { RequestListItemComponent } from './request-list/request-list-item.component';
 import { RequestSubmitterComponent } from './request-submitter/request-submitter.component';
 import { RequestTabbedViewComponent } from './request-tabbed-view/request-tabbed-view.component';
+import { RequestFilesListComponent } from './request-files-list/request-files-list.component';
 
 import { ApplicationFormsModule } from '../application-forms/application-forms.module';
+import { DocumentRecordingModule } from '../document-recording/document-recording.module';
 
 import { ElectronicFilingRoutingModule } from './electronic-filing-routing.module';
-import { RequestFilesListComponent } from './request-files-list/request-files-list.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { RequestFilesListComponent } from './request-files-list/request-files-li
     SharedIndicatorsModule,
 
     ApplicationFormsModule,
+    DocumentRecordingModule,
 
     ElectronicFilingRoutingModule
   ],

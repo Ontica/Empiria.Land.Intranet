@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 import { EFilingRequest, PreventiveNote } from '@app/domain/models';
 
@@ -17,6 +17,7 @@ import { EFilingRequest, PreventiveNote } from '@app/domain/models';
 export class RequestListItemComponent implements OnChanges {
 
   @Input() request: EFilingRequest;
+  @Output() editionEvent = new EventEmitter<boolean>();
 
   preventiveNoteDueDate = '';
 
@@ -46,4 +47,7 @@ export class RequestListItemComponent implements OnChanges {
     this.preventiveNoteDueDate = `Vigencia: ${diffDays} días`;
   }
 
+  editRequest() {
+    this.editionEvent.emit(true);
+  }
 }

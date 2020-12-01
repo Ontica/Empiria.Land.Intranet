@@ -84,3 +84,30 @@ table.form-section .form-section-title {
   border-bottom: $form-title-border;
   font: $control-font;
 }
+
+//Tmp JM
+.pr-1 {
+  padding-right: 0.5rem;
+}
+
+.grid-text-item {
+  padding-left: 1rem;
+}
+
+.section-title {
+  color: $form-title-color;
+  border-bottom: $form-title-border;
+  margin: 0.5rem 0;
+}
+
+.form-section label, label.label-filter {
+    max-width: 110px;
+    min-width: 110px;
+    margin: auto;
+    line-height: 1rem;
+}
+
+.form-section label.label-sm {
+  max-width: 55px;
+  min-width: 55px;
+}

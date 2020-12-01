@@ -14,7 +14,7 @@ import { PresentationState } from '@app/core/presentation';
 import { EFilingRequest, EmptyEFilingRequest,
          EFilingRequestFilter, EmptyEFilingRequestFilter } from '@app/domain/models';
 
-import { ElectronicFilingAction } from '@app/core/presentation/state.commands';
+import { ElectronicFilingAction, DocumentsRecordingAction } from '@app/core/presentation/state.commands';
 
 
 export enum RequestListEventType {
@@ -68,6 +68,9 @@ export class RequestListComponent implements OnChanges {
     this.store.dispatch(ElectronicFilingAction.SELECT_REQUEST, { request });
   }
 
+  onSelectRecordingAct(request: EFilingRequest) {
+    this.store.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT, { request });
+  }
 
   onClickCreateRequestButton() {
     const event: EventInfo = {

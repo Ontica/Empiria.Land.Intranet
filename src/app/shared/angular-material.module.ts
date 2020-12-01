@@ -23,6 +23,8 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import {
   MomentDateAdapter,
@@ -92,7 +94,9 @@ export const DATE_FORMATS = {
     MatRippleModule,
     MatSidenavModule,
     MatStepperModule,
-    MatTabsModule
+    MatTabsModule,
+    MatTooltipModule,
+    MatTableModule,
   ],
 
   exports: [
@@ -112,7 +116,9 @@ export const DATE_FORMATS = {
     MatRippleModule,
     MatSidenavModule,
     MatStepperModule,
-    MatTabsModule
+    MatTabsModule,
+    MatTooltipModule,
+    MatTableModule
   ],
 
   providers: [

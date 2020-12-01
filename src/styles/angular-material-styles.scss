@@ -13,6 +13,12 @@
   font-family: 'Material Icons' !important;
 }
 
+button .mat-icon {
+  color: $icon-color-light;
+  cursor: pointer;
+  font-family: 'Material Icons' !important;
+}
+
 .material-icons-outlined,
 .material-icons.material-icons--outlined {
   font-family: 'Material Icons Outlined' !important;
@@ -105,4 +111,111 @@
 .mat-list-base .mat-list-option .mat-list-item-content {
   padding-right: 0 !important;
   padding-left: 0 !important;
+}
+
+//
+// button mini-fab components
+//
+.mat-mini-fab {
+  width: 35px !important;
+  height: 35px !important;
+}
+
+.mat-mini-fab .mat-button-wrapper {
+  padding: 5.5px 0 !important;
+  height: 35px;
+}
+
+//
+// mat-table components
+//
+table.mat-table {
+  width: 100%;
+  margin: 0.5rem 0;
+  font-family: $font-family;
+  font-size: 9pt !important;
+  font-weight: 400;
+
+  tr {
+      height: 35px;
+  }
+
+  th {
+    font-weight: 500;
+    background-color: $primary-color;
+    color: $white;
+  }
+
+  th:first-of-type {
+      padding-left: 10px;
+  }
+
+  th:last-of-type {
+    padding-right: 10px;
+  }
+
+  td {
+    background-color: white;
+    vertical-align: top;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .mat-icon {
+      cursor: pointer;
+    }
+
+    .mat-icon:hover {
+      color: $icon-color-dark;
+    }
+  }
+
+  td:first-of-type {
+      padding-left: 10px;
+  }
+
+  td:last-of-type {
+      padding-right: 10px;
+      width: auto;
+
+      vertical-align: middle;
+      padding-top: 0px;
+      padding-bottom: 0px;
+  }
+}
+
+//
+// mat-divider
+//
+
+.mat-divider.divider-padding {
+  margin: 0.5rem 0;
+}
+
+//
+// matexpansion panel
+// 
+
+.mat-expansion-panel-header {
+  height: 45px;
+}
+
+.mat-expansion-panel-header.mat-expanded {
+  height: 45px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.mat-expansion-panel-header-title {
+  flex-basis: 0;
+  align-items: center;
+  .mat-icon {
+    margin-right: 1rem;
+  }
+}
+
+.mat-expansion-panel-body {
+  padding: 16px 24px 16px !important;
+}
+
+.mat-expansion-panel .mat-action-row {
+  padding: 16px 30px 16px 24px !important;
 }
