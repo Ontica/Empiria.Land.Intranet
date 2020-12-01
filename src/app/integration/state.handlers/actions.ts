@@ -12,9 +12,13 @@ export { ActionType as MainUIStateAction } from '../state.handlers/main-ui.state
 import { ActionType as ElectronicFilingAction } from './electronic-filing.state.handler';
 export { ActionType as ElectronicFilingAction } from './electronic-filing.state.handler';
 
+import { ActionType as DocumentsRecordingAction } from './documents-recording.state.handler';
+export { ActionType as DocumentsRecordingAction } from './documents-recording.state.handler';
+
 
 export type StateAction
   = MainUIStateAction
   | ElectronicFilingAction
+  | DocumentsRecordingAction
 
 ;

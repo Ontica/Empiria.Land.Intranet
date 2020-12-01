@@ -11,6 +11,7 @@ import { STATE_HANDLERS } from '@app/core/presentation/presentation.state';
 
 import { MainUserInterfaceStateHandler } from './main-ui.state.handler';
 import { ElectronicFilingStateHandler } from './electronic-filing.state.handler';
+import { DocumentsRecordingStateHandler } from './documents-recording.state.handler';
 import { RepositoryStateHandler } from './repository.state.handler';
 
 
@@ -20,10 +21,12 @@ import { RepositoryStateHandler } from './repository.state.handler';
   providers: [
     MainUserInterfaceStateHandler,
     ElectronicFilingStateHandler,
+    DocumentsRecordingStateHandler,
     RepositoryStateHandler,
 
     { provide: STATE_HANDLERS, useExisting: MainUserInterfaceStateHandler, multi: true },
     { provide: STATE_HANDLERS, useExisting: ElectronicFilingStateHandler, multi: true },
+    { provide: STATE_HANDLERS, useExisting: DocumentsRecordingStateHandler, multi: true },
     { provide: STATE_HANDLERS, useExisting: RepositoryStateHandler, multi: true }
 
   ]

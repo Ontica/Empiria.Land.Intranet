@@ -7,4 +7,6 @@
 
 export * from './electronic-filing.use-cases';
 
+export * from './documents-recording.use-cases';
+
 export * from './repository.use-cases';

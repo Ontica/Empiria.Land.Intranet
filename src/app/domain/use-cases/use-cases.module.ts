@@ -8,6 +8,7 @@
 import { NgModule } from '@angular/core';
 
 import { BackendProvidersModule } from '@app/integration/backend.providers/backend.providers.module';
+import { DocumentsRecordingUseCases } from './documents-recording.use-cases';
 
 import { ElectronicFilingUseCases } from './electronic-filing.use-cases';
 import { RepositoryUseCases } from './repository.use-cases';
@@ -21,7 +22,8 @@ import { RepositoryUseCases } from './repository.use-cases';
 
   providers: [
     ElectronicFilingUseCases,
-    RepositoryUseCases
+    DocumentsRecordingUseCases,
+    RepositoryUseCases,
   ]
 
 })
