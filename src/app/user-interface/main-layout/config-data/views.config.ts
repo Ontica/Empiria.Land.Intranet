@@ -13,37 +13,37 @@ export const RequestsViews: View[] = [
     name: 'Requests.Pending',
     title: 'Trámites en elaboración',
     menuTitle: 'En elaboración',
-    url: '/electronic-filing/requests/pending'
+    url: '/transactions/pending'
   },
   {
     name: 'Requests.OnSign',
     title: 'Trámites pendientes de firma',
     menuTitle: 'En firma',
-    url: '/electronic-filing/requests/on-sign'
+    url: '/transactions/on-sign'
   },
   {
     name: 'Requests.Finished',
     title: 'Trámites finalizados',
     menuTitle: 'Finalizados',
-    url: '/electronic-filing/requests/finished'
+    url: '/transactions/finished'
   },
   {
     name: 'Requests.Rejected',
     title: 'Trámites devueltos',
     menuTitle: 'Devueltos',
-    url: '/electronic-filing/requests/rejected'
+    url: '/transactions/rejected'
   },
   {
     name: 'Requests.OnPayment',
     title: 'Trámites por ingresar',
     menuTitle: 'Por ingresar',
-    url: '/electronic-filing/requests/on-payment'
+    url: '/transactions/on-payment'
   },
   {
     name: 'Requests.All',
     title: 'Todos los trámites',
     menuTitle: 'Todos',
-    url: '/electronic-filing/requests/all'
+    url: '/transactions/all'
   }
 ];
 
