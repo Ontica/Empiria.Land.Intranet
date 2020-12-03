@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationState } from '@app/core/presentation';
-import { ElectronicFilingStateSelector, DocumentsRecordingSelector, ElectronicFilingAction, DocumentsRecordingAction,
+import { ElectronicFilingStateSelector, ElectronicFilingAction,
          MainUIStateSelector } from '@app/core/presentation/state.commands';
 
 import { EFilingRequest, EmptyEFilingRequest, FilingRequestStatusType,
@@ -74,12 +74,6 @@ export class ElectronicFilingMainPageComponent implements OnInit, OnDestroy {
         this.filter = x
       );
 
-    this.store.select<EFilingRequest>(DocumentsRecordingSelector.SELECTED_RECORDING_ACT)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(x => {
-        this.selectedRequest = x;
-        this.displayEditorRecordingAct = !isEmpty(this.selectedRequest);
-      });
   }
 
 
@@ -93,13 +87,11 @@ export class ElectronicFilingMainPageComponent implements OnInit, OnDestroy {
     this.store.dispatch(ElectronicFilingAction.UNSELECT_REQUEST);
   }
 
+  
   onRequestCreatorClosed() {
     this.displayRequestCreator = false;
   }
 
-  onCloseEditorRecordingAct() {
-    this.store.dispatch(DocumentsRecordingAction.UNSELECT_RECORDING_ACT);
-  }
 
   onRequestListEvent(event: EventInfo): void {
     switch (event.type as RequestListEventType) {

@@ -68,9 +68,6 @@ export class RequestListComponent implements OnChanges {
     this.store.dispatch(ElectronicFilingAction.SELECT_REQUEST, { request });
   }
 
-  onSelectRecordingAct(request: EFilingRequest) {
-    this.store.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT, { request });
-  }
 
   onClickCreateRequestButton() {
     const event: EventInfo = {

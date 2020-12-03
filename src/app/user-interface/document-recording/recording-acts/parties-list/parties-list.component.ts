@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 
 @Component({
-  selector: 'emp-parties-list',
+  selector: 'emp-land-parties-list',
   templateUrl: './parties-list.component.html',
 })
 export class PartiesListComponent implements OnInit {

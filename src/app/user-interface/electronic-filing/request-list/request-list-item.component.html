@@ -22,7 +22,7 @@
     </div>
   </div>
 
-  <div fxFlex="12%">
+  <div fxFlex="15%">
     <div *ngIf="request?.transaction?.uid">
       <div class="label">Pago</div>
       <div>
@@ -33,15 +33,9 @@
     </div>
   </div>
 
-  <div fxFlex="8%">
+  <div fxFlex="10%">
     <div class="label">Estado:</div>
     <div class="primary-text nowrap"><b>{{request.status.name}}</b></div>
-  </div>
-
-  <div fxFlex="5%">
-    <div class="primary-text nowrap">
-      <button mat-mini-fab color="accent" matTooltip="Agregar personas al acto jurídico" (click)="editRequest()"><mat-icon>search</mat-icon></button>
-    </div>
   </div>
 
 </div>

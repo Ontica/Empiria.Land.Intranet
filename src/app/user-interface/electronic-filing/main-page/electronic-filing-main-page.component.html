@@ -18,13 +18,6 @@
     </emp-one-request-tabbed-view >
   </div>
 
-  <div *ngIf="displayEditorRecordingAct" class="secondary">
-    <emp-recording-acts 
-        [request]="selectedRequest"
-        (closeEvent)="onCloseEditorRecordingAct()">
-    </emp-recording-acts>
-  </div>
-
 </div>
 
 <emp-ng-modal-window *ngIf="displayRequestCreator"

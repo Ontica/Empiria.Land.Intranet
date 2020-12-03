@@ -8,7 +8,7 @@ import { participationTypeEnum, PartyTypesEnum, Person, RecordingActParty, Roles
 
 
 @Component({
-  selector: 'emp-party-editor',
+  selector: 'emp-land-party-editor',
   templateUrl: './party-editor.component.html'
 })
 export class PartyEditorComponent implements OnInit {
