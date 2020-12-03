@@ -12,6 +12,7 @@ import { DocumentsRecordingUseCases } from './documents-recording.use-cases';
 
 import { ElectronicFilingUseCases } from './electronic-filing.use-cases';
 import { RepositoryUseCases } from './repository.use-cases';
+import { TransactionUseCases } from './transaction.use-cases';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { RepositoryUseCases } from './repository.use-cases';
   providers: [
     ElectronicFilingUseCases,
     DocumentsRecordingUseCases,
+    TransactionUseCases,
     RepositoryUseCases,
   ]
 

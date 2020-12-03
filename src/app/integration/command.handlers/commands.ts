@@ -8,4 +8,9 @@
 import { CommandType as ElectronicFilingCommandType } from './electronic-filing.command.handler';
 export { CommandType as ElectronicFilingCommandType } from './electronic-filing.command.handler';
 
-export type CommandType = ElectronicFilingCommandType;
+import { CommandType as TransactionCommandType } from './transaction.command.handler';
+export { CommandType as TransactionCommandType } from './transaction.command.handler';
+
+export type CommandType =   ElectronicFilingCommandType | 
+                            TransactionCommandType;
+

@@ -15,10 +15,14 @@ export { ActionType as ElectronicFilingAction } from './electronic-filing.state.
 import { ActionType as DocumentsRecordingAction } from './documents-recording.state.handler';
 export { ActionType as DocumentsRecordingAction } from './documents-recording.state.handler';
 
+import { ActionType as TransactionAction } from './transaction.state.handler';
+export { ActionType as TransactionAction } from './transaction.state.handler';
+
 
 export type StateAction
   = MainUIStateAction
   | ElectronicFilingAction
   | DocumentsRecordingAction
+  | TransactionAction
 
 ;

@@ -9,5 +9,7 @@ export * from './electronic-filing.api.provider';
 
 export * from './documents-recording.api.provider';
 
+export * from './transaction.api.provider';
+
 export * from './repository.api.provider';
 

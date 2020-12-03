@@ -13,13 +13,19 @@ import { SelectorType as ElectronicFilingStateSelector } from './electronic-fili
 export { SelectorType as ElectronicFilingStateSelector } from './electronic-filing.state.handler';
 
 
-import { SelectorType as DocumentsRecordingSelector } from './documents-recording.state.handler';
-export { SelectorType as DocumentsRecordingSelector } from './documents-recording.state.handler';
+import { SelectorType as DocumentsRecordingStateSelector } from './documents-recording.state.handler';
+export { SelectorType as DocumentsRecordingStateSelector } from './documents-recording.state.handler';
+
+
+import { SelectorType as TransactionStateSelector } from './transaction.state.handler';
+export { SelectorType as TransactionStateSelector } from './transaction.state.handler';
+
 
 import { SelectorType as LandRepositoryStateSelector } from './repository.state.handler';
 export { SelectorType as LandRepositoryStateSelector } from './repository.state.handler';
 
 export type StateSelector = MainUIStateSelector |
                             ElectronicFilingStateSelector |
-                            DocumentsRecordingSelector |
+                            DocumentsRecordingStateSelector |
+                            TransactionStateSelector |
                             LandRepositoryStateSelector;

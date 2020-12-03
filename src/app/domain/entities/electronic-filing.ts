@@ -5,15 +5,37 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { DateString, Entity, PartitionedType } from '@app/core';
+import { DateString, Entity } from '@app/core';
 
 import { RealEstate } from './property';
 
 
-export interface Transaction extends Entity {
-  status: string;
-  presentationDate: DateString;
-}
+// export interface Transaction extends Entity {
+//   status: string;
+//   presentationDate: DateString;
+
+//   type: string;
+//   subtype: string;
+//   transactionID: string;
+//   requestedBy: string;
+//   presentationTime: DateString;
+//   stage: string;
+//   statusName: string;
+// }
+
+// export const EmptyTransaction: Transaction = {
+//   uid: '',
+//   status: '',
+//   presentationDate: '',
+
+//   type: '',
+//   subtype: '',
+//   transactionID: '',
+//   requestedBy: '',
+//   presentationTime: '',
+//   stage: '',
+//   statusName: ''
+// };
 
 
 export type FilingRequestStatusType = 'Pending' | 'OnSign' | 'OnPayment' | 'Submitted' |
@@ -111,7 +133,7 @@ export interface EFilingRequest extends Entity {
   form?: ApplicationForm;
   paymentOrder?: PaymentOrderData;
   esign?: ESignData;
-  transaction?: Transaction;
+  transaction?: any; //Transaction
   outputDocuments: EFilingDocument[];
   permissions: FilingRequestPermissions;
 }
@@ -204,13 +226,6 @@ export interface NotarialInstrument {
 }
 
 
-export const EmptyTransaction: Transaction = {
-  uid: '',
-  status: '',
-  presentationDate: ''
-};
-
-
 export const EmptyEFilingRequest: EFilingRequest = {
   uid: '',
   procedureType: 'NoDeterminado',
@@ -233,7 +248,7 @@ export const EmptyEFilingRequest: EFilingRequest = {
     name: 'Pendiente'
   },
   esign: null,
-  transaction: EmptyTransaction,
+  transaction: null, //EmptyTransaction
   outputDocuments: [],
   permissions: {
     canManage: false,
