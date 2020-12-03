@@ -1,0 +1,29 @@
+<div class="explorer" fxLayoutGap="32px">
+
+  <div [fxHide.lt-lg]="displayEditor || displayEditorRecordingAct" class="primary">
+    <emp-land-request-list
+        [requestList]="requestList"
+        [selectedRequest]="selectedRequest"
+        [filter]="filter"
+        [title]="currentView.title"
+        [isLoading]="isLoading"
+        (requestListEvent)="onRequestListEvent($event)">
+    </emp-land-request-list>
+  </div>
+
+
+  <div *ngIf="displayEditorRecordingAct" class="secondary">
+    <emp-land-recording-acts 
+        [request]="selectedRequest"
+        (closeEvent)="onCloseEditorRecordingAct()">
+    </emp-land-recording-acts>
+  </div>
+
+</div>
+
+<emp-ng-modal-window *ngIf="displayRequestCreator"
+                     [config]="{width:'820px', height:'840px'}">
+  <emp-land-request-creator
+    (closeEvent)="onRequestCreatorClosed()">
+  </emp-land-request-creator>
+</emp-ng-modal-window>

@@ -1,0 +1,48 @@
+<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="8px" fxLayoutGap.gt-xs="32px">
+
+  <div fxFlex="35">
+    <div class="label">Tipo de trámite</div>
+    <div class="primary-text nowrap"><b>{{request.type}}</b></div>
+    <div>{{request.subtype}}</div>
+  </div>
+
+  <!-- <div *ngIf="request?.form?.fields['propertyData']?.propertyUID" fxFlex="auto">
+    <div class="label">Folio real del predio</div>
+    <div class="primary-text nowrap"><b>{{request?.form?.fields['propertyData']?.propertyUID || ''}}</b></div>
+    <div>{{request?.form?.fields['propertyName']}}</div>
+  </div> -->
+
+  <div fxFlex="30%">
+    <div *ngIf="request?.uid">
+      <div class="label">Trámite RPP</div>
+      <div>
+        <div class="primary-text nowrap"><b>{{request?.uid}}</b></div>
+        <div>{{request?.presentationTime | date:'dd/LLL/yyyy HH:mm'}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div fxFlex="12%">
+    <div *ngIf="request?.transaction?.uid">
+      <div class="label">Pago</div>
+      <div>
+        <div class="primary-text nowrap"><b>Por verificar</b></div>
+        <div>{{request?.paymentOrder?.total | currency}}</div>
+        <div>{{request?.paymentOrder?.receiptNo}}</div>
+      </div>
+    </div>
+  </div> -->
+
+  <div fxFlex="30%">
+    <div class="label">Estado:</div>
+    <div class="primary-text nowrap"><b>{{request.statusName}}</b></div>
+    <!-- <div>{{preventiveNoteDueDate}}</div> -->
+  </div>
+
+  <div fxFlex="5%">
+    <div class="primary-text nowrap">
+      <button mat-mini-fab color="accent" matTooltip="Agregar personas al acto jurídico" (click)="editRequest()"><mat-icon>search</mat-icon></button>
+    </div>
+  </div>
+
+</div>
