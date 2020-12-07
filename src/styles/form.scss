@@ -100,11 +100,12 @@ table.form-section .form-section-title {
   margin: 0.5rem 0;
 }
 
-.form-section label, label.label-filter {
-    max-width: 110px;
-    min-width: 110px;
-    margin: auto;
-    line-height: 1rem;
+.form-section label, 
+label.label-filter {
+  max-width: 110px;
+  min-width: 110px;
+  margin: auto;
+  line-height: 1rem;
 }
 
 .form-section label.label-sm {

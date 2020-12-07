@@ -54,6 +54,14 @@ button .mat-icon {
   height: 100%;
 }
 
+.mat-ink-bar {
+  background-color: $secondary-color !important;
+}
+
+.mat-tab-group .mat-tab-body {
+  padding: 16px 24px 16px !important;
+}
+
 //
 // stepper
 //
@@ -116,6 +124,7 @@ button .mat-icon {
 //
 // button mini-fab components
 //
+
 .mat-mini-fab {
   width: 35px !important;
   height: 35px !important;
@@ -129,6 +138,7 @@ button .mat-icon {
 //
 // mat-table components
 //
+
 table.mat-table {
   width: 100%;
   margin: 0.5rem 0;
@@ -137,7 +147,7 @@ table.mat-table {
   font-weight: 400;
 
   tr {
-      height: 35px;
+    height: 35px;
   }
 
   th {
@@ -147,7 +157,7 @@ table.mat-table {
   }
 
   th:first-of-type {
-      padding-left: 10px;
+    padding-left: 10px;
   }
 
   th:last-of-type {
@@ -170,16 +180,15 @@ table.mat-table {
   }
 
   td:first-of-type {
-      padding-left: 10px;
+    padding-left: 10px;
   }
 
   td:last-of-type {
-      padding-right: 10px;
-      width: auto;
-
-      vertical-align: middle;
-      padding-top: 0px;
-      padding-bottom: 0px;
+    padding-right: 10px;
+    width: auto;
+    vertical-align: middle;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 
@@ -193,7 +202,7 @@ table.mat-table {
 
 //
 // matexpansion panel
-// 
+//
 
 .mat-expansion-panel-header {
   height: 45px;
@@ -207,9 +216,6 @@ table.mat-table {
 .mat-expansion-panel-header-title {
   flex-basis: 0;
   align-items: center;
-  .mat-icon {
-    margin-right: 1rem;
-  }
 }
 
 .mat-expansion-panel-body {
