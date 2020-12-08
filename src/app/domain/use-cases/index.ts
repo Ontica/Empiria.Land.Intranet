@@ -5,8 +5,6 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-export * from './electronic-filing.use-cases';
-
 export * from './documents-recording.use-cases';
 
 export * from './transaction.use-cases';

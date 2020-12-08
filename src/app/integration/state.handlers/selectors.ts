@@ -9,10 +9,6 @@ import { SelectorType as MainUIStateSelector } from '../state.handlers/main-ui.s
 export { SelectorType as MainUIStateSelector } from '../state.handlers/main-ui.state.handler';
 
 
-import { SelectorType as ElectronicFilingStateSelector } from './electronic-filing.state.handler';
-export { SelectorType as ElectronicFilingStateSelector } from './electronic-filing.state.handler';
-
-
 import { SelectorType as DocumentsRecordingStateSelector } from './documents-recording.state.handler';
 export { SelectorType as DocumentsRecordingStateSelector } from './documents-recording.state.handler';
 
@@ -25,7 +21,6 @@ import { SelectorType as LandRepositoryStateSelector } from './repository.state.
 export { SelectorType as LandRepositoryStateSelector } from './repository.state.handler';
 
 export type StateSelector = MainUIStateSelector |
-                            ElectronicFilingStateSelector |
                             DocumentsRecordingStateSelector |
                             TransactionStateSelector |
                             LandRepositoryStateSelector;

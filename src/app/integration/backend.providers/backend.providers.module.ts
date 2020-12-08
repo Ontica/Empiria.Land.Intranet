@@ -7,12 +7,10 @@
 
 import { NgModule } from '@angular/core';
 
-import { EFilingRequestApiProvider } from '@app/domain/providers/electronic-filing.api.provider';
 import { DocumentsRecordingApiProvider } from '@app/domain/providers';
 import { TransactionApiProvider } from '@app/domain/providers/transaction.api.provider';
 import { RepositoryApiProvider } from '@app/domain/providers/repository.api.provider';
 
-import { ElectronicFilingApiHttpProvider } from './http/electronic-filing.api.http.provider';
 import { DocumentsRecordingApiHttpProvider } from './http/documents-recording.api.http.provider';
 import { TransactionApiHttpProvider } from './http/transaction.api.http.provider';
 import { RepositoryApiHttpProvider } from './http/repository.api.http.provider';
@@ -21,7 +19,6 @@ import { RepositoryApiHttpProvider } from './http/repository.api.http.provider';
 @NgModule({
 
   providers: [
-    { provide: EFilingRequestApiProvider, useClass: ElectronicFilingApiHttpProvider },
     { provide: DocumentsRecordingApiProvider, useClass: DocumentsRecordingApiHttpProvider },
     { provide: TransactionApiProvider, useClass: TransactionApiHttpProvider },
     { provide: RepositoryApiProvider, useClass: RepositoryApiHttpProvider }

@@ -5,11 +5,8 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-export * from './electronic-filing.api.provider';
-
 export * from './documents-recording.api.provider';
 
 export * from './transaction.api.provider';
 
 export * from './repository.api.provider';
-

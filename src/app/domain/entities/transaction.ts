@@ -22,6 +22,7 @@ export interface Transaction extends Entity {
 export type TransactionStagesType = 'Pending' | 'InProgress' | 'Completed' | 'Returned' |
                                     'OnHold' | 'All';
 
+
 export type TransactionStatusType = 'OnSign';
 
 
@@ -37,15 +38,37 @@ export const EmptyTransaction: Transaction = {
   statusName: ''
 };
 
-export interface TransactionFilter {
-    stage?: TransactionStagesType;
-    status?: TransactionStatusType;
 
-    keywords: string;
+export interface TransactionFilter {
+  stage?: TransactionStagesType;
+  status?: TransactionStatusType;
+
+  keywords: string;
 }
+
 
 export const EmptyTransactionFilter: TransactionFilter = {
     stage: 'All',
     status: null,
     keywords: '',
 };
+
+
+export interface Requester {
+  name: string;
+  email?: string;
+  phone?: string;
+  rfc?: string;
+}
+
+
+export const EmptyRequester: Requester = {
+  name: '',
+  email: '',
+  phone: '',
+  rfc: ''
+};
+
+
+export type ProcedureType = 'AvisoPreventivo' | 'AvisoTestamentario' | 'SegundoAvisoDefinitivo' |
+                            'InscripcionEscrituraPublica' | 'SolicitudFolioReal' | 'NoDeterminado';

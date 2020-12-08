@@ -5,12 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { CommandType as ElectronicFilingCommandType } from './electronic-filing.command.handler';
-export { CommandType as ElectronicFilingCommandType } from './electronic-filing.command.handler';
-
 import { CommandType as TransactionCommandType } from './transaction.command.handler';
 export { CommandType as TransactionCommandType } from './transaction.command.handler';
 
-export type CommandType =   ElectronicFilingCommandType | 
-                            TransactionCommandType;
-
+export type CommandType = TransactionCommandType;
