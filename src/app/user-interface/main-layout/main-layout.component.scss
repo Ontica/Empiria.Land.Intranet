@@ -46,12 +46,12 @@
     white-space: nowrap;
   }
 
-
   .search-and-settings {
     @include row;
 
     width: auto;
     align-items: center;
+
     > * {
       margin-left: 32px;
     }
