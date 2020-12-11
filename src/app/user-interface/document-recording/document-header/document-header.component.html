@@ -1,0 +1,65 @@
+<form [formGroup]="form" autocomplete="off" class="form-section">
+	<div class="section-title">Documento a inscribir</div>
+	<div fxLayout="row" fxLayout.lt-md="column">
+		<div fxFlex="60" fxLayoutAlign="space-around">
+			<label fxFlex="40">Categoría del documento:</label>
+			<emp-ng-select
+				[items]="documentCategoriesList"
+				[config]="{placeholder: '( Seleccionar )'}"
+				formControlName="documentCategory"
+				fxFlex="60">
+			</emp-ng-select>
+		</div>
+
+		<div fxFlex="40" fxLayoutAlign="space-around">
+			<label fxFlex="60">Num de hojas del instrumento:</label>
+			<emp-ng-select 
+				[items]="numberSheetsList"
+				[config]="{placeholder: '( ? )'}"
+				formControlName="numberSheets"
+				fxFlex="40">
+			</emp-ng-select>
+		</div>
+	</div>
+
+	<div fxLayout="row" fxLayout.lt-md="column">
+		<div fxFlex="100">
+			<label>Notario:</label>
+			<emp-ng-select 
+				[items]="notarias$ | async"
+				[config]="{placeholder: '( Seleccionar )', virtualScroll: true}"
+				[typeahead]="notariasInput$"
+				[loading]="notariasLoading"
+				formControlName="notaria"
+				fxFlex="100">
+		
+			<ng-template #optionTemplate ng-option-tmp let-item="item">
+				<div style="padding: 0.25rem 0;">
+					{{item.name}}
+					<br>
+					<div style="font-size: 0.7rem;">
+						<strong>{{item.ciudad}} </strong>  
+						{{item.notaria}}
+					</div>
+				</div>
+			</ng-template>
+		</emp-ng-select>
+		</div>
+	</div>
+	
+	<div fxLayout="row" fxLayout.lt-md="column">
+		<div fxFlex="100">
+			<label for="text-editor">Descripción:</label>
+			<emp-ng-text-editor id="text-editor" 
+				formControlName="description" 
+				fxFlex="100">
+			</emp-ng-text-editor>
+		</div>
+	</div>
+
+<br>
+<br>
+	<button (click)="enableEditor()" [ngClass]="editDocument ? 'btn-warning' : 'btn-action' ">
+		{{editDocument ? 'Descartar Cambios' : 'Editar Documento'}}
+	</button>
+</form>
