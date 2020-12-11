@@ -1,0 +1,41 @@
+<ng-select
+	[(ngModel)]="value"
+	[disabled]="disabled"
+	[items]="items"
+	[loading]="loading"
+	[typeahead]="typeahead"
+	[addTag]="selectBoxConfig.addTag"
+	[addTagText]="selectBoxConfig.addTagText"
+	[bindLabel]="selectBoxConfig.bindLabel"
+	[bindValue]="selectBoxConfig.bindValue"
+	[clearable]="selectBoxConfig.clearable"
+	[closeOnSelect]="selectBoxConfig.closeOnSelect"
+	[groupBy]="selectBoxConfig.groupBy"
+	[hideSelected]="selectBoxConfig.hideSelected"
+	[minTermLength]="selectBoxConfig.minTermLength"
+	[multiple]="selectBoxConfig.multiple"
+	[notFoundText]="selectBoxConfig.notFoundText"
+	[placeholder]="selectBoxConfig.placeholder"
+	[searchable]="selectBoxConfig.searchable"
+	[typeToSearchText]="selectBoxConfig.typeToSearchText"
+	[virtualScroll]="selectBoxConfig.virtualScroll"
+	(change)="onChangedEvent($event)"
+	(focus)="onTouched($event)"
+	(clear)="onClear()"
+	fxFlex="100"
+	appendTo="body">
+
+	<ng-template ng-optgroup-tmp let-item="item">
+			{{item.name}}
+	</ng-template>
+
+	<ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+			<ng-container *ngIf="optionTemplate">
+					<ng-container *ngTemplateOutlet="optionTemplate; context:{item: item}"></ng-container>
+			</ng-container>
+			<ng-container *ngIf="!optionTemplate">
+					{{item.name}}
+			</ng-container>
+	</ng-template>
+
+</ng-select>

@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 
 import { SafeHtmlPipe } from './safe-html.pipe';
 import { SafeUrlPipe } from './safe-url.pipe';
+import { DateTimeFormatPipe } from './date-time-format.pipe';
 
 
 @NgModule({
@@ -21,11 +22,13 @@ import { SafeUrlPipe } from './safe-url.pipe';
   declarations: [
     SafeHtmlPipe,
     SafeUrlPipe,
+    DateTimeFormatPipe
   ],
 
   exports: [
     SafeHtmlPipe,
-    SafeUrlPipe
+    SafeUrlPipe,
+    DateTimeFormatPipe
   ],
 
 

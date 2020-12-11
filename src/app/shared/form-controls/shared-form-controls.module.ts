@@ -7,11 +7,15 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AngularMaterialModule } from '../angular-material.module';
 
 import { SearchBoxComponent } from './search-box/search-box.component';
+import { TextEditorComponent } from './text-editor/text-editor.component';
+import { SelectBoxComponent } from './select-box/select-box.component';
 
 
 @NgModule({
@@ -19,17 +23,23 @@ import { SearchBoxComponent } from './search-box/search-box.component';
   imports: [
     CommonModule,
     FormsModule,
-
-    AngularMaterialModule
+    ReactiveFormsModule,
+    AngularMaterialModule,
+    NgSelectModule,
+    QuillModule.forRoot()
   ],
 
   declarations: [
-    SearchBoxComponent
+    SearchBoxComponent,
+    TextEditorComponent,
+    SelectBoxComponent
   ],
 
   exports: [
-    SearchBoxComponent
-  ],
+    SearchBoxComponent,
+    TextEditorComponent,
+    SelectBoxComponent
+  ]
 
 })
 export class SharedFormControlsModule { }
