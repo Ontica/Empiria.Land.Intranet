@@ -2,10 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { EmptyTransaction, Transaction } from '@app/domain/models';
 
 @Component({
-  selector: 'emp-land-document-recording',
-  templateUrl: './document-recording.component.html',
+  selector: 'emp-land-instrument-edition',
+  templateUrl: './instrument-edition.component.html',
 })
-export class DocumentRecordingComponent implements OnInit {
+export class InstrumentEditionComponent implements OnInit {
 
   @Input() request: Transaction = EmptyTransaction;
 

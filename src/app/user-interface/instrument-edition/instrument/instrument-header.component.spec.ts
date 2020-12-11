@@ -1,20 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { InstrumentHeaderComponent } from './instrument-header.component';
 
-import { DocumentRecordingComponent } from './document-recording.component';
-
-describe('DocumentRecordingComponent', () => {
-  let component: DocumentRecordingComponent;
-  let fixture: ComponentFixture<DocumentRecordingComponent>;
+describe('InstrumentHeaderComponent', () => {
+  let component: InstrumentHeaderComponent;
+  let fixture: ComponentFixture<InstrumentHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DocumentRecordingComponent ]
+      declarations: [ InstrumentHeaderComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DocumentRecordingComponent);
+    fixture = TestBed.createComponent(InstrumentHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

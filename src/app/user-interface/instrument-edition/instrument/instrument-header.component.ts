@@ -4,33 +4,33 @@ import { concat, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'emp-land-document-header',
-  templateUrl: './document-header.component.html'
+  selector: 'emp-land-instrument-header',
+  templateUrl: './instrument-header.component.html'
 })
-export class DocumentHeaderComponent implements OnInit {
+export class InstrumentHeaderComponent implements OnInit {
 
   form: FormGroup;
 
-  documentCategoriesList: any[];
+  instrumentCategoriesList: any[];
   numberSheetsList: any[];
 
   notarias$: any;
   notariasInput$ = new Subject<string>();
   notariasLoading = false;
 
-  editDocument = false;
+  editInstrument = false;
 
   constructor() { }
 
   ngOnInit(): void {
-    this.editDocument = false;
+    this.editInstrument = false;
     this.setFormControls();
     this.loadData();
   }
 
   setFormControls = () => {
     this.form = new FormGroup({
-      documentCategory: new FormControl({value: '', disabled: false}),
+      instrumentCategory: new FormControl({value: '', disabled: false}),
       notaria: new FormControl({value: '', disabled: false}),
       numberSheets: new FormControl({value: '', disabled: false}),
       description: new FormControl({value: '', disabled: false }, Validators.required),
@@ -38,7 +38,7 @@ export class DocumentHeaderComponent implements OnInit {
     this.disableFields(true);
   }
 
-  get documentCategory(): any { return this.form.get('documentCategory'); }
+  get instrumentCategory(): any { return this.form.get('instrumentCategory'); }
   get numberSheets(): any { return this.form.get('numberSheets'); }
   get description(): any { return this.form.get('description'); }
   get notaria(): any { return this.form.get('notaria'); }
@@ -46,12 +46,12 @@ export class DocumentHeaderComponent implements OnInit {
 
   disableFields(disable: boolean){
     if (disable){
-      this.documentCategory.disable();
+      this.instrumentCategory.disable();
       this.numberSheets.disable();
       this.description.disable();
       this.notaria.disable();
     }else{
-      this.documentCategory.enable();
+      this.instrumentCategory.enable();
       this.numberSheets.enable();
       this.description.enable();
       this.notaria.enable();
@@ -82,7 +82,7 @@ export class DocumentHeaderComponent implements OnInit {
   }
 
   enableEditor(){
-    this.editDocument = !this.editDocument;
-    this.disableFields(!this.editDocument);
+    this.editInstrument = !this.editInstrument;
+    this.disableFields(!this.editInstrument);
   }
 }

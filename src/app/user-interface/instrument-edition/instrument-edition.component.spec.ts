@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { InstrumentEditionComponent } from './instrument-edition.component';
 
-import { PartiesEditorComponent } from './parties-editor.component';
 
-describe('PartiesEditorComponent', () => {
-  let component: PartiesEditorComponent;
-  let fixture: ComponentFixture<PartiesEditorComponent>;
+describe('InstrumentEditionComponent', () => {
+  let component: InstrumentEditionComponent;
+  let fixture: ComponentFixture<InstrumentEditionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PartiesEditorComponent ]
+      declarations: [ InstrumentEditionComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PartiesEditorComponent);
+    fixture = TestBed.createComponent(InstrumentEditionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

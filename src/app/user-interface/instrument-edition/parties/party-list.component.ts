@@ -4,10 +4,10 @@ import { RecordingActParty } from '@app/domain/models';
 
 
 @Component({
-  selector: 'emp-land-parties-list',
-  templateUrl: './parties-list.component.html',
+  selector: 'emp-land-party-list',
+  templateUrl: './party-list.component.html',
 })
-export class PartiesListComponent implements OnInit {
+export class PartyListComponent implements OnInit {
 
   dataSource: MatTableDataSource<RecordingActParty>;
   displayedColumns = ['name', 'typeIdentification', 'role', 'participationAmount', 'action'];

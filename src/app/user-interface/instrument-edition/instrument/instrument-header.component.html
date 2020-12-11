@@ -4,7 +4,7 @@
 		<div fxFlex="60" fxLayoutAlign="space-around">
 			<label fxFlex="40">Categoría del documento:</label>
 			<emp-ng-select
-				[items]="documentCategoriesList"
+				[items]="instrumentCategoriesList"
 				[config]="{placeholder: '( Seleccionar )'}"
 				formControlName="documentCategory"
 				fxFlex="60">
@@ -59,7 +59,8 @@
 
 <br>
 <br>
-	<button (click)="enableEditor()" [ngClass]="editDocument ? 'btn-warning' : 'btn-action' ">
-		{{editDocument ? 'Descartar Cambios' : 'Editar Documento'}}
+
+	<button (click)="enableEditor()" [ngClass]="editInstrument ? 'btn-warning' : 'btn-action' ">
+		{{editInstrument ? 'Descartar Cambios' : 'Editar Documento'}}
 	</button>
 </form>
