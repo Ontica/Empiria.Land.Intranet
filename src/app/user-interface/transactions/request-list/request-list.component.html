@@ -35,8 +35,8 @@
       <div class="list-item-container">
 
         <div class="list-item-name">
-          <b><a #trigger
-              (click)="onSelect(request)">{{request.requestedBy}}</a></b>
+          <strong><a #trigger
+              (click)="onSelect(request)">{{request.requestedBy}}</a></strong>
         </div>
 
         <emp-land-request-list-item [request]="request" (editionEvent)="onSelectRecordingAct(request)"></emp-land-request-list-item>
@@ -45,6 +45,6 @@
 
     </div>
 
-  </div> <!--card-body-->
+  </div>
 
 </div>

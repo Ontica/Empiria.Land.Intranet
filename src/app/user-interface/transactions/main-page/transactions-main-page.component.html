@@ -11,11 +11,19 @@
     </emp-land-request-list>
   </div>
 
+  
+  <div *ngIf="displayEditor" class="secondary">
+    <emp-land-request-tabbed-view
+        [request]="selectedRequest"
+        (closeEvent)="onCloseEditor()">
+    </emp-land-request-tabbed-view>
+  </div>
+
 
   <div *ngIf="displayEditorRecordingAct" class="secondary">
     <emp-land-recording-acts 
         [request]="selectedRequest"
-        (closeEvent)="onCloseEditorRecordingAct()">
+        (closeEvent)="onCloseEditor()">
     </emp-land-recording-acts>
   </div>
 

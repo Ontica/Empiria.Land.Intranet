@@ -12,9 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularMaterialModule } from '@app/shared/angular-material.module';
 import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
 
-import { SharedContainersModule } from '@app/shared/containers/shared-containers.module';
-import { SharedFormControlsModule } from '@app/shared/form-controls/shared-form-controls.module';
-import { SharedIndicatorsModule } from '@app/shared/indicators/shared-indicators.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { TransactionsMainPageComponent } from './main-page/transactions-main-page.component';
 import { RequestCreatorComponent } from './request-creator/request-creator.component';
@@ -24,7 +22,7 @@ import { RequestListItemComponent } from './request-list/request-list-item.compo
 
 import { DocumentRecordingModule } from '../document-recording/document-recording.module';
 import { TransactionsRoutingModule } from './transactions-routing.module';
-
+import { RequestTabbedViewComponent } from './request-tabbed-view/request-tabbed-view.component';
 
 
 @NgModule({
@@ -35,13 +33,10 @@ import { TransactionsRoutingModule } from './transactions-routing.module';
     ReactiveFormsModule,
     AngularMaterialModule,
     AngularFlexLayoutModule,
-
-    SharedContainersModule,
-    SharedFormControlsModule,
-    SharedIndicatorsModule,
-
+    SharedModule,
+    
     DocumentRecordingModule,
-    TransactionsRoutingModule
+    TransactionsRoutingModule,
   ],
 
   declarations: [
@@ -50,6 +45,7 @@ import { TransactionsRoutingModule } from './transactions-routing.module';
     RequesterDataComponent,
     RequestListComponent,
     RequestListItemComponent,
+    RequestTabbedViewComponent,
   ],
 
   exports: []

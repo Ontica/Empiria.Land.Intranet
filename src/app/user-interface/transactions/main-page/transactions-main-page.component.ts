@@ -12,8 +12,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationState } from '@app/core/presentation';
-import { DocumentsRecordingStateSelector, TransactionStateSelector, MainUIStateSelector, 
-         DocumentsRecordingAction, TransactionAction } from '@app/core/presentation/state.commands';
+import { TransactionStateSelector, MainUIStateSelector,
+         DocumentsRecordingAction, DocumentsRecordingStateSelector, TransactionAction } from '@app/core/presentation/state.commands';
 
 import { Transaction, TransactionFilter, TransactionStagesType,
          EmptyTransaction, EmptyTransactionFilter, TransactionStatusType } from '@app/domain/models';
@@ -91,15 +91,14 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   onCloseEditor() {
     this.store.dispatch(TransactionAction.UNSELECT_REQUEST);
+    this.store.dispatch(DocumentsRecordingAction.UNSELECT_RECORDING_ACT);
   }
+
 
   onRequestCreatorClosed() {
     this.displayRequestCreator = false;
   }
 
-  onCloseEditorRecordingAct() {
-    this.store.dispatch(DocumentsRecordingAction.UNSELECT_RECORDING_ACT);
-  }
 
   onRequestListEvent(event: EventInfo): void {
     switch (event.type as RequestListEventType) {
@@ -130,41 +129,39 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   private getRequestStageForView(view: View): TransactionStagesType {
     switch (view.name) {
-      case 'Requests.Pending': //En Elaboracion
+      case 'Requests.Pending': // En Elaboracion
         return 'InProgress';
-      case 'Requests.OnSign': //En Firma
-        return null; //'InProgress'
-      case 'Requests.Finished': //Finalizados
+      case 'Requests.OnSign': // En Firma
+        return null; // 'InProgress'
+      case 'Requests.Finished': // Finalizados
         return 'Completed';
-      case 'Requests.Rejected': //Devueltos
+      case 'Requests.Rejected': // Devueltos
         return 'Returned';
-      case 'Requests.OnPayment': //Por Ingresar
+      case 'Requests.OnPayment': // Por Ingresar
         return 'Pending';
-      case 'Requests.All': //Todos
+      case 'Requests.All': // Todos
         return 'All';
       default:
         throw Assertion.assertNoReachThisCode(`Unrecognized view with name '${view.name}'.`);
     }
   }
 
-  
   private getRequestStatusForView(view: View): TransactionStatusType {
-    if(view.name == 'Requests.OnSign'){
+    if (view.name === 'Requests.OnSign'){
       return 'OnSign';
     }else{
       return null;
     }
   }
 
-
   private loadRequests(data?: { keywords: string }) {
-    const currentKeywords = this.store.getValue<TransactionFilter>(TransactionStateSelector.LIST_FILTER).keywords;
-    let filter: TransactionFilter = {
+    const currentKeywords =
+    this.store.getValue<TransactionFilter>(TransactionStateSelector.LIST_FILTER).keywords;
+    const filter: TransactionFilter = {
       stage: this.getRequestStageForView(this.currentView),
       status: this.getRequestStatusForView(this.currentView),
       keywords: data ? data.keywords : currentKeywords,
-    }
-    
+    };
     this.isLoading = true;
     this.store.dispatch(TransactionAction.LOAD_REQUESTS_LIST, { filter });
   }
