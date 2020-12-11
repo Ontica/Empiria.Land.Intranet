@@ -4,18 +4,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AngularMaterialModule } from '@app/shared/angular-material.module';
 import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
-import { SharedContainersModule } from '@app/shared/containers/shared-containers.module';
-import { SharedFormControlsModule } from '@app/shared/form-controls/shared-form-controls.module';
-import { SharedIndicatorsModule } from '@app/shared/indicators/shared-indicators.module';
-import { RecordingActsComponent } from './recording-acts/recording-acts.component'
-import { PartiesListComponent } from './recording-acts/parties-list/parties-list.component';
-import { PartyEditorComponent } from './recording-acts/party-editor/party-editor.component';
-
+import { SharedModule } from '@app/shared/shared.module';
+import { PartiesEditorComponent } from './recording-acts/parties-editor/parties-editor.component';
+import { PartiesListComponent } from './recording-acts/parties-editor/parties-list/parties-list.component';
+import { PartyEditorComponent } from './recording-acts/parties-editor/party-editor/party-editor.component';
+import { RecordingActsComponent } from './recording-acts/recording-acts.component';
 
 
 @NgModule({
   declarations: [
     RecordingActsComponent,
+    PartiesEditorComponent,
     PartiesListComponent,
     PartyEditorComponent
   ],
@@ -26,12 +25,8 @@ import { PartyEditorComponent } from './recording-acts/party-editor/party-editor
     NgSelectModule,
     AngularMaterialModule,
     AngularFlexLayoutModule,
-
-    SharedContainersModule,
-    SharedFormControlsModule,
-    SharedIndicatorsModule,
+    SharedModule
   ],
-
   exports: [
     RecordingActsComponent
   ]

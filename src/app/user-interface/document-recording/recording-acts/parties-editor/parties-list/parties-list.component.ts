@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { RecordingActParty } from '@app/domain/models';
-import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -10,7 +9,6 @@ import { Subscription } from 'rxjs';
 })
 export class PartiesListComponent implements OnInit {
 
-  subscription: Subscription;
   dataSource: MatTableDataSource<RecordingActParty>;
   displayedColumns = ['name', 'typeIdentification', 'role', 'participationAmount', 'action'];
 
@@ -26,10 +24,10 @@ export class PartiesListComponent implements OnInit {
   }
 
   loadPartiesData(){
-    //TODO: subscribe to data
+    // TODO: subscribe to data
   }
 
   removeParty(party){
-    //TODO: emite remove data
+    // TODO: emite remove data
   }
 }

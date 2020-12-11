@@ -2,10 +2,10 @@
     <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Nombre </th>
         <td mat-cell *matCellDef="let row"> 
-            <b>{{row.name}}</b>
+            <strong>{{row.name}}</strong>
             <div class="grid-text-item" fxLayout="row" *ngFor="let item of row.partiesList" style="font-size: 8pt;">
                 <div class="pr-1 label">{{item.role.name}}: </div>
-                <b>{{item.name}}</b>
+                <strong>{{item.name}}</strong>
             </div> 
         </td>
     </ng-container>

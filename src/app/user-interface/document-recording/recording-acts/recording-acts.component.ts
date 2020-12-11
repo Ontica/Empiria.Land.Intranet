@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { EmptyTransaction, Transaction } from '@app/domain/models';
-import { PartyEditorComponent } from './party-editor/party-editor.component';
+import { PartyEditorComponent } from './parties-editor/party-editor/party-editor.component';
 
 
 @Component({
@@ -20,15 +20,7 @@ export class RecordingActsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  partyAdded(event){
-  }
-
   onClose() {
     this.closeEvent.emit();
   }
-
-  onScroll(scroll){
-    this.partyEditor.closeSelects();
-  }
-
 }

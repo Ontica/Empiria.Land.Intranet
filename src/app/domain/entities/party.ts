@@ -53,7 +53,7 @@ export interface ParticipationParty {
   role: Role;
   participationType: Identifiable;
   participationAmount: number;
-  observations: string
+  observations: string;
 }
 
 export interface RecordingActParty  extends Person, ParticipationParty {

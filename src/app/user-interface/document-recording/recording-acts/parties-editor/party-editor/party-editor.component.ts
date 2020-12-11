@@ -1,10 +1,10 @@
-import { Component, HostListener, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { NgSelectComponent, NgSelectConfig } from '@ng-select/ng-select';
 import { concat, Observable, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
-import { participationTypeEnum, PartyTypesEnum, Person, RecordingActParty, RolesGroupEnum } from '@app/domain/models';
+import { participationTypeEnum, PartyTypesEnum, RecordingActParty, RolesGroupEnum } from '@app/domain/models';
+import { SelectBoxComponent } from '@app/shared/form-controls/select-box/select-box.component';
 
 
 @Component({
@@ -13,19 +13,19 @@ import { participationTypeEnum, PartyTypesEnum, Person, RecordingActParty, Roles
 })
 export class PartyEditorComponent implements OnInit {
   @ViewChild(MatExpansionPanel, {static: true}) matExpansionPanelElement: MatExpansionPanel;
-  @ViewChildren(NgSelectComponent)  public ngSelects: QueryList<NgSelectComponent>;
+  @ViewChild('selectSearchParty')  public ngSelectSearchParty: SelectBoxComponent;
 
   @Output() emitSaved = new Subject<boolean>();
 
   isLoading = false;
 
-  parties$: Observable<Person[]>;
+  parties$: Observable<any[]>;
   partiesInput$ = new Subject<string>();
-  isRegisteredParty: boolean = false;
+  isRegisteredParty = false;
   partiesLoading = false;
   selectedParty: RecordingActParty;
 
-  showForm: boolean = false;
+  showForm = false;
   form: FormGroup;
   selectedPartyType: any = null;
 
@@ -37,29 +37,18 @@ export class PartyEditorComponent implements OnInit {
 
   rolesGroup = RolesGroupEnum;
 
-  constructor(private config: NgSelectConfig) {
-    this.config.notFoundText = 'No se encontraron registros';
-    this.config.appendTo = 'body';
+  constructor() {
   }
 
   ngOnInit(): void {
     this.selectedParty = null;
     this.selectedPartyType = null;
     this.isRegisteredParty = false;
-
     this.showForm = false;
-
     this.setFormControls();
-
     this.loadParties();
     this.loadFormSelectsData();
   }
-
-  // if resize window we close the ng-select
-  @HostListener('window:resize', ['$event'])
-	onResize(event) {
-		this.closeSelects();
-	}
 
   //#region LOAD DATA
   loadParties() {
@@ -68,8 +57,8 @@ export class PartyEditorComponent implements OnInit {
       this.partiesInput$.pipe(
           distinctUntilChanged(),
           tap(() => this.partiesLoading = true),
-          switchMap(term => 
-            //TODO: call to web api
+          switchMap(term =>
+            // TODO: call to web api
             of([])
           .pipe(
               catchError(() => of([])),
@@ -80,7 +69,7 @@ export class PartyEditorComponent implements OnInit {
   }
 
   loadFormSelectsData(){
-    //TODO: suscribe to data
+    // TODO: suscribe to data
     this.partyTypesList = [];
     this.identificationTypesList = [];
     this.rolesList = [];
@@ -95,11 +84,11 @@ export class PartyEditorComponent implements OnInit {
       name: new FormControl({value: '', disabled: false}, Validators.required),
       curp: new FormControl({value: '', disabled: false}),
       rfc: new FormControl({value: '', disabled: false}),
-      typeIdentification: new FormControl({value: '', disabled: false}),
+      typeIdentification: new FormControl({value: null, disabled: false}),
       identification: new FormControl({value: '', disabled: false}),
       notes: new FormControl(''),
-      role: new FormControl('', Validators.required),
-      participationType: new FormControl( ''),
+      role: new FormControl(null, Validators.required),
+      participationType: new FormControl(''),
       participationAmount: new FormControl(''),
       observations: new FormControl(''),
       of: new FormControl([]),
@@ -124,7 +113,7 @@ export class PartyEditorComponent implements OnInit {
     this.role
         .valueChanges
         .subscribe(value => {
-          if(value == RolesGroupEnum.primary) {
+          if (value?.uid === RolesGroupEnum.primary) {
             this.participationType.setValidators([Validators.required]);
             this.participationAmount.clearValidators();
             this.of.clearValidators();
@@ -141,7 +130,7 @@ export class PartyEditorComponent implements OnInit {
     this.participationType
         .valueChanges
         .subscribe(value => {
-          if(this.validateParticipationTypeWithAmount(value)) {
+          if (this.validateParticipationTypeWithAmount(value)) {
             this.participationAmount.setValidators([Validators.required]);
           } else {
             this.participationAmount.clearValidators();
@@ -158,33 +147,43 @@ export class PartyEditorComponent implements OnInit {
 
     this.showForm = false;
     this.isLoading = false;
+
+    this.ngSelectSearchParty.clearModel();
   }
 
   setFormData(){
-    this.showForm = true;
-    this.isRegisteredParty = this.selectedParty && ( 'uid' in this.selectedParty ); //TODO: validate valid Uid 
-    this.selectedParty.type = 'type' in this.selectedParty ? this.selectedParty.type : this.selectedPartyType ?? 1;
-    this.form.reset();
+    if(this.selectedParty){
+      this.showForm = true;
+      this.isRegisteredParty = 'uid' in this.selectedParty;
+      const typeSelected = 'type' in this.selectedParty ? this.selectedParty.type : this.selectedPartyType ?? '1';
+      this.selectedParty.type = typeSelected;
+      this.form.reset();
 
-    if(this.isRegisteredParty){
-      this.form.patchValue({
-        name: this.selectedParty?.name,
-        curp: this.selectedParty?.curp,
-        rfc: this.selectedParty?.identification.numberIdentification,
-        typeIdentification: this.selectedParty?.identification.typeIdentification.uid,
-        identification: this.selectedParty?.identification.numberIdentification,
-      });
+      if (this.isRegisteredParty){
+        this.form.patchValue({
+          name: this.selectedParty?.name,
+          curp: this.selectedParty?.curp,
+          rfc: this.selectedParty?.identification.numberIdentification,
+          typeIdentification: this.selectedParty?.identification.typeIdentification.uid,
+          identification: this.selectedParty?.identification.numberIdentification,
+        });
+      }else{
+        this.form.patchValue({
+          name: this.selectedParty?.name,
+        });
+      }
+      this.disablePartyFields(this.isRegisteredParty);
+    }
+  }
 
+  disablePartyFields(disable: boolean){
+    if (disable){
       this.name.disable();
       this.curp.disable();
       this.rfc.disable();
       this.typeIdentification.disable();
       this.identification.disable();
     }else{
-      this.form.patchValue({
-        name: this.selectedParty?.name,
-      });
-
       this.name.enable();
       this.curp.enable();
       this.rfc.enable();
@@ -196,10 +195,10 @@ export class PartyEditorComponent implements OnInit {
 
   //#region SUBMIT DATA
   submit = () => {
-    if(this.form.valid) {
+    if (this.form.valid) {
       // TODO: confirm or reject submit
       this.isLoading = true;
-      let partyAdd: RecordingActParty = this.getFormData();
+      const partyAdd: RecordingActParty = this.getFormData();
       this.validateData(partyAdd);
       // TODO: save Party
       console.log(partyAdd);
@@ -210,16 +209,19 @@ export class PartyEditorComponent implements OnInit {
   }
 
   validateData(partyAdd: RecordingActParty){
-    let message = ''
-    //TODO: return message to alert from data with format not valid and show confirm save data
-    if(partyAdd.curp != null && !curpValida(partyAdd.curp))
-      message = `La Curp no es valida: ${partyAdd.curp}. `
- 
-    if(partyAdd.identification.typeIdentification.uid == '2' && !validateRFC(partyAdd.identification.numberIdentification))
+    let message = '';
+    // TODO: return message to alert from data with format not valid and show confirm save data
+    if (partyAdd.curp !== null && !curpValida(partyAdd.curp)){
+      message = `La Curp no es valida: ${partyAdd.curp}. `;
+    }
+
+    if (partyAdd.identification.typeIdentification.uid === '2' &&
+      !validateRFC(partyAdd.identification.numberIdentification)) {
       message = `El RFC no es valido:  ${partyAdd.identification.numberIdentification}. `;
+    }
 
     console.log(message);
-    return message
+    return message;
   }
 
   effectOfSaved(){
@@ -231,8 +233,7 @@ export class PartyEditorComponent implements OnInit {
   }
 
   getFormData(){
-    let formModel = this.form.getRawValue();
-
+    const formModel = this.form.getRawValue();
     const data: RecordingActParty = {
       uid: this.selectedParty.uid,
       name: formModel.name.toString().toUpperCase(),
@@ -240,22 +241,22 @@ export class PartyEditorComponent implements OnInit {
       governmentID: '',
       governmentIDType: '',
       identification: {
-        typeIdentification: this.selectedParty.type == PartyTypesEnum.person ? 
-                            this.identificationTypesList.filter(x=>x.uid == formModel.typeIdentification)[0] ?? {uid: '', name: ''}: 
+        typeIdentification: this.selectedParty.type === PartyTypesEnum.person ?
+                            ( formModel.typeIdentification ?? {uid: '', name: ''} ) :
                             {uid: '2', name: 'RFC'},
-        numberIdentification: this.selectedParty.type == PartyTypesEnum.person ? 
-                              formModel.identification ? formModel.identification.toString().toUpperCase() : '' : 
-                              formModel.rfc ? formModel.rfc.toString().toUpperCase() : '',
+        numberIdentification: this.selectedParty.type === PartyTypesEnum.person ?
+                              formModel.identification ?? '' :
+                              formModel.rfc
       },
       type: this.selectedParty.type,
       notes: formModel.notes,
-      role: this.getListItemsFromGroup(this.rolesList).filter(x=>x.uid == formModel.role)[0],
-      participationType: this.participationTypesList.filter(x=>x.uid == formModel.participationType)[0],
+      role: formModel.role,
+      participationType: formModel.participationType,
       participationAmount: formModel.participationAmount,
       observations: formModel.observations,
       of: formModel.of,
       partiesList: []
-    }
+    };
     return data;
   }
 
@@ -274,62 +275,65 @@ export class PartyEditorComponent implements OnInit {
 
   //#region  COMPONENT LOGIC AND VALIDATIONS
   getRoleTypeSelected(){
-    let roleType = this.rolesList.filter(x=> x.items.filter(y=> y.uid == this.role.value).length > 0);
-    if (roleType.length > 0) return roleType[0].uid;
-    else return null;
+    const roleType =
+    this.rolesList.filter(x => x.items.filter(y => y.uid === this.role.value?.uid).length > 0);
+    if (roleType.length > 0){
+      return roleType[0].uid;
+    } else {
+      return null;
+    }
   }
 
   validateParticipationTypeWithAmount(value){
-    return [participationTypeEnum.porcentaje, 
+    return [participationTypeEnum.porcentaje,
             participationTypeEnum.m2,
-            participationTypeEnum.hectarea].includes(value) 
-  }
-
-  closeSelects(){
-    this.ngSelects.filter( child => child.isOpen ).forEach( child => child.close() );
+            participationTypeEnum.hectarea].includes(value?.uid);
   }
   //#endregion
 }
 
 //#region function TODO: check if we use these functions and move them to a class or a pipe
-//Función para validar una CURP
+// Function that validates a CURP
 function curpValida(curp) {
-    var re = /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/,
-        validado = curp.match(re);
-	
-    if (!validado)  //Coincide con el formato general?
-    	return false;
-    
-    //Validar que coincida el dígito verificador
-    function digitoVerificador(curp17) {
-        //Fuente https://consultas.curp.gob.mx/CurpSP/
-        var diccionario  = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",
-            lngSuma      = 0.0,
-            lngDigito    = 0.0;
-        for(var i=0; i<17; i++)
-            lngSuma = lngSuma + diccionario.indexOf(curp17.charAt(i)) * (18 - i);
-        lngDigito = 10 - lngSuma % 10;
-        if (lngDigito == 10) return 0;
-        return lngDigito;
+  const re = /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/;
+  const validado = curp.match(re);
+  if (!validado){ // Does it match the general format?
+    return false;
+  }
+  // Validate that the check digit matches
+  function digitoVerificador(curp17) {
+    // Source https://consultas.curp.gob.mx/CurpSP/
+    const diccionario = '0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
+    let lngSuma = 0.0;
+    let lngDigito = 0.0;
+
+    for (let i = 0; i < 17; i++){
+      lngSuma = lngSuma + diccionario.indexOf(curp17.charAt(i)) * (18 - i);
     }
-  
-    if (validado[2] != digitoVerificador(validado[1])) 
-    	return false;
-        
-    return true; //valid
+    lngDigito = 10 - lngSuma % 10;
+    if (lngDigito === 10){
+      return 0;
+    }
+    return lngDigito;
+  }
+
+  if (validado[2] !== digitoVerificador(validado[1])) {
+    return false;
+  }
+  return true; // valid
 }
 
-//Funcion que valida el RFC
+// Function that validates a rfc
 function validateRFC(rfc) {
-  // regex del sitio oficial del SAT para validar RFC
-  var patternPM = "^(([A-ZÑ&]{3})([0-9]{2})([0][13578]|[1][02])(([0][1-9]|[12][\\d])|[3][01])([A-Z0-9]{3}))|" +
-      "(([A-ZÑ&]{3})([0-9]{2})([0][13456789]|[1][012])(([0][1-9]|[12][\\d])|[3][0])([A-Z0-9]{3}))|" +
-      "(([A-ZÑ&]{3})([02468][048]|[13579][26])[0][2]([0][1-9]|[12][\\d])([A-Z0-9]{3}))|" +
-      "(([A-ZÑ&]{3})([0-9]{2})[0][2]([0][1-9]|[1][0-9]|[2][0-8])([A-Z0-9]{3}))$";
-  var patternPF = "^(([A-ZÑ&]{4})([0-9]{2})([0][13578]|[1][02])(([0][1-9]|[12][\\d])|[3][01])([A-Z0-9]{3}))|" +
-      "(([A-ZÑ&]{4})([0-9]{2})([0][13456789]|[1][012])(([0][1-9]|[12][\\d])|[3][0])([A-Z0-9]{3}))|" +
-      "(([A-ZÑ&]{4})([02468][048]|[13579][26])[0][2]([0][1-9]|[12][\\d])([A-Z0-9]{3}))|" +
-      "(([A-ZÑ&]{4})([0-9]{2})[0][2]([0][1-9]|[1][0-9]|[2][0-8])([A-Z0-9]{3}))$";
+  // regex from the SAT official site to validate RFCs
+  const patternPM = '^(([A-ZÑ&]{3})([0-9]{2})([0][13578]|[1][02])(([0][1-9]|[12][\\d])|[3][01])([A-Z0-9]{3}))|' +
+    '(([A-ZÑ&]{3})([0-9]{2})([0][13456789]|[1][012])(([0][1-9]|[12][\\d])|[3][0])([A-Z0-9]{3}))|' +
+    '(([A-ZÑ&]{3})([02468][048]|[13579][26])[0][2]([0][1-9]|[12][\\d])([A-Z0-9]{3}))|' +
+    '(([A-ZÑ&]{3})([0-9]{2})[0][2]([0][1-9]|[1][0-9]|[2][0-8])([A-Z0-9]{3}))$';
+  const patternPF = '^(([A-ZÑ&]{4})([0-9]{2})([0][13578]|[1][02])(([0][1-9]|[12][\\d])|[3][01])([A-Z0-9]{3}))|' +
+    '(([A-ZÑ&]{4})([0-9]{2})([0][13456789]|[1][012])(([0][1-9]|[12][\\d])|[3][0])([A-Z0-9]{3}))|' +
+    '(([A-ZÑ&]{4})([02468][048]|[13579][26])[0][2]([0][1-9]|[12][\\d])([A-Z0-9]{3}))|' +
+    '(([A-ZÑ&]{4})([0-9]{2})[0][2]([0][1-9]|[1][0-9]|[2][0-8])([A-Z0-9]{3}))$';
 
   if (rfc.match(patternPM) || rfc.match(patternPF)) {
       return true;
