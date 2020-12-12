@@ -60,4 +60,4 @@ For third-party components, please read [ThirdPartyNotices](https://github.com/O
 
 ## Copyright
 
-Copyright © 2009-2020. La Vía Óntica SC, Ontica LLC and contributors.
+Copyright © 2009-2021. La Vía Óntica SC, Ontica LLC and contributors.

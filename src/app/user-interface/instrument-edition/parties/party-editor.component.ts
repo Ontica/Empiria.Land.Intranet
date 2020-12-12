@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
@@ -152,14 +159,14 @@ export class PartyEditorComponent implements OnInit {
   }
 
   setFormData(){
-    if(this.selectedParty){
+    if (this.selectedParty) {
       this.showForm = true;
       this.isRegisteredParty = 'uid' in this.selectedParty;
       const typeSelected = 'type' in this.selectedParty ? this.selectedParty.type : this.selectedPartyType ?? '1';
       this.selectedParty.type = typeSelected;
       this.form.reset();
 
-      if (this.isRegisteredParty){
+      if (this.isRegisteredParty) {
         this.form.patchValue({
           name: this.selectedParty?.name,
           curp: this.selectedParty?.curp,
@@ -167,7 +174,7 @@ export class PartyEditorComponent implements OnInit {
           typeIdentification: this.selectedParty?.identification.typeIdentification.uid,
           identification: this.selectedParty?.identification.numberIdentification,
         });
-      }else{
+      } else {
         this.form.patchValue({
           name: this.selectedParty?.name,
         });
@@ -177,13 +184,13 @@ export class PartyEditorComponent implements OnInit {
   }
 
   disablePartyFields(disable: boolean){
-    if (disable){
+    if (disable) {
       this.name.disable();
       this.curp.disable();
       this.rfc.disable();
       this.typeIdentification.disable();
       this.identification.disable();
-    }else{
+    } else {
       this.name.enable();
       this.curp.enable();
       this.rfc.enable();
@@ -191,7 +198,6 @@ export class PartyEditorComponent implements OnInit {
       this.identification.enable();
     }
   }
-  //#endregion
 
   //#region SUBMIT DATA
   submit = () => {
