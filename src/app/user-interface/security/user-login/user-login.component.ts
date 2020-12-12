@@ -11,33 +11,22 @@ import { Router } from '@angular/router';
 
 import { AuthenticationService } from '@app/core';
 
-import { AbstractForm } from '@app/shared/services';
-
-
-enum FormMessages {
-
-  IncompleteLoginData =
-    'Necesito el nombre de usuario y la contraseña.',
-
-}
-
-
 @Component({
   selector: 'emp-ng-user-login',
   templateUrl: './user-login.component.html',
   styleUrls: ['./user-login.component.scss'],
 })
-export class UserLoginComponent extends AbstractForm implements OnInit {
+export class UserLoginComponent implements OnInit {
+
+  form = new FormGroup({
+    userID: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required)
+  });
+
+  exceptionMsg: string;
 
   constructor(private authenticationService: AuthenticationService,
-              private router: Router) {
-    super();
-  }
-
-
-  get Msg(): typeof FormMessages {
-    return FormMessages;
-  }
+              private router: Router) { }
 
 
   ngOnInit() {
@@ -45,49 +34,20 @@ export class UserLoginComponent extends AbstractForm implements OnInit {
         .then((x: boolean) => this.reloadPage(x));
   }
 
-
-  // abstract methods implementation
-
-
-  protected createFormGroup(): FormGroup {
-
-    return new FormGroup({
-
-      userID: new FormControl('', Validators.required),
-
-      password: new FormControl('', Validators.required)
-
-    });
-
-  }
-
-
-  protected execute(): Promise<boolean> {
-    switch (this.command.name) {
-
-      case 'authenticate':
-        return this.authenticate();
-
-      default:
-        throw new Error(`Command '${this.command.name}' doesn't have a command handler.`);
+  login() {
+    if (this.form.valid) {
+      this.authenticate();
     }
   }
-
-
-  protected validate(): Promise<void> {
-    if (!this.valid) {
-      this.addException(FormMessages.IncompleteLoginData);
-    }
-
-    return Promise.resolve();
-  }
-
 
   // private methods
 
   private authenticate(): Promise<boolean> {
     return this.authenticationService.login(this.form.value.userID, this.form.value.password)
-               .then(() => this.router.navigate(['/transactions']));
+      .then(
+        () => this.router.navigate(['/transactions']),
+        err => this.exceptionMsg = err
+      );
   }
 
 

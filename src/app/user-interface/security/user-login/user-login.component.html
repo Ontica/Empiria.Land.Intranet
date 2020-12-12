@@ -20,8 +20,7 @@
 
       <br>
 
-      <form [class.submitted]="submitted" [formGroup]="form" (ngSubmit)="onSubmit()"
-            (keydown)="keyboardHandler($event)">
+      <form autocomplete="off" [formGroup]="form">
 
         <div class="authentication-section-form">
 
@@ -35,10 +34,12 @@
                  autocomplete="current-password" required
                  formControlName="password">
 
-          <div *ngIf="showExceptionMsg"
+          <div *ngIf="exceptionMsg"
                 class="inline-error">{{exceptionMsg}}</div>
 
-          <button type="submit" class="btn-action" (click)="setCommand('authenticate')">Ingresar</button>
+          <button type="button" [disabled]="!form.valid"
+                  [class.btn]="!form.valid" [class.btn-action]="form.valid"
+                  (click)="login()">Ingresar</button>
 
         </div>
 
