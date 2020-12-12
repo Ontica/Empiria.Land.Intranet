@@ -15,12 +15,12 @@ import { DocumentsRecordingApiProvider } from '../providers/documents-recording.
 @Injectable()
 export class DocumentsRecordingUseCases {
 
-
   constructor(private backend: DocumentsRecordingApiProvider) { }
- 
+
   getRecordingDocument(uid: string): Observable<RecordingDocument> {
     Assertion.assertValue(uid, 'uid');
 
     return this.backend.getRecordingDocument(uid);
   }
+
 }

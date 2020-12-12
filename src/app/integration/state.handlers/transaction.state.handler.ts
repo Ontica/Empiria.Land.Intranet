@@ -67,7 +67,7 @@ export class TransactionStateHandler extends AbstractStateHandler {
 
       case ActionType.LOAD_REQUESTS_LIST:
         const filter = payload?.filter || this.getValue(SelectorType.LIST_FILTER);
-        
+
         this.setValue(SelectorType.LIST_FILTER, filter);
         return this.setValue<U>(SelectorType.REQUESTS_LIST,
                                 this.useCases.getRequests(filter));

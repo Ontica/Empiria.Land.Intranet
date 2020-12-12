@@ -1,10 +1,10 @@
 {
   "appName": "Empiria Land Intranet Application",
   "version": "5.0.0-alpha.1",
-  "date": "2020-11-23",
+  "date": "2020-11-24",
   "settings": [{
       "key": "APPLICATION_KEY",
-      "value": "notDEVaDuOkU3rd7IO5OqIaAdvp7VSe8AZQtLsN4YwP12tUo3igSg10UfLe9RPnP"
+      "value": "land-intranet-dev_O!S85lA8nPAlOaeeOTwhFJC@A9A*48!DQo!47@qrU3d56221cnDwVLum^@qN-NBJ"
     },
     {
       "key": "HTTP_API_BASE_ADDRESS",

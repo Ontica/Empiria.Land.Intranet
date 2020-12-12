@@ -18,16 +18,12 @@ import { Transaction, TransactionFilter } from '@app/domain/models';
 @Injectable()
 export class TransactionUseCases {
 
-
   constructor(private backend: TransactionApiProvider) { }
 
-
-  getRequests(filter: TransactionFilter): Observable<Transaction[]> {  
+  getRequests(filter: TransactionFilter): Observable<Transaction[]> {
     Assertion.assertValue(filter, 'filter');
 
     return this.backend.getTransactionRequestList(filter.stage, filter.status, filter.keywords);
   }
-
-  // update methods
 
 }

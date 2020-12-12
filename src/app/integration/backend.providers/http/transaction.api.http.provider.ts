@@ -14,7 +14,6 @@ import { Transaction, TransactionStagesType, TransactionStatusType } from '@app/
 import { TransactionApiProvider } from '@app/domain/providers/transaction.api.provider';
 
 
-
 @Injectable()
 export class TransactionApiHttpProvider extends TransactionApiProvider {
 
@@ -23,24 +22,29 @@ export class TransactionApiHttpProvider extends TransactionApiProvider {
   }
 
 
-  getTransactionRequestList(stage?: TransactionStagesType, status?: TransactionStatusType, keywords?: string): Observable<Transaction[]> {
+  getTransactionRequestList(stage?: TransactionStagesType,
+                            status?: TransactionStatusType,
+                            keywords?: string): Observable<Transaction[]> {
     let path = `v5/land/transactions`;
 
-    if(stage) {
+    if (stage) {
       path += `/?stage=${stage}`;
-      if(status) path += `&status=${status}`;
-      if(keywords) path += `&keywords=${keywords}`;
-    } else if(status){
-      path += `/?status=${status}`
-      if(keywords) path += `&keywords=${keywords}`;
-    }else if (keywords){
-      path += `/?keywords=${keywords}`
+      if (status) {
+        path += `&status=${status}`;
+      }
+      if (keywords) {
+        path += `&keywords=${keywords}`;
+      }
+    } else if (status) {
+      path += `/?status=${status}`;
+      if (keywords) {
+        path += `&keywords=${keywords}`;
+      }
+    } else if (keywords) {
+      path += `/?keywords=${keywords}`;
     }
 
     return this.http.get<Transaction[]>(path);
   }
-
-
-  // command methods
 
 }

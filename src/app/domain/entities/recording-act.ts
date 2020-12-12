@@ -10,13 +10,16 @@ import { Identifiable, PartitionedType, Money } from '@app/core';
 import { Property } from './property';
 import { RoledParty } from './party';
 
+
 export interface RecordingDocument extends Identifiable, PartitionedType {
-  recordingActs: RecordingAct[]; 
+  recordingActs: RecordingAct[];
 }
+
 
 export interface RecordingActType extends Identifiable, PartitionedType {
 
 }
+
 
 export interface BaseRecordingAct extends Identifiable {
   type: RecordingActType;
@@ -43,6 +46,7 @@ export interface ModificationAct extends BaseRecordingAct {
   operationAmount?: Money;
   notes: string;
 }
+
 
 export const EmptyRecordingAct: RecordingAct = {
   uid: '',

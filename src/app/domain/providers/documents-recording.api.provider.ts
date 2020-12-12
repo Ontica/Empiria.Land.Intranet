@@ -8,9 +8,8 @@
 import { Observable } from 'rxjs';
 import { RecordingDocument } from '../models';
 
-
 export abstract class DocumentsRecordingApiProvider {
 
-    abstract getRecordingDocument(uid: string): Observable<RecordingDocument>;
-    
+  abstract getRecordingDocument(uid: string): Observable<RecordingDocument>;
+
 }

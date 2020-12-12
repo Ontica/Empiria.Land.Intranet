@@ -12,6 +12,7 @@ import { FrontController } from '@app/core/presentation';
 import { ProcedureType, Requester } from '@app/domain/models';
 import { TransactionCommandType } from '@app/core/presentation/commands';
 
+
 @Component({
   selector: 'emp-land-request-creator',
   templateUrl: './request-creator.component.html',
@@ -51,7 +52,7 @@ export class RequestCreatorComponent {
     };
 
     console.log(event);
-    this.closeEvent.emit()
+    this.closeEvent.emit();
 
     // this.frontController.dispatch<void>(event)
     //   .then(() => this.closeEvent.emit());

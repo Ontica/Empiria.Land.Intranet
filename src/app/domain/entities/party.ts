@@ -41,7 +41,7 @@ export interface PartyOf extends RoledParty {
 }
 
 //////////
-//JM: temporal
+// JM: temporal
 //////////
 
 export interface Identification {
@@ -62,7 +62,8 @@ export interface RecordingActParty  extends Person, ParticipationParty {
   of?: RecordingActParty[];
 }
 
-//Enums
+// Enumerations
+
 export enum RolesGroupEnum {
   primary = '1',
   secondary = '2',
