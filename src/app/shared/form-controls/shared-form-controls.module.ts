@@ -13,9 +13,10 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AngularMaterialModule } from '../angular-material.module';
 
+import { DatePickerComponent } from './date-picker/date-picker.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
-import { TextEditorComponent } from './text-editor/text-editor.component';
 import { SelectBoxComponent } from './select-box/select-box.component';
+import { TextEditorComponent } from './text-editor/text-editor.component';
 
 
 @NgModule({
@@ -30,15 +31,17 @@ import { SelectBoxComponent } from './select-box/select-box.component';
   ],
 
   declarations: [
+    DatePickerComponent,
     SearchBoxComponent,
+    SelectBoxComponent,
     TextEditorComponent,
-    SelectBoxComponent
   ],
 
   exports: [
+    DatePickerComponent,
     SearchBoxComponent,
+    SelectBoxComponent,
     TextEditorComponent,
-    SelectBoxComponent
   ]
 
 })
