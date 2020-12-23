@@ -2,6 +2,7 @@
   <input type="text" class="text-box picker"
          autocomplete="off" maxlength="11"
          #input
+         [disabled]="disabled"
          [matDatepicker]="picker"
          [ngModel]="date"
          (change)="onInputChange(input.value)"

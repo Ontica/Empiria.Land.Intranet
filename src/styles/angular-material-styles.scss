@@ -225,3 +225,21 @@ table.mat-table {
 .mat-expansion-panel .mat-action-row {
   padding: 16px 30px 16px 24px !important;
 }
+
+//
+// mat date picker
+//
+
+.mat-datepicker-toggle {
+  margin-right: 8px;
+
+  .mat-icon-button {
+    width: 28px;
+    height: 28px;
+    line-height: 24px;
+    border: $control-border;
+    border-radius: 2px;
+    background-color: #edeef0;
+    margin: 2px 0;
+  }
+}
