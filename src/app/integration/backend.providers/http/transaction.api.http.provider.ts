@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { HttpService } from '@app/core';
 
-import { Transaction, TransactionStagesType, TransactionStatusType } from '@app/domain/entities';
+import { Transaction, TransactionStagesType, TransactionStatusType } from '@app/domain/models';
 import { TransactionApiProvider } from '@app/domain/providers/transaction.api.provider';
 
 

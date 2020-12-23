@@ -7,7 +7,7 @@
 
 import { Observable } from 'rxjs';
 
-import { RealEstate } from '@app/domain/entities';
+import { RealEstate } from '@app/domain/models';
 import { Identifiable } from '@app/core';
 
 

@@ -12,7 +12,7 @@ import { Assertion, HttpService } from '@app/core';
 
 import { DocumentsRecordingApiProvider } from '@app/domain/providers';
 
-import { RecordingDocument } from '@app/domain/entities';
+import { RecordingDocument } from '@app/domain/models';
 
 
 @Injectable()

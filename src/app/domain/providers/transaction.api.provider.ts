@@ -6,7 +6,7 @@
  */
 
 import { Observable } from 'rxjs';
-import { Transaction, TransactionStagesType, TransactionStatusType } from '@app/domain/entities';
+import { Transaction, TransactionStagesType, TransactionStatusType } from '@app/domain/models';
 
 
 export abstract class TransactionApiProvider {

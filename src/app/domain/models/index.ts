@@ -18,4 +18,12 @@
 // needed for external services interaction.
 //
 
-export * from '../entities';
+export * from './instrument';
+
+export * from './party';
+
+export * from './property';
+
+export * from './recording-act';
+
+export * from './transaction';
