@@ -12,7 +12,6 @@ import { concat, Observable, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import { participationTypeEnum, PartyTypesEnum, RecordingActParty, RolesGroupEnum } from '@app/domain/models';
 import { SelectBoxComponent } from '@app/shared/form-controls/select-box/select-box.component';
-import { PersonsDummyService } from './persons-dummy.service';
 
 
 @Component({
