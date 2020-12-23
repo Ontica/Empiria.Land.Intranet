@@ -20,10 +20,10 @@ export class TransactionUseCases {
 
   constructor(private backend: TransactionApiProvider) { }
 
-  getRequests(filter: TransactionFilter): Observable<Transaction[]> {
+  getTransactionList(filter: TransactionFilter): Observable<Transaction[]> {
     Assertion.assertValue(filter, 'filter');
 
-    return this.backend.getTransactionRequestList(filter.stage, filter.status, filter.keywords);
+    return this.backend.getTransactionList(filter.stage, filter.status, filter.keywords);
   }
 
 }

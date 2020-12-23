@@ -11,8 +11,8 @@ import { Transaction, TransactionStagesType, TransactionStatusType } from '@app/
 
 export abstract class TransactionApiProvider {
 
-  abstract getTransactionRequestList(stage?: TransactionStagesType,
-                                     status?: TransactionStatusType,
-                                     keywords?: string): Observable<Transaction[]>;
+  abstract getTransactionList(stage?: TransactionStagesType,
+                              status?: TransactionStatusType,
+                              keywords?: string): Observable<Transaction[]>;
 
 }

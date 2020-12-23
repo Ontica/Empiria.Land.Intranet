@@ -65,7 +65,7 @@ export class RequestListComponent implements OnChanges {
 
 
   onSelect(request: Transaction) {
-    this.store.dispatch(TransactionAction.SELECT_REQUEST, { request });
+    this.store.dispatch(TransactionAction.SELECT_TRANSACTION, { request });
   }
 
   onSelectRecordingAct(request: Transaction) {

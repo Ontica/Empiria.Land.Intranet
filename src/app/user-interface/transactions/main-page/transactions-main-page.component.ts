@@ -48,7 +48,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.store.select<Transaction[]>(TransactionStateSelector.REQUESTS_LIST)
+    this.store.select<Transaction[]>(TransactionStateSelector.TRANSACTION_LIST)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => {
         this.requestList = x;
@@ -61,7 +61,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
         this.onChangeView(x)
       );
 
-    this.store.select<Transaction>(TransactionStateSelector.SELECTED_REQUEST)
+    this.store.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => {
         this.selectedRequest = x;
@@ -90,7 +90,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
 
   onCloseEditor() {
-    this.store.dispatch(TransactionAction.UNSELECT_REQUEST);
+    this.store.dispatch(TransactionAction.UNSELECT_TRANSACTION);
     this.store.dispatch(DocumentsRecordingAction.UNSELECT_RECORDING_ACT);
   }
 
@@ -163,7 +163,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
       keywords: data ? data.keywords : currentKeywords,
     };
     this.isLoading = true;
-    this.store.dispatch(TransactionAction.LOAD_REQUESTS_LIST, { filter });
+    this.store.dispatch(TransactionAction.LOAD_TRANSACTION_LIST, { filter });
   }
 
 }

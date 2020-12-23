@@ -22,9 +22,9 @@ export class TransactionApiHttpProvider extends TransactionApiProvider {
   }
 
 
-  getTransactionRequestList(stage?: TransactionStagesType,
-                            status?: TransactionStatusType,
-                            keywords?: string): Observable<Transaction[]> {
+  getTransactionList(stage?: TransactionStagesType,
+                     status?: TransactionStatusType,
+                     keywords?: string): Observable<Transaction[]> {
     let path = `v5/land/transactions`;
 
     if (stage) {

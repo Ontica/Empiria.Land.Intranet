@@ -18,16 +18,16 @@ import { EmptyTransactionFilter, EmptyTransaction } from '@app/domain/models';
 
 
 export enum ActionType {
-  LOAD_REQUESTS_LIST = 'Land.UI-Action.Transaction.LoadRequestList',
-  SELECT_REQUEST     = 'Land.UI-Action.Transaction.SelectRequest',
-  UNSELECT_REQUEST   = 'Land.UI-Action.Transaction.UnselectRequest'
+  LOAD_TRANSACTION_LIST = 'Land.UI-Action.Transaction.LoadTransactionList',
+  SELECT_TRANSACTION = 'Land.UI-Action.Transaction.SelectTransaction',
+  UNSELECT_TRANSACTION = 'Land.UI-Action.Transaction.UnselectTransaction',
 }
 
 
 export enum SelectorType {
-  REQUESTS_LIST    = 'Land.UI-Item.Transaction.List',
-  LIST_FILTER      = 'Land.UI-Item.Transaction.Filter',
-  SELECTED_REQUEST = 'Land.UI-Item.Transaction.SelectedRequest'
+  TRANSACTION_LIST = 'Land.UI-Item.Transaction.List',
+  LIST_FILTER = 'Land.UI-Item.Transaction.Filter',
+  SELECTED_TRANSACTION = 'Land.UI-Item.Transaction.Selected',
 }
 
 
@@ -37,9 +37,9 @@ enum CommandEffectType {
 
 
 const initialState: StateValues = [
-  { key: SelectorType.REQUESTS_LIST, value: [] },
+  { key: SelectorType.TRANSACTION_LIST, value: [] },
   { key: SelectorType.LIST_FILTER, value: EmptyTransactionFilter },
-  { key: SelectorType.SELECTED_REQUEST, value: EmptyTransaction }
+  { key: SelectorType.SELECTED_TRANSACTION, value: EmptyTransaction },
 ];
 
 
@@ -65,23 +65,22 @@ export class TransactionStateHandler extends AbstractStateHandler {
   dispatch<U>(actionType: ActionType, payload?: any): Promise<U> | void {
     switch (actionType) {
 
-      case ActionType.LOAD_REQUESTS_LIST:
+      case ActionType.LOAD_TRANSACTION_LIST:
         const filter = payload?.filter || this.getValue(SelectorType.LIST_FILTER);
-
         this.setValue(SelectorType.LIST_FILTER, filter);
-        return this.setValue<U>(SelectorType.REQUESTS_LIST,
-                                this.useCases.getRequests(filter));
+
+        return this.setValue<U>(SelectorType.TRANSACTION_LIST,
+                                this.useCases.getTransactionList(filter));
 
 
-      case ActionType.SELECT_REQUEST:
+      case ActionType.SELECT_TRANSACTION:
         Assertion.assertValue(payload.request, 'payload.request');
-
-        this.setValue(SelectorType.SELECTED_REQUEST, payload.request);
+        this.setValue(SelectorType.SELECTED_TRANSACTION, payload.request);
         return;
 
 
-      case ActionType.UNSELECT_REQUEST:
-        this.setValue(SelectorType.SELECTED_REQUEST, EmptyTransaction);
+      case ActionType.UNSELECT_TRANSACTION:
+        this.setValue(SelectorType.SELECTED_TRANSACTION, EmptyTransaction);
         return;
 
 
