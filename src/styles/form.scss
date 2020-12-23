@@ -100,15 +100,16 @@ table.form-section .form-section-title {
   margin: 0.5rem 0;
 }
 
-.form-section label,
-label.label-filter {
-  max-width: 110px;
-  min-width: 110px;
-  margin: auto;
-  line-height: 1rem;
-}
+form.form-section {
 
-.form-section label.label-sm {
-  max-width: 55px;
-  min-width: 55px;
+  label {
+    display: block;
+    width: 100%;
+    margin: auto;
+    line-height: 1rem;
+    color: #2c3942;
+    font-size: 10.6px;
+    font-weight: 700;
+  }
+
 }

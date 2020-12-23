@@ -12,6 +12,7 @@ import { concat, Observable, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import { participationTypeEnum, PartyTypesEnum, RecordingActParty, RolesGroupEnum } from '@app/domain/models';
 import { SelectBoxComponent } from '@app/shared/form-controls/select-box/select-box.component';
+import { PersonsDummyService } from './persons-dummy.service';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class PartyEditorComponent implements OnInit {
   isRegisteredParty = false;
   partiesLoading = false;
   selectedParty: RecordingActParty;
+  uidSelectedParty: any = null;
 
   showForm = false;
   form: FormGroup;
@@ -49,6 +51,7 @@ export class PartyEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedParty = null;
+    this.uidSelectedParty = null;
     this.selectedPartyType = null;
     this.isRegisteredParty = false;
     this.showForm = false;
@@ -120,7 +123,7 @@ export class PartyEditorComponent implements OnInit {
     this.role
         .valueChanges
         .subscribe(value => {
-          if (value?.uid === RolesGroupEnum.primary) {
+          if (value === RolesGroupEnum.primary) {
             this.participationType.setValidators([Validators.required]);
             this.participationAmount.clearValidators();
             this.of.clearValidators();
@@ -149,6 +152,7 @@ export class PartyEditorComponent implements OnInit {
   resetForm(){
     this.form.reset();
     this.selectedParty = null;
+    this.uidSelectedParty = null;
     this.isRegisteredParty = false;
     this.selectedPartyType = null;
 
@@ -158,8 +162,9 @@ export class PartyEditorComponent implements OnInit {
     this.ngSelectSearchParty.clearModel();
   }
 
-  setFormData(){
-    if (this.selectedParty) {
+  setFormData(event){
+    if (event) {
+      this.selectedParty = event;
       this.showForm = true;
       this.isRegisteredParty = 'uid' in this.selectedParty;
       const typeSelected = 'type' in this.selectedParty ? this.selectedParty.type : this.selectedPartyType ?? '1';
@@ -282,7 +287,7 @@ export class PartyEditorComponent implements OnInit {
   //#region  COMPONENT LOGIC AND VALIDATIONS
   getRoleTypeSelected(){
     const roleType =
-    this.rolesList.filter(x => x.items.filter(y => y.uid === this.role.value?.uid).length > 0);
+    this.rolesList.filter(x => x.items.filter(y => y.uid === this.role.value).length > 0);
     if (roleType.length > 0){
       return roleType[0].uid;
     } else {
@@ -293,7 +298,7 @@ export class PartyEditorComponent implements OnInit {
   validateParticipationTypeWithAmount(value){
     return [participationTypeEnum.porcentaje,
             participationTypeEnum.m2,
-            participationTypeEnum.hectarea].includes(value?.uid);
+            participationTypeEnum.hectarea].includes(value);
   }
   //#endregion
 }
