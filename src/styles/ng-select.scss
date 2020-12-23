@@ -5,8 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
- @import "~@ng-select/ng-select/themes/default.theme.css";
-
+@import "~@ng-select/ng-select/themes/default.theme.css";
 
 .ng-select {
   margin-right: 8px;
@@ -87,13 +86,14 @@
   background-color: #fafafa;
 }
 
-.ng-dropdown-panel-items, .ng-select-container {
+.ng-dropdown-panel-items,
+.ng-select-container {
   .item-template {
     padding: 0.25rem 0;
   }
 
   .item-text-sm {
     font-size: 0.75rem;
-    text-overflow:ellipsis;
+    text-overflow: ellipsis;
   }
 }
