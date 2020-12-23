@@ -62,6 +62,7 @@ export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccess
   @Input() bindValue: string = 'uid';
   @Input() loading = false;
   @Input() typeahead: Subject<string>;
+  @Input() showError = false;
 
   @Input()
   get config() {

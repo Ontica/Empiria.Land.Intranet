@@ -24,7 +24,8 @@
   (focus)="onTouched($event)"
   (clear)="onClear()"
   (blur)="onBlur($event)"
-  (search)="onSearch($event)">
+  (search)="onSearch($event)"
+  [class.invalid-control]="showError">
 
   <ng-template ng-label-tmp let-item="item" *ngIf="labelTemplate">
     <ng-container *ngIf="labelTemplate">
