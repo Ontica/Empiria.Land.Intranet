@@ -5,8 +5,9 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
-import { FrontController } from '@app/core/presentation';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnInit } from '@angular/core';
+import { FrontController, PresentationState } from '@app/core/presentation';
+import { InstrumentsAction } from '@app/core/presentation/state.commands';
 
 import { Transaction, EmptyTransaction } from '@app/domain/models';
 
@@ -15,7 +16,7 @@ import { Transaction, EmptyTransaction } from '@app/domain/models';
   selector: 'emp-land-request-tabbed-view',
   templateUrl: './request-tabbed-view.component.html'
 })
-export class RequestTabbedViewComponent implements OnChanges {
+export class RequestTabbedViewComponent implements OnInit, OnChanges {
 
   @Input() request: Transaction = EmptyTransaction;
 
@@ -23,11 +24,18 @@ export class RequestTabbedViewComponent implements OnChanges {
 
   selectedTabIndex = 0;
 
-  constructor(private frontController: FrontController) { }
+  constructor(private frontController: FrontController, private store: PresentationState) { }
 
+  ngOnInit(): void {
+  }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges): void {
     this.setSelectedTabIndex();
+
+    if (changes.request && changes.request.currentValue){
+      console.log('Transaction ui:', this.request.uid);
+      this.store.dispatch(InstrumentsAction.LOAD_TRANSACTION_INSTRUMENT, this.request.uid);
+    }
   }
 
 

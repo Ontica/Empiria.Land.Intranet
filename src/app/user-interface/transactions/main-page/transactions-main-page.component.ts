@@ -57,8 +57,11 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
     this.store.select<View>(MainUIStateSelector.CURRENT_VIEW)
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(x =>
-        this.onChangeView(x)
+      .subscribe(x =>{
+        this.onChangeView(x);
+        this.store.dispatch(TransactionAction.UNSELECT_TRANSACTION);
+        this.store.dispatch(DocumentsRecordingAction.UNSELECT_RECORDING_ACT);
+      }
       );
 
     this.store.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)

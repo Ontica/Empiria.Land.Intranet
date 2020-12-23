@@ -5,6 +5,8 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
+export * from './instrument';
+
  export * from './party';
 
  export * from './property';

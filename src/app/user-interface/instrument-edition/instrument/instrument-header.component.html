@@ -1,66 +1,196 @@
-<form [formGroup]="form" autocomplete="off" class="form-section">
-	<div class="section-title">Documento a inscribir</div>
-	<div fxLayout="row" fxLayout.lt-md="column">
-		<div fxFlex="60" fxLayoutAlign="space-around">
-			<label fxFlex="40">Categoría del documento:</label>
-			<emp-ng-select
-				[items]="instrumentCategoriesList"
-				[config]="{placeholder: '( Seleccionar )'}"
-				formControlName="documentCategory"
-				fxFlex="60">
-			</emp-ng-select>
-		</div>
+<form [formGroup]="form" autocomplete="off" class="form-section" [empNgSpinnerHost]="spinner">
 
-		<div fxFlex="40" fxLayoutAlign="space-around">
-			<label fxFlex="60">Num de hojas del instrumento:</label>
-			<emp-ng-select 
-				[items]="numberSheetsList"
-				[config]="{placeholder: '( ? )'}"
-				formControlName="numberSheets"
-				fxFlex="40">
-			</emp-ng-select>
-		</div>
-	</div>
+  <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
-	<div fxLayout="row" fxLayout.lt-md="column">
-		<div fxFlex="100">
-			<label>Notario:</label>
-			<emp-ng-select 
-				[items]="notarias$ | async"
-				[config]="{placeholder: '( Seleccionar )', virtualScroll: true}"
-				[typeahead]="notariasInput$"
-				[loading]="notariasLoading"
-				formControlName="notaria"
-				fxFlex="100">
-		
-			<ng-template #optionTemplate ng-option-tmp let-item="item">
-				<div style="padding: 0.25rem 0;">
-					{{item.name}}
-					<br>
-					<div style="font-size: 0.7rem;">
-						<strong>{{item.ciudad}} </strong>  
-						{{item.notaria}}
-					</div>
-				</div>
-			</ng-template>
-		</emp-ng-select>
-		</div>
-	</div>
-	
-	<div fxLayout="row" fxLayout.lt-md="column">
-		<div fxFlex="100">
-			<label for="text-editor">Descripción:</label>
-			<emp-ng-text-editor id="text-editor" 
-				formControlName="description" 
-				fxFlex="100">
-			</emp-ng-text-editor>
-		</div>
-	</div>
+  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+    <div class="section-title">Documento a inscribir</div>
 
-<br>
-<br>
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex>
+        <label>Tipo de instrumento:</label>
+        <emp-ng-select formControlName="type"
+          [config]="{ clearable: false }"
+          [bindLabel]="'typeName'"
+          [bindValue]="'type'"
+          [items]="instrumentTypesList">
+        </emp-ng-select>
+      </div>
+      <div fxFlex>
+        <label>Fecha:</label>
+        <emp-ng-datepicker formControlName="issueDate">
+        </emp-ng-datepicker>
+      </div>
+      <div fxFlex fxLayoutAlign="end">
+        <div fxFlex="100px">
+          <label>Número de hojas:</label>
+          <input formControlName="sheetsCount"
+            type="number"
+            class="text-box">
+        </div>
+      </div>
+    </div>
 
-	<button (click)="enableEditor()" [ngClass]="editInstrument ? 'btn-warning' : 'btn-action' ">
-		{{editInstrument ? 'Descartar Cambios' : 'Editar Documento'}}
-	</button>
+    <ng-container *ngIf="getFormControl('type').value">
+      <div fxLayout="row" fxLayout.lt-md="column">
+        <div fxFlex="100">
+          <ng-container [ngSwitch]="getFormControl('type').value">
+            <label *ngSwitchCase="instrumentTypeEnum.DocumentoJuzgado">Autoridad:</label>
+            <label *ngSwitchCase="instrumentTypeEnum.DocumentoTerceros">Expedido por:</label>
+            <label *ngSwitchCase="instrumentTypeEnum.TituloPropiedad">Expedido por C.:</label>
+            <label *ngSwitchDefault>Notaría:</label>
+          </ng-container>
+          <emp-ng-select formControlName="issuer"
+            [config]="{ hideSelected: true, minTermLength: issuerMinTermLength }"
+            [items]="issuerList$ | async"
+            [typeahead]="issuerInput$"
+            [loading]="issuerLoading"
+            (changes)="setIssuerSelected($event)">
+          <ng-template #labelTemplate let-item="item">
+            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.EscrituraPublica,
+                                                       instrumentTypeEnum.OficioNotaria])">
+              <span class="ng-value-label">
+                <strong>{{item.entity}}, {{item.place}} - </strong>
+                {{item.officialPosition}} - {{item.name}}
+              </span>
+            </ng-container>
+
+            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.DocumentoJuzgado])">
+              <span class="ng-value-label">
+                <strong>{{item.place}} - </strong>
+                {{item.officialPosition}} - {{item.name}}
+              </span>
+            </ng-container>
+
+            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.DocumentoTerceros,
+                                                       instrumentTypeEnum.TituloPropiedad])">
+              <span class="ng-value-label">
+                <strong>{{item.name}} - </strong>
+                {{item.officialPosition}}
+              </span>
+            </ng-container>
+          </ng-template>
+
+          <ng-template #optionTemplate let-item="item">
+            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.EscrituraPublica,
+                                                       instrumentTypeEnum.OficioNotaria])">
+              <div class="ng-option item-template">
+                {{item.entity}}, {{item.place}}<br>
+                <span class="item-text-sm">
+                  <strong>{{item.officialPosition}}</strong>
+                  {{item.name}}
+                </span>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.DocumentoJuzgado])">
+              <div class="ng-option item-template">
+                <strong>{{item.place}},</strong> {{item.officialPosition}}<br>
+                {{item.name}}
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.DocumentoTerceros,
+                                                       instrumentTypeEnum.TituloPropiedad])">
+              <div class="ng-option item-template">
+                <strong>{{item.name}}</strong> <br>
+                {{item.officialPosition}}
+              </div>
+            </ng-container>
+          </ng-template>
+        </emp-ng-select>
+        </div>
+      </div>
+
+      <div fxLayout="row" fxLayout.lt-md="column">
+        <div [fxFlex]="100/3" fxFlex.lt-md="100"
+          *ngIf="validateTypeSelected([instrumentTypeEnum.OficioNotaria,
+                                       instrumentTypeEnum.DocumentoJuzgado,
+                                       instrumentTypeEnum.DocumentoTerceros])">
+
+          <ng-container [ngSwitch]="getFormControl('type').value">
+            <label *ngSwitchCase="instrumentTypeEnum.DocumentoTerceros">Tipo de documento:</label>
+            <label *ngSwitchDefault>Tipo de oficio:</label>
+          </ng-container>
+
+          <emp-ng-select formControlName="kind"
+            [bindValue]="'name'"
+            [items]="instrumentKindsList">
+          </emp-ng-select>
+        </div>
+
+        <div [fxFlex]="100/3" fxFlex.lt-md="100">
+          <ng-container [ngSwitch]="getFormControl('type').value">
+            <label *ngSwitchCase="instrumentTypeEnum.EscrituraPublica">Escritura:</label>
+            <label *ngSwitchCase="instrumentTypeEnum.OficioNotaria">No. Oficio:</label>
+            <label *ngSwitchCase="instrumentTypeEnum.DocumentoJuzgado">Oficio:</label>
+            <label *ngSwitchCase="instrumentTypeEnum.DocumentoTerceros">No. Documento:</label>
+            <label *ngSwitchCase="instrumentTypeEnum.TituloPropiedad">Título de propiedad No.:</label>
+          </ng-container>
+
+          <input formControlName="instrumentNo"
+            type="text"
+            class="text-box uppercase">
+        </div>
+
+        <div [fxFlex]="100/3" fxFlex.lt-md="100"
+          *ngIf="validateTypeSelected([instrumentTypeEnum.EscrituraPublica,
+                                       instrumentTypeEnum.DocumentoJuzgado])">
+          <ng-container [ngSwitch]="getFormControl('type').value">
+            <label *ngSwitchCase="instrumentTypeEnum.EscrituraPublica">Volumen / libro:</label>
+            <label *ngSwitchDefault>Expediente:</label>
+          </ng-container>
+          <input formControlName="binderNo"
+            type="text"
+            class="text-box uppercase">
+        </div>
+
+        <div [fxFlex]="100/3" fxFlex.lt-md="100" fxLayoutAlign="end"
+          *ngIf="validateTypeSelected([instrumentTypeEnum.EscrituraPublica])">
+          <div fxFlex="100px">
+            <label>Folio del:</label>
+            <input formControlName="folio"
+              type="text"
+              class="text-box uppercase"
+              style="width: 90px;">
+            </div>
+
+            <div fxFlex="100px">
+              <label>al:</label>
+              <input formControlName="endFolio"
+                type="text"
+                class="text-box uppercase"
+                style="width: 90px;">
+            </div>
+        </div>
+
+        <div [fxFlex]="100/3" fxFlex.lt-md="100"
+          *ngIf="validateTypeSelected([instrumentTypeEnum.TituloPropiedad])">
+            <label>Folio:</label>
+            <input formControlName="folio"
+              type="text"
+              class="text-box uppercase">
+        </div>
+      </div>
+    </ng-container>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex>
+        <label>Descripción:</label>
+        <emp-ng-text-editor formControlName="summary">
+        </emp-ng-text-editor>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="space-between" >
+      <button (click)="enableEditor()" [ngClass]="readonly ? 'btn-action' : 'btn-warning' ">
+        {{readonly ? 'Editar Documento' : 'Descartar Cambios'}}
+      </button>
+
+      <button *ngIf="!readonly" (click)="submit()"
+        [class.btn]="form?.invalid"
+        [class.btn-action]="form?.valid">
+        Guardar los Cambios
+      </button>
+    </div>
+  </div>
 </form>

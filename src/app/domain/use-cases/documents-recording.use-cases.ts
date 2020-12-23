@@ -8,7 +8,7 @@
 import { Injectable } from '@angular/core';
 import { Assertion } from '@app/core';
 import { Observable } from 'rxjs';
-import { RecordingDocument } from '../entities/recording-act';
+import { RecordingDocument } from '../models';
 import { DocumentsRecordingApiProvider } from '../providers/documents-recording.api.provider';
 
 

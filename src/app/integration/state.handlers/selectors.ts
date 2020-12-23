@@ -13,14 +13,30 @@ import { SelectorType as DocumentsRecordingStateSelector } from './documents-rec
 export { SelectorType as DocumentsRecordingStateSelector } from './documents-recording.state.handler';
 
 
-import { SelectorType as TransactionStateSelector } from './transaction.state.handler';
-export { SelectorType as TransactionStateSelector } from './transaction.state.handler';
+import { SelectorType as InstrumentsStateSelector } from './instruments.state.handler';
+export { SelectorType as InstrumentsStateSelector } from './instruments.state.handler';
+
+
+import { SelectorType as InstrumentTypesStateSelector } from './instrument-types.state.handler';
+export { SelectorType as InstrumentTypesStateSelector } from './instrument-types.state.handler';
+
+
+import { SelectorType as IssuersStateSelector } from './issuers.state.handler';
+export { SelectorType as IssuersStateSelector } from './issuers.state.handler';
 
 
 import { SelectorType as LandRepositoryStateSelector } from './repository.state.handler';
 export { SelectorType as LandRepositoryStateSelector } from './repository.state.handler';
 
+
+import { SelectorType as TransactionStateSelector } from './transaction.state.handler';
+export { SelectorType as TransactionStateSelector } from './transaction.state.handler';
+
+
 export type StateSelector = MainUIStateSelector |
                             DocumentsRecordingStateSelector |
-                            TransactionStateSelector |
-                            LandRepositoryStateSelector;
+                            InstrumentsStateSelector |
+                            InstrumentTypesStateSelector |
+                            IssuersStateSelector |
+                            LandRepositoryStateSelector |
+                            TransactionStateSelector;

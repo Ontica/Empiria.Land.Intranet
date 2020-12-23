@@ -7,6 +7,6 @@
 
 export * from './documents-recording.use-cases';
 
-export * from './transaction.use-cases';
-
 export * from './repository.use-cases';
+
+export * from './transaction.use-cases';

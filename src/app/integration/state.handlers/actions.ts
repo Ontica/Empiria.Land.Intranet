@@ -11,6 +11,15 @@ export { ActionType as MainUIStateAction } from '../state.handlers/main-ui.state
 import { ActionType as DocumentsRecordingAction } from './documents-recording.state.handler';
 export { ActionType as DocumentsRecordingAction } from './documents-recording.state.handler';
 
+import { ActionType as InstrumentsAction } from './instruments.state.handler';
+export { ActionType as InstrumentsAction } from './instruments.state.handler';
+
+import { ActionType as InstrumentTypesAction } from './instrument-types.state.handler';
+export { ActionType as InstrumentTypesAction } from './instrument-types.state.handler';
+
+import { ActionType as IssuersAction } from './issuers.state.handler';
+export { ActionType as IssuersAction } from './issuers.state.handler';
+
 import { ActionType as TransactionAction } from './transaction.state.handler';
 export { ActionType as TransactionAction } from './transaction.state.handler';
 
@@ -18,4 +27,7 @@ export { ActionType as TransactionAction } from './transaction.state.handler';
 export type StateAction
   = MainUIStateAction
   | DocumentsRecordingAction
-  | TransactionAction;
+  | InstrumentsAction
+  | InstrumentTypesAction
+  | TransactionAction
+  | IssuersAction;
