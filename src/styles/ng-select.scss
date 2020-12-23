@@ -50,6 +50,7 @@
   font-size: 0.9em;
   margin-bottom: 0 !important;
   background-color: $control-disabled-background;
+  height: $control-height - 5px;
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
@@ -84,4 +85,15 @@
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
   color: #333;
   background-color: #fafafa;
+}
+
+.ng-dropdown-panel-items, .ng-select-container {
+  .item-template {
+    padding: 0.25rem 0;
+  }
+
+  .item-text-sm {
+    font-size: 0.75rem;
+    text-overflow:ellipsis;
+  }
 }

@@ -7,8 +7,7 @@ import { Subject } from 'rxjs';
 export interface SelectBoxConfig {
   addTag?: boolean;
   addTagText?: string;
-  bindLabel?: string;
-  bindValue?: string;
+  appendTo?: string;
   clearable?: boolean;
   closeOnSelect?: boolean;
   groupBy?: string;
@@ -25,8 +24,7 @@ export interface SelectBoxConfig {
 const DefaultSelectBoxConfig: SelectBoxConfig = {
   addTag: false,
   addTagText: 'Agregar Item',
-  bindLabel: 'name',
-  bindValue: 'uid',
+  appendTo: 'body',
   clearable: true,
   closeOnSelect: true,
   groupBy: null,
@@ -37,7 +35,7 @@ const DefaultSelectBoxConfig: SelectBoxConfig = {
   placeholder: 'Seleccione',
   searchable: true,
   typeToSearchText: 'Por favor ingrese 5 o mas caracteres',
-  virtualScroll: false
+  virtualScroll: false,
 };
 
 @Component({
@@ -55,10 +53,13 @@ const DefaultSelectBoxConfig: SelectBoxConfig = {
 export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @ViewChild(NgSelectComponent) select: NgSelectComponent;
 
-  @ContentChild('groupTemplate', { read: TemplateRef }) labelTemplate: TemplateRef<any>;
+  @ContentChild('labelTemplate', { read: TemplateRef }) labelTemplate: TemplateRef<any>;
+  @ContentChild('groupTemplate', { read: TemplateRef }) groupTemplate: TemplateRef<any>;
   @ContentChild('optionTemplate', { read: TemplateRef }) optionTemplate: TemplateRef<any>;
 
   @Input() items: any[];
+  @Input() bindLabel: string = 'name';
+  @Input() bindValue: string = 'uid';
   @Input() loading = false;
   @Input() typeahead: Subject<string>;
 
@@ -72,6 +73,8 @@ export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccess
 
   @Output() clear = new EventEmitter<boolean>();
   @Output() changes = new EventEmitter<any>();
+  @Output() search = new EventEmitter<any>();
+  @Output() blur = new EventEmitter<any>();
 
   selectBoxConfig = DefaultSelectBoxConfig;
 
@@ -81,7 +84,8 @@ export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccess
   value: any = null;
 
   private onScroll = (event: any) => {
-    if (this.select && this.select.isOpen) {
+    const autoscroll = event.srcElement.classList.contains('ng-dropdown-panel-items')
+    if (this.select && this.select.isOpen && !autoscroll) {
       this.select.close();
     }
   }
@@ -121,8 +125,15 @@ export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccess
   }
 
   onChangedEvent(event){
-    this.onChange(event);
-    this.changes.emit(this.value);
+    let value = event;
+    if (Array.isArray(event)) {
+      value = event.map(item => item[this.bindValue])
+    } else if (event) {
+      value = event[this.bindValue];
+    }
+
+    this.onChange(value);
+    this.changes.emit(event);
   }
 
   onClear() {
@@ -131,5 +142,13 @@ export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccess
 
   clearModel(){
     this.select.clearModel();
+  }
+
+  onSearch(event){
+    this.search.emit(event);
+  }
+
+  onBlur(event){
+    this.blur.emit(event);
   }
 }
