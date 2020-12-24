@@ -12,8 +12,11 @@
           [config]="{ clearable: false }"
           [bindLabel]="'typeName'"
           [bindValue]="'type'"
-          [items]="instrumentTypesList">
+          [items]="instrumentTypesList"
+          [showError]="getFormControl('type').touched && getFormControl('type').invalid"
+          (changes)="instrumentTypeChange($event)">
         </emp-ng-select>
+
       </div>
       <div fxFlex>
         <label>Fecha:</label>
@@ -43,8 +46,7 @@
             [config]="{ hideSelected: true, minTermLength: issuerMinTermLength }"
             [items]="issuerList$ | async"
             [typeahead]="issuerInput$"
-            [loading]="issuerLoading"
-            (changes)="setIssuerSelected($event)">
+            [loading]="issuerLoading">
           <ng-template #labelTemplate let-item="item">
             <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.EscrituraPublica,
                                                        instrumentTypeEnum.OficioNotaria])">
@@ -182,7 +184,7 @@
     </div>
 
     <div fxLayout="row" fxLayoutAlign="space-between" >
-      <button (click)="enableEditor()" [ngClass]="readonly ? 'btn-action' : 'btn-warning' ">
+      <button (click)="enableEditInstrument(readonly)" [ngClass]="readonly ? 'btn-action' : 'btn-warning'">
         {{readonly ? 'Editar Documento' : 'Descartar Cambios'}}
       </button>
 

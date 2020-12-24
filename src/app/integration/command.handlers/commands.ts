@@ -5,7 +5,12 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
+import { CommandType as InstrumentsCommandType } from './instruments.command.handler';
+export { CommandType as InstrumentsCommandType } from './instruments.command.handler';
+
 import { CommandType as TransactionCommandType } from './transaction.command.handler';
 export { CommandType as TransactionCommandType } from './transaction.command.handler';
 
-export type CommandType = TransactionCommandType;
+export type CommandType
+  = InstrumentsCommandType
+  | TransactionCommandType;

@@ -33,7 +33,6 @@ export class RequestTabbedViewComponent implements OnInit, OnChanges {
     this.setSelectedTabIndex();
 
     if (changes.request && changes.request.currentValue){
-      console.log('Transaction ui:', this.request.uid);
       this.store.dispatch(InstrumentsAction.LOAD_TRANSACTION_INSTRUMENT, this.request.uid);
     }
   }

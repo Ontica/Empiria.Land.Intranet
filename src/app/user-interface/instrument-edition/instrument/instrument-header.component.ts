@@ -8,24 +8,30 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { concat, of, Subject, from, Observable } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, filter, skipWhile, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, filter,
+         switchMap, takeUntil, tap } from 'rxjs/operators';
+import { EventInfo, isEmpty } from '@app/core';
+import { FrontController, PresentationState } from '@app/core/presentation';
+import { InstrumentsStateSelector, InstrumentTypesAction, InstrumentTypesStateSelector,
+         IssuersAction, TransactionStateSelector } from '@app/core/presentation/state.commands';
+import { Transaction, Instrument, Issuer, InstrumentTypeEnum,
+         EmptyTransaction, EmptyInstrument} from '@app/domain/models';
+import { InstrumentsCommandType } from '@app/core/presentation/commands';
 
-import { isEmpty } from '@app/core';
-import { PresentationState } from '@app/core/presentation';
-import { InstrumentsStateSelector, InstrumentTypesAction, InstrumentTypesStateSelector, IssuersAction } from '@app/core/presentation/state.commands';
-import { EmptyInstrument, Instrument, InstrumentTypeEnum, Issuer } from '@app/domain/models';
-
+type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'issuer' |
+                              'instrumentNo' | 'binderNo' | 'folio' | 'endFolio' | 'summary';
 
 @Component({
   selector: 'emp-land-instrument-header',
   templateUrl: './instrument-header.component.html'
 })
 export class InstrumentHeaderComponent implements OnInit, OnDestroy {
-
+  transaction: Transaction = EmptyTransaction;
   instrument: Instrument = EmptyInstrument;
 
   isLoading = false;
   readonly = true;
+  submitted = false;
   private unsubscribe: Subject<void> = new Subject();
   instrumentTypeEnum = InstrumentTypeEnum;
 
@@ -39,7 +45,7 @@ export class InstrumentHeaderComponent implements OnInit, OnDestroy {
     binderNo: new FormControl(''),
     folio: new FormControl(''),
     endFolio: new FormControl(''),
-    summary: new FormControl({value: '', disabled: false})
+    summary: new FormControl('')
   });
 
   instrumentTypesList: any[] = [
@@ -50,7 +56,6 @@ export class InstrumentHeaderComponent implements OnInit, OnDestroy {
     { type: 'DocumentoTerceros', typeName: 'Documento de terceros' }
   ];
 
-  issuerSelected: Issuer;
   issuerList$: Observable<Issuer[]>;
   issuerInput$ = new Subject<string>();
   issuerLoading = false;
@@ -58,22 +63,20 @@ export class InstrumentHeaderComponent implements OnInit, OnDestroy {
 
   instrumentKindsList: any[] = [];
 
-  constructor(private store: PresentationState) { }
+  constructor(private store: PresentationState,
+              private frontController: FrontController) { }
 
   ngOnInit(): void {
-    this.subscribeInstrumentTypeChange();
-    //TODO: obtener datos de store y actualizar al cambiar de tramite.
+    this.store.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
+    .pipe(takeUntil(this.unsubscribe))
+    .subscribe(x => { this.transaction = x; });
+
     this.store.select<Instrument>(InstrumentsStateSelector.TRANSACTION_INSTRUMENT)
     .pipe(takeUntil(this.unsubscribe))
     .subscribe(x => {
-      console.log('Instrumento: ', x);
-
       this.instrument = !isEmpty(x) ? x : EmptyInstrument;
-      this.readonly = true;
-      this.disableForm(this.readonly);
-      this.resetForm();
+      this.enableEditor(false);
       this.loadInstrumentKindList(this.instrument.type);
-      this.isLoading = false;
     });
 
     this.store.select<string[]>(InstrumentTypesStateSelector.INSTRUMENT_KIND_LIST)
@@ -89,47 +92,50 @@ export class InstrumentHeaderComponent implements OnInit, OnDestroy {
     this.unsubscribe.complete();
   }
 
-  getFormControl(name){
+  getFormControl(name: instrumentFormControls){
     return this.form.get(name);
   }
 
-  enableEditor(){
-    this.readonly = !this.readonly;
-    this.resetForm();
-    this.disableForm(this.readonly);
-  }
-
-  disableForm(disable: boolean){
-    if (disable) {
-      this.form.disable();
-    } else {
+  enableEditor(enable: boolean){
+    this.readonly = !enable;
+    this.setFormModel();
+    if (enable) {
       this.form.enable();
+    } else {
+      this.form.disable();
     }
   }
 
-  resetForm(){
-    this.issuerSelected = this.instrument.issuer;
+  enableEditInstrument(edit){
+    if (this.instrument.status == 'Opened') {
+      this.enableEditor(edit);
+    } else {
+      alert(`No es posible editar el documento, su estatus es ${this.instrument.status}.`)
+    }
+  }
+
+  setFormModel(){
     this.form.reset({
       type: this.instrument.type,
       sheetsCount: this.instrument.sheetsCount,
       kind: this.instrument.kind,
       issueDate: this.instrument.issueDate,
-      issuer: this.instrument.issuer?.uid,
+      issuer: isEmpty(this.instrument.issuer) ? null : this.instrument.issuer.uid,
       instrumentNo: this.instrument.instrumentNo,
       binderNo: this.instrument.binderNo,
       folio: this.instrument.folio,
       endFolio: this.instrument.endFolio,
       summary: this.instrument.summary
     });
+    this.submitted = false;
     this.subscribeIssuerList();
   }
 
-  discardFormChanges(restart){
-    if (restart){
-      this.issuerSelected = this.instrument.issuer;
+  resetForm(resetModel){
+    if (resetModel){
       this.form.patchValue({
         kind: this.instrument.kind,
-        issuer: this.instrument.issuer?.uid,
+        issuer: isEmpty(this.instrument.issuer) ? null : this.instrument.issuer.uid,
         instrumentNo: this.instrument.instrumentNo,
         binderNo: this.instrument.binderNo,
         folio: this.instrument.folio,
@@ -137,7 +143,6 @@ export class InstrumentHeaderComponent implements OnInit, OnDestroy {
       });
       this.subscribeIssuerList();
     }else{
-      this.issuerSelected = null;
       this.getFormControl('kind').reset();
       this.getFormControl('issuer').reset();
       this.getFormControl('instrumentNo').reset();
@@ -147,24 +152,9 @@ export class InstrumentHeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  subscribeInstrumentTypeChange(){
-    this.getFormControl('type')
-        .valueChanges
-        .pipe(
-          takeUntil(this.unsubscribe),
-          skipWhile(val=> !val)
-        )
-        .subscribe(value => {
-          if (!this.getFormControl('kind').disabled){
-            this.loadInstrumentKindList(value);
-            this.discardFormChanges(value === this.instrument.type);
-          }
-        });
-  }
-
   subscribeIssuerList(){
     this.issuerList$ = concat(
-      of(this.instrument.issuer ? [this.instrument.issuer] : []),
+      of(isEmpty(this.instrument.issuer) ? [] : [this.instrument.issuer]),
       this.issuerInput$.pipe(
           filter(e => { return e !== null && e.length >= this.issuerMinTermLength }),
           distinctUntilChanged(),
@@ -187,41 +177,54 @@ export class InstrumentHeaderComponent implements OnInit, OnDestroy {
     );
   }
 
+  instrumentTypeChange(change){
+    this.loadInstrumentKindList(change.type);
+    this.resetForm(change.type === this.instrument.type);
+  }
+
   loadInstrumentKindList(instrumentType){
     this.isLoading = true;
-
-    if (!instrumentType ||
-        [InstrumentTypeEnum.EscrituraPublica,
-         InstrumentTypeEnum.TituloPropiedad].includes(instrumentType)) {
+    if (!instrumentType || [InstrumentTypeEnum.EscrituraPublica, InstrumentTypeEnum.TituloPropiedad]
+                           .includes(instrumentType)) {
       this.instrumentKindsList = [];
       this.isLoading = false;
       return;
     }
-
     this.store.dispatch(InstrumentTypesAction.LOAD_INSTRUMENT_KIND_LIST, this.getFormControl('type').value);
   }
 
   submit() {
-    if (this.form.valid){
-      this.isLoading = true;
-      setTimeout(() => {
-        console.log('FORM VALID = ', this.form.valid)
-        console.log(this.getFormData());
-        this.isLoading = false;
-      }, 500);
+    if (this.form.valid && !this.submitted){
+      this.submitted = true;
+
+      const commantType = isEmpty(this.instrument) ?
+        InstrumentsCommandType.CREATE_INSTRUMENT :
+        InstrumentsCommandType.UPDATE_INSTRUMENT;
+
+      const instrument = this.getFormData();
+
+      const event: EventInfo = {
+        type: commantType,
+        payload: {
+          transactionUID: this.transaction.uid,
+          instrument: instrument
+        }
+      };
+      console.log(event);
+      this.frontController.dispatch<void>(event);
     }
   }
 
   getFormData() {
-    const formModel = this.form.value;
+    const formModel = this.form.getRawValue();
 
     const data = {
       uid: this.instrument.uid,
       type: formModel.type,
-      kind: formModel.kind,
+      kind: formModel.kind ?? '',
       sheetsCount: formModel.sheetsCount,
       issueDate: formModel.issueDate,
-      issuerUID: formModel.issuer,
+      issuerUID: formModel.issuer ?? 'Empty',
       summary: formModel.summary,
       instrumentNo: formModel.instrumentNo,
       binderNo: formModel.binderNo,
@@ -236,7 +239,4 @@ export class InstrumentHeaderComponent implements OnInit, OnDestroy {
     return type.includes(this.getFormControl('type').value);
   }
 
-  setIssuerSelected(event){
-    this.issuerSelected = event;
-  }
 }

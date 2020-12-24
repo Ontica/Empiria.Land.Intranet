@@ -1,6 +1,18 @@
 import { DateString } from "@app/core";
 
 
+export interface Period {
+  fromDate: DateString;
+  toDate: DateString;
+}
+
+
+export const EmptyPeriod: Period = {
+  fromDate: '',
+  toDate: ''
+}
+
+
 export interface Issuer {
   uid: string;
   name: string;
@@ -9,6 +21,17 @@ export interface Issuer {
   place: string;
   period: Period;
 }
+
+
+export const EmptyIssuer: Issuer = {
+  uid: 'Empty',
+  name: 'No determinado',
+  officialPosition: '',
+  entity: 'No determinado',
+  place: 'No determinado',
+  period: EmptyPeriod
+}
+
 
 export interface Instrument {
   uid: string;
@@ -29,13 +52,14 @@ export interface Instrument {
   status: InstrumentStatus;
 }
 
+
 export const EmptyInstrument: Instrument = {
   uid: '',
   type: null,
   typeName: '',
   kind: '',
   issueDate: '',
-  issuer: null,
+  issuer: EmptyIssuer,
   summary: '',
   asText: '',
   controlID: '',
@@ -43,10 +67,26 @@ export const EmptyInstrument: Instrument = {
   binderNo: '',
   folio: '',
   endFolio: '',
-  sheetsCount: 0,
+  sheetsCount: null,
   media: [],
-  status: 'Closed'
+  status: 'Opened'
 }
+
+
+export interface ModificationInstrument {
+  uid?: string;
+  type?: InstrumentType;
+  kind?: string;
+  issuerUID?: string;
+  issueDate?: DateString;
+  summary?: string;
+  instrumentNo?: string;
+  binderNo?: string;
+  folio?: string;
+  endFolio?: string;
+  sheetsCount?: number;
+}
+
 
 export enum InstrumentTypeEnum {
   EscrituraPublica = 'EscrituraPublica',
@@ -56,7 +96,9 @@ export enum InstrumentTypeEnum {
   DocumentoTerceros = 'DocumentoTerceros'
 }
 
-export type InstrumentType = 'EscrituraPublica' | 'OficioNotaria' | 'TituloPropiedad' | 'DocumentoJuzgado' | 'DocumentoTerceros';
+
+export type InstrumentType = 'EscrituraPublica' | 'OficioNotaria' | 'TituloPropiedad' |
+                             'DocumentoJuzgado' | 'DocumentoTerceros';
 
 
 export type InstrumentStatus = 'Opened' | 'Closed' | 'ReadOnly' | 'Secured' | 'Confidential';
@@ -92,12 +134,6 @@ export interface ElectronicSignData {
   signTime: DateString;
   signedBy: Contact;
   signedByPosition: string;
-}
-
-
-export interface Period {
-  fromDate: DateString;
-  toDate: DateString;
 }
 
 

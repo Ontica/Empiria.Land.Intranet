@@ -13,6 +13,7 @@ import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-
 
 import { EmptyInstrument } from '@app/domain/models';
 import { InstrumentsApiProvider } from '@app/domain/providers';
+import { InstrumentsCommandType } from '../command.handlers/commands';
 
 
 
@@ -27,7 +28,8 @@ export enum SelectorType {
 
 
 enum CommandEffectType {
-
+  CREATE_INSTRUMENT = InstrumentsCommandType.CREATE_INSTRUMENT,
+  UPDATE_INSTRUMENT = InstrumentsCommandType.UPDATE_INSTRUMENT,
 }
 
 
@@ -51,7 +53,16 @@ export class InstrumentsStateHandler extends AbstractStateHandler {
 
 
   applyEffects(command: CommandResult): void {
+    switch ((command.type as any) as CommandEffectType) {
 
+      case CommandEffectType.CREATE_INSTRUMENT:
+      case CommandEffectType.UPDATE_INSTRUMENT:
+        this.setValue(SelectorType.TRANSACTION_INSTRUMENT, command.result);
+        return;
+
+      default:
+        throw this.unhandledCommandOrActionType(command);
+    }
   }
 
 

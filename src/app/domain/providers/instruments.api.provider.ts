@@ -6,11 +6,17 @@
  */
 
 import { Observable } from 'rxjs';
-import { Instrument } from '../models';
+import { Instrument, ModificationInstrument } from '../models';
 
 
 export abstract class InstrumentsApiProvider {
 
   abstract getTransactionInstrument(transactionUID: string): Observable<Instrument>;
+
+  abstract createTransactionInstrument(transactionUID: string,
+                                       instrument: ModificationInstrument): Observable<Instrument>;
+
+  abstract updateTransactionInstrument(transactionUID: string,
+                                       instrument: ModificationInstrument): Observable<Instrument>;
 
 }
