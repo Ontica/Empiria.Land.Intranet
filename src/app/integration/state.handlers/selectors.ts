@@ -21,10 +21,6 @@ import { SelectorType as InstrumentTypesStateSelector } from './instrument-types
 export { SelectorType as InstrumentTypesStateSelector } from './instrument-types.state.handler';
 
 
-import { SelectorType as IssuersStateSelector } from './issuers.state.handler';
-export { SelectorType as IssuersStateSelector } from './issuers.state.handler';
-
-
 import { SelectorType as LandRepositoryStateSelector } from './repository.state.handler';
 export { SelectorType as LandRepositoryStateSelector } from './repository.state.handler';
 
@@ -37,6 +33,5 @@ export type StateSelector = MainUIStateSelector |
                             DocumentsRecordingStateSelector |
                             InstrumentsStateSelector |
                             InstrumentTypesStateSelector |
-                            IssuersStateSelector |
                             LandRepositoryStateSelector |
                             TransactionStateSelector;

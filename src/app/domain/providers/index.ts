@@ -11,8 +11,6 @@ export * from './instrument-types.api.provider';
 
 export * from './instruments.api.provider';
 
-export * from './issuers.api.provider';
-
 export * from './repository.api.provider';
 
 export * from './transaction.api.provider';

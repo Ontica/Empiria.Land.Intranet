@@ -6,10 +6,12 @@
  */
 
 import { Observable } from 'rxjs';
-import { Instrument, ModificationInstrument } from '../models';
 
+import { Instrument, Issuer, IssuersFilter, ModificationInstrument } from '../models';
 
 export abstract class InstrumentsApiProvider {
+
+  abstract findIssuers(filter: IssuersFilter): Observable<Issuer[]>;
 
   abstract getTransactionInstrument(transactionUID: string): Observable<Instrument>;
 

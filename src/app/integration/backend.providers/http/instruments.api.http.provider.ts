@@ -8,11 +8,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion, HttpService } from '@app/core';
+import { Assertion, DateStringLibrary, HttpService } from '@app/core';
 
 import { InstrumentsApiProvider } from '@app/domain/providers/instruments.api.provider';
-import { Instrument, ModificationInstrument } from '@app/domain/models';
 
+import { Instrument, Issuer, IssuersFilter, ModificationInstrument } from '@app/domain/models';
 
 @Injectable()
 export class InstrumentsApiHttpProvider extends InstrumentsApiProvider {
@@ -21,10 +21,33 @@ export class InstrumentsApiHttpProvider extends InstrumentsApiProvider {
     super();
   }
 
+  findIssuers(filter: IssuersFilter): Observable<Issuer[]> {
+    let path = `v5/land/instrument-issuers/?instrumentType=${filter.instrumentType}`;
+
+    if (filter.instrumentKind) {
+      path += `&instrumentKind="${filter.instrumentKind}"`;
+    }
+
+    if (filter.onDate && DateStringLibrary.isDate(filter.onDate)) {
+      path += `&onDate=${filter.onDate}`;
+    }
+
+    if (filter.keywords) {
+      path += `&keywords=${filter.keywords}`;
+    }
+
+    return this.http.get<Issuer[]>(path);
+  }
+
+
   getTransactionInstrument(transactionUID: string): Observable<Instrument> {
-    let path = `v5/land/transactions/${transactionUID}/instrument`;
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}/instrument`;
+
     return this.http.get<Instrument>(path);
   }
+
 
   createTransactionInstrument(transactionUID: string,
                               instrument: ModificationInstrument): Observable<Instrument> {
@@ -35,6 +58,7 @@ export class InstrumentsApiHttpProvider extends InstrumentsApiProvider {
 
     return this.http.post<Instrument>(path, instrument );
   }
+
 
   updateTransactionInstrument(transactionUID: string,
                               instrument: ModificationInstrument): Observable<Instrument> {
