@@ -1,4 +1,11 @@
-import { DateString } from "@app/core";
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
+import { DateString } from '@app/core';
 
 
 export interface Period {
@@ -10,7 +17,7 @@ export interface Period {
 export const EmptyPeriod: Period = {
   fromDate: '',
   toDate: ''
-}
+};
 
 
 export interface Issuer {
@@ -30,8 +37,14 @@ export const EmptyIssuer: Issuer = {
   entity: 'No determinado',
   place: 'No determinado',
   period: EmptyPeriod
-}
+};
 
+export interface IssuersFilter {
+  instrumentType: string;
+  instrumentKind: string;
+  onDate: DateString;
+  keywords: string;
+}
 
 export interface Instrument {
   uid: string;
@@ -70,7 +83,27 @@ export const EmptyInstrument: Instrument = {
   sheetsCount: null,
   media: [],
   status: 'Opened'
+};
+
+export const InstrumentTypesList: any[] = [
+  { type: 'EscrituraPublica', typeName: 'Escritura pública' },
+  { type: 'OficioNotaria', typeName: 'Oficio de notaría' },
+  { type: 'DocumentoJuzgado', typeName: 'Documento de juzgado' },
+  { type: 'TituloPropiedad', typeName: 'Título de propiedad' },
+  { type: 'DocumentoTerceros', typeName: 'Documento de terceros' }
+];
+
+export enum InstrumentTypeEnum {
+  EscrituraPublica = 'EscrituraPublica',
+  OficioNotaria = 'OficioNotaria',
+  TituloPropiedad = 'TituloPropiedad',
+  DocumentoJuzgado = 'DocumentoJuzgado',
+  DocumentoTerceros = 'DocumentoTerceros'
 }
+
+
+export type InstrumentType = 'EscrituraPublica' | 'OficioNotaria' | 'TituloPropiedad' |
+                             'DocumentoJuzgado' | 'DocumentoTerceros';
 
 
 export interface ModificationInstrument {
@@ -86,20 +119,6 @@ export interface ModificationInstrument {
   endFolio?: string;
   sheetsCount?: number;
 }
-
-
-export enum InstrumentTypeEnum {
-  EscrituraPublica = 'EscrituraPublica',
-  OficioNotaria = 'OficioNotaria',
-  TituloPropiedad = 'TituloPropiedad',
-  DocumentoJuzgado = 'DocumentoJuzgado',
-  DocumentoTerceros = 'DocumentoTerceros'
-}
-
-
-export type InstrumentType = 'EscrituraPublica' | 'OficioNotaria' | 'TituloPropiedad' |
-                             'DocumentoJuzgado' | 'DocumentoTerceros';
-
 
 export type InstrumentStatus = 'Opened' | 'Closed' | 'ReadOnly' | 'Secured' | 'Confidential';
 

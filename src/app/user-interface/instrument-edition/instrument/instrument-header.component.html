@@ -37,9 +37,9 @@
       <div fxLayout="row" fxLayout.lt-md="column">
         <div fxFlex="100">
           <ng-container [ngSwitch]="getFormControl('type').value">
-            <label *ngSwitchCase="instrumentTypeEnum.DocumentoJuzgado">Autoridad:</label>
-            <label *ngSwitchCase="instrumentTypeEnum.DocumentoTerceros">Expedido por:</label>
-            <label *ngSwitchCase="instrumentTypeEnum.TituloPropiedad">Expedido por C.:</label>
+            <label *ngSwitchCase="InstrumentType.DocumentoJuzgado">Autoridad:</label>
+            <label *ngSwitchCase="InstrumentType.DocumentoTerceros">Expedido por:</label>
+            <label *ngSwitchCase="InstrumentType.TituloPropiedad">Expedido por C.:</label>
             <label *ngSwitchDefault>Notaría:</label>
           </ng-container>
           <emp-ng-select formControlName="issuer"
@@ -48,23 +48,23 @@
             [typeahead]="issuerInput$"
             [loading]="issuerLoading">
           <ng-template #labelTemplate let-item="item">
-            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.EscrituraPublica,
-                                                       instrumentTypeEnum.OficioNotaria])">
+            <ng-container *ngIf="validateTypeSelected([InstrumentType.EscrituraPublica,
+                                                       InstrumentType.OficioNotaria])">
               <span class="ng-value-label">
                 <strong>{{item.entity}}, {{item.place}} - </strong>
                 {{item.officialPosition}} - {{item.name}}
               </span>
             </ng-container>
 
-            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.DocumentoJuzgado])">
+            <ng-container *ngIf="validateTypeSelected([InstrumentType.DocumentoJuzgado])">
               <span class="ng-value-label">
                 <strong>{{item.place}} - </strong>
                 {{item.officialPosition}} - {{item.name}}
               </span>
             </ng-container>
 
-            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.DocumentoTerceros,
-                                                       instrumentTypeEnum.TituloPropiedad])">
+            <ng-container *ngIf="validateTypeSelected([InstrumentType.DocumentoTerceros,
+                                                       InstrumentType.TituloPropiedad])">
               <span class="ng-value-label">
                 <strong>{{item.name}} - </strong>
                 {{item.officialPosition}}
@@ -73,8 +73,8 @@
           </ng-template>
 
           <ng-template #optionTemplate let-item="item">
-            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.EscrituraPublica,
-                                                       instrumentTypeEnum.OficioNotaria])">
+            <ng-container *ngIf="validateTypeSelected([InstrumentType.EscrituraPublica,
+                                                       InstrumentType.OficioNotaria])">
               <div class="ng-option item-template">
                 {{item.entity}}, {{item.place}}<br>
                 <span class="item-text-sm">
@@ -84,15 +84,15 @@
               </div>
             </ng-container>
 
-            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.DocumentoJuzgado])">
+            <ng-container *ngIf="validateTypeSelected([InstrumentType.DocumentoJuzgado])">
               <div class="ng-option item-template">
                 <strong>{{item.place}},</strong> {{item.officialPosition}}<br>
                 {{item.name}}
               </div>
             </ng-container>
 
-            <ng-container *ngIf="validateTypeSelected([instrumentTypeEnum.DocumentoTerceros,
-                                                       instrumentTypeEnum.TituloPropiedad])">
+            <ng-container *ngIf="validateTypeSelected([InstrumentType.DocumentoTerceros,
+                                                       InstrumentType.TituloPropiedad])">
               <div class="ng-option item-template">
                 <strong>{{item.name}}</strong> <br>
                 {{item.officialPosition}}
@@ -105,12 +105,12 @@
 
       <div fxLayout="row" fxLayout.lt-md="column">
         <div [fxFlex]="100/3" fxFlex.lt-md="100"
-          *ngIf="validateTypeSelected([instrumentTypeEnum.OficioNotaria,
-                                       instrumentTypeEnum.DocumentoJuzgado,
-                                       instrumentTypeEnum.DocumentoTerceros])">
+          *ngIf="validateTypeSelected([InstrumentType.OficioNotaria,
+                                       InstrumentType.DocumentoJuzgado,
+                                       InstrumentType.DocumentoTerceros])">
 
           <ng-container [ngSwitch]="getFormControl('type').value">
-            <label *ngSwitchCase="instrumentTypeEnum.DocumentoTerceros">Tipo de documento:</label>
+            <label *ngSwitchCase="InstrumentType.DocumentoTerceros">Tipo de documento:</label>
             <label *ngSwitchDefault>Tipo de oficio:</label>
           </ng-container>
 
@@ -122,11 +122,11 @@
 
         <div [fxFlex]="100/3" fxFlex.lt-md="100">
           <ng-container [ngSwitch]="getFormControl('type').value">
-            <label *ngSwitchCase="instrumentTypeEnum.EscrituraPublica">Escritura:</label>
-            <label *ngSwitchCase="instrumentTypeEnum.OficioNotaria">No. Oficio:</label>
-            <label *ngSwitchCase="instrumentTypeEnum.DocumentoJuzgado">Oficio:</label>
-            <label *ngSwitchCase="instrumentTypeEnum.DocumentoTerceros">No. Documento:</label>
-            <label *ngSwitchCase="instrumentTypeEnum.TituloPropiedad">Título de propiedad No.:</label>
+            <label *ngSwitchCase="InstrumentType.EscrituraPublica">Escritura:</label>
+            <label *ngSwitchCase="InstrumentType.OficioNotaria">No. Oficio:</label>
+            <label *ngSwitchCase="InstrumentType.DocumentoJuzgado">Oficio:</label>
+            <label *ngSwitchCase="InstrumentType.DocumentoTerceros">No. Documento:</label>
+            <label *ngSwitchCase="InstrumentType.TituloPropiedad">Título de propiedad No.:</label>
           </ng-container>
 
           <input formControlName="instrumentNo"
@@ -135,10 +135,10 @@
         </div>
 
         <div [fxFlex]="100/3" fxFlex.lt-md="100"
-          *ngIf="validateTypeSelected([instrumentTypeEnum.EscrituraPublica,
-                                       instrumentTypeEnum.DocumentoJuzgado])">
+          *ngIf="validateTypeSelected([InstrumentType.EscrituraPublica,
+                                       InstrumentType.DocumentoJuzgado])">
           <ng-container [ngSwitch]="getFormControl('type').value">
-            <label *ngSwitchCase="instrumentTypeEnum.EscrituraPublica">Volumen / libro:</label>
+            <label *ngSwitchCase="InstrumentType.EscrituraPublica">Volumen / libro:</label>
             <label *ngSwitchDefault>Expediente:</label>
           </ng-container>
           <input formControlName="binderNo"
@@ -147,7 +147,7 @@
         </div>
 
         <div [fxFlex]="100/3" fxFlex.lt-md="100" fxLayoutAlign="end"
-          *ngIf="validateTypeSelected([instrumentTypeEnum.EscrituraPublica])">
+          *ngIf="validateTypeSelected([InstrumentType.EscrituraPublica])">
           <div fxFlex="100px">
             <label>Folio del:</label>
             <input formControlName="folio"
@@ -166,7 +166,7 @@
         </div>
 
         <div [fxFlex]="100/3" fxFlex.lt-md="100"
-          *ngIf="validateTypeSelected([instrumentTypeEnum.TituloPropiedad])">
+          *ngIf="validateTypeSelected([InstrumentType.TituloPropiedad])">
             <label>Folio:</label>
             <input formControlName="folio"
               type="text"

@@ -25,9 +25,9 @@ export enum ActionType {
 
 
 export enum SelectorType {
-  TRANSACTION_LIST = 'Land.UI-Item.Transaction.List',
-  LIST_FILTER = 'Land.UI-Item.Transaction.Filter',
-  SELECTED_TRANSACTION = 'Land.UI-Item.Transaction.Selected',
+  TRANSACTION_LIST = 'Land.Transactions.TransactionList',
+  LIST_FILTER = 'Land.Transactions.TransactionList.Filter',
+  SELECTED_TRANSACTION = 'Land.Transactions.SelectedTransaction',
 }
 
 
