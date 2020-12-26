@@ -1,5 +1,5 @@
-<emp-ng-card [title]="request.type + ': ' + request.transactionID"
-             [hint]="'Presentado el: ' + ( request.presentationTime | dateTimeFormat )"
+<emp-ng-card [title]="transaction.type + ': ' + transaction.transactionID"
+             [hint]="'Presentado el: ' + ( transaction.presentationTime | dateTimeFormat )"
              (cardClose)="onClose()">
 
 <mat-tab-group [selectedIndex]="selectedTabIndex">
@@ -11,33 +11,33 @@
 
   <mat-tab label="Digitalización" disabled>
     <ng-template matTabContent>
-      
+
     </ng-template>
   </mat-tab>
 
   <mat-tab label="Inscripción de documentos">
     <ng-template matTabContent>
-      <emp-land-instrument-edition [request]="request"></emp-land-instrument-edition>
+      <emp-land-instrument-edition [transaction]="transaction"></emp-land-instrument-edition>
     </ng-template>
   </mat-tab>
 
   <mat-tab label="Emisión de certificados" disabled>
     <ng-template matTabContent>
-      
+
     </ng-template>
   </mat-tab>
-  
+
   <mat-tab label="Devoluciones" disabled>
     <ng-template matTabContent>
-      
+
     </ng-template>
   </mat-tab>
 
   <mat-tab label="Estado del trámite" disabled>
     <ng-template matTabContent>
-      
+
     </ng-template>
-  </mat-tab> 
+  </mat-tab>
 </mat-tab-group>
 
 </emp-ng-card>
