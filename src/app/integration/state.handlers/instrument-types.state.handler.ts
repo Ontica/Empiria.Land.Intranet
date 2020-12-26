@@ -6,22 +6,17 @@
  */
 
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { Assertion } from '@app/core';
 
 import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
+
 import { InstrumentTypesApiProvider } from '@app/domain/providers';
-
-
-export enum ActionType {
-  LOAD_INSTRUMENT_KIND_LIST = 'Land.UI-Action.Instrument-types.LoadInstrumentKindList',
-}
-
 
 export enum SelectorType {
   INSTRUMENT_KIND_LIST = 'Land.UI-Item.Instrument-types.InstrumentKindList',
 }
-
 
 const initialState: StateValues = [
   { key: SelectorType.INSTRUMENT_KIND_LIST, value: [] },
@@ -31,28 +26,28 @@ const initialState: StateValues = [
 @Injectable()
 export class InstrumentTypesStateHandler extends AbstractStateHandler {
 
-
   constructor(private service: InstrumentTypesApiProvider) {
     super({
       initialState,
-      selectors: SelectorType,
-      actions: ActionType
+      selectors: SelectorType
     });
   }
 
 
+  select<T>(selectorType: SelectorType, params?: any): Observable<T> {
+    switch (selectorType) {
 
-  dispatch<U>(actionType: ActionType, payload?: any): Promise<U> | void {
-    switch (actionType) {
-      case ActionType.LOAD_INSTRUMENT_KIND_LIST:
-        Assertion.assertValue(payload, 'instrumentType');
+      case SelectorType.INSTRUMENT_KIND_LIST:
+        Assertion.assertValue(params, 'params');
 
-        return this.setValue<U>(SelectorType.INSTRUMENT_KIND_LIST,
-                                this.service.getInstrumentKindsList(payload));
+        const result = this.service.getInstrumentKindsList(params);
+
+        return result as Observable<T>;
 
       default:
-        throw this.unhandledCommandOrActionType(actionType);
+        return super.select<T>(selectorType, params);
+
     }
-  }
+  }  // select
 
 }
