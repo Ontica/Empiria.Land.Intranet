@@ -38,24 +38,19 @@ export class FrontController {
     return createCommandAlias(type, payload);
   }
 
+  execute(command: Command | CommandType): void;
 
-  dispatch(command: Command): void;
+  execute<T>(commandType: Command | CommandType): Promise<T>;
 
-  dispatch<U>(command: Command): Promise<U>;
+  execute<T>(commandOrType: Command | CommandType): Promise<T> | void {
+    Assertion.assertValue(commandOrType, 'commandOrTypecommand');
 
-  dispatch(commandType: CommandType, payload?: any): void;
+    if (typeof commandOrType === 'string') {
+      const commandFromCommandType = this.createCommand(commandOrType);
 
-  dispatch<U>(commandType: CommandType, payload?: any): Promise<U>;
-
-
-  dispatch<U>(commandOrCommandType: Command | CommandType, payload?: any): Promise<U> {
-    Assertion.assertValue(commandOrCommandType, 'commandOrCommandType');
-
-    if (typeof commandOrCommandType === 'string') {
-      const command = this.createCommand(commandOrCommandType as CommandType, payload);
-      return this.dispatchImplementation<U>(command);
+      return this.executeImplementation<T>(commandFromCommandType);
     } else {
-      return this.dispatchImplementation<U>(commandOrCommandType);
+      return this.executeImplementation<T>(commandOrType);
     }
   }
 
@@ -71,7 +66,7 @@ export class FrontController {
   }
 
 
-  private dispatchImplementation<U>(command: Command): Promise<U> {
+  private executeImplementation<U>(command: Command): Promise<U> {
     if (this.isProcessing) {
       throw new Error('FrontController is processing a previous command. Please try again later.');
     }
@@ -110,7 +105,9 @@ export class FrontController {
         return handler;
       }
     }
-    throw Assertion.assertNoReachThisCode(`There is not defined a command handler for command type '${command.type}'.`);
+    throw Assertion.assertNoReachThisCode(
+      `There is not defined a command handler for command type '${command.type}'.`
+    );
   }
 
 

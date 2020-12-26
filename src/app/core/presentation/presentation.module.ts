@@ -8,12 +8,13 @@
 import { NgModule } from '@angular/core';
 
 import { FrontController } from './front.controller';
-
+import { PresentationLayer } from './presentation-layer';
 import { PresentationState } from './presentation.state';
 
 import { CommandHandlersModule } from '@app/integration/command.handlers/command.handlers.module';
 
 import { StateHandlersModule } from '@app/integration/state.handlers/state.handlers.module';
+
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { StateHandlersModule } from '@app/integration/state.handlers/state.handl
 
   providers: [
     FrontController,
+    PresentationLayer,
     PresentationState
   ]
 

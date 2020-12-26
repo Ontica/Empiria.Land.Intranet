@@ -8,3 +8,7 @@
 export * from './front.controller';
 
 export * from './presentation.state';
+
+export * from './presentation-layer';
+
+export { Command } from '../data-types';
