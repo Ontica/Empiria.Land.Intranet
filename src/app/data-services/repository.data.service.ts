@@ -6,59 +6,66 @@
  */
 
 import { Injectable } from '@angular/core';
-
 import { Observable } from 'rxjs';
 
-import { Assertion, Identifiable } from '@app/core';
+import { Assertion, HttpService, Identifiable } from '@app/core';
 
 import { RealEstate } from '@app/domain/models';
 
-import { RepositoryApiProvider } from '../providers';
-
 
 @Injectable()
-export class RepositoryUseCases {
+export class RepositoryDataService {
 
-  constructor(private backend: RepositoryApiProvider) { }
-
+  constructor(private http: HttpService) { }
 
   getOwnershipRecordingSectionList(recorderOfficeUID: string): Observable<Identifiable[]> {
     Assertion.assertValue(recorderOfficeUID, 'recorderOfficeUID');
 
-    return this.backend.getOwnershipRecordingSectionList(recorderOfficeUID);
+    const path = `v2/catalogues/recorder-offices/${recorderOfficeUID}/ownership-recording-sections`;
+
+    return this.http.get<Identifiable[]>(path);
   }
 
 
   getRealEstate(uid: string): Observable<RealEstate> {
     Assertion.assertValue(uid, 'uid');
 
-    return this.backend.getRealEstate(uid);
+    const path = `v2/extranet/properties/${uid}`;
+
+    return this.http.get<RealEstate>(path);
   }
 
 
-  getRealEstateTypeList() {
-    return this.backend.getRealEstateTypeList();
+  getRealEstateTypeList(): Observable<Identifiable[]> {
+    const path = `v2/catalogues/real-estate-types`;
+
+    return this.http.get<Identifiable[]>(path);
   }
 
 
   getRecorderOfficeList(): Observable<Identifiable[]> {
-    return this.backend.getRecorderOfficeList();
+    const path = `v2/catalogues/recorder-offices`;
+
+    return this.http.get<Identifiable[]>(path);
   }
 
 
   getRecorderOfficeSectionBookList(recorderOfficeUID: string,
                                    sectionUID: string): Observable<Identifiable[]> {
     Assertion.assertValue(recorderOfficeUID, 'recorderOfficeUID');
-    Assertion.assertValue(sectionUID, 'sectionUID');
 
-    return this.backend.getRecorderOfficeSectionBookList(recorderOfficeUID, sectionUID);
+    const path = `v2/catalogues/recorder-offices/${recorderOfficeUID}/recording-books/${sectionUID}`;
+
+    return this.http.get<Identifiable[]>(path);
   }
 
 
   getRecorderOfficeMunicipalityList(recorderOfficeUID: string): Observable<Identifiable[]> {
     Assertion.assertValue(recorderOfficeUID, 'recorderOfficeUID');
 
-    return this.backend.getRecorderOfficeMunicipalityList(recorderOfficeUID);
+    const path = `v2/catalogues/recorder-offices/${recorderOfficeUID}/municipalities`;
+
+    return this.http.get<Identifiable[]>(path);
   }
 
 }

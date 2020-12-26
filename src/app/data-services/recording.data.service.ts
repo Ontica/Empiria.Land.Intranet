@@ -5,8 +5,14 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-export * from './documents-recording.use-cases';
+import { Injectable } from '@angular/core';
 
-export * from './repository.use-cases';
+import { HttpService } from '@app/core';
 
-export * from './transaction.use-cases';
+
+@Injectable()
+export class RecordingDataService {
+
+  constructor(private http: HttpService) { }
+
+}

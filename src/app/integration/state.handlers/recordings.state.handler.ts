@@ -11,7 +11,7 @@ import { Assertion, CommandResult } from '@app/core';
 
 import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
 
-import { DocumentsRecordingUseCases } from '@app/domain/use-cases';
+import { RecordingDataService } from '@app/data-services';
 
 import { EmptyRecordingAct } from '@app/domain/models';
 
@@ -38,9 +38,9 @@ const initialState: StateValues = [
 
 
 @Injectable()
-export class DocumentsRecordingStateHandler extends AbstractStateHandler {
+export class RecordingsStateHandler extends AbstractStateHandler {
 
-  constructor(private useCases: DocumentsRecordingUseCases) {
+  constructor(private data: RecordingDataService) {
     super({
       initialState,
       selectors: SelectorType,

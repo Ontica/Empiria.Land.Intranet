@@ -10,16 +10,13 @@ import { Observable } from 'rxjs';
 
 import { Assertion, DateStringLibrary, HttpService } from '@app/core';
 
-import { InstrumentsApiProvider } from '@app/domain/providers/instruments.api.provider';
-
 import { Instrument, Issuer, IssuersFilter, ModificationInstrument } from '@app/domain/models';
 
-@Injectable()
-export class InstrumentsApiHttpProvider extends InstrumentsApiProvider {
 
-  constructor(private http: HttpService) {
-    super();
-  }
+@Injectable()
+export class InstrumentDataService {
+
+  constructor(private http: HttpService) { }
 
   findIssuers(filter: IssuersFilter): Observable<Issuer[]> {
     let path = `v5/land/instrument-issuers/?instrumentType=${filter.instrumentType}`;

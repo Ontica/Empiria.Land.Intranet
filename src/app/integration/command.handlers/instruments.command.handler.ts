@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 
 import { Command, CommandHandler, toPromise } from '@app/core';
 
-import { InstrumentsApiProvider } from '@app/domain/providers';
+import { InstrumentDataService } from '@app/data-services';
 
 
 export enum CommandType {
@@ -21,7 +21,7 @@ export enum CommandType {
 @Injectable()
 export class InstrumentsCommandHandler extends CommandHandler {
 
-  constructor(private service: InstrumentsApiProvider) {
+  constructor(private data: InstrumentDataService) {
     super(CommandType);
   }
 
@@ -31,12 +31,12 @@ export class InstrumentsCommandHandler extends CommandHandler {
 
       case CommandType.CREATE_INSTRUMENT:
         return toPromise<U>(
-          this.service.createTransactionInstrument(command.payload.transactionUID, command.payload.instrument)
+          this.data.createTransactionInstrument(command.payload.transactionUID, command.payload.instrument)
         );
 
       case CommandType.UPDATE_INSTRUMENT:
         return toPromise<U>(
-          this.service.updateTransactionInstrument(command.payload.transactionUID, command.payload.instrument)
+          this.data.updateTransactionInstrument(command.payload.transactionUID, command.payload.instrument)
         );
 
       default:

@@ -8,13 +8,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion, CommandResult } from '@app/core';
+import { Assertion, CommandResult, toObservable } from '@app/core';
 
 import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
 
 import { EmptyInstrument, IssuersFilter } from '@app/domain/models';
 
-import { InstrumentsApiProvider } from '@app/domain/providers';
+import { InstrumentDataService } from '@app/data-services';
 
 import { InstrumentsCommandType } from '../command.handlers/commands';
 
@@ -40,8 +40,7 @@ const initialState: StateValues = [
 @Injectable()
 export class InstrumentsStateHandler extends AbstractStateHandler {
 
-
-  constructor(private service: InstrumentsApiProvider) {
+  constructor(private data: InstrumentDataService) {
     super({
       initialState,
       selectors: SelectorType,
@@ -56,14 +55,13 @@ export class InstrumentsStateHandler extends AbstractStateHandler {
       case SelectorType.TRANSACTION_INSTRUMENT:
         Assertion.assertValue(params, 'params');
 
-        const result = this.service.getTransactionInstrument(params);
-
-        return result as unknown as Observable<U>;
+        return toObservable<U>(this.data.getTransactionInstrument(params));
 
       case SelectorType.ISSUER_LIST:
         Assertion.assertValue(params.instrumentType, 'params.InstrumentType');
 
-        return this.service.findIssuers(params as IssuersFilter) as unknown as Observable<U>;
+        return toObservable<U>(this.data.findIssuers(params as IssuersFilter));
+
       default:
         return super.select<U>(selectorType, params);
 

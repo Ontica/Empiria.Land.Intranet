@@ -8,8 +8,8 @@
 import { ActionType as MainUIStateAction } from '../state.handlers/main-ui.state.handler';
 export { ActionType as MainUIStateAction } from '../state.handlers/main-ui.state.handler';
 
-import { ActionType as DocumentsRecordingAction } from './documents-recording.state.handler';
-export { ActionType as DocumentsRecordingAction } from './documents-recording.state.handler';
+import { ActionType as DocumentsRecordingAction } from './recordings.state.handler';
+export { ActionType as DocumentsRecordingAction } from './recordings.state.handler';
 
 import { ActionType as TransactionAction } from './transaction.state.handler';
 export { ActionType as TransactionAction } from './transaction.state.handler';

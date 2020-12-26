@@ -8,11 +8,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion } from '@app/core';
+import { Assertion, toObservable } from '@app/core';
 
 import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
 
-import { InstrumentTypesApiProvider } from '@app/domain/providers';
+import { InstrumentTypeDataService } from '@app/data-services';
 
 export enum SelectorType {
   INSTRUMENT_KIND_LIST = 'Land.UI-Item.Instrument-types.InstrumentKindList',
@@ -26,7 +26,7 @@ const initialState: StateValues = [
 @Injectable()
 export class InstrumentTypesStateHandler extends AbstractStateHandler {
 
-  constructor(private service: InstrumentTypesApiProvider) {
+  constructor(private data: InstrumentTypeDataService) {
     super({
       initialState,
       selectors: SelectorType
@@ -40,9 +40,7 @@ export class InstrumentTypesStateHandler extends AbstractStateHandler {
       case SelectorType.INSTRUMENT_KIND_LIST:
         Assertion.assertValue(params, 'params');
 
-        const result = this.service.getInstrumentKindsList(params);
-
-        return result as Observable<T>;
+        return toObservable<T>(this.data.getInstrumentKindsList(params));
 
       default:
         return super.select<T>(selectorType, params);

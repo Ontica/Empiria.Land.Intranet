@@ -9,8 +9,8 @@ import { SelectorType as MainUIStateSelector } from '../state.handlers/main-ui.s
 export { SelectorType as MainUIStateSelector } from '../state.handlers/main-ui.state.handler';
 
 
-import { SelectorType as DocumentsRecordingStateSelector } from './documents-recording.state.handler';
-export { SelectorType as DocumentsRecordingStateSelector } from './documents-recording.state.handler';
+import { SelectorType as DocumentsRecordingStateSelector } from './recordings.state.handler';
+export { SelectorType as DocumentsRecordingStateSelector } from './recordings.state.handler';
 
 
 import { SelectorType as InstrumentsStateSelector } from './instruments.state.handler';

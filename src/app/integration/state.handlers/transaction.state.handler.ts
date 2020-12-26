@@ -11,10 +11,9 @@ import { Assertion, CommandResult } from '@app/core';
 
 import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
 
-import { TransactionUseCases } from '@app/domain/use-cases';
+import { TransactionDataService } from '@app/data-services';
 
 import { EmptyTransactionFilter, EmptyTransaction } from '@app/domain/models';
-
 
 
 export enum ActionType {
@@ -47,7 +46,7 @@ const initialState: StateValues = [
 export class TransactionStateHandler extends AbstractStateHandler {
 
 
-  constructor(private useCases: TransactionUseCases) {
+  constructor(private data: TransactionDataService) {
     super({
       initialState,
       selectors: SelectorType,
@@ -70,7 +69,7 @@ export class TransactionStateHandler extends AbstractStateHandler {
         this.setValue(SelectorType.LIST_FILTER, filter);
 
         return this.setValue<U>(SelectorType.TRANSACTION_LIST,
-                                this.useCases.getTransactionList(filter));
+                                this.data.getTransactionList(filter));
 
 
       case ActionType.SELECT_TRANSACTION:

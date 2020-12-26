@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 
 import { Command, CommandHandler, toPromise } from '@app/core';
 
-import { TransactionUseCases } from '@app/domain/use-cases';
+import { TransactionDataService } from '@app/data-services';
 
 
 export enum CommandType {
@@ -20,7 +20,7 @@ export enum CommandType {
 @Injectable()
 export class TransactionCommandHandler extends CommandHandler {
 
-  constructor(private useCases: TransactionUseCases) {
+  constructor(private data: TransactionDataService) {
     super(CommandType);
   }
 

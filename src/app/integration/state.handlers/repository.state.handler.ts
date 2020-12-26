@@ -12,7 +12,8 @@ import { Assertion, Cache, Identifiable } from '@app/core';
 
 import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
 
-import { RepositoryUseCases } from '@app/domain/use-cases';
+import { RepositoryDataService } from '@app/data-services';
+
 import { RealEstate } from '@app/domain/models';
 
 
@@ -39,7 +40,7 @@ const initialState: StateValues = [
 @Injectable()
 export class RepositoryStateHandler extends AbstractStateHandler {
 
-  constructor(private repository: RepositoryUseCases) {
+  constructor(private data: RepositoryDataService) {
     super({ initialState, selectors: SelectorType });
   }
 
@@ -51,7 +52,7 @@ export class RepositoryStateHandler extends AbstractStateHandler {
 
       case SelectorType.DISTRICT_LIST:
 
-        dataProvider = () => this.repository.getRecorderOfficeList();
+        dataProvider = () => this.data.getRecorderOfficeList();
 
         return super.selectFirst<U>(selectorType, dataProvider);
 
@@ -59,7 +60,7 @@ export class RepositoryStateHandler extends AbstractStateHandler {
       case SelectorType.DISTRICT_MUNICIPALITY_LIST:
         Assertion.assertValue(params.districtUID, 'params.districtUID');
 
-        dataProvider = () => this.repository.getRecorderOfficeMunicipalityList(params.districtUID);
+        dataProvider = () => this.data.getRecorderOfficeMunicipalityList(params.districtUID);
 
         return super.selectMemoized<U>(selectorType, dataProvider, params.districtUID);
 
@@ -69,7 +70,7 @@ export class RepositoryStateHandler extends AbstractStateHandler {
         Assertion.assertValue(params.districtUID, 'params.sectionUID');
 
         dataProvider =
-            () => this.repository.getRecorderOfficeSectionBookList(params.districtUID, params.sectionUID);
+            () => this.data.getRecorderOfficeSectionBookList(params.districtUID, params.sectionUID);
 
         return super.selectMemoized<U>(selectorType, dataProvider, params.districtUID + params.sectionUID);
 
@@ -77,7 +78,7 @@ export class RepositoryStateHandler extends AbstractStateHandler {
       case SelectorType.DISTRICT_OWNERSHIP_RECORDING_SECTIONS_LIST:
         Assertion.assertValue(params.districtUID, 'params.districtUID');
 
-        dataProvider = () => this.repository.getOwnershipRecordingSectionList(params.districtUID);
+        dataProvider = () => this.data.getOwnershipRecordingSectionList(params.districtUID);
 
         return super.selectMemoized<U>(selectorType, dataProvider, params.districtUID);
 
@@ -85,13 +86,13 @@ export class RepositoryStateHandler extends AbstractStateHandler {
       case SelectorType.REAL_ESTATE:
         Assertion.assertValue(params.uid, 'params.uid');
 
-        dataProvider = () => this.repository.getRealEstate(params.uid);
+        dataProvider = () => this.data.getRealEstate(params.uid);
 
         return super.selectMemoized<U>(selectorType, dataProvider, params.uid);
 
 
       case SelectorType.REAL_ESTATE_TYPE_LIST:
-        dataProvider = () => this.repository.getRealEstateTypeList();
+        dataProvider = () => this.data.getRealEstateTypeList();
 
         return super.selectFirst<U>(selectorType, dataProvider);
 
