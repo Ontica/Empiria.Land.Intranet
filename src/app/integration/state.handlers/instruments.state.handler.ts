@@ -12,7 +12,7 @@ import { Assertion, CommandResult, toObservable } from '@app/core';
 
 import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
 
-import { EmptyInstrument, IssuersFilter } from '@app/domain/models';
+import { EmptyInstrument, IssuersFilter } from '@app/models';
 
 import { InstrumentDataService } from '@app/data-services';
 

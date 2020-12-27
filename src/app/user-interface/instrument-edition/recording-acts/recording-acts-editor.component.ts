@@ -6,7 +6,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EmptyTransaction, Transaction } from '@app/domain/models';
+import { EmptyTransaction, Transaction } from '@app/models';
 
 
 @Component({

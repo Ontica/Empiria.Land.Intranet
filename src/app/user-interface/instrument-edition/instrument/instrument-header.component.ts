@@ -20,7 +20,7 @@ import { InstrumentsStateSelector,
 import { InstrumentsCommandType } from '@app/core/presentation/commands';
 
 import { Transaction, Instrument, InstrumentTypeEnum, InstrumentTypesList,
-         Issuer, IssuersFilter, EmptyTransaction, EmptyInstrument} from '@app/domain/models';
+         Issuer, IssuersFilter, EmptyTransaction, EmptyInstrument} from '@app/models';
 
 type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'issuer' |
                               'instrumentNo' | 'binderNo' | 'folio' | 'endFolio' | 'summary';

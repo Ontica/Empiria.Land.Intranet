@@ -11,7 +11,7 @@ import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS
 
 import { PresentationState } from '@app/core/presentation';
 
-import { EmptyRealEstate, RealEstate } from '@app/domain/models';
+import { EmptyRealEstate, RealEstate } from '@app/models';
 
 import { LandRepositoryStateSelector } from '@app/core/presentation/state.commands';
 

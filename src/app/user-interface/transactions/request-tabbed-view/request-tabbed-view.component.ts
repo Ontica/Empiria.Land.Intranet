@@ -7,7 +7,7 @@
 
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 
-import { Transaction, EmptyTransaction } from '@app/domain/models';
+import { Transaction, EmptyTransaction } from '@app/models';
 
 
 @Component({

@@ -10,7 +10,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { concat, Observable, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
-import { participationTypeEnum, PartyTypesEnum, RecordingActParty, RolesGroupEnum } from '@app/domain/models';
+import { participationTypeEnum, PartyTypesEnum, RecordingActParty, RolesGroupEnum } from '@app/models';
 import { SelectBoxComponent } from '@app/shared/form-controls/select-box/select-box.component';
 
 

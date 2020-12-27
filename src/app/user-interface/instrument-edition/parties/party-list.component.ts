@@ -7,7 +7,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { RecordingActParty } from '@app/domain/models';
+import { RecordingActParty } from '@app/models';
 
 
 @Component({

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { HttpService } from '@app/core';
 
-import { Transaction, TransactionFilter } from '@app/domain/models';
+import { Transaction, TransactionFilter } from '@app/models';
 
 
 @Injectable()

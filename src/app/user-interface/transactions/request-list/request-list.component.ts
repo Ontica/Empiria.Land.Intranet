@@ -12,7 +12,7 @@ import { EventInfo } from '@app/core';
 import { PresentationState } from '@app/core/presentation';
 
 import { Transaction, EmptyTransaction,
-         TransactionFilter, EmptyTransactionFilter } from '@app/domain/models';
+         TransactionFilter, EmptyTransactionFilter } from '@app/models';
 
 import { TransactionAction, DocumentsRecordingAction } from '@app/core/presentation/state.commands';
 

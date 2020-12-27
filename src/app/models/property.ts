@@ -47,3 +47,19 @@ export const EmptyRealEstate: RealEstate = {
   isPartition: false,
   partitionOf: Empty,
 };
+
+
+export interface RecordingSeekData {
+  districtUID: string;
+  municipalityUID: string;
+  recordingSectionUID: string;
+  recordingBookUID: string;
+  recordingNo: string;
+  recordingFraction?: string;
+  ownership?: string;
+  cadastralKey?: string;
+  propertyType?: string;
+  propertyName?: string;
+  location?: string;
+  searchNotes?: string;
+}

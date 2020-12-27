@@ -10,7 +10,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Assertion } from '@app/core';
 
-import { EmptyRequester, Requester, ProcedureType } from '@app/domain/models';
+import { EmptyRequester, Requester, ProcedureType } from '@app/models';
 
 
 @Component({

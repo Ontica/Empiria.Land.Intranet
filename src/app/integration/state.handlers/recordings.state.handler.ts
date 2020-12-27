@@ -13,7 +13,7 @@ import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-
 
 import { RecordingDataService } from '@app/data-services';
 
-import { EmptyRecordingAct } from '@app/domain/models';
+import { EmptyRecordingAct } from '@app/models';
 
 
 export enum ActionType {

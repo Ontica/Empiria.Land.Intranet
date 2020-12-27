@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, DateStringLibrary, HttpService } from '@app/core';
 
-import { Instrument, Issuer, IssuersFilter, ModificationInstrument } from '@app/domain/models';
+import { Instrument, Issuer, IssuersFilter, ModificationInstrument } from '@app/models';
 
 
 @Injectable()

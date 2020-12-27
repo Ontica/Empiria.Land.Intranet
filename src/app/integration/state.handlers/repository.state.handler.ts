@@ -14,7 +14,7 @@ import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-
 
 import { RepositoryDataService } from '@app/data-services';
 
-import { RealEstate } from '@app/domain/models';
+import { RealEstate } from '@app/models';
 
 
 export enum SelectorType {

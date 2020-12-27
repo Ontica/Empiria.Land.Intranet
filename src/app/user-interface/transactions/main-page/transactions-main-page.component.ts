@@ -13,10 +13,11 @@ import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationState } from '@app/core/presentation';
 import { TransactionStateSelector, MainUIStateSelector,
-         DocumentsRecordingAction, DocumentsRecordingStateSelector, TransactionAction } from '@app/core/presentation/state.commands';
+         DocumentsRecordingAction, DocumentsRecordingStateSelector,
+         TransactionAction } from '@app/core/presentation/state.commands';
 
 import { Transaction, TransactionFilter, TransactionStagesType,
-         EmptyTransaction, EmptyTransactionFilter, TransactionStatusType } from '@app/domain/models';
+         EmptyTransaction, EmptyTransactionFilter, TransactionStatusType } from '@app/models';
 
 import { View } from '@app/user-interface/main-layout';
 
@@ -57,12 +58,11 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
     this.store.select<View>(MainUIStateSelector.CURRENT_VIEW)
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(x =>{
+      .subscribe(x => {
         this.onChangeView(x);
         this.store.dispatch(TransactionAction.UNSELECT_TRANSACTION);
         this.store.dispatch(DocumentsRecordingAction.UNSELECT_RECORDING_ACT);
-      }
-      );
+      });
 
     this.store.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .pipe(takeUntil(this.unsubscribe))

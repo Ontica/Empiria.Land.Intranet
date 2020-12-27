@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { InstrumentType } from '@app/domain/models';
+import { InstrumentType } from '@app/models';
 
 
 @Injectable()

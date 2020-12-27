@@ -19,7 +19,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Identifiable, Assertion } from '@app/core';
 import { PresentationState } from '@app/core/presentation';
 
-import { EmptyRealEstate, RecordingSeekData } from '@app/domain/models';
+import { EmptyRealEstate, RecordingSeekData } from '@app/models';
 
 import { LandRepositoryStateSelector } from '@app/core/presentation/state.commands';
 

@@ -7,10 +7,11 @@
 
 import { Component, Output, EventEmitter } from '@angular/core';
 
-import { EventInfo } from '@app/core';
-import { FrontController } from '@app/core/presentation';
-import { ProcedureType, Requester } from '@app/domain/models';
+import { FrontController, Command } from '@app/core/presentation';
+
 import { TransactionCommandType } from '@app/core/presentation/commands';
+
+import { ProcedureType, Requester } from '@app/models';
 
 
 @Component({
@@ -26,16 +27,13 @@ export class RequestCreatorComponent {
 
   constructor(private frontController: FrontController) { }
 
-
   get procedureSelected() {
     return this.procedureType !== 'NoDeterminado';
   }
 
-
   onClose() {
     this.closeEvent.emit();
   }
-
 
   onRequesterDataChanged(requester: Requester) {
     this.sendCreateEFilingRequestEvent(requester);
@@ -43,7 +41,7 @@ export class RequestCreatorComponent {
 
 
   private sendCreateEFilingRequestEvent(requestedBy: Requester) {
-    const event: EventInfo = {
+    const command: Command = {
       type: TransactionCommandType.CREATE_TRANSACTION,
       payload: {
         procedureType: this.procedureType,
@@ -51,11 +49,11 @@ export class RequestCreatorComponent {
       }
     };
 
-    console.log(event);
+    console.log(command);
     this.closeEvent.emit();
 
-    // this.frontController.dispatch<void>(event)
-    //   .then(() => this.closeEvent.emit());
+    this.frontController.execute<void>(command)
+                        .then(() => this.closeEvent.emit());
 
   }
 

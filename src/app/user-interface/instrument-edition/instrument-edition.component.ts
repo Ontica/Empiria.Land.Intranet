@@ -14,7 +14,7 @@ import { isEmpty } from '@app/core';
 import { PresentationLayer } from '@app/core/presentation';
 import { InstrumentsStateSelector } from '@app/core/presentation/state.commands';
 
-import { Transaction, EmptyTransaction, Instrument, EmptyInstrument } from '@app/domain/models';
+import { Transaction, EmptyTransaction, Instrument, EmptyInstrument } from '@app/models';
 
 
 @Component({

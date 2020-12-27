@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService, Identifiable } from '@app/core';
 
-import { RealEstate } from '@app/domain/models';
+import { RealEstate } from '@app/models';
 
 
 @Injectable()

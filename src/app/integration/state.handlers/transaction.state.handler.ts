@@ -13,7 +13,7 @@ import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-
 
 import { TransactionDataService } from '@app/data-services';
 
-import { EmptyTransactionFilter, EmptyTransaction } from '@app/domain/models';
+import { EmptyTransactionFilter, EmptyTransaction } from '@app/models';
 
 
 export enum ActionType {
