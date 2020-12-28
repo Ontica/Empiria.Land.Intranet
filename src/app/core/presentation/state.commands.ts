@@ -7,4 +7,6 @@
 
 export * from '@app/integration/state.handlers/actions';
 
+export * from '@app/integration/state.handlers/effects';
+
 export * from '@app/integration/state.handlers/selectors';

@@ -8,7 +8,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion, CommandResult, toObservable } from '@app/core';
+import { Assertion, toObservable } from '@app/core';
 
 import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
 
@@ -25,7 +25,7 @@ export enum SelectorType {
 }
 
 
-enum CommandEffectType {
+export enum EffectType {
   CREATE_INSTRUMENT = InstrumentsCommandType.CREATE_INSTRUMENT,
   UPDATE_INSTRUMENT = InstrumentsCommandType.UPDATE_INSTRUMENT,
 }
@@ -44,7 +44,7 @@ export class InstrumentsStateHandler extends AbstractStateHandler {
     super({
       initialState,
       selectors: SelectorType,
-      effects: CommandEffectType
+      effects: EffectType
     });
   }
 
@@ -58,7 +58,7 @@ export class InstrumentsStateHandler extends AbstractStateHandler {
         return toObservable<U>(this.data.getTransactionInstrument(params));
 
       case SelectorType.ISSUER_LIST:
-        Assertion.assertValue(params.instrumentType, 'params.InstrumentType');
+        Assertion.assertValue(params.instrumentType, 'params.instrumentType');
 
         return toObservable<U>(this.data.findIssuers(params as IssuersFilter));
 
@@ -66,19 +66,19 @@ export class InstrumentsStateHandler extends AbstractStateHandler {
         return super.select<U>(selectorType, params);
 
     }
-  }  // select
+  }
 
 
-  applyEffects(command: CommandResult): void {
-    switch ((command.type as any) as CommandEffectType) {
+  applyEffects(effectType: EffectType, params?: any): void {
+    switch (effectType) {
 
-      case CommandEffectType.CREATE_INSTRUMENT:
-      case CommandEffectType.UPDATE_INSTRUMENT:
-        this.setValue(SelectorType.TRANSACTION_INSTRUMENT, command.result);
+      case EffectType.CREATE_INSTRUMENT:
+      case EffectType.UPDATE_INSTRUMENT:
+        this.setValue(SelectorType.TRANSACTION_INSTRUMENT, params.result);
         return;
 
       default:
-        throw this.unhandledCommandOrActionType(command);
+        throw this.unhandledCommandOrActionType(effectType);
     }
   }
 

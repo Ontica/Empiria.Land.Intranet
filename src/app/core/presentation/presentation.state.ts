@@ -8,10 +8,10 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion, CommandResult } from '@app/core';
+import { Assertion } from '@app/core';
 
 import { StateHandler } from './state-handler';
-import { StateAction, StateSelector } from './state.commands';
+import { StateAction, StateEffect, StateSelector } from './state.commands';
 
 
 export const STATE_HANDLERS =
@@ -24,31 +24,24 @@ export class PresentationState {
   constructor(@Inject(STATE_HANDLERS) private registeredHandlers: StateHandler[]) { }
 
 
-  applyEffects(command: CommandResult): void {
-    Assertion.assertValue(command, 'command');
+  applyEffects(effectType: StateEffect, payload?: any): void {
+    Assertion.assertValue(effectType, 'effectType');
 
-    try {
-      const stateHandler = this.tryGetStateHandlerForCommand(command);
+    const stateHandler = this.tryGetEffectsHandler(effectType);
 
-      if (stateHandler) {
-        stateHandler.applyEffects(command);
-      }
-
-    } catch (e) {
-      throw e;
+    if (stateHandler) {
+      stateHandler.applyEffects(effectType, payload);
     }
   }
 
-  dispatch(actionType: StateAction, payload?: any): void;
-
-  dispatch<U>(actionType: StateAction, payload?: any): Promise<U>;
-
-  dispatch<U>(actionType: StateAction, payload?: any): U extends void ? void : Promise<U> {
+  dispatch(actionType: StateAction, params?: any): void {
     Assertion.assertValue(actionType, 'actionType');
 
     const stateHandler = this.getStateHandlerForAction(actionType);
 
-    return stateHandler.dispatch<U>(actionType, payload);
+    stateHandler.dispatch(actionType, params);
+
+    this.applyEffects(actionType as any as StateEffect);
   }
 
 
@@ -97,9 +90,9 @@ export class PresentationState {
   }
 
 
-  private tryGetStateHandlerForCommand(command: CommandResult): StateHandler | undefined {
+  private tryGetEffectsHandler(effectType: StateEffect): StateHandler | undefined {
     for (const handler of this.registeredHandlers) {
-      if (handler.effects.includes(command.type)) {
+      if (handler.effects.includes(effectType as unknown as string)) {
         return handler;
       }
     }

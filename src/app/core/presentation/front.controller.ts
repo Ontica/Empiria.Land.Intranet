@@ -14,6 +14,7 @@ import { PresentationState } from './presentation.state';
 
 import { CommandType } from './commands';
 import { MainUIStateAction } from '@app/integration/state.handlers/actions';
+import { StateEffect } from '@app/integration/state.handlers/effects';
 
 
 export const COMMAND_HANDLERS =
@@ -61,7 +62,7 @@ export class FrontController {
   private afterCommandExecution(command: Command, result: any) {
     const commandResult: CommandResult = { ...command, result };
 
-    this.presentation.applyEffects(commandResult);
+    this.presentation.applyEffects(command.type as unknown as StateEffect, commandResult);
     this.endProcessing();
   }
 
