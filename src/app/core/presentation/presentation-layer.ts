@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, Command } from '@app/core';
 
-import { StateSelector } from './state.commands';
+import { StateAction, StateSelector } from './state.commands';
 import { CommandType } from './commands';
 
 import { PresentationState } from './presentation.state';
@@ -38,10 +38,23 @@ export class PresentationLayer {
     return this.controller.execute<T>(command);
   }
 
+  dispatch(actionType: StateAction, payload?: any): void {
+    Assertion.assertValue(actionType, 'actionType');
+
+    return this.presenter.dispatch(actionType, payload);
+  }
+
+
   select<T>(selector: StateSelector, params?: any): Observable<T> {
     Assertion.assertValue(selector, 'selector');
 
     return this.presenter.select<T>(selector, params);
+  }
+
+  selectValue<T>(selector: StateSelector): T {
+    Assertion.assertValue(selector, 'selector');
+
+    return this.presenter.getValue<T>(selector);
   }
 
 }

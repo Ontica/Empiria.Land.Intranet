@@ -70,7 +70,7 @@ export class MainUserInterfaceStateHandler extends AbstractStateHandler {
   }
 
 
-  dispatch<U>(actionType: ActionType, payload?: any): Promise<U> | void {
+  dispatch(actionType: ActionType, payload?: any): void {
     switch (actionType) {
 
       case ActionType.SET_IS_PROCESSING_FLAG:

@@ -7,7 +7,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { Assertion, CommandResult } from '@app/core';
+import { Assertion } from '@app/core';
 
 import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
 
@@ -17,18 +17,13 @@ import { EmptyRecordingAct } from '@app/models';
 
 
 export enum ActionType {
-  SELECT_RECORDING_ACT  = 'OnePoint.UI-Action.ElectronicFiling.SelectRecordingAct',
-  UNSELECT_RECORDING_ACT= 'OnePoint.UI-Action.ElectronicFiling.UnselectRecordingAct',
+  SELECT_RECORDING_ACT   = 'OnePoint.UI-Action.ElectronicFiling.SelectRecordingAct',
+  UNSELECT_RECORDING_ACT = 'OnePoint.UI-Action.ElectronicFiling.UnselectRecordingAct',
 }
 
 
 export enum SelectorType {
   SELECTED_RECORDING_ACT = 'OnePoint.UI-Item.ElectronicFiling.SelectedRecordingAct'
-}
-
-
-enum CommandEffectType {
-
 }
 
 
@@ -44,22 +39,17 @@ export class RecordingsStateHandler extends AbstractStateHandler {
     super({
       initialState,
       selectors: SelectorType,
-      actions: ActionType,
-      effects: CommandEffectType
+      actions: ActionType
     });
   }
 
-  applyEffects(command: CommandResult): void {
-
-  }
-
-  dispatch<U>(actionType: ActionType, payload?: any): Promise<U> | void {
+  dispatch(actionType: ActionType, params?: any): void {
     switch (actionType) {
 
       case ActionType.SELECT_RECORDING_ACT:
-        Assertion.assertValue(payload.request, 'payload.request');
+        Assertion.assertValue(params.transaction, 'params.transaction');
 
-        this.setValue(SelectorType.SELECTED_RECORDING_ACT, payload.request);
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, params.transaction);
         return;
 
       case ActionType.UNSELECT_RECORDING_ACT:

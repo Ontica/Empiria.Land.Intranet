@@ -9,13 +9,11 @@ import { Observable, BehaviorSubject } from 'rxjs';
 
 import { Assertion } from '../general/assertion';
 
-import { Cache, CommandResult, KeyValue, resolve } from '../data-types';
+import { Cache, KeyValue, resolve } from '../data-types';
 
-import { StateAction, StateSelector } from './state.commands';
-import { CommandType } from './commands';
+import { StateAction, StateEffect, StateSelector } from './state.commands';
 
 import { UpdateStateUtilities } from './update-state-utilities';
-
 
 export type StateValues = KeyValue[];
 
@@ -26,18 +24,15 @@ export interface StateHandler {
   readonly actions: string[];
   readonly effects: string[];
 
-  applyEffects(command: CommandResult): void;
+  applyEffects(effectType: StateEffect, params?: any): void;
 
-  dispatch(actionType: StateAction, payload?: any): void;
-
-  dispatch<U>(actionType: StateAction, payload?: any): U extends void ? void : Promise<U>;
+  dispatch(actionType: StateAction, params?: any): void;
 
   getValue<U>(selector: StateSelector): U;
 
   select<U>(selector: StateSelector, params?: any): Observable<U>;
 
 }
-
 
 export interface StateHandlerConfig {
   initialState?: StateValues;
@@ -74,19 +69,19 @@ export abstract class AbstractStateHandler implements StateHandler {
     }
 
     if (config.effects) {
-      this.effects = Object.keys(config.effects).map(k => config.effects[k as CommandType]);
+      this.effects = Object.keys(config.effects).map(k => config.effects[k]);
     }
 
     this.stateUpdater = new UpdateStateUtilities(this, this.setValue);
   }
 
 
-  applyEffects(command: CommandResult): void {
+  applyEffects(effectType: StateEffect, params?: any): void {
 
   }
 
 
-  dispatch<U>(actionType: StateAction, payload?: any): Promise<U> | void {
+  dispatch(actionType: StateAction, payload?: any): void {
     throw this.unhandledCommandOrActionType(actionType);
   }
 
@@ -103,8 +98,6 @@ export abstract class AbstractStateHandler implements StateHandler {
 
     return stateItem.asObservable() as Observable<U>;
   }
-
-
 
   selectMemoized<U>(selector: StateSelector, funct: () => any, key: string): Observable<U> {
     Assertion.assertValue(key, 'key');
@@ -177,14 +170,9 @@ export abstract class AbstractStateHandler implements StateHandler {
   }
 
 
-  protected unhandledCommandOrActionType(commandOrActionType: CommandResult | string): never {
-    let msg = `${AbstractStateHandler.name} is not able to handle `;
-
-    if (typeof commandOrActionType === 'string') {
-      msg += `action '${commandOrActionType}.'`;
-    } else {
-      msg += `command '${commandOrActionType.type}.'`;
-    }
+  protected unhandledCommandOrActionType(commandOrActionType: StateEffect | StateAction): never {
+    const msg = `${AbstractStateHandler.name} is not able to handle ` +
+                `action or command '${commandOrActionType}.'`;
 
     throw Assertion.assertNoReachThisCode(msg);
   }
