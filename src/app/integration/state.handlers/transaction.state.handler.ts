@@ -7,81 +7,113 @@
 
 import { Injectable } from '@angular/core';
 
-import { Assertion, CommandResult } from '@app/core';
+import { Assertion } from '@app/core';
 
 import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
 
 import { TransactionDataService } from '@app/data-services';
 
-import { EmptyTransactionFilter, EmptyTransaction } from '@app/models';
+import { EmptyTransactionFilter, EmptyTransaction, TransactionFilter } from '@app/models';
+import { Observable } from 'rxjs';
 
 
 export enum ActionType {
-  LOAD_TRANSACTION_LIST = 'Land.UI-Action.Transaction.LoadTransactionList',
-  SELECT_TRANSACTION = 'Land.UI-Action.Transaction.SelectTransaction',
-  UNSELECT_TRANSACTION = 'Land.UI-Action.Transaction.UnselectTransaction',
+  SELECT_TRANSACTION = 'Land.Transactions.Action.SelectTransaction',
+  SET_LIST_FILTER = 'Land.Transactions.Action.SetListFilter',
+  UNSELECT_TRANSACTION = 'Land.Transactions.Action.UnselectTransaction'
+}
+
+
+export enum EffectType {
+  SET_LIST_FILTER = ActionType.SET_LIST_FILTER
 }
 
 
 export enum SelectorType {
-  TRANSACTION_LIST = 'Land.Transactions.TransactionList',
-  LIST_FILTER = 'Land.Transactions.TransactionList.Filter',
-  SELECTED_TRANSACTION = 'Land.Transactions.SelectedTransaction',
-}
-
-
-enum CommandEffectType {
-
+  LIST_FILTER = 'Land.Transactions.Selectors.TransactionListFilter',
+  SELECTED_TRANSACTION = 'Land.Transactions.Selectors.SelectedTransaction',
+  TRANSACTION_LIST = 'Land.Transactions.Selectors.TransactionList',
 }
 
 
 const initialState: StateValues = [
-  { key: SelectorType.TRANSACTION_LIST, value: [] },
   { key: SelectorType.LIST_FILTER, value: EmptyTransactionFilter },
   { key: SelectorType.SELECTED_TRANSACTION, value: EmptyTransaction },
+  { key: SelectorType.TRANSACTION_LIST, value: [] },
 ];
 
 
 @Injectable()
 export class TransactionStateHandler extends AbstractStateHandler {
 
-
   constructor(private data: TransactionDataService) {
     super({
       initialState,
       selectors: SelectorType,
       actions: ActionType,
-      effects: CommandEffectType
+      effects: EffectType
     });
   }
 
 
-  applyEffects(command: CommandResult): void {
+  select<T>(selectorType: SelectorType, params?: any): Observable<T> {
+    switch (selectorType) {
 
+      case SelectorType.TRANSACTION_LIST:
+        return super.select<T>(SelectorType.TRANSACTION_LIST);
+
+      case SelectorType.LIST_FILTER:
+        return super.select<T>(SelectorType.LIST_FILTER);
+
+      default:
+        return super.select<T>(selectorType, params);
+
+    }
   }
 
 
-  dispatch<U>(actionType: ActionType, payload?: any): Promise<U> | void {
+  applyEffects(effectType: EffectType, params?: any): void {
+    switch (effectType) {
+
+      case EffectType.SET_LIST_FILTER:
+        const filter = this.getValue<TransactionFilter>(SelectorType.LIST_FILTER);
+
+        const transactionList = this.data.getTransactionList(filter);
+
+        this.setValue(SelectorType.TRANSACTION_LIST, transactionList);
+
+        this.dispatch(ActionType.UNSELECT_TRANSACTION);
+
+        return;
+      default:
+        throw this.unhandledCommandOrActionType(effectType);
+    }
+  }
+
+
+  dispatch(actionType: ActionType, params?: any): void {
     switch (actionType) {
 
-      case ActionType.LOAD_TRANSACTION_LIST:
-        const filter = payload?.filter || this.getValue(SelectorType.LIST_FILTER);
-        this.setValue(SelectorType.LIST_FILTER, filter);
-
-        return this.setValue<U>(SelectorType.TRANSACTION_LIST,
-                                this.data.getTransactionList(filter));
-
-
       case ActionType.SELECT_TRANSACTION:
-        Assertion.assertValue(payload.request, 'payload.request');
-        this.setValue(SelectorType.SELECTED_TRANSACTION, payload.request);
-        return;
+        Assertion.assertValue(params.transaction, 'payload.transaction');
 
+        this.setValue(SelectorType.SELECTED_TRANSACTION, params.transaction);
+
+        return;
 
       case ActionType.UNSELECT_TRANSACTION:
         this.setValue(SelectorType.SELECTED_TRANSACTION, EmptyTransaction);
+
         return;
 
+      case ActionType.SET_LIST_FILTER:
+        Assertion.assertValue(params.filter, 'payload.filter');
+
+        const filter = params?.filter || this.getValue(SelectorType.LIST_FILTER);
+
+        this.setValue(SelectorType.LIST_FILTER, filter);
+
+        return;
 
       default:
         throw this.unhandledCommandOrActionType(actionType);

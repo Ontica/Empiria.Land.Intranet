@@ -9,7 +9,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 
 import { EventInfo } from '@app/core';
 
-import { PresentationState } from '@app/core/presentation';
+import { PresentationLayer } from '@app/core/presentation';
 
 import { Transaction, EmptyTransaction,
          TransactionFilter, EmptyTransactionFilter } from '@app/models';
@@ -44,7 +44,7 @@ export class RequestListComponent implements OnChanges {
   keywords = '';
 
 
-  constructor(private store: PresentationState) { }
+  constructor(private uiLayer: PresentationLayer) { }
 
 
   ngOnChanges(changes: SimpleChanges) {
@@ -64,12 +64,12 @@ export class RequestListComponent implements OnChanges {
   }
 
 
-  onSelect(request: Transaction) {
-    this.store.dispatch(TransactionAction.SELECT_TRANSACTION, { request });
+  onSelect(transaction: Transaction) {
+    this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION, { transaction });
   }
 
-  onSelectRecordingAct(request: Transaction) {
-    this.store.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT, { request });
+  onSelectRecordingAct(transaction: Transaction) {
+    this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT, { transaction });
   }
 
   onClickCreateRequestButton() {

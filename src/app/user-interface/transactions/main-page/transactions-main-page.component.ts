@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 
-import { PresentationState } from '@app/core/presentation';
+import { PresentationLayer } from '@app/core/presentation';
 import { TransactionStateSelector, MainUIStateSelector,
          DocumentsRecordingAction, DocumentsRecordingStateSelector,
          TransactionAction } from '@app/core/presentation/state.commands';
@@ -45,39 +45,33 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   private unsubscribe: Subject<void> = new Subject();
 
-  constructor(private store: PresentationState) { }
+  constructor(private uiLayer: PresentationLayer) { }
 
 
   ngOnInit() {
-    this.store.select<Transaction[]>(TransactionStateSelector.TRANSACTION_LIST)
+    this.uiLayer.select<Transaction[]>(TransactionStateSelector.TRANSACTION_LIST)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => {
         this.requestList = x;
         this.isLoading = false;
       });
 
-    this.store.select<View>(MainUIStateSelector.CURRENT_VIEW)
+    this.uiLayer.select<View>(MainUIStateSelector.CURRENT_VIEW)
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(x => {
-        this.onChangeView(x);
-        this.store.dispatch(TransactionAction.UNSELECT_TRANSACTION);
-        this.store.dispatch(DocumentsRecordingAction.UNSELECT_RECORDING_ACT);
-      });
+      .subscribe(x => this.onChangeView(x));
 
-    this.store.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
+    this.uiLayer.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => {
         this.selectedRequest = x;
         this.displayEditor = !isEmpty(this.selectedRequest);
       });
 
-    this.store.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
+    this.uiLayer.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(x =>
-        this.filter = x
-      );
+      .subscribe(x => this.filter = x);
 
-    this.store.select<Transaction>(DocumentsRecordingStateSelector.SELECTED_RECORDING_ACT)
+    this.uiLayer.select<Transaction>(DocumentsRecordingStateSelector.SELECTED_RECORDING_ACT)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => {
         this.selectedRequest = x;
@@ -93,8 +87,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
 
   onCloseEditor() {
-    this.store.dispatch(TransactionAction.UNSELECT_TRANSACTION);
-    this.store.dispatch(DocumentsRecordingAction.UNSELECT_RECORDING_ACT);
+    this.unselectCurrentTransaction();
   }
 
 
@@ -107,7 +100,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
     switch (event.type as RequestListEventType) {
 
       case RequestListEventType.SET_FILTER:
-        this.loadRequests(event.payload);
+        this.changeFilter(event.payload);
         return;
 
       case RequestListEventType.ON_CLICK_CREATE_REQUEST_BUTTON:
@@ -123,26 +116,24 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   // private methods
 
-
   private onChangeView(newView: View) {
     this.currentView = newView;
-    this.loadRequests();
+    this.changeFilter();
   }
-
 
   private getRequestStageForView(view: View): TransactionStagesType {
     switch (view.name) {
-      case 'Requests.Pending': // En Elaboracion
+      case 'Requests.Pending':    // En Elaboracion
         return 'InProgress';
-      case 'Requests.OnSign': // En Firma
-        return null; // 'InProgress'
-      case 'Requests.Finished': // Finalizados
+      case 'Requests.OnSign':     // En Firma
+        return null;                // 'InProgress'
+      case 'Requests.Finished':   // Finalizados
         return 'Completed';
-      case 'Requests.Rejected': // Devueltos
+      case 'Requests.Rejected':   // Devueltos
         return 'Returned';
-      case 'Requests.OnPayment': // Por Ingresar
+      case 'Requests.OnPayment':  // Por Ingresar
         return 'Pending';
-      case 'Requests.All': // Todos
+      case 'Requests.All':        // Todos
         return 'All';
       default:
         throw Assertion.assertNoReachThisCode(`Unrecognized view with name '${view.name}'.`);
@@ -152,21 +143,29 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   private getRequestStatusForView(view: View): TransactionStatusType {
     if (view.name === 'Requests.OnSign'){
       return 'OnSign';
-    }else{
+    } else {
       return null;
     }
   }
 
-  private loadRequests(data?: { keywords: string }) {
+  private changeFilter(data?: { keywords: string }) {
     const currentKeywords =
-    this.store.getValue<TransactionFilter>(TransactionStateSelector.LIST_FILTER).keywords;
+        this.uiLayer.selectValue<TransactionFilter>(TransactionStateSelector.LIST_FILTER).keywords;
+
     const filter: TransactionFilter = {
       stage: this.getRequestStageForView(this.currentView),
       status: this.getRequestStatusForView(this.currentView),
       keywords: data ? data.keywords : currentKeywords,
     };
+
     this.isLoading = true;
-    this.store.dispatch(TransactionAction.LOAD_TRANSACTION_LIST, { filter });
+
+    this.uiLayer.dispatch(TransactionAction.SET_LIST_FILTER, { filter });
+  }
+
+  private unselectCurrentTransaction() {
+    this.uiLayer.dispatch(TransactionAction.UNSELECT_TRANSACTION);
+    this.uiLayer.dispatch(DocumentsRecordingAction.UNSELECT_RECORDING_ACT);
   }
 
 }
