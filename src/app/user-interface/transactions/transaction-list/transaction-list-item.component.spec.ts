@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { RequestTabbedViewComponent } from './request-tabbed-view.component';
+import { RequestListItemComponent } from './transaction-list-item.component';
 
 
-describe('RequestTabbedViewComponent', () => {
-  let component: RequestTabbedViewComponent;
-  let fixture: ComponentFixture<RequestTabbedViewComponent>;
+describe('RequestListItemComponent', () => {
+  let component: RequestListItemComponent;
+  let fixture: ComponentFixture<RequestListItemComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ RequestTabbedViewComponent ]
+      declarations: [ RequestListItemComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RequestTabbedViewComponent);
+    fixture = TestBed.createComponent(RequestListItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

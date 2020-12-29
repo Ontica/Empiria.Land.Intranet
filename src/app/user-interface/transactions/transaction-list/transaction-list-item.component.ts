@@ -12,7 +12,7 @@ import { Transaction } from '@app/models';
 
 @Component({
   selector: 'emp-land-request-list-item',
-  templateUrl: './request-list-item.component.html',
+  templateUrl: './transaction-list-item.component.html',
 })
 export class RequestListItemComponent {
 

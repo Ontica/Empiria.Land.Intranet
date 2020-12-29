@@ -21,7 +21,7 @@ import { Transaction, TransactionFilter, TransactionStagesType,
 
 import { View } from '@app/user-interface/main-layout';
 
-import { RequestListEventType } from '../request-list/request-list.component';
+import { RequestListEventType } from '../transaction-list/transaction-list.component';
 
 
 @Component({

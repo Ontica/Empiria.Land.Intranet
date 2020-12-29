@@ -25,7 +25,7 @@ export enum RequestListEventType {
 
 @Component({
   selector: 'emp-land-request-list',
-  templateUrl: './request-list.component.html'
+  templateUrl: './transaction-list.component.html'
 })
 export class RequestListComponent implements OnChanges {
 

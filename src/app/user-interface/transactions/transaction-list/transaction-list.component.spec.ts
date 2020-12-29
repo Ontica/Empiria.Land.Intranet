@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { RequestListComponent } from './request-list.component';
+import { RequestListComponent } from './transaction-list.component';
 
 
 describe('RequestListComponent', () => {

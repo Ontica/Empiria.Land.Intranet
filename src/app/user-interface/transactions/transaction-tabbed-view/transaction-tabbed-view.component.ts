@@ -12,7 +12,7 @@ import { Transaction, EmptyTransaction } from '@app/models';
 
 @Component({
   selector: 'emp-land-request-tabbed-view',
-  templateUrl: './request-tabbed-view.component.html'
+  templateUrl: './transaction-tabbed-view.component.html'
 })
 export class RequestTabbedViewComponent implements OnChanges {
 
