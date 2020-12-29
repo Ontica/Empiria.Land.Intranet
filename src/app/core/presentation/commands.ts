@@ -5,4 +5,4 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-export * from '@app/integration/command.handlers/commands';
+export * from '@app/presentation/command.handlers/commands';

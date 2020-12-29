@@ -13,8 +13,8 @@ import { Assertion, Command, CommandHandler, CommandResult,
 import { PresentationState } from './presentation.state';
 
 import { CommandType } from './commands';
-import { MainUIStateAction } from '@app/integration/state.handlers/actions';
-import { StateEffect } from '@app/integration/state.handlers/effects';
+import { MainUIStateAction } from '@app/presentation/state.handlers/actions';
+import { StateEffect } from '@app/presentation/state.handlers/effects';
 
 
 export const COMMAND_HANDLERS =

@@ -42,10 +42,14 @@ export class InstrumentTypesStateHandler extends AbstractStateHandler {
 
         return toObservable<T>(this.data.getInstrumentKindsList(params));
 
+        // const dataProvider = () => this.data.getInstrumentKindsList(params);
+
+        // return super.selectMemoized<T>(selectorType, dataProvider, params);
+
       default:
         return super.select<T>(selectorType, params);
 
     }
-  }  // select
+  }
 
 }
