@@ -2,28 +2,29 @@
 
   <div fxFlex="35">
     <div class="label">Tipo de trámite</div>
-    <div class="primary-text nowrap"><strong>{{request.type}}</strong></div>
-    <div>{{request.subtype}}</div>
+    <div class="primary-text nowrap"><strong>{{transaction.type}}</strong></div>
+    <div>{{transaction.subtype}}</div>
   </div>
 
   <div fxFlex="30%">
-    <div *ngIf="request?.transactionID">
+    <div *ngIf="transaction?.transactionID">
       <div class="label">Trámite RPP</div>
       <div>
-        <div class="primary-text nowrap"><strong>{{request?.transactionID}}</strong></div>
-        <div>{{request?.presentationTime | dateTimeFormat}}</div>
+        <div class="primary-text nowrap"><strong>{{transaction?.transactionID}}</strong></div>
+        <div>{{transaction?.presentationTime | dateTimeFormat}}</div>
       </div>
     </div>
   </div>
 
   <div fxFlex="30%">
     <div class="label">Estado:</div>
-    <div class="primary-text nowrap"><strong>{{request.statusName}}</strong></div>
+    <div class="primary-text nowrap"><strong>{{transaction.statusName}}</strong></div>
   </div>
 
   <div fxFlex="5%">
     <div class="primary-text nowrap">
-      <button mat-mini-fab color="accent" matTooltip="Agregar personas al acto jurídico" (click)="editRequest()"><mat-icon>search</mat-icon></button>
+      <button mat-mini-fab color="accent" matTooltip="Agregar personas al acto jurídico"
+              (click)="showProvisionalRecordingEditor()"><mat-icon>search</mat-icon></button>
     </div>
   </div>
 

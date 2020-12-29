@@ -17,11 +17,11 @@ import { SharedModule } from '@app/shared/shared.module';
 import { InstrumentEditionModule } from '../instrument-edition/instrument-edition.module';
 import { InstrumentRecordingModule } from '../instrument-recording/instrument-recording.module';
 
-import { RequestListComponent } from './transaction-list/transaction-list.component';
-import { RequestListItemComponent } from './transaction-list/transaction-list-item.component';
-import { RequestTabbedViewComponent } from './transaction-tabbed-view/transaction-tabbed-view.component';
-import { TransactionsRoutingModule } from './transactions-routing.module';
+import { TransactionListComponent } from './transaction-list/transaction-list.component';
+import { TransactionListItemComponent } from './transaction-list/transaction-list-item.component';
+import { TransactionTabbedViewComponent } from './transaction-tabbed-view/transaction-tabbed-view.component';
 import { TransactionsMainPageComponent } from './main-page/transactions-main-page.component';
+import { TransactionsRoutingModule } from './transactions-routing.module';
 
 
 @NgModule({
@@ -40,9 +40,9 @@ import { TransactionsMainPageComponent } from './main-page/transactions-main-pag
 
   declarations: [
     TransactionsMainPageComponent,
-    RequestListComponent,
-    RequestListItemComponent,
-    RequestTabbedViewComponent,
+    TransactionListComponent,
+    TransactionListItemComponent,
+    TransactionTabbedViewComponent,
   ],
 
   exports: []

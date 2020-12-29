@@ -17,13 +17,13 @@ import { EmptyRecordingAct } from '@app/models';
 
 
 export enum ActionType {
-  SELECT_RECORDING_ACT   = 'OnePoint.UI-Action.ElectronicFiling.SelectRecordingAct',
-  UNSELECT_RECORDING_ACT = 'OnePoint.UI-Action.ElectronicFiling.UnselectRecordingAct',
+  SELECT_RECORDING_ACT   = 'Land.Recording.Action.SelectRecordingAct',
+  UNSELECT_RECORDING_ACT = 'Land.Recording.Action.UnselectRecordingAct',
 }
 
 
 export enum SelectorType {
-  SELECTED_RECORDING_ACT = 'OnePoint.UI-Item.ElectronicFiling.SelectedRecordingAct'
+  SELECTED_RECORDING_ACT = 'Land.Recording.Selector.SelectedRecordingAct'
 }
 
 

@@ -16,12 +16,12 @@ import { TransactionStateSelector, MainUIStateSelector,
          DocumentsRecordingAction, DocumentsRecordingStateSelector,
          TransactionAction } from '@app/core/presentation/state.commands';
 
-import { Transaction, TransactionFilter, TransactionStagesType,
-         EmptyTransaction, EmptyTransactionFilter, TransactionStatusType } from '@app/models';
+import { Transaction, TransactionFilter, TransactionStages,
+         EmptyTransaction, EmptyTransactionFilter, TransactionStatus } from '@app/models';
 
 import { View } from '@app/user-interface/main-layout';
 
-import { RequestListEventType } from '../transaction-list/transaction-list.component';
+import { TransactionListEventType } from '../transaction-list/transaction-list.component';
 
 
 @Component({
@@ -35,11 +35,11 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   currentView: View;
 
-  requestList: Transaction[] = [];
-  selectedRequest: Transaction = EmptyTransaction;
+  transactionList: Transaction[] = [];
+  selectedTransaction: Transaction = EmptyTransaction;
   filter: TransactionFilter = EmptyTransactionFilter;
 
-  displayRequestCreator = false;
+  displayTransactionCreator = false;
 
   isLoading = false;
 
@@ -52,7 +52,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
     this.uiLayer.select<Transaction[]>(TransactionStateSelector.TRANSACTION_LIST)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => {
-        this.requestList = x;
+        this.transactionList = x;
         this.isLoading = false;
       });
 
@@ -63,8 +63,8 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
     this.uiLayer.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => {
-        this.selectedRequest = x;
-        this.displayEditor = !isEmpty(this.selectedRequest);
+        this.selectedTransaction = x;
+        this.displayEditor = !isEmpty(this.selectedTransaction);
       });
 
     this.uiLayer.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
@@ -74,8 +74,8 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
     this.uiLayer.select<Transaction>(DocumentsRecordingStateSelector.SELECTED_RECORDING_ACT)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => {
-        this.selectedRequest = x;
-        this.displayEditorRecordingAct = !isEmpty(this.selectedRequest);
+        this.selectedTransaction = x;
+        this.displayEditorRecordingAct = !isEmpty(this.selectedTransaction);
       });
   }
 
@@ -91,20 +91,20 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  onRequestCreatorClosed() {
-    this.displayRequestCreator = false;
+  onTransactionCreatorClosed() {
+    this.displayTransactionCreator = false;
   }
 
 
-  onRequestListEvent(event: EventInfo): void {
-    switch (event.type as RequestListEventType) {
+  onTransactionListEvent(event: EventInfo): void {
+    switch (event.type as TransactionListEventType) {
 
-      case RequestListEventType.SET_FILTER:
+      case TransactionListEventType.SET_FILTER:
         this.changeFilter(event.payload);
         return;
 
-      case RequestListEventType.ON_CLICK_CREATE_REQUEST_BUTTON:
-        this.displayRequestCreator = true;
+      case TransactionListEventType.SHOW_CREATE_TRANSACTION_EDITOR:
+        this.displayTransactionCreator = true;
         return;
 
       default:
@@ -121,27 +121,27 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
     this.changeFilter();
   }
 
-  private getRequestStageForView(view: View): TransactionStagesType {
+  private getTransactionStageForView(view: View): TransactionStages {
     switch (view.name) {
-      case 'Requests.Pending':    // En Elaboracion
+      case 'Transactions.Pending':    // En Elaboracion
         return 'InProgress';
-      case 'Requests.OnSign':     // En Firma
-        return null;                // 'InProgress'
-      case 'Requests.Finished':   // Finalizados
+      case 'Transactions.OnSign':     // En Firma
+        return null;                    // 'InProgress'
+      case 'Transactions.Finished':   // Finalizados
         return 'Completed';
-      case 'Requests.Rejected':   // Devueltos
+      case 'Transactions.Rejected':   // Devueltos
         return 'Returned';
-      case 'Requests.OnPayment':  // Por Ingresar
+      case 'Transactions.OnPayment':  // Por Ingresar
         return 'Pending';
-      case 'Requests.All':        // Todos
+      case 'Transactions.All':        // Todos
         return 'All';
       default:
         throw Assertion.assertNoReachThisCode(`Unrecognized view with name '${view.name}'.`);
     }
   }
 
-  private getRequestStatusForView(view: View): TransactionStatusType {
-    if (view.name === 'Requests.OnSign'){
+  private getTransactionStatusForView(view: View): TransactionStatus {
+    if (view.name === 'Transactions.OnSign'){
       return 'OnSign';
     } else {
       return null;
@@ -153,8 +153,8 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
         this.uiLayer.selectValue<TransactionFilter>(TransactionStateSelector.LIST_FILTER).keywords;
 
     const filter: TransactionFilter = {
-      stage: this.getRequestStageForView(this.currentView),
-      status: this.getRequestStatusForView(this.currentView),
+      stage: this.getTransactionStageForView(this.currentView),
+      status: this.getTransactionStatusForView(this.currentView),
       keywords: data ? data.keywords : currentKeywords,
     };
 

@@ -8,20 +8,20 @@
 import { View, Layout } from '../common-models/common';
 
 import {
-  RequestsViews,
+  TransactionViews,
   SearchViews
 } from './views.config';
 
 
-export type LayoutType = 'Requests' | 'Transactions' | 'Search';
+export type LayoutType = 'Transactions' | 'Search';
 
 
-export const APP_VIEWS: View[] = RequestsViews.concat(SearchViews);
+export const APP_VIEWS: View[] = TransactionViews.concat(SearchViews);
 
 export const APP_LAYOUTS: Layout[] = [
   {
-    name: 'Requests',
-    views: RequestsViews,
+    name: 'Transactions',
+    views: TransactionViews,
     hint: 'Registro de trámites',
     defaultTitle: 'Trámites'
   },

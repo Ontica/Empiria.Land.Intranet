@@ -30,7 +30,7 @@ export class TransactionCommandHandler extends CommandHandler {
 
       // case CommandType.CREATE_TRANSACTION:
       //   return toPromise<U>(
-      //     this.useCases.createRequest(command.payload.procedureType, command.payload.requestedBy)
+      //     this.useCases.createTransaction(command.payload.procedureType, command.payload.requestedBy)
       //   );
 
       default:

@@ -5,22 +5,23 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { Transaction } from '@app/models';
 
 
 @Component({
-  selector: 'emp-land-request-list-item',
+  selector: 'emp-land-transaction-list-item',
   templateUrl: './transaction-list-item.component.html',
 })
-export class RequestListItemComponent {
+export class TransactionListItemComponent {
 
-  @Input() request: Transaction;
-  @Output() editionEvent = new EventEmitter<boolean>();
+  @Input() transaction: Transaction;
 
+  @Output() provisionalEvent = new EventEmitter<boolean>();
 
-  editRequest() {
-    this.editionEvent.emit(true);
+  showProvisionalRecordingEditor() {
+    this.provisionalEvent.emit(true);
   }
+
 }

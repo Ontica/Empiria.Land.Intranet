@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { RequestTabbedViewComponent } from './transaction-tabbed-view.component';
+import { TransactionTabbedViewComponent } from './transaction-tabbed-view.component';
 
 
-describe('RequestTabbedViewComponent', () => {
-  let component: RequestTabbedViewComponent;
-  let fixture: ComponentFixture<RequestTabbedViewComponent>;
+describe('TransactionTabbedViewComponent', () => {
+  let component: TransactionTabbedViewComponent;
+  let fixture: ComponentFixture<TransactionTabbedViewComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ RequestTabbedViewComponent ]
+      declarations: [ TransactionTabbedViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RequestTabbedViewComponent);
+    fixture = TestBed.createComponent(TransactionTabbedViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

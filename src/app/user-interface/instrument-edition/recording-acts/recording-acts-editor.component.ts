@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { EmptyTransaction, Transaction } from '@app/models';
 
 
@@ -13,22 +13,18 @@ import { EmptyTransaction, Transaction } from '@app/models';
   selector: 'emp-land-recording-acts',
   templateUrl: './recording-acts-editor.component.html'
 })
-export class RecordingActsEditorComponent implements OnInit {
+export class RecordingActsEditorComponent {
 
-  @Input() request: Transaction = EmptyTransaction;
+  @Input() transaction: Transaction = EmptyTransaction;
 
   @Output() closeEvent = new EventEmitter<void>();
-
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
   onClose() {
     this.closeEvent.emit();
   }
 
-  partyAdded(event){
+  partyAdded(event) {
+
   }
+
 }

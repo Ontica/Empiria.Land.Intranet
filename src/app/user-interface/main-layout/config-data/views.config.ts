@@ -8,39 +8,39 @@
 import { View } from '../common-models/common';
 
 
-export const RequestsViews: View[] = [
+export const TransactionViews: View[] = [
   {
-    name: 'Requests.Pending',
+    name: 'Transactions.Pending',
     title: 'Trámites en elaboración',
     menuTitle: 'En elaboración',
     url: '/transactions/pending'
   },
   {
-    name: 'Requests.OnSign',
+    name: 'Transactions.OnSign',
     title: 'Trámites pendientes de firma',
     menuTitle: 'En firma',
     url: '/transactions/on-sign'
   },
   {
-    name: 'Requests.Finished',
+    name: 'Transactions.Finished',
     title: 'Trámites finalizados',
     menuTitle: 'Finalizados',
     url: '/transactions/finished'
   },
   {
-    name: 'Requests.Rejected',
+    name: 'Transactions.Rejected',
     title: 'Trámites devueltos',
     menuTitle: 'Devueltos',
     url: '/transactions/rejected'
   },
   {
-    name: 'Requests.OnPayment',
+    name: 'Transactions.OnPayment',
     title: 'Trámites por ingresar',
     menuTitle: 'Por ingresar',
     url: '/transactions/on-payment'
   },
   {
-    name: 'Requests.All',
+    name: 'Transactions.All',
     title: 'Todos los trámites',
     menuTitle: 'Todos',
     url: '/transactions/all'

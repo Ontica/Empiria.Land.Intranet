@@ -17,21 +17,21 @@ import { Transaction, EmptyTransaction,
 import { TransactionAction, DocumentsRecordingAction } from '@app/core/presentation/state.commands';
 
 
-export enum RequestListEventType {
-  SET_FILTER                     = 'RequestListComponent.SetFilter',
-  ON_CLICK_CREATE_REQUEST_BUTTON = 'RequestListComponent.OnClickCreateRequestButton'
+export enum TransactionListEventType {
+  SET_FILTER                     = 'TransactionListComponent.Event.SetFilter',
+  SHOW_CREATE_TRANSACTION_EDITOR = 'TransactionListComponent.Event.ShowCreateTransactionEditor'
 }
 
 
 @Component({
-  selector: 'emp-land-request-list',
+  selector: 'emp-land-transaction-list',
   templateUrl: './transaction-list.component.html'
 })
-export class RequestListComponent implements OnChanges {
+export class TransactionListComponent implements OnChanges {
 
-  @Input() requestList: Transaction[] = [];
+  @Input() transactionList: Transaction[] = [];
 
-  @Input() selectedRequest: Transaction = EmptyTransaction;
+  @Input() selectedTransaction: Transaction = EmptyTransaction;
 
   @Input() filter: TransactionFilter = EmptyTransactionFilter;
 
@@ -39,10 +39,9 @@ export class RequestListComponent implements OnChanges {
 
   @Input() isLoading = false;
 
-  @Output() requestListEvent = new EventEmitter<EventInfo>();
+  @Output() transactionListEvent = new EventEmitter<EventInfo>();
 
   keywords = '';
-
 
   constructor(private uiLayer: PresentationLayer) { }
 
@@ -54,13 +53,13 @@ export class RequestListComponent implements OnChanges {
   }
 
 
-  isSelected(request: Transaction) {
-    return (this.selectedRequest.uid === request.uid);
+  isSelected(transaction: Transaction) {
+    return (this.selectedTransaction.uid === transaction.uid);
   }
 
 
   onFilterChange() {
-    this.setFilter();
+    this.sendSetFilterEvent();
   }
 
 
@@ -72,25 +71,28 @@ export class RequestListComponent implements OnChanges {
     this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT, { transaction });
   }
 
-  onClickCreateRequestButton() {
-    // const event: EventInfo = {
-    //   type: RequestListEventType.ON_CLICK_CREATE_REQUEST_BUTTON
-    // };
-
-    // this.requestListEvent.emit(event);
+  onClickCreateTransactionButton() {
+    this.sendShowCreateTransactionEditorEvent();
   }
 
 
   // private methods
 
-
-  private setFilter() {
+  private sendShowCreateTransactionEditorEvent() {
     const event: EventInfo = {
-      type: RequestListEventType.SET_FILTER,
+      type: TransactionListEventType.SHOW_CREATE_TRANSACTION_EDITOR
+    };
+
+    this.transactionListEvent.emit(event);
+  }
+
+  private sendSetFilterEvent() {
+    const event: EventInfo = {
+      type: TransactionListEventType.SET_FILTER,
       payload: { keywords: this.keywords }
     };
 
-    this.requestListEvent.emit(event);
+    this.transactionListEvent.emit(event);
   }
 
 }
