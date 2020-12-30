@@ -10,22 +10,19 @@ import { Observable } from 'rxjs';
 
 import { Assertion, Command } from '@app/core';
 
-import { StateAction, StateSelector } from './state.commands';
-import { CommandType } from './commands';
+import { ActionType, StateSelector, CommandType } from './presentation-types';
 
 import { PresentationState } from './presentation.state';
-import { FrontController } from './front.controller';
 
 
 @Injectable()
 export class PresentationLayer {
 
-  constructor(private presenter: PresentationState,
-              private controller: FrontController) { }
+  constructor(private presenter: PresentationState) { }
 
 
   createCommand(type: CommandType, payload?: any): Command {
-    return this.controller.createCommand(type, payload);
+    return this.presenter.createCommand(type, payload);
   }
 
   execute(command: Command | CommandType): void;
@@ -35,10 +32,10 @@ export class PresentationLayer {
   execute<T>(command: Command | CommandType): Promise<T> | void {
     Assertion.assertValue(command, 'command');
 
-    return this.controller.execute<T>(command);
+    return this.presenter.execute<T>(command);
   }
 
-  dispatch(actionType: StateAction, payload?: any): void {
+  dispatch(actionType: ActionType, payload?: any): void {
     Assertion.assertValue(actionType, 'actionType');
 
     return this.presenter.dispatch(actionType, payload);

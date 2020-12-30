@@ -8,20 +8,29 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion } from '@app/core';
+import { Assertion, Command, CommandResult, createCommand as createCommandAlias } from '@app/core';
 
-import { StateHandler } from './state-handler';
-import { StateAction, StateEffect, StateSelector } from './state.commands';
+import { PresentationHandler } from './presentation.handler';
+import { CommandType, ActionType, StateEffect, StateSelector } from './presentation-types';
+
+import { MainUIStateAction } from '@app/presentation/exported.presentation.types';
 
 
 export const STATE_HANDLERS =
-                new InjectionToken<StateHandler[]>('PresentationStateHandlers');
+                new InjectionToken<PresentationHandler[]>('PresentationStateHandlers');
 
 
 @Injectable()
 export class PresentationState {
 
-  constructor(@Inject(STATE_HANDLERS) private registeredHandlers: StateHandler[]) { }
+  private processing = false;
+
+  constructor(@Inject(STATE_HANDLERS) private registeredHandlers: PresentationHandler[]) { }
+
+
+  get isProcessing() {
+    return this.processing;
+  }
 
 
   applyEffects(effectType: StateEffect, payload?: any): void {
@@ -34,7 +43,8 @@ export class PresentationState {
     }
   }
 
-  dispatch(actionType: StateAction, params?: any): void {
+
+  dispatch(actionType: ActionType, params?: any): void {
     Assertion.assertValue(actionType, 'actionType');
 
     const stateHandler = this.getStateHandlerForAction(actionType);
@@ -42,6 +52,24 @@ export class PresentationState {
     stateHandler.dispatch(actionType, params);
 
     this.applyEffects(actionType as any as StateEffect);
+  }
+
+
+  createCommand(type: CommandType, payload?: any): Command {
+    return createCommandAlias(type, payload);
+  }
+
+
+  execute<T>(commandOrType: Command | CommandType): Promise<T> {
+    Assertion.assertValue(commandOrType, 'commandOrTypecommand');
+
+    if (typeof commandOrType === 'string') {
+      const commandFromCommandType = this.createCommand(commandOrType);
+
+      return this.executeImplementation<T>(commandFromCommandType);
+    } else {
+      return this.executeImplementation<T>(commandOrType);
+    }
   }
 
 
@@ -66,6 +94,72 @@ export class PresentationState {
   // private methods
 
 
+  private afterCommandExecution(command: Command, result: any) {
+    const commandResult: CommandResult = { ...command, result };
+
+    this.applyEffects(command.type as unknown as StateEffect, commandResult);
+    this.endProcessing();
+  }
+
+
+  private executeImplementation<U>(command: Command): Promise<U> {
+    if (this.isProcessing) {
+      throw new Error('PresentationState is processing a previous command. Please try again later.');
+    }
+
+    try {
+      this.startProcessing();
+
+      const commandHandler = this.selectCommandHandler(command);
+
+      return commandHandler.execute<U>(command)
+        .then(x => {
+          this.afterCommandExecution(command, x);
+          return x;
+
+        }).catch(e => {
+          this.whenCommandExecutionFails(command, e);
+          throw e;
+        });
+
+    } catch (e) {
+      this.endProcessing();
+      throw e;
+    }
+  }
+
+
+  private endProcessing(): void {
+    this.processing = false;
+    this.dispatch(MainUIStateAction.SET_IS_PROCESSING_FLAG, false);
+  }
+
+
+  private selectCommandHandler(command: Command): PresentationHandler {
+    for (const handler of this.registeredHandlers) {
+      if (handler.commands.includes(command.type)) {
+        return handler;
+      }
+    }
+    throw Assertion.assertNoReachThisCode(
+      `There is not defined a command handler for command type '${command.type}'.`
+    );
+  }
+
+
+  private startProcessing(): void {
+    this.processing = true;
+    this.dispatch(MainUIStateAction.SET_IS_PROCESSING_FLAG, true);
+  }
+
+
+  private whenCommandExecutionFails(command: Command, error: any) {
+    this.endProcessing();
+
+    console.log(`There was a problem executing command ${command.type}.`, error);
+  }
+
+
   private getStateHandlerForAction(actionType: string) {
     for (const handler of this.registeredHandlers) {
       if (handler.actions.includes(actionType)) {
@@ -78,7 +172,7 @@ export class PresentationState {
   }
 
 
-  private getStateHandlerForSelector(selector: StateSelector): StateHandler {
+  private getStateHandlerForSelector(selector: StateSelector): PresentationHandler {
     for (const handler of this.registeredHandlers) {
       if (handler.selectors.includes(selector)) {
         return handler;
@@ -90,7 +184,7 @@ export class PresentationState {
   }
 
 
-  private tryGetEffectsHandler(effectType: StateEffect): StateHandler | undefined {
+  private tryGetEffectsHandler(effectType: StateEffect): PresentationHandler | undefined {
     for (const handler of this.registeredHandlers) {
       if (handler.effects.includes(effectType as unknown as string)) {
         return handler;

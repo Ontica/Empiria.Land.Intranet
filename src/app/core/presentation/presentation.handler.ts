@@ -9,24 +9,27 @@ import { Observable, BehaviorSubject } from 'rxjs';
 
 import { Assertion } from '../general/assertion';
 
-import { Cache, KeyValue, resolve } from '../data-types';
+import { Cache, Command, KeyValue, resolve } from '../data-types';
 
-import { StateAction, StateEffect, StateSelector } from './state.commands';
+import { ActionType, CommandType, StateEffect, StateSelector } from './presentation-types';
 
-import { UpdateStateUtilities } from './update-state-utilities';
+import { StateUpdaterUtilities } from './state-updater.utilities';
 
 export type StateValues = KeyValue[];
 
 
-export interface StateHandler {
+export interface PresentationHandler {
 
   readonly selectors: string[];
   readonly actions: string[];
+  readonly commands: string[];
   readonly effects: string[];
 
   applyEffects(effectType: StateEffect, params?: any): void;
 
-  dispatch(actionType: StateAction, params?: any): void;
+  dispatch(actionType: ActionType, params?: any): void;
+
+  execute<U>(command: Command): Promise<U>;
 
   getValue<U>(selector: StateSelector): U;
 
@@ -38,20 +41,21 @@ export interface StateHandlerConfig {
   initialState?: StateValues;
   selectors?: any;
   actions?: any;
+  commands?: any;
   effects?: any;
 }
 
 
-export abstract class AbstractStateHandler implements StateHandler {
+export abstract class AbstractPresentationHandler implements PresentationHandler {
 
   readonly selectors: string[] = [];
   readonly actions: string[] = [];
+  readonly commands: string[] = [];
   readonly effects: string[] = [];
 
-  protected stateUpdater: UpdateStateUtilities;
+  protected stateUpdater: StateUpdaterUtilities;
 
   private stateItems = new Map<string, BehaviorSubject<any>>();
-
 
   constructor(config: StateHandlerConfig) {
     Assertion.assertValue(config, 'config');
@@ -65,26 +69,32 @@ export abstract class AbstractStateHandler implements StateHandler {
     this.selectors = Object.keys(config.selectors).map(k => config.selectors[k as StateSelector]);
 
     if (config.actions) {
-      this.actions = Object.keys(config.actions).map(k => config.actions[k as StateAction]);
+      this.actions = Object.keys(config.actions).map(k => config.actions[k as ActionType]);
+    }
+
+    if (config.commands) {
+      this.commands = Object.keys(config.commands).map(k => config.commands[k as CommandType]);
     }
 
     if (config.effects) {
       this.effects = Object.keys(config.effects).map(k => config.effects[k]);
     }
 
-    this.stateUpdater = new UpdateStateUtilities(this, this.setValue);
+    this.stateUpdater = new StateUpdaterUtilities(this, this.setValue);
   }
 
 
   applyEffects(effectType: StateEffect, params?: any): void {
-
+    throw this.unhandledCommandOrActionType(effectType);
   }
 
-
-  dispatch(actionType: StateAction, payload?: any): void {
+  dispatch(actionType: ActionType, payload?: any): void {
     throw this.unhandledCommandOrActionType(actionType);
   }
 
+  execute<U>(command: Command): Promise<U> {
+    throw this.unhandledCommand(command);
+  }
 
   getValue<U>(selector: StateSelector): U {
     const stateItem = this.getStateMapItem(selector);
@@ -170,12 +180,20 @@ export abstract class AbstractStateHandler implements StateHandler {
   }
 
 
-  protected unhandledCommandOrActionType(commandOrActionType: StateEffect | StateAction): never {
-    const msg = `${AbstractStateHandler.name} is not able to handle ` +
+  protected unhandledCommand(command: Command): never {
+    const msg = `${AbstractPresentationHandler.name} is not able to handle command ${command.type}.`;
+
+    throw Assertion.assertNoReachThisCode(msg);
+  }
+
+
+  protected unhandledCommandOrActionType(commandOrActionType: StateEffect | ActionType): never {
+    const msg = `${AbstractPresentationHandler.name} is not able to handle ` +
                 `action or command '${commandOrActionType}.'`;
 
     throw Assertion.assertNoReachThisCode(msg);
   }
+
 
 
   // private methods
