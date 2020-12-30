@@ -20,7 +20,7 @@ import { TransactionStateSelector, MainUIStateSelector,
 import { Transaction, TransactionFilter, TransactionStages,
          EmptyTransaction, EmptyTransactionFilter, TransactionStatus } from '@app/models';
 
-import { View } from '@app/user-interface/main-layout';
+import { View } from '@app/views/main-layout';
 
 import { TransactionListEventType } from '../transaction-list/transaction-list.component';
 

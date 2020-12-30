@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
 
-import { MenuItem } from '@app/user-interface/main-layout';
+import { MenuItem } from '@app/views/main-layout';
 
 
 @Component({
