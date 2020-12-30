@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 
 import { Assertion, Exception } from '@app/core';
 
-import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
+import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
 import { NavigationHeader, DefaultNavigationHeader,
          buildNavigationHeader,
@@ -32,7 +32,7 @@ export enum SelectorType {
 }
 
 
-export interface MainUserInterfaceState {
+export interface MainLayoutState {
   readonly layout: Layout;
   readonly navigationHeader: NavigationHeader;
   readonly currentView: View;
@@ -49,7 +49,7 @@ const initialState: StateValues = [
 
 
 @Injectable()
-export class MainUserInterfaceStateHandler extends AbstractStateHandler {
+export class MainLayoutPresentationHandler extends AbstractPresentationHandler {
 
   constructor() {
     super({
@@ -60,7 +60,7 @@ export class MainUserInterfaceStateHandler extends AbstractStateHandler {
   }
 
 
-  get state(): MainUserInterfaceState {
+  get state(): MainLayoutState {
     return {
       layout: this.getValue(SelectorType.LAYOUT),
       navigationHeader: this.getValue(SelectorType.NAVIGATION_HEADER),

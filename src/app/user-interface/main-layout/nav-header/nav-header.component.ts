@@ -12,8 +12,7 @@ import { Subscription } from 'rxjs';
 import { PresentationState } from '@app/core/presentation';
 
 import { MenuItem, NavigationHeader } from '@app/user-interface/main-layout';
-import { MainUIStateSelector } from '@app/core/presentation/state.commands';
-
+import { MainUIStateSelector } from '@app/core/presentation/presentation-types';
 
 
 @Component({
@@ -31,7 +30,6 @@ export class NavigationHeaderComponent implements OnInit, OnDestroy {
 
   constructor(protected state: PresentationState) { }
 
-
   ngOnInit() {
     this.subscription = this.state.select<NavigationHeader>(MainUIStateSelector.NAVIGATION_HEADER)
       .subscribe (
@@ -39,17 +37,14 @@ export class NavigationHeaderComponent implements OnInit, OnDestroy {
       );
   }
 
-
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
 
-
   onClickMenu(menuItem: MenuItem) {
     this.action.emit(menuItem.action);
   }
-
 
 }

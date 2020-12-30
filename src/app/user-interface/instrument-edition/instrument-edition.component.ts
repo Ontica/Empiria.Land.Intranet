@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { isEmpty } from '@app/core';
 import { PresentationLayer } from '@app/core/presentation';
-import { InstrumentsStateSelector } from '@app/core/presentation/state.commands';
+import { InstrumentsStateSelector } from '@app/core/presentation/presentation-types';
 
 import { Transaction, EmptyTransaction, Instrument, EmptyInstrument } from '@app/models';
 

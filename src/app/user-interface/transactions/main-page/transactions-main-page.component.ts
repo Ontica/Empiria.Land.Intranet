@@ -12,9 +12,10 @@ import { takeUntil } from 'rxjs/operators';
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer } from '@app/core/presentation';
+
 import { TransactionStateSelector, MainUIStateSelector,
          DocumentsRecordingAction, DocumentsRecordingStateSelector,
-         TransactionAction } from '@app/core/presentation/state.commands';
+         TransactionAction } from '@app/core/presentation/presentation-types';
 
 import { Transaction, TransactionFilter, TransactionStages,
          EmptyTransaction, EmptyTransactionFilter, TransactionStatus } from '@app/models';

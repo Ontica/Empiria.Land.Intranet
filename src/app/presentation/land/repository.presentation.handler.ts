@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, Cache, Identifiable } from '@app/core';
 
-import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
+import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
 import { RepositoryDataService } from '@app/data-services';
 
@@ -38,7 +38,7 @@ const initialState: StateValues = [
 
 
 @Injectable()
-export class RepositoryStateHandler extends AbstractStateHandler {
+export class RepositoryPresentationHandler extends AbstractPresentationHandler {
 
   constructor(private data: RepositoryDataService) {
     super({ initialState, selectors: SelectorType });

@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 
 import { Assertion } from '@app/core';
 
-import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
+import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
 import { RecordingDataService } from '@app/data-services';
 
@@ -33,7 +33,7 @@ const initialState: StateValues = [
 
 
 @Injectable()
-export class RecordingsStateHandler extends AbstractStateHandler {
+export class RecordingsPresentationHandler extends AbstractPresentationHandler {
 
   constructor(private data: RecordingDataService) {
     super({

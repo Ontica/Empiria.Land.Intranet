@@ -13,7 +13,7 @@ import { PresentationState } from '@app/core/presentation';
 
 import { EmptyRealEstate, RealEstate } from '@app/models';
 
-import { LandRepositoryStateSelector } from '@app/core/presentation/state.commands';
+import { LandRepositoryStateSelector } from '@app/core/presentation/presentation-types';
 
 
 @Component({

@@ -7,9 +7,9 @@
 
 import { Injectable } from '@angular/core';
 
-import { Assertion } from '@app/core';
+import { Assertion, Command } from '@app/core';
 
-import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
+import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
 import { TransactionDataService } from '@app/data-services';
 
@@ -21,6 +21,11 @@ export enum ActionType {
   SELECT_TRANSACTION = 'Land.Transactions.Action.SelectTransaction',
   SET_LIST_FILTER = 'Land.Transactions.Action.SetListFilter',
   UNSELECT_TRANSACTION = 'Land.Transactions.Action.UnselectTransaction'
+}
+
+
+export enum CommandType {
+  CREATE_TRANSACTION = 'Land.Transactions.Command.CreateTransaction',
 }
 
 
@@ -44,7 +49,7 @@ const initialState: StateValues = [
 
 
 @Injectable()
-export class TransactionStateHandler extends AbstractStateHandler {
+export class TransactionPresentationHandler extends AbstractPresentationHandler {
 
   constructor(private data: TransactionDataService) {
     super({
@@ -87,6 +92,20 @@ export class TransactionStateHandler extends AbstractStateHandler {
         return;
       default:
         throw this.unhandledCommandOrActionType(effectType);
+    }
+  }
+
+
+  execute<U>(command: Command): Promise<U> {
+    switch (command.type as CommandType) {
+
+      // case CommandType.CREATE_TRANSACTION:
+      //   return toPromise<U>(
+      //     this.useCases.createTransaction(command.payload.procedureType, command.payload.requestedBy)
+      //   );
+
+      default:
+        throw this.unhandledCommand(command);
     }
   }
 

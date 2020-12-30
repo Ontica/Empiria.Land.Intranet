@@ -16,8 +16,8 @@ import { isEmpty } from '@app/core';
 import { Command, PresentationLayer } from '@app/core/presentation';
 
 import { InstrumentsStateSelector,
-         InstrumentTypesStateSelector } from '@app/core/presentation/state.commands';
-import { InstrumentsCommandType } from '@app/core/presentation/commands';
+         InstrumentTypesStateSelector,
+         InstrumentsCommandType } from '@app/core/presentation/presentation-types';
 
 import { Transaction, Instrument, InstrumentTypeEnum, InstrumentTypesList,
          Issuer, IssuersFilter, EmptyTransaction, EmptyInstrument} from '@app/models';

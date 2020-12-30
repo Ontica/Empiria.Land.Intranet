@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { PresentationState } from '@app/core/presentation';
-import { MainUIStateAction, MainUIStateSelector } from '@app/core/presentation/state.commands';
+import { MainUIStateAction, MainUIStateSelector } from '@app/core/presentation/presentation-types';
 
 
 @Component({

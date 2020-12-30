@@ -8,16 +8,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion, toObservable } from '@app/core';
+import { Assertion, Command, toObservable, toPromise } from '@app/core';
 
-import { AbstractStateHandler, StateValues } from '@app/core/presentation/state-handler';
+import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
 import { EmptyInstrument, IssuersFilter } from '@app/models';
 
 import { InstrumentDataService } from '@app/data-services';
-
-import { InstrumentsCommandType } from '../command.handlers/commands';
-
 
 export enum SelectorType {
   TRANSACTION_INSTRUMENT = 'Land.Instruments.CurrentTransactionInstrument',
@@ -25,9 +22,15 @@ export enum SelectorType {
 }
 
 
+export enum CommandType {
+  CREATE_INSTRUMENT = 'Land.Transaction.Instrument.Create',
+  UPDATE_INSTRUMENT = 'Land.Transaction.Instrument.Update',
+}
+
+
 export enum EffectType {
-  CREATE_INSTRUMENT = InstrumentsCommandType.CREATE_INSTRUMENT,
-  UPDATE_INSTRUMENT = InstrumentsCommandType.UPDATE_INSTRUMENT,
+  CREATE_INSTRUMENT = CommandType.CREATE_INSTRUMENT,
+  UPDATE_INSTRUMENT = CommandType.UPDATE_INSTRUMENT,
 }
 
 
@@ -38,12 +41,13 @@ const initialState: StateValues = [
 
 
 @Injectable()
-export class InstrumentsStateHandler extends AbstractStateHandler {
+export class InstrumentsPresentationHandler extends AbstractPresentationHandler {
 
   constructor(private data: InstrumentDataService) {
     super({
       initialState,
       selectors: SelectorType,
+      commands: CommandType,
       effects: EffectType
     });
   }
@@ -79,6 +83,26 @@ export class InstrumentsStateHandler extends AbstractStateHandler {
 
       default:
         throw this.unhandledCommandOrActionType(effectType);
+    }
+  }
+
+
+  execute<U>(command: Command): Promise<U> {
+
+    switch (command.type as CommandType) {
+
+      case CommandType.CREATE_INSTRUMENT:
+        return toPromise<U>(
+          this.data.createTransactionInstrument(command.payload.transactionUID, command.payload.instrument)
+        );
+
+      case CommandType.UPDATE_INSTRUMENT:
+        return toPromise<U>(
+          this.data.updateTransactionInstrument(command.payload.transactionUID, command.payload.instrument)
+        );
+
+      default:
+        throw this.unhandledCommand(command);
     }
   }
 
