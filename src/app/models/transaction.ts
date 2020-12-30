@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { DateString, Entity } from '@app/core';
+import { Assertion, DateString, Entity } from '@app/core';
 
 
 export interface Transaction extends Entity {
@@ -19,10 +19,21 @@ export interface Transaction extends Entity {
   statusName: string;
 }
 
-export type TransactionStages = 'Pending' | 'InProgress' | 'Completed' | 'Returned' | 'OnHold' | 'All';
+export enum TransactionStage  {
+  MyInbox = 'MyInbox',
+  Pending = 'Pending',
+  InProgress = 'InProgress',
+  Completed = 'Completed',
+  Returned = 'Returned',
+  OnHold = 'OnHold',
+  All = 'All'
+}
 
 
-export type TransactionStatus = 'OnSign';
+export enum TransactionStatus {
+  OnSign = 'OnSign',
+  All = ''
+}
 
 
 export const EmptyTransaction: Transaction = {
@@ -39,14 +50,15 @@ export const EmptyTransaction: Transaction = {
 
 
 export interface TransactionFilter {
-  stage?: TransactionStages;
+  stage?: TransactionStage;
   status?: TransactionStatus;
   keywords: string;
 }
 
 
 export const EmptyTransactionFilter: TransactionFilter = {
-  stage: 'All',
+  stage: TransactionStage.All,
+  status: TransactionStatus.All,
   keywords: '',
 };
 
@@ -65,3 +77,33 @@ export const EmptyRequester: Requester = {
   phone: '',
   rfc: ''
 };
+
+
+export function mapTransactionStageFromViewName(viewName: string): TransactionStage {
+  switch (viewName) {
+    case 'Transactions.MyInbox':
+      return TransactionStage.MyInbox;
+    case 'Transactions.InProgress':
+      return TransactionStage.InProgress;
+    case 'Transactions.OnSign':
+      return TransactionStage.InProgress;
+    case 'Transactions.Finished':
+      return TransactionStage.Completed;
+    case 'Transactions.Returned':
+      return TransactionStage.Returned;
+    case 'Transactions.Pending':
+      return TransactionStage.Pending;
+    case 'Transactions.All':
+      return TransactionStage.All;
+    default:
+      throw Assertion.assertNoReachThisCode(`Unhandled transaction stage for view '${viewName}'.`);
+  }
+}
+
+
+export function mapTransactionStatusFromViewName(viewName: string): TransactionStatus {
+  if (viewName === 'Transactions.OnSign') {
+    return TransactionStatus.OnSign;
+  }
+  return TransactionStatus.All;
+}

@@ -10,10 +10,15 @@ import { View } from '../common-models/common';
 
 export const TransactionViews: View[] = [
   {
-    name: 'Transactions.Pending',
+    name: 'Transactions.MyInbox',
+    title: 'Mis trámites pendientes',
+    url: '/transactions/my-inbox'
+  },
+  {
+    name: 'Transactions.InProgress',
     title: 'Trámites en elaboración',
     menuTitle: 'En elaboración',
-    url: '/transactions/pending'
+    url: '/transactions/in-progress'
   },
   {
     name: 'Transactions.OnSign',
@@ -28,16 +33,16 @@ export const TransactionViews: View[] = [
     url: '/transactions/finished'
   },
   {
-    name: 'Transactions.Rejected',
+    name: 'Transactions.Returned',
     title: 'Trámites devueltos',
     menuTitle: 'Devueltos',
-    url: '/transactions/rejected'
+    url: '/transactions/returned'
   },
   {
-    name: 'Transactions.OnPayment',
+    name: 'Transactions.Pending',
     title: 'Trámites por ingresar',
     menuTitle: 'Por ingresar',
-    url: '/transactions/on-payment'
+    url: '/transactions/pending'
   },
   {
     name: 'Transactions.All',

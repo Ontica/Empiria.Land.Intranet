@@ -9,7 +9,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { Assertion, EventInfo, isEmpty } from '@app/core';
+import { EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer } from '@app/core/presentation';
 
@@ -17,8 +17,10 @@ import { TransactionStateSelector, MainUIStateSelector,
          DocumentsRecordingAction, DocumentsRecordingStateSelector,
          TransactionAction } from '@app/core/presentation/presentation-types';
 
-import { Transaction, TransactionFilter, TransactionStages,
-         EmptyTransaction, EmptyTransactionFilter, TransactionStatus } from '@app/models';
+import { Transaction, TransactionFilter,
+         EmptyTransaction, EmptyTransactionFilter,
+         mapTransactionStageFromViewName, mapTransactionStatusFromViewName,
+         } from '@app/models/transaction';
 
 import { View } from '@app/views/main-layout';
 
@@ -122,40 +124,13 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
     this.changeFilter();
   }
 
-  private getTransactionStageForView(view: View): TransactionStages {
-    switch (view.name) {
-      case 'Transactions.Pending':    // En Elaboracion
-        return 'InProgress';
-      case 'Transactions.OnSign':     // En Firma
-        return null;                    // 'InProgress'
-      case 'Transactions.Finished':   // Finalizados
-        return 'Completed';
-      case 'Transactions.Rejected':   // Devueltos
-        return 'Returned';
-      case 'Transactions.OnPayment':  // Por Ingresar
-        return 'Pending';
-      case 'Transactions.All':        // Todos
-        return 'All';
-      default:
-        throw Assertion.assertNoReachThisCode(`Unrecognized view with name '${view.name}'.`);
-    }
-  }
-
-  private getTransactionStatusForView(view: View): TransactionStatus {
-    if (view.name === 'Transactions.OnSign'){
-      return 'OnSign';
-    } else {
-      return null;
-    }
-  }
-
   private changeFilter(data?: { keywords: string }) {
     const currentKeywords =
         this.uiLayer.selectValue<TransactionFilter>(TransactionStateSelector.LIST_FILTER).keywords;
 
     const filter: TransactionFilter = {
-      stage: this.getTransactionStageForView(this.currentView),
-      status: this.getTransactionStatusForView(this.currentView),
+      stage: mapTransactionStageFromViewName(this.currentView.name),
+      status: mapTransactionStatusFromViewName(this.currentView.name),
       keywords: data ? data.keywords : currentKeywords,
     };
 

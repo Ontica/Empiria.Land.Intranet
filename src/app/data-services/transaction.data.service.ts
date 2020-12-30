@@ -23,20 +23,14 @@ export class TransactionDataService {
 
     if (filter.stage) {
       path += `/?stage=${filter.stage}`;
+    }
 
-      if (filter.status) {
+    if (filter.status) {
         path += `&status=${filter.status}`;
-      }
-      if (filter.keywords) {
+    }
+
+    if (filter.keywords) {
         path += `&keywords=${filter.keywords}`;
-      }
-    } else if (filter.status) {
-      path += `/?status=${filter.status}`;
-      if (filter.keywords) {
-        path += `&keywords=${filter.keywords}`;
-      }
-    } else if (filter.keywords) {
-      path += `/?keywords=${filter.keywords}`;
     }
 
     return this.http.get<Transaction[]>(path);
