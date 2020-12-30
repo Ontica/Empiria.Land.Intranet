@@ -8,15 +8,15 @@
 import { Assertion } from '../general/assertion';
 import { Entity } from '../data-types/core-types';
 
-import { StateSelector } from './state.commands';
-import { StateHandler } from './state-handler';
+import { StateSelector } from './presentation-types';
+import { PresentationHandler } from './presentation.handler';
 import { Exception } from '../general/exception';
 
 
-export class UpdateStateUtilities {
+export class StateUpdaterUtilities {
 
 
-  constructor(private stateHandler: StateHandler,
+  constructor(private stateHandler: PresentationHandler,
               private setValueFunction: (selector: StateSelector, value: any) => void) { }
 
 
