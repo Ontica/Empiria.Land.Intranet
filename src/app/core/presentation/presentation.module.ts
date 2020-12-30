@@ -7,25 +7,19 @@
 
 import { NgModule } from '@angular/core';
 
-import { FrontController } from './front.controller';
 import { PresentationLayer } from './presentation-layer';
 import { PresentationState } from './presentation.state';
 
-import { CommandHandlersModule } from '@app/presentation/command.handlers/command.handlers.module';
-
-import { StateHandlersModule } from '@app/presentation/state.handlers/state.handlers.module';
-
+import { StateHandlersModule } from '@app/presentation/state.handlers.module';
 
 
 @NgModule({
 
   imports: [
-    CommandHandlersModule,
     StateHandlersModule
   ],
 
   providers: [
-    FrontController,
     PresentationLayer,
     PresentationState
   ]

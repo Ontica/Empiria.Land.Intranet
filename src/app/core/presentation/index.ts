@@ -5,8 +5,6 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-export * from './front.controller';
-
 export * from './presentation.state';
 
 export * from './presentation-layer';
