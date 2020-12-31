@@ -16,10 +16,10 @@
 
         <input type="search" class="text-box" style="width:auto" fxHide.lt-sm="true"
                placeholder="Buscar trámites"
-               (search)="onFilterChange()" [(ngModel)]="keywords">
+               (search)="onChangeFilter()" [(ngModel)]="keywords">
         &nbsp; &nbsp; &nbsp;
         <button class="btn-action"
-                (click)="onClickCreateTransactionButton()">Nuevo</button>
+                (click)="onClickCreateTransaction()">Nuevo</button>
 
     </div>
 
@@ -36,11 +36,12 @@
 
         <div class="list-item-name">
           <strong><a #trigger
-              (click)="onSelect(transaction)">{{transaction.requestedBy}}</a></strong>
+              (click)="onSelectTransaction(transaction)">{{transaction.requestedBy}}</a></strong>
         </div>
 
-        <emp-land-transaction-list-item [transaction]="transaction" (provisionalEvent)="onSelectRecordingAct(transaction)">
-
+        <emp-land-transaction-list-item
+          [transaction]="transaction"
+          (optionsClick)="onClickTransactionOptions(transaction)">
         </emp-land-transaction-list-item>
 
       </div>

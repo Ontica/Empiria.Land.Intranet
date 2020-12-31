@@ -9,17 +9,15 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 
 import { EventInfo } from '@app/core';
 
-import { PresentationLayer } from '@app/core/presentation';
-
 import { Transaction, EmptyTransaction,
          TransactionFilter, EmptyTransactionFilter } from '@app/models';
 
-import { TransactionAction, DocumentsRecordingAction } from '@app/core/presentation/presentation-types';
-
 
 export enum TransactionListEventType {
-  SET_FILTER                     = 'TransactionListComponent.Event.SetFilter',
-  SHOW_CREATE_TRANSACTION_EDITOR = 'TransactionListComponent.Event.ShowCreateTransactionEditor'
+  CREATE_TRANSACTION_CLICKED  = 'TransactionListComponent.Event.CreateTransactionClicked',
+  FILTER_CHANGED              = 'TransactionListComponent.Event.FilterChanged',
+  TRANSACTION_OPTIONS_CLICKED =  'TransactionListComponent.Event.TransactionOptionsClicked',
+  TRANSACTION_SELECTED        = 'TransactionListComponent.Event.TransactionSelected'
 }
 
 
@@ -43,8 +41,6 @@ export class TransactionListComponent implements OnChanges {
 
   keywords = '';
 
-  constructor(private uiLayer: PresentationLayer) { }
-
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.filter) {
@@ -58,38 +54,32 @@ export class TransactionListComponent implements OnChanges {
   }
 
 
-  onFilterChange() {
-    this.sendSetFilterEvent();
+  onChangeFilter() {
+    this.sendEvent(TransactionListEventType.FILTER_CHANGED, { keywords: this.keywords });
   }
 
 
-  onSelect(transaction: Transaction) {
-    this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION, { transaction });
+  onClickCreateTransaction() {
+    this.sendEvent(TransactionListEventType.CREATE_TRANSACTION_CLICKED);
   }
 
-  onSelectRecordingAct(transaction: Transaction) {
-    this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT, { transaction });
+
+  onClickTransactionOptions(transaction: Transaction) {
+    this.sendEvent(TransactionListEventType.TRANSACTION_OPTIONS_CLICKED, { transaction });
   }
 
-  onClickCreateTransactionButton() {
-    this.sendShowCreateTransactionEditorEvent();
-  }
 
+  onSelectTransaction(transaction: Transaction) {
+    this.sendEvent(TransactionListEventType.TRANSACTION_SELECTED, { transaction });
+  }
 
   // private methods
 
-  private sendShowCreateTransactionEditorEvent() {
-    const event: EventInfo = {
-      type: TransactionListEventType.SHOW_CREATE_TRANSACTION_EDITOR
-    };
 
-    this.transactionListEvent.emit(event);
-  }
-
-  private sendSetFilterEvent() {
+  private sendEvent(eventType: TransactionListEventType, payload?: any) {
     const event: EventInfo = {
-      type: TransactionListEventType.SET_FILTER,
-      payload: { keywords: this.keywords }
+      type: eventType,
+      payload
     };
 
     this.transactionListEvent.emit(event);

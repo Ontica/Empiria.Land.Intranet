@@ -18,10 +18,10 @@ export class TransactionListItemComponent {
 
   @Input() transaction: Transaction;
 
-  @Output() provisionalEvent = new EventEmitter<boolean>();
+  @Output() optionsClick = new EventEmitter<boolean>();
 
-  showProvisionalRecordingEditor() {
-    this.provisionalEvent.emit(true);
+  onClickTransactionOptions() {
+    this.optionsClick.emit(true);
   }
 
 }

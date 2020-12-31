@@ -33,16 +33,15 @@ import { TransactionListEventType } from '../transaction-list/transaction-list.c
 })
 export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
-  displayEditor = false;
-  displayEditorRecordingAct = false;
-
   currentView: View;
 
   transactionList: Transaction[] = [];
   selectedTransaction: Transaction = EmptyTransaction;
   filter: TransactionFilter = EmptyTransactionFilter;
 
-  displayTransactionCreator = false;
+  displayCreateTransactionEditor = false;
+  displayRecordingActEditor = false;
+  displayTransactionTabbedView = false;
 
   isLoading = false;
 
@@ -61,13 +60,13 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
     this.uiLayer.select<View>(MainUIStateSelector.CURRENT_VIEW)
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(x => this.onChangeView(x));
+      .subscribe(x => this.onCurrentViewChanged(x));
 
     this.uiLayer.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => {
         this.selectedTransaction = x;
-        this.displayEditor = !isEmpty(this.selectedTransaction);
+        this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
       });
 
     this.uiLayer.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
@@ -78,7 +77,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => {
         this.selectedTransaction = x;
-        this.displayEditorRecordingAct = !isEmpty(this.selectedTransaction);
+        this.displayRecordingActEditor = !isEmpty(this.selectedTransaction);
       });
   }
 
@@ -95,19 +94,27 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
 
   onTransactionCreatorClosed() {
-    this.displayTransactionCreator = false;
+    this.displayCreateTransactionEditor = false;
   }
 
 
   onTransactionListEvent(event: EventInfo): void {
     switch (event.type as TransactionListEventType) {
 
-      case TransactionListEventType.SET_FILTER:
-        this.changeFilter(event.payload);
+      case TransactionListEventType.CREATE_TRANSACTION_CLICKED:
+        this.displayCreateTransactionEditor = true;
         return;
 
-      case TransactionListEventType.SHOW_CREATE_TRANSACTION_EDITOR:
-        this.displayTransactionCreator = true;
+      case TransactionListEventType.FILTER_CHANGED:
+        this.applyTransactionsFilter(event.payload);
+        return;
+
+      case TransactionListEventType.TRANSACTION_OPTIONS_CLICKED:
+        this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT,  event.payload);
+        return;
+
+      case TransactionListEventType.TRANSACTION_SELECTED:
+        this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION, event.payload);
         return;
 
       default:
@@ -119,12 +126,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   // private methods
 
-  private onChangeView(newView: View) {
-    this.currentView = newView;
-    this.changeFilter();
-  }
-
-  private changeFilter(data?: { keywords: string }) {
+  private applyTransactionsFilter(data?: { keywords: string }) {
     const currentKeywords =
         this.uiLayer.selectValue<TransactionFilter>(TransactionStateSelector.LIST_FILTER).keywords;
 
@@ -138,6 +140,13 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
     this.uiLayer.dispatch(TransactionAction.SET_LIST_FILTER, { filter });
   }
+
+
+  private onCurrentViewChanged(newView: View) {
+    this.currentView = newView;
+    this.applyTransactionsFilter();
+  }
+
 
   private unselectCurrentTransaction() {
     this.uiLayer.dispatch(TransactionAction.UNSELECT_TRANSACTION);
