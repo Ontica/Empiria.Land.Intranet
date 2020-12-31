@@ -1,18 +1,18 @@
 <div class="explorer" fxLayoutGap="32px">
 
-  <div [fxHide.lt-lg]="displayEditor || displayRecordingActEditor" class="primary">
+  <div [fxHide.lt-lg]="displayTransactionTabbedView || displayRecordingActEditor" class="primary">
     <emp-land-transaction-list
         [transactionList]="transactionList"
         [selectedTransaction]="selectedTransaction"
         [filter]="filter"
-        [title]="currentView.title"
+        [title]="currentView?.title"
         [isLoading]="isLoading"
         (transactionListEvent)="onTransactionListEvent($event)">
     </emp-land-transaction-list>
   </div>
 
 
-  <div *ngIf="displayEditor" class="secondary">
+  <div *ngIf="displayTransactionTabbedView" class="secondary">
     <emp-land-transaction-tabbed-view
         [transaction]="selectedTransaction"
         (closeEvent)="onCloseEditor()">

@@ -14,15 +14,22 @@ import { ActionType, StateSelector, CommandType } from './presentation-types';
 
 import { PresentationState } from './presentation.state';
 
+import { SubscriptionHelper } from './subscription.helper';
+
 
 @Injectable()
 export class PresentationLayer {
+
 
   constructor(private presenter: PresentationState) { }
 
 
   createCommand(type: CommandType, payload?: any): Command {
     return this.presenter.createCommand(type, payload);
+  }
+
+  createSubscriptionHelper(): SubscriptionHelper {
+    return new SubscriptionHelper(this);
   }
 
   execute(command: Command | CommandType): void;

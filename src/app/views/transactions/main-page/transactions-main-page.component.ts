@@ -6,16 +6,14 @@
  */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import { EventInfo, isEmpty } from '@app/core';
 
-import { PresentationLayer } from '@app/core/presentation';
+import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { TransactionStateSelector, MainUIStateSelector,
          DocumentsRecordingAction, DocumentsRecordingStateSelector,
-         TransactionAction } from '@app/core/presentation/presentation-types';
+         TransactionAction} from '@app/core/presentation/presentation-types';
 
 import { Transaction, TransactionFilter,
          EmptyTransaction, EmptyTransactionFilter,
@@ -45,36 +43,37 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   isLoading = false;
 
-  private unsubscribe: Subject<void> = new Subject();
+  subscriptionHelper: SubscriptionHelper;
 
-  constructor(private uiLayer: PresentationLayer) { }
+  constructor(private uiLayer: PresentationLayer) {
+    this.subscriptionHelper = uiLayer.createSubscriptionHelper();
+  }
 
 
   ngOnInit() {
-    this.uiLayer.select<Transaction[]>(TransactionStateSelector.TRANSACTION_LIST)
-      .pipe(takeUntil(this.unsubscribe))
+    this.subscriptionHelper.select<Transaction[]>(TransactionStateSelector.TRANSACTION_LIST)
       .subscribe(x => {
         this.transactionList = x;
         this.isLoading = false;
       });
 
-    this.uiLayer.select<View>(MainUIStateSelector.CURRENT_VIEW)
-      .pipe(takeUntil(this.unsubscribe))
+
+    this.subscriptionHelper.select<View>(MainUIStateSelector.CURRENT_VIEW)
       .subscribe(x => this.onCurrentViewChanged(x));
 
-    this.uiLayer.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
-      .pipe(takeUntil(this.unsubscribe))
+
+    this.subscriptionHelper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .subscribe(x => {
         this.selectedTransaction = x;
         this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
       });
 
-    this.uiLayer.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
-      .pipe(takeUntil(this.unsubscribe))
+
+    this.subscriptionHelper.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
       .subscribe(x => this.filter = x);
 
-    this.uiLayer.select<Transaction>(DocumentsRecordingStateSelector.SELECTED_RECORDING_ACT)
-      .pipe(takeUntil(this.unsubscribe))
+
+    this.subscriptionHelper.select<Transaction>(DocumentsRecordingStateSelector.SELECTED_RECORDING_ACT)
       .subscribe(x => {
         this.selectedTransaction = x;
         this.displayRecordingActEditor = !isEmpty(this.selectedTransaction);
@@ -83,8 +82,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
+    this.subscriptionHelper.destroy();
   }
 
 

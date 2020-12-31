@@ -9,4 +9,6 @@ export * from './presentation.state';
 
 export * from './presentation-layer';
 
+export * from './subscription.helper';
+
 export { Command } from '../data-types';

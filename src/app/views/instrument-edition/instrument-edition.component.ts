@@ -5,13 +5,10 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnChanges } from '@angular/core';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 
 import { isEmpty } from '@app/core';
-import { PresentationLayer } from '@app/core/presentation';
+import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { InstrumentsStateSelector } from '@app/core/presentation/presentation-types';
 
 import { Transaction, EmptyTransaction, Instrument, EmptyInstrument } from '@app/models';
@@ -21,21 +18,25 @@ import { Transaction, EmptyTransaction, Instrument, EmptyInstrument } from '@app
   selector: 'emp-land-instrument-edition',
   templateUrl: './instrument-edition.component.html',
 })
-export class InstrumentEditionComponent implements OnChanges {
+export class InstrumentEditionComponent implements OnChanges, OnDestroy {
 
   @Input() transaction: Transaction = EmptyTransaction;
 
   instrument: Instrument = EmptyInstrument;
 
-  private unsubscribe: Subject<void> = new Subject();
+  helper: SubscriptionHelper;
 
-  constructor(private uiLayer: PresentationLayer) { }
+  constructor(private uiLayer: PresentationLayer) {
+    this.helper = uiLayer.createSubscriptionHelper();
+  }
 
   ngOnChanges() {
-    this.uiLayer.select<Instrument>(InstrumentsStateSelector.TRANSACTION_INSTRUMENT,
-                                    this.transaction.uid)
-    .pipe(takeUntil(this.unsubscribe))
-    .subscribe(x => this.instrument = isEmpty(x) ? EmptyInstrument : x);
+    this.helper.select<Instrument>(InstrumentsStateSelector.TRANSACTION_INSTRUMENT, this.transaction.uid)
+      .subscribe(x => this.instrument = isEmpty(x) ? EmptyInstrument : x);
+  }
+
+  ngOnDestroy() {
+    this.helper.destroy();
   }
 
 }
