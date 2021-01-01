@@ -17,6 +17,8 @@ export interface Transaction extends Entity {
   stage: string;
   status: string;
   statusName: string;
+  assignedToUID: string;
+  assignedToName: string;
 }
 
 export enum TransactionStage  {
@@ -45,7 +47,9 @@ export const EmptyTransaction: Transaction = {
   presentationTime: '',
   stage: '',
   status: '',
-  statusName: ''
+  statusName: '',
+  assignedToUID: '',
+  assignedToName: ''
 };
 
 
