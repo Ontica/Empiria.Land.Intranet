@@ -82,7 +82,8 @@ export class InstrumentsPresentationHandler extends AbstractPresentationHandler 
 
       case EffectType.CREATE_INSTRUMENT:
       case EffectType.UPDATE_INSTRUMENT:
-        this.setValue(SelectorType.TRANSACTION_INSTRUMENT, params.result);
+        super.setMemoized(SelectorType.TRANSACTION_INSTRUMENT, params.result,
+                          params.payload.transactionUID);
         return;
 
       default:

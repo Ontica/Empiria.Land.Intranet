@@ -109,27 +109,38 @@ export abstract class AbstractPresentationHandler implements PresentationHandler
     return stateItem.asObservable() as Observable<U>;
   }
 
-  selectMemoized<U>(selector: StateSelector, funct: () => any, key: string): Observable<U> {
+  selectMemoized<U>(selector: StateSelector, funct: () => Observable<any>, key: string): Observable<U> {
     Assertion.assertValue(key, 'key');
 
-    const stateItem = this.getStateMapItem(selector);
-
-    const cache: Cache<Observable<U>> = stateItem.value as Cache<Observable<U>>;
-
-    if (!cache) {
-      Assertion.assertNoReachThisCode(`Uninitialized cache for selector ${selector}.`);
-    }
+    const cache = this.getMemoizedCache<U>(selector);
 
     if (cache.has(key)) {
-      console.log('memoized YES, IT HAS key', key, selector, cache);
-      return cache.get(key);
+      return cache.get(key).asObservable();
     }
 
-    console.log('memoized no key', key, selector, cache);
+    const subject = new BehaviorSubject<U>(null);
 
-    cache.set(key, funct());
+    cache.set(key, subject);
 
-    return cache.get(key);
+    funct().toPromise().then(x => subject.next(x));
+
+    return cache.get(key).asObservable();
+  }
+
+
+  setMemoized<U>(selector: StateSelector, value: U, key: string): void {
+    Assertion.assertValue(key, 'key');
+
+    const cache = this.getMemoizedCache<U>(selector);
+
+    if (cache.has(key)) {
+      cache.get(key).next(value);
+      return;
+    }
+
+    const subject = new BehaviorSubject<U>(value);
+
+    cache.set(key, subject);
   }
 
 
@@ -197,6 +208,17 @@ export abstract class AbstractPresentationHandler implements PresentationHandler
 
 
   // private methods
+
+  private getMemoizedCache<U>(selector: StateSelector): Cache<BehaviorSubject<U>> {
+    const stateItem = this.getStateMapItem(selector);
+
+    const cache: Cache<BehaviorSubject<U>> = stateItem.value as Cache<BehaviorSubject<U>>;
+
+    if (!cache) {
+      Assertion.assertNoReachThisCode(`Uninitialized cache for selector ${selector}.`);
+    }
+    return cache;
+  }
 
 
   private getStateMapItem(selector: StateSelector) {
