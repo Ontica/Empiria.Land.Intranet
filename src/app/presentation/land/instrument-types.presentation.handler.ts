@@ -8,7 +8,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion, toObservable } from '@app/core';
+import { Assertion, Cache } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
@@ -19,7 +19,7 @@ export enum SelectorType {
 }
 
 const initialState: StateValues = [
-  { key: SelectorType.INSTRUMENT_KIND_LIST, value: [] },
+  { key: SelectorType.INSTRUMENT_KIND_LIST, value: new Cache<string[]>() },
 ];
 
 
@@ -34,20 +34,20 @@ export class InstrumentTypesPresentationHandler extends AbstractPresentationHand
   }
 
 
-  select<T>(selectorType: SelectorType, params?: any): Observable<T> {
+  select<U>(selectorType: SelectorType, params?: any): Observable<U> {
     switch (selectorType) {
 
       case SelectorType.INSTRUMENT_KIND_LIST:
         Assertion.assertValue(params, 'params');
 
-        return toObservable<T>(this.data.getInstrumentKindsList(params));
+        const instrumentType = params;
 
-        // const dataProvider = () => this.data.getInstrumentKindsList(params);
+        const dataProvider = () => this.data.getInstrumentKindsList(instrumentType);
 
-        // return super.selectMemoized<T>(selectorType, dataProvider, params);
+        return super.selectMemoized<U>(selectorType, dataProvider, instrumentType);
 
       default:
-        return super.select<T>(selectorType, params);
+        return super.select<U>(selectorType, params);
 
     }
   }
