@@ -8,11 +8,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion, Command, toObservable, toPromise } from '@app/core';
+import { Assertion, Cache, Command, toObservable, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { EmptyInstrument, IssuersFilter } from '@app/models';
+import { IssuersFilter, Transaction } from '@app/models';
 
 import { InstrumentDataService } from '@app/data-services';
 
@@ -35,7 +35,7 @@ export enum EffectType {
 
 
 const initialState: StateValues = [
-  { key: SelectorType.TRANSACTION_INSTRUMENT, value: EmptyInstrument },
+  { key: SelectorType.TRANSACTION_INSTRUMENT, value: new Cache<Transaction[]>() },
   { key: SelectorType.ISSUER_LIST, value: [] },
 ];
 
@@ -59,7 +59,11 @@ export class InstrumentsPresentationHandler extends AbstractPresentationHandler 
       case SelectorType.TRANSACTION_INSTRUMENT:
         Assertion.assertValue(params, 'params');
 
-        return toObservable<U>(this.data.getTransactionInstrument(params));
+        const transactionUID = params;
+
+        const provider = () => this.data.getTransactionInstrument(transactionUID);
+
+        return super.selectMemoized<U>(selectorType, provider, transactionUID);
 
       case SelectorType.ISSUER_LIST:
         Assertion.assertValue(params.instrumentType, 'params.instrumentType');
