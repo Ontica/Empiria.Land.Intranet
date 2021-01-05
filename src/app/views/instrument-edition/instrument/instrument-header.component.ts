@@ -8,9 +8,9 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { concat, of, Subject, from, Observable } from 'rxjs';
+import { concat, of, Subject, Observable } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter,
-         switchMap, tap } from 'rxjs/operators';
+         switchMap, take, tap } from 'rxjs/operators';
 
 import { isEmpty } from '@app/core';
 import { Command, PresentationLayer } from '@app/core/presentation';
@@ -198,16 +198,16 @@ export class InstrumentHeaderComponent implements OnChanges {
   private loadInstrumentKindList(instrumentType) {
     this.isLoading = true;
 
-    if (!instrumentType || [InstrumentTypeEnum.EscrituraPublica, InstrumentTypeEnum.TituloPropiedad]
-                           .includes(instrumentType)) {
+    if (!instrumentType || [InstrumentTypeEnum.EscrituraPublica,
+                            InstrumentTypeEnum.TituloPropiedad].includes(instrumentType)) {
       this.instrumentKindsList = [];
       this.isLoading = false;
       return;
     }
 
     this.uiLayer.select<string[]>(InstrumentTypesStateSelector.INSTRUMENT_KIND_LIST, instrumentType)
-                .toPromise()
-                .then(x => {
+                .pipe(take(1))
+                .subscribe(x => {
                   this.instrumentKindsList = x.map(item => Object.create({ name: item }));
                   this.isLoading = false;
                 });
@@ -222,8 +222,8 @@ export class InstrumentHeaderComponent implements OnChanges {
           debounceTime(800),
           tap(() => this.issuerLoading = true),
           switchMap(term =>
-            from(this.uiLayer.select<Issuer[]>(InstrumentsStateSelector.ISSUER_LIST,
-                                               this.buildIssuerFilter(term)))
+            this.uiLayer.select<Issuer[]>(InstrumentsStateSelector.ISSUER_LIST,
+                                          this.buildIssuerFilter(term))
           .pipe(
               catchError(() => of([])),
               tap(() => this.issuerLoading = false)
