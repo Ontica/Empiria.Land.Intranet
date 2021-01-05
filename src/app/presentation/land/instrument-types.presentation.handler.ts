@@ -44,7 +44,7 @@ export class InstrumentTypesPresentationHandler extends AbstractPresentationHand
 
         const dataProvider = () => this.data.getInstrumentKindsList(instrumentType);
 
-        return super.selectMemoized<U>(selectorType, dataProvider, instrumentType);
+        return super.selectMemoized(selectorType, dataProvider, instrumentType, []);
 
       default:
         return super.select<U>(selectorType, params);

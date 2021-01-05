@@ -63,7 +63,7 @@ export class InstrumentsPresentationHandler extends AbstractPresentationHandler 
 
         const provider = () => this.data.getTransactionInstrument(transactionUID);
 
-        return super.selectMemoized<U>(selectorType, provider, transactionUID);
+        return super.selectMemoized<U>(selectorType, provider, transactionUID, {});
 
       case SelectorType.ISSUER_LIST:
         Assertion.assertValue(params.instrumentType, 'params.instrumentType');

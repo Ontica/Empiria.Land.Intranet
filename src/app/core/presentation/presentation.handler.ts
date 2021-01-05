@@ -15,6 +15,7 @@ import { ActionType, CommandType, StateEffect, StateSelector } from './presentat
 
 import { StateUpdaterUtilities } from './state-updater.utilities';
 
+
 export type StateValues = KeyValue[];
 
 
@@ -109,7 +110,10 @@ export abstract class AbstractPresentationHandler implements PresentationHandler
     return stateItem.asObservable() as Observable<U>;
   }
 
-  selectMemoized<U>(selector: StateSelector, funct: () => Observable<any>, key: string): Observable<U> {
+
+  selectMemoized<U>(selector: StateSelector,
+                    funct: () => Observable<any>,
+                    key: string, defaultValue: any): Observable<U> {
     Assertion.assertValue(key, 'key');
 
     const cache = this.getMemoizedCache<U>(selector);
@@ -118,13 +122,17 @@ export abstract class AbstractPresentationHandler implements PresentationHandler
       return cache.get(key).asObservable();
     }
 
-    const subject = new BehaviorSubject<U>(null);
+    const subject = new BehaviorSubject<U>(defaultValue);
 
     cache.set(key, subject);
 
-    funct().toPromise().then(x => subject.next(x));
+    funct().toPromise()
+    .then(x => {
+      subject.next(x);
+      return x;
+    });
 
-    return cache.get(key).asObservable();
+    return subject.asObservable();
   }
 
 
@@ -141,7 +149,7 @@ export abstract class AbstractPresentationHandler implements PresentationHandler
     const subject = new BehaviorSubject<U>(value);
 
     cache.set(key, subject);
-  }
+   }
 
 
   selectFirst<U>(selector: StateSelector, funct: () => any): Observable<U> {

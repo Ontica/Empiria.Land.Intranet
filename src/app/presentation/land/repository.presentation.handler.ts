@@ -62,7 +62,7 @@ export class RepositoryPresentationHandler extends AbstractPresentationHandler {
 
         dataProvider = () => this.data.getRecorderOfficeMunicipalityList(params.districtUID);
 
-        return super.selectMemoized<U>(selectorType, dataProvider, params.districtUID);
+        return super.selectMemoized<U>(selectorType, dataProvider, params.districtUID, []);
 
 
       case SelectorType.DISTRICT_SECTION_RECORDING_BOOKS_LIST:
@@ -72,7 +72,8 @@ export class RepositoryPresentationHandler extends AbstractPresentationHandler {
         dataProvider =
             () => this.data.getRecorderOfficeSectionBookList(params.districtUID, params.sectionUID);
 
-        return super.selectMemoized<U>(selectorType, dataProvider, params.districtUID + params.sectionUID);
+        return super.selectMemoized<U>(selectorType, dataProvider,
+                                      params.districtUID + params.sectionUID, []);
 
 
       case SelectorType.DISTRICT_OWNERSHIP_RECORDING_SECTIONS_LIST:
@@ -80,7 +81,7 @@ export class RepositoryPresentationHandler extends AbstractPresentationHandler {
 
         dataProvider = () => this.data.getOwnershipRecordingSectionList(params.districtUID);
 
-        return super.selectMemoized<U>(selectorType, dataProvider, params.districtUID);
+        return super.selectMemoized<U>(selectorType, dataProvider, params.districtUID, []);
 
 
       case SelectorType.REAL_ESTATE:
@@ -88,7 +89,7 @@ export class RepositoryPresentationHandler extends AbstractPresentationHandler {
 
         dataProvider = () => this.data.getRealEstate(params.uid);
 
-        return super.selectMemoized<U>(selectorType, dataProvider, params.uid);
+        return super.selectMemoized<U>(selectorType, dataProvider, params.uid, {});
 
 
       case SelectorType.REAL_ESTATE_TYPE_LIST:
