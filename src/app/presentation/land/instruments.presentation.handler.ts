@@ -12,7 +12,7 @@ import { Assertion, Cache, Command, toObservable, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { IssuersFilter, Transaction } from '@app/models';
+import { IssuersFilter, TransactionShortModel } from '@app/models';
 
 import { InstrumentDataService } from '@app/data-services';
 
@@ -35,7 +35,7 @@ export enum EffectType {
 
 
 const initialState: StateValues = [
-  { key: SelectorType.TRANSACTION_INSTRUMENT, value: new Cache<Transaction[]>() },
+  { key: SelectorType.TRANSACTION_INSTRUMENT, value: new Cache<TransactionShortModel[]>() },
   { key: SelectorType.ISSUER_LIST, value: [] },
 ];
 

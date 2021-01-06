@@ -11,7 +11,7 @@ import { isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { InstrumentsStateSelector } from '@app/core/presentation/presentation-types';
 
-import { Transaction, EmptyTransaction, Instrument, EmptyInstrument } from '@app/models';
+import { TransactionShortModel, EmptyTransactionShortModel, Instrument, EmptyInstrument } from '@app/models';
 
 
 @Component({
@@ -20,7 +20,7 @@ import { Transaction, EmptyTransaction, Instrument, EmptyInstrument } from '@app
 })
 export class InstrumentEditionComponent implements OnChanges, OnDestroy {
 
-  @Input() transaction: Transaction = EmptyTransaction;
+  @Input() transaction: TransactionShortModel = EmptyTransactionShortModel;
 
   instrument: Instrument = EmptyInstrument;
 

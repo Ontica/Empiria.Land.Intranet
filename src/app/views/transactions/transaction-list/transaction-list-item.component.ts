@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { Transaction } from '@app/models';
+import { TransactionShortModel } from '@app/models';
 
 
 @Component({
@@ -16,7 +16,7 @@ import { Transaction } from '@app/models';
 })
 export class TransactionListItemComponent {
 
-  @Input() transaction: Transaction;
+  @Input() transaction: TransactionShortModel;
 
   @Output() optionsClick = new EventEmitter<boolean>();
 

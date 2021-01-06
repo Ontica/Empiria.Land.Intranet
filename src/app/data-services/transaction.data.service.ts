@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { HttpService } from '@app/core';
 
-import { Transaction, TransactionFilter } from '@app/models';
+import { TransactionShortModel, TransactionFilter } from '@app/models';
 
 
 @Injectable()
@@ -18,7 +18,7 @@ export class TransactionDataService {
 
   constructor(private http: HttpService) { }
 
-  getTransactionList(filter: TransactionFilter): Observable<Transaction[]> {
+  getTransactionList(filter: TransactionFilter): Observable<TransactionShortModel[]> {
     let path = `v5/land/transactions`;
 
     if (filter.stage) {
@@ -33,7 +33,7 @@ export class TransactionDataService {
         path += `&keywords=${filter.keywords}`;
     }
 
-    return this.http.get<Transaction[]>(path);
+    return this.http.get<TransactionShortModel[]>(path);
   }
 
 }

@@ -8,7 +8,7 @@
 import { Assertion, DateString, Entity } from '@app/core';
 
 
-export interface Transaction extends Entity {
+export interface TransactionShortModel extends Entity {
   type: string;
   subtype: string;
   transactionID: string;
@@ -20,6 +20,38 @@ export interface Transaction extends Entity {
   assignedToUID: string;
   assignedToName: string;
 }
+
+
+export const EmptyTransactionShortModel: TransactionShortModel = {
+  uid: '',
+  type: '',
+  subtype: '',
+  transactionID: '',
+  requestedBy: '',
+  presentationTime: '',
+  stage: '',
+  status: '',
+  statusName: '',
+  assignedToUID: '',
+  assignedToName: ''
+};
+
+
+export interface Requester {
+  name: string;
+  email?: string;
+  phone?: string;
+  rfc?: string;
+}
+
+
+export const EmptyRequester: Requester = {
+  name: '',
+  email: '',
+  phone: '',
+  rfc: ''
+};
+
 
 export enum TransactionStage  {
   MyInbox = 'MyInbox',
@@ -38,21 +70,6 @@ export enum TransactionStatus {
 }
 
 
-export const EmptyTransaction: Transaction = {
-  uid: '',
-  type: '',
-  subtype: '',
-  transactionID: '',
-  requestedBy: '',
-  presentationTime: '',
-  stage: '',
-  status: '',
-  statusName: '',
-  assignedToUID: '',
-  assignedToName: ''
-};
-
-
 export interface TransactionFilter {
   stage?: TransactionStage;
   status?: TransactionStatus;
@@ -64,22 +81,6 @@ export const EmptyTransactionFilter: TransactionFilter = {
   stage: TransactionStage.All,
   status: TransactionStatus.All,
   keywords: '',
-};
-
-
-export interface Requester {
-  name: string;
-  email?: string;
-  phone?: string;
-  rfc?: string;
-}
-
-
-export const EmptyRequester: Requester = {
-  name: '',
-  email: '',
-  phone: '',
-  rfc: ''
 };
 
 

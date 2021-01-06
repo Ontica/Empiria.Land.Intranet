@@ -13,7 +13,7 @@ import { AbstractPresentationHandler, StateValues } from '@app/core/presentation
 
 import { TransactionDataService } from '@app/data-services';
 
-import { EmptyTransactionFilter, EmptyTransaction, TransactionFilter } from '@app/models';
+import { EmptyTransactionFilter, EmptyTransactionShortModel, TransactionFilter } from '@app/models';
 import { Observable } from 'rxjs';
 
 
@@ -26,6 +26,7 @@ export enum ActionType {
 
 export enum CommandType {
   CREATE_TRANSACTION = 'Land.Transactions.Command.CreateTransaction',
+  UPDATE_TRANSACTION = 'Land.Transactions.Command.UpdateTransaction',
 }
 
 
@@ -43,7 +44,7 @@ export enum SelectorType {
 
 const initialState: StateValues = [
   { key: SelectorType.LIST_FILTER, value: EmptyTransactionFilter },
-  { key: SelectorType.SELECTED_TRANSACTION, value: EmptyTransaction },
+  { key: SelectorType.SELECTED_TRANSACTION, value: EmptyTransactionShortModel },
   { key: SelectorType.TRANSACTION_LIST, value: [] },
 ];
 
@@ -121,7 +122,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         return;
 
       case ActionType.UNSELECT_TRANSACTION:
-        this.setValue(SelectorType.SELECTED_TRANSACTION, EmptyTransaction);
+        this.setValue(SelectorType.SELECTED_TRANSACTION, EmptyTransactionShortModel);
 
         return;
 

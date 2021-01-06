@@ -9,7 +9,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 
 import { EventInfo } from '@app/core';
 
-import { Transaction, EmptyTransaction,
+import { TransactionShortModel, EmptyTransactionShortModel,
          TransactionFilter, EmptyTransactionFilter } from '@app/models';
 
 
@@ -27,9 +27,9 @@ export enum TransactionListEventType {
 })
 export class TransactionListComponent implements OnChanges {
 
-  @Input() transactionList: Transaction[] = [];
+  @Input() transactionList: TransactionShortModel[] = [];
 
-  @Input() selectedTransaction: Transaction = EmptyTransaction;
+  @Input() selectedTransaction: TransactionShortModel = EmptyTransactionShortModel;
 
   @Input() filter: TransactionFilter = EmptyTransactionFilter;
 
@@ -49,7 +49,7 @@ export class TransactionListComponent implements OnChanges {
   }
 
 
-  isSelected(transaction: Transaction) {
+  isSelected(transaction: TransactionShortModel) {
     return (this.selectedTransaction.uid === transaction.uid);
   }
 
@@ -64,12 +64,12 @@ export class TransactionListComponent implements OnChanges {
   }
 
 
-  onClickTransactionOptions(transaction: Transaction) {
+  onClickTransactionOptions(transaction: TransactionShortModel) {
     this.sendEvent(TransactionListEventType.TRANSACTION_OPTIONS_CLICKED, { transaction });
   }
 
 
-  onSelectTransaction(transaction: Transaction) {
+  onSelectTransaction(transaction: TransactionShortModel) {
     this.sendEvent(TransactionListEventType.TRANSACTION_SELECTED, { transaction });
   }
 
