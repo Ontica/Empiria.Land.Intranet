@@ -30,6 +30,10 @@
 </div>
 
 <emp-ng-modal-window *ngIf="displayCreateTransactionEditor"
-                     [config]="{width:'820px', height:'840px'}">
+                     [config]="{width:'820px'}">
+
+  <emp-land-transaction-creator (closeEvent)="onTransactionCreatorClosed()">
+
+  </emp-land-transaction-creator>
 
 </emp-ng-modal-window>

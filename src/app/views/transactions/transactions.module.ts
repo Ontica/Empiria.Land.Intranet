@@ -22,6 +22,8 @@ import { TransactionListItemComponent } from './transaction-list/transaction-lis
 import { TransactionTabbedViewComponent } from './transaction-tabbed-view/transaction-tabbed-view.component';
 import { TransactionsMainPageComponent } from './main-page/transactions-main-page.component';
 import { TransactionsRoutingModule } from './transactions-routing.module';
+import { TransactionCreatorComponent } from './transaction-creator/transaction-creator.component';
+import { TransactionEditorComponent } from './transaction-editor/transaction-editor.component';
 
 
 @NgModule({
@@ -43,6 +45,8 @@ import { TransactionsRoutingModule } from './transactions-routing.module';
     TransactionListComponent,
     TransactionListItemComponent,
     TransactionTabbedViewComponent,
+    TransactionCreatorComponent,
+    TransactionEditorComponent,
   ],
 
   exports: []

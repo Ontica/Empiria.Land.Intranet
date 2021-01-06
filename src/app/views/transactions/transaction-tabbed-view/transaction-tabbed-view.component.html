@@ -3,9 +3,9 @@
              (cardClose)="onClose()">
 
 <mat-tab-group [selectedIndex]="selectedTabIndex">
-  <mat-tab label="Información del trámite" disabled>
+  <mat-tab label="Información del trámite">
     <ng-template matTabContent>
-
+      <emp-land-transaction-editor></emp-land-transaction-editor>
     </ng-template>
   </mat-tab>
 

@@ -31,7 +31,7 @@ export class TransactionTabbedViewComponent implements OnChanges {
   }
 
   private setSelectedTabIndex() {
-    this.selectedTabIndex = 2;
+    this.selectedTabIndex = 0;
   }
 
 }

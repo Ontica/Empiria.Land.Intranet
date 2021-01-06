@@ -5,7 +5,8 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Assertion, DateString, Entity } from '@app/core';
+import { Assertion, DateString, Empty, Entity, Identifiable } from '@app/core';
+import { Instrument } from './instrument';
 
 
 export interface TransactionShortModel extends Entity {
@@ -37,6 +38,24 @@ export const EmptyTransactionShortModel: TransactionShortModel = {
 };
 
 
+export interface Transaction extends Entity {
+  type: Identifiable;
+  subtype: Identifiable;
+  transactionID: string;
+  presentationTime: DateString;
+  requestedBy: Requester;
+  agency: Identifiable;
+  recorderOffice: Identifiable;
+  instrument?: Instrument;
+  instrumentDescriptor: string;
+  baseResource: Resource;
+  services: any[];
+  payment: Payment;
+  status: string;
+  statusName: string;
+}
+
+
 export interface Requester {
   name: string;
   email?: string;
@@ -45,11 +64,60 @@ export interface Requester {
 }
 
 
+export interface Resource extends Entity {
+  type: string;
+  subtype: string;
+  resourceID: string;
+  mediaUri: string;
+}
+
+
+export interface Payment {
+  total: number;
+  receiptNo: string;
+  mediaUri: string;
+}
+
+
 export const EmptyRequester: Requester = {
   name: '',
   email: '',
   phone: '',
   rfc: ''
+};
+
+
+export const EmptyResource: Resource = {
+  uid: '',
+  type: '',
+  subtype: '',
+  resourceID: '',
+  mediaUri: ''
+};
+
+
+export const EmptyPayment: Payment = {
+  total: null,
+  receiptNo: '',
+  mediaUri: ''
+};
+
+
+export const EmptyTransaction: Transaction = {
+  uid: '',
+  type: Empty,
+  subtype: Empty,
+  transactionID: '',
+  presentationTime: '',
+  requestedBy: EmptyRequester,
+  agency: Empty,
+  recorderOffice: Empty,
+  instrumentDescriptor: '',
+  baseResource: EmptyResource,
+  services: [],
+  payment: EmptyPayment,
+  status: '',
+  statusName: ''
 };
 
 
@@ -82,6 +150,28 @@ export const EmptyTransactionFilter: TransactionFilter = {
   status: TransactionStatus.All,
   keywords: '',
 };
+
+
+export const TransactionTypesList: any[] = [
+  { type: 'AvisoPreventivo', typeName: 'Avisos Preventivos o definitivo' },
+  { type: 'InscripcionDocumento', typeName: 'Inscripción de documentos' },
+  { type: 'ExpedicionCertificado', typeName: 'Expedición de certificados' },
+  { type: 'Procede', typeName: 'Procede' },
+  { type: 'TramiteComercio', typeName: 'Trámite de comercio' },
+  { type: 'ArchivoGeneralNotaria', typeName: 'Archivo general de notarías' },
+  { type: 'OficialiaPartes', typeName: 'Oficialía de partes' }
+];
+
+
+export enum TransactionTypeEnum {
+  AvisoPreventivo = 'AvisoPreventivo',
+  InscripcionDocumento = 'InscripcionDocumento',
+  ExpedicionCertificado = 'ExpedicionCertificado',
+  Procede = 'Procede',
+  TramiteComercio = 'TramiteComercio',
+  ArchivoGeneralNotaria = 'ArchivoGeneralNotaria',
+  OficialiaPartes = 'OficialiaPartes'
+}
 
 
 export function mapTransactionStageFromViewName(viewName: string): TransactionStage {
