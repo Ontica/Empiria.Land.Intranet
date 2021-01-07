@@ -15,10 +15,8 @@ import { TransactionStateSelector, MainUIStateSelector,
          DocumentsRecordingAction, DocumentsRecordingStateSelector,
          TransactionAction} from '@app/core/presentation/presentation-types';
 
-import { TransactionShortModel, TransactionFilter,
-         EmptyTransactionShortModel, EmptyTransactionFilter,
-         mapTransactionStageFromViewName, mapTransactionStatusFromViewName,
-         } from '@app/models/transaction';
+import { TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
+         mapTransactionStageFromViewName, mapTransactionStatusFromViewName } from '@app/models/transaction';
 
 import { View } from '@app/views/main-layout';
 
@@ -34,7 +32,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   currentView: View;
 
   transactionList: TransactionShortModel[] = [];
-  selectedTransaction: TransactionShortModel = EmptyTransactionShortModel;
+  selectedTransaction: Transaction = EmptyTransaction;
   filter: TransactionFilter = EmptyTransactionFilter;
 
   displayCreateTransactionEditor = false;
@@ -62,7 +60,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
       .subscribe(x => this.onCurrentViewChanged(x));
 
 
-    this.subscriptionHelper.select<TransactionShortModel>(TransactionStateSelector.SELECTED_TRANSACTION)
+    this.subscriptionHelper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .subscribe(x => {
         this.selectedTransaction = x;
         this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
@@ -73,8 +71,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
       .subscribe(x => this.filter = x);
 
 
-    this.subscriptionHelper.select<TransactionShortModel>
-      (DocumentsRecordingStateSelector.SELECTED_RECORDING_ACT)
+    this.subscriptionHelper.select<Transaction>(DocumentsRecordingStateSelector.SELECTED_RECORDING_ACT)
       .subscribe(x => {
         this.selectedTransaction = x;
         this.displayRecordingActEditor = !isEmpty(this.selectedTransaction);
@@ -109,11 +106,13 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
         return;
 
       case TransactionListEventType.TRANSACTION_OPTIONS_CLICKED:
-        this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT,  event.payload);
+        this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT,
+                              {'transactionUID': event.payload.transaction.uid});
         return;
 
       case TransactionListEventType.TRANSACTION_SELECTED:
-        this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION, event.payload);
+        this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION,
+                              {'transactionUID': event.payload.transaction.uid});
         return;
 
       default:

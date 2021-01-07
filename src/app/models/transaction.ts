@@ -39,13 +39,13 @@ export const EmptyTransactionShortModel: TransactionShortModel = {
 
 
 export interface Transaction extends Entity {
-  type: Identifiable;
-  subtype: Identifiable;
+  type: TransactionType;
+  subtype: TransactionSubtype;
   transactionID: string;
   presentationTime: DateString;
   requestedBy: Requester;
-  agency: Identifiable;
-  recorderOffice: Identifiable;
+  agency: Agency;
+  recorderOffice: RecorderOffice;
   instrument?: Instrument;
   instrumentDescriptor: string;
   baseResource: Resource;
@@ -56,12 +56,33 @@ export interface Transaction extends Entity {
 }
 
 
+export interface TransactionType extends Identifiable {
+  subtypes?: TransactionSubtype[];
+}
+
+
+export interface TransactionSubtype extends Identifiable {
+
+}
+
+
 export interface Requester {
   name: string;
   email?: string;
   phone?: string;
   rfc?: string;
 }
+
+
+export interface Agency extends Identifiable {
+
+}
+
+
+export interface RecorderOffice extends Identifiable {
+
+}
+
 
 
 export interface Resource extends Entity {

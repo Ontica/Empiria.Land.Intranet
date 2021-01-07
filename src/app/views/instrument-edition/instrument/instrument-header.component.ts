@@ -19,8 +19,8 @@ import { InstrumentsStateSelector,
          InstrumentTypesStateSelector,
          InstrumentsCommandType } from '@app/core/presentation/presentation-types';
 
-import { TransactionShortModel, Instrument, InstrumentTypeEnum, InstrumentTypesList,
-         Issuer, IssuersFilter, EmptyTransactionShortModel, EmptyInstrument} from '@app/models';
+import { Instrument, InstrumentTypeEnum, InstrumentTypesList,
+         Issuer, IssuersFilter, EmptyInstrument} from '@app/models';
 
 type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'issuer' |
                               'instrumentNo' | 'binderNo' | 'folio' | 'endFolio' | 'summary';
@@ -31,7 +31,7 @@ type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'i
 })
 export class InstrumentHeaderComponent implements OnChanges {
 
-  @Input() transaction: TransactionShortModel = EmptyTransactionShortModel;
+  @Input() transactionUID: string = 'Empty';
   @Input() instrument: Instrument = EmptyInstrument;
 
   InstrumentType = InstrumentTypeEnum;
@@ -153,7 +153,7 @@ export class InstrumentHeaderComponent implements OnChanges {
     const command: Command = {
       type: commandType,
       payload: {
-        transactionUID: this.transaction.uid,
+        transactionUID: this.transactionUID,
         instrument: this.getFormData()
       }
     };

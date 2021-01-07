@@ -11,7 +11,7 @@ import { Assertion } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { RecordingDataService } from '@app/data-services';
+import { TransactionDataService } from '@app/data-services';
 
 import { EmptyRecordingAct } from '@app/models';
 
@@ -35,7 +35,7 @@ const initialState: StateValues = [
 @Injectable()
 export class RecordingsPresentationHandler extends AbstractPresentationHandler {
 
-  constructor(private data: RecordingDataService) {
+  constructor(private data: TransactionDataService) { // Temp: RecordingDataService
     super({
       initialState,
       selectors: SelectorType,
@@ -47,9 +47,11 @@ export class RecordingsPresentationHandler extends AbstractPresentationHandler {
     switch (actionType) {
 
       case ActionType.SELECT_RECORDING_ACT:
-        Assertion.assertValue(params.transaction, 'params.transaction');
+        Assertion.assertValue(params.transactionUID, 'payload.transactionUID');
 
-        this.setValue(SelectorType.SELECTED_RECORDING_ACT, params.transaction);
+        const transaction = this.data.getTransaction(params.transactionUID);
+
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, transaction);
         return;
 
       case ActionType.UNSELECT_RECORDING_ACT:

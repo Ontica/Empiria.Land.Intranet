@@ -9,7 +9,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 
 import { EventInfo } from '@app/core';
 
-import { TransactionShortModel, EmptyTransactionShortModel,
+import { TransactionShortModel, EmptyTransaction, Transaction,
          TransactionFilter, EmptyTransactionFilter } from '@app/models';
 
 
@@ -29,7 +29,7 @@ export class TransactionListComponent implements OnChanges {
 
   @Input() transactionList: TransactionShortModel[] = [];
 
-  @Input() selectedTransaction: TransactionShortModel = EmptyTransactionShortModel;
+  @Input() selectedTransaction: Transaction = EmptyTransaction;
 
   @Input() filter: TransactionFilter = EmptyTransactionFilter;
 

@@ -85,7 +85,7 @@ export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccess
   value: any = null;
 
   private onScroll = (event: any) => {
-    const autoscroll = event.srcElement.classList.contains('ng-dropdown-panel-items')
+    const autoscroll = event.srcElement.classList.contains('ng-dropdown-panel-items');
     if (this.select && this.select.isOpen && !autoscroll) {
       this.select.close();
     }
@@ -128,7 +128,7 @@ export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccess
   onChangedEvent(event){
     let value = event;
     if (Array.isArray(event)) {
-      value = event.map(item => item[this.bindValue])
+      value = event.map(item => item[this.bindValue]);
     } else if (event) {
       value = event[this.bindValue];
     }

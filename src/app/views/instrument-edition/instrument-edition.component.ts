@@ -11,7 +11,7 @@ import { isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { InstrumentsStateSelector } from '@app/core/presentation/presentation-types';
 
-import { TransactionShortModel, EmptyTransactionShortModel, Instrument, EmptyInstrument } from '@app/models';
+import { Instrument, EmptyInstrument } from '@app/models';
 
 
 @Component({
@@ -20,7 +20,7 @@ import { TransactionShortModel, EmptyTransactionShortModel, Instrument, EmptyIns
 })
 export class InstrumentEditionComponent implements OnChanges, OnDestroy {
 
-  @Input() transaction: TransactionShortModel = EmptyTransactionShortModel;
+  @Input() transactionUID: string = 'Empty';
 
   instrument: Instrument = EmptyInstrument;
 
@@ -31,7 +31,7 @@ export class InstrumentEditionComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges() {
-    this.helper.select<Instrument>(InstrumentsStateSelector.TRANSACTION_INSTRUMENT, this.transaction.uid)
+    this.helper.select<Instrument>(InstrumentsStateSelector.TRANSACTION_INSTRUMENT, this.transactionUID)
       .subscribe(x => this.instrument = isEmpty(x) ? EmptyInstrument : x);
   }
 

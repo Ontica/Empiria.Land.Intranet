@@ -7,7 +7,7 @@
 
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 
-import { TransactionShortModel, EmptyTransactionShortModel } from '@app/models';
+import { Transaction, EmptyTransaction } from '@app/models';
 
 
 @Component({
@@ -16,7 +16,7 @@ import { TransactionShortModel, EmptyTransactionShortModel } from '@app/models';
 })
 export class TransactionTabbedViewComponent implements OnChanges {
 
-  @Input() transaction: TransactionShortModel = EmptyTransactionShortModel;
+  @Input() transaction: Transaction = EmptyTransaction;
 
   @Output() closeEvent = new EventEmitter<void>();
 

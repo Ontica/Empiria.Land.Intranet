@@ -8,9 +8,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { HttpService } from '@app/core';
+import { Assertion, HttpService } from '@app/core';
 
-import { TransactionShortModel, TransactionFilter } from '@app/models';
+import { TransactionShortModel, TransactionFilter, Transaction } from '@app/models';
 
 
 @Injectable()
@@ -34,6 +34,15 @@ export class TransactionDataService {
     }
 
     return this.http.get<TransactionShortModel[]>(path);
+  }
+
+
+  getTransaction(transactionUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}`;
+
+    return this.http.get<Transaction>(path);
   }
 
 }

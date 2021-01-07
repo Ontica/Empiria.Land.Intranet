@@ -6,7 +6,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { EmptyTransactionShortModel, TransactionShortModel } from '@app/models';
+import { Transaction, EmptyTransaction } from '@app/models';
 
 
 @Component({
@@ -15,7 +15,7 @@ import { EmptyTransactionShortModel, TransactionShortModel } from '@app/models';
 })
 export class RecordingActsEditorComponent {
 
-  @Input() transaction: TransactionShortModel = EmptyTransactionShortModel;
+  @Input() transaction: Transaction = EmptyTransaction;
 
   @Output() closeEvent = new EventEmitter<void>();
 
