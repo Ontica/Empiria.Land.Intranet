@@ -1,4 +1,4 @@
-<emp-ng-card [title]="transaction.type + ': ' + transaction.transactionID"
+<emp-ng-card [title]="transaction.type.name + ': ' + transaction.transactionID"
              [hint]="'Presentado el: ' + ( transaction.presentationTime | dateTimeFormat )"
              (cardClose)="onClose()">
 
@@ -17,7 +17,7 @@
 
   <mat-tab label="Inscripción">
     <ng-template matTabContent>
-      <emp-land-instrument-edition [transaction]="transaction"></emp-land-instrument-edition>
+      <emp-land-instrument-edition [transactionUID]="transaction.uid"></emp-land-instrument-edition>
     </ng-template>
   </mat-tab>
 
