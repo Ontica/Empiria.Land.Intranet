@@ -15,7 +15,6 @@ export interface SelectBoxConfig {
   minTermLength?: number;
   multiple?: boolean;
   notFoundText?: string;
-  placeholder?: string;
   searchable?: boolean;
   typeToSearchText?: string;
   virtualScroll?: boolean;
@@ -32,7 +31,6 @@ const DefaultSelectBoxConfig: SelectBoxConfig = {
   minTermLength: 5,
   multiple: false,
   notFoundText: 'No se encontraron registros',
-  placeholder: 'Seleccione',
   searchable: true,
   typeToSearchText: 'Por favor ingrese 5 o mas caracteres',
   virtualScroll: false,
@@ -60,6 +58,7 @@ export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccess
   @Input() items: any[];
   @Input() bindLabel: string = 'name';
   @Input() bindValue: string = 'uid';
+  @Input() placeholder: string = 'Seleccione';
   @Input() loading = false;
   @Input() typeahead: Subject<string>;
   @Input() showError = false;

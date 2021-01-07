@@ -92,7 +92,7 @@
         <div fxFlex="60">
           <label>Identificación:</label>
           <emp-ng-select #selectIdentificationTypes
-            [config]="{placeholder: '( Ninguna )'}"
+            [placeholder]="'( Ninguna )'"
             [items]="identificationTypesList"
             formControlName="typeIdentification">
           </emp-ng-select>
@@ -127,7 +127,8 @@
         <div fxFlex="40">
           <label>Participa como:</label>
           <emp-ng-select #selectRoles
-            [config]="{placeholder: '( Seleccionar rol )', groupBy: 'items'}"
+            [config]="{groupBy: 'items'}"
+            [placeholder]="'( Seleccionar rol )'"
             [items]="rolesList"
             [class.invalid-control]="role.touched && role.errors"
             formControlName="role">
@@ -140,7 +141,7 @@
               <label>Sobre:</label>
               <emp-ng-select #selectParticipationTypes
                 [items]="participationTypesList"
-                [config]="{placeholder: '( U de M )'}"
+                [placeholder]="'( U de M )'"
                 [class.invalid-control]="participationType.touched && participationType.errors"
                 formControlName="participationType">
               </emp-ng-select>
@@ -158,11 +159,11 @@
             <div fxFlex="60">
               <label>Sobre:</label>
               <emp-ng-select #selectPartiesInRecordingAct
-                [config]="{placeholder: 'Seleccionar una persona u organización',
-                           closeOnSelect: false,
+                [config]="{closeOnSelect: false,
                            multiple: true,
                            searchable: false,
                            clearable: false }"
+                [placeholder]="'Seleccionar una persona u organización'"
                 [items]="partiesInRecordingActList"
 
                 [class.invalid-control]="of.touched && of.errors"
