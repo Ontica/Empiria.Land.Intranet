@@ -44,6 +44,7 @@ export interface Transaction extends Entity {
   transactionID: string;
   presentationTime: DateString;
   requestedBy: Requester;
+  assignedTo: Identifiable;
   agency: Agency;
   recorderOffice: RecorderOffice;
   instrument?: Instrument;
@@ -53,6 +54,7 @@ export interface Transaction extends Entity {
   payment: Payment;
   status: string;
   statusName: string;
+  stage: string;
 }
 
 
@@ -131,6 +133,7 @@ export const EmptyTransaction: Transaction = {
   transactionID: '',
   presentationTime: '',
   requestedBy: EmptyRequester,
+  assignedTo: Empty,
   agency: Empty,
   recorderOffice: Empty,
   instrumentDescriptor: '',
@@ -138,7 +141,8 @@ export const EmptyTransaction: Transaction = {
   services: [],
   payment: EmptyPayment,
   status: '',
-  statusName: ''
+  statusName: '',
+  stage: ''
 };
 
 
@@ -173,25 +177,14 @@ export const EmptyTransactionFilter: TransactionFilter = {
 };
 
 
-export const TransactionTypesList: any[] = [
-  { type: 'AvisoPreventivo', typeName: 'Avisos Preventivos o definitivo' },
-  { type: 'InscripcionDocumento', typeName: 'Inscripción de documentos' },
-  { type: 'ExpedicionCertificado', typeName: 'Expedición de certificados' },
-  { type: 'Procede', typeName: 'Procede' },
-  { type: 'TramiteComercio', typeName: 'Trámite de comercio' },
-  { type: 'ArchivoGeneralNotaria', typeName: 'Archivo general de notarías' },
-  { type: 'OficialiaPartes', typeName: 'Oficialía de partes' }
-];
-
-
-export enum TransactionTypeEnum {
-  AvisoPreventivo = 'AvisoPreventivo',
-  InscripcionDocumento = 'InscripcionDocumento',
-  ExpedicionCertificado = 'ExpedicionCertificado',
-  Procede = 'Procede',
-  TramiteComercio = 'TramiteComercio',
-  ArchivoGeneralNotaria = 'ArchivoGeneralNotaria',
-  OficialiaPartes = 'OficialiaPartes'
+export interface ModificationTransaction {
+  typeUID?: string;
+  subtypeUID?: string;
+  recorderOfficeUID?: string;
+  agencyUID?: string;
+  requestedBy?: string;
+  requestedByEmail?: string;
+  instrumentDescriptor?: string;
 }
 
 
@@ -222,4 +215,38 @@ export function mapTransactionStatusFromViewName(viewName: string): TransactionS
     return TransactionStatus.OnSign;
   }
   return TransactionStatus.All;
+}
+
+
+export function mapTransactionShortModelFromTransaction(transaction: Transaction): TransactionShortModel {
+  return {
+    uid: transaction.uid,
+    type: transaction.type.name,
+    subtype: transaction.subtype.name,
+    transactionID: transaction.transactionID,
+    requestedBy: transaction.requestedBy.name,
+    presentationTime: transaction.presentationTime,
+    stage: transaction.stage,
+    status: transaction.status,
+    statusName: transaction.statusName,
+    assignedToUID: transaction.assignedTo?.uid,
+    assignedToName: transaction.assignedTo?.name
+  };
+}
+
+// Array Functions
+
+export function insertToArrayIfNotExist<T, K extends keyof T>(array: T[], item: T, key: K): T[] {
+  let newArray = [... array];
+  if (array.filter(element => element[key] === item[key]).length === 0) {
+    newArray = [...array, ... [item]];
+  }
+  return newArray;
+}
+
+
+export function insertItemTopArray<T, K extends keyof T>(array: T[], item: T, key: K): T[] {
+  const oldArrayFilter = array.filter(element => element[key] !== item[key]);
+  const newArray = [... [item], ...oldArrayFilter];
+  return newArray;
 }

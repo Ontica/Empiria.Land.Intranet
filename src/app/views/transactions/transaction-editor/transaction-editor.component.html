@@ -1,3 +1,8 @@
-<emp-land-transaction-header [transaction]="transaction">
+<emp-land-transaction-header
+  [transaction]="transaction"
+  [transactionTypeList]="transactionTypeList"
+  [agencyList]="agencyList"
+  [recorderOfficeList]="recorderOfficeList"
+  (transactionHeadertEvent)="onTransactionHeaderEvent($event)">
 
 </emp-land-transaction-header>

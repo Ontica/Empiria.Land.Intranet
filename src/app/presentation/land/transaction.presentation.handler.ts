@@ -7,15 +7,17 @@
 
 import { Injectable } from '@angular/core';
 
-import { Assertion, Command, Cache } from '@app/core';
+import { Observable } from 'rxjs';
+
+import { Assertion, Command, Cache, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
 import { TransactionDataService } from '@app/data-services';
 
-import { Agency, RecorderOffice, TransactionFilter, TransactionType,
-         EmptyTransaction, EmptyTransactionFilter } from '@app/models';
-import { Observable } from 'rxjs';
+import { Agency, RecorderOffice, TransactionFilter, TransactionShortModel, TransactionType,
+         EmptyTransaction, EmptyTransactionFilter,
+         insertItemTopArray, mapTransactionShortModelFromTransaction } from '@app/models';
 
 
 export enum ActionType {
@@ -32,7 +34,9 @@ export enum CommandType {
 
 
 export enum EffectType {
-  SET_LIST_FILTER = ActionType.SET_LIST_FILTER
+  SET_LIST_FILTER = ActionType.SET_LIST_FILTER,
+  CREATE_TRANSACTION = CommandType.CREATE_TRANSACTION,
+  UPDATE_TRANSACTION = CommandType.UPDATE_TRANSACTION,
 }
 
 
@@ -63,8 +67,9 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
     super({
       initialState,
       selectors: SelectorType,
-      actions: ActionType,
-      effects: EffectType
+      effects: EffectType,
+      commands: CommandType,
+      actions: ActionType
     });
   }
 
@@ -103,7 +108,22 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
 
   applyEffects(effectType: EffectType, params?: any): void {
+
     switch (effectType) {
+
+      case EffectType.CREATE_TRANSACTION:
+      case EffectType.UPDATE_TRANSACTION:
+        const transactionListOld = this.getValue<TransactionShortModel[]>(SelectorType.TRANSACTION_LIST);
+
+        const transactionToInsert = mapTransactionShortModelFromTransaction(params.result);
+
+        const transactionListNew = insertItemTopArray(transactionListOld, transactionToInsert, 'uid');
+
+        this.setValue(SelectorType.TRANSACTION_LIST, transactionListNew);
+
+        this.setValue(SelectorType.SELECTED_TRANSACTION, params.result);
+
+        return;
 
       case EffectType.SET_LIST_FILTER:
         const filter = this.getValue<TransactionFilter>(SelectorType.LIST_FILTER);
@@ -122,12 +142,18 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
 
   execute<T>(command: Command): Promise<T> {
+
     switch (command.type as CommandType) {
 
-      // case CommandType.CREATE_TRANSACTION:
-      //   return toPromise<U>(
-      //     this.useCases.createTransaction(command.payload.procedureType, command.payload.requestedBy)
-      //   );
+      case CommandType.CREATE_TRANSACTION:
+        return toPromise<T>(
+          this.data.createTransaction(command.payload.transaction)
+        );
+
+      case CommandType.UPDATE_TRANSACTION:
+        return toPromise<T>(
+          this.data.updateTransaction(command.payload.transactionUID, command.payload.transaction)
+        );
 
       default:
         throw this.unhandledCommand(command);

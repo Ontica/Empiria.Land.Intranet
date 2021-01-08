@@ -4,7 +4,12 @@
   (cardClose)="onClose()">
 
   <div style="padding: 0 16px 32px 16px !important;">
-    <emp-land-transaction-header [transaction]="transaction">
+    <emp-land-transaction-header
+      [transaction]="transaction"
+      [transactionTypeList]="transactionTypeList"
+      [agencyList]="agencyList"
+      [recorderOfficeList]="recorderOfficeList"
+      (transactionHeadertEvent)="onTransactionHeaderEvent($event)">
 
     </emp-land-transaction-header>
   </div>

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { Agency, RecorderOffice, Transaction,
+import { Agency, ModificationTransaction, RecorderOffice, Transaction,
          TransactionFilter, TransactionShortModel, TransactionType } from '@app/models';
 
 
@@ -46,17 +46,40 @@ export class TransactionDataService {
     return this.http.get<Transaction>(path);
   }
 
+
+  createTransaction(transaction: ModificationTransaction): Observable<Transaction> {
+    Assertion.assertValue(transaction, 'transaction');
+
+    const path = `v5/land/transactions`;
+
+    return this.http.post<Transaction>(path, transaction);
+  }
+
+
+  updateTransaction(transactionUID: string,
+                    transaction: ModificationTransaction): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+    Assertion.assertValue(transaction, 'transaction');
+
+    const path = `v5/land/transactions/${transactionUID}`;
+
+    return this.http.put<Transaction>(path, transaction);
+  }
+
+
   getTransactionTypes(): Observable<TransactionType[]> {
     const path = `v5/land/transaction-types`;
 
     return this.http.get<TransactionType[]>(path);
   }
 
+
   getAgencies(): Observable<Agency[]> {
     const path = `v5/land/agencies`;
 
     return this.http.get<Agency[]>(path);
   }
+
 
   getRecorderOffices(): Observable<RecorderOffice[]> {
     const path = `v5/land/recorder-offices`;

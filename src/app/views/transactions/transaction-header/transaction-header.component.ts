@@ -1,16 +1,15 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Assertion, Command, isEmpty } from '@app/core';
-import { PresentationLayer } from '@app/core/presentation';
-import { TransactionCommandType,
-         TransactionStateSelector } from '@app/core/presentation/presentation-types';
-import { Transaction, EmptyTransaction, TransactionTypeEnum,
-         TransactionType, TransactionSubtype, Agency, RecorderOffice } from '@app/models';
-
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Assertion, EventInfo, isEmpty } from '@app/core';
+import { Transaction, EmptyTransaction, TransactionType, TransactionSubtype,
+         Agency, RecorderOffice, insertToArrayIfNotExist } from '@app/models';
 
 type transactionFormControls = 'type' | 'subtype' | 'name' | 'email' |
                               'instrumentNo' | 'agency' | 'recorderOffice';
 
+export enum TransactionHeaderEventType {
+  SUBMIT_TRANSACTION_CLICKED  = 'TransactionListComponent.Event.SubmitTransactionClicked'
+}
 
 @Component({
   selector: 'emp-land-transaction-header',
@@ -20,16 +19,17 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
 
   @Input() transaction: Transaction = EmptyTransaction;
 
+  @Input() transactionTypeList: TransactionType[] = [];
+
+  @Input() agencyList: Agency[] = [];
+
+  @Input() recorderOfficeList: RecorderOffice[] = [];
+
   @Input() readonly = false;
 
-  TransactionType = TransactionTypeEnum;
+  @Output() transactionHeadertEvent = new EventEmitter<EventInfo>();
 
-  transactionTypeSelected: TransactionType = null;
-
-  transactionTypeList: TransactionType[] = [];
   transactionSubtypeList: TransactionSubtype[] = [];
-  agencyList: Agency[] = [];
-  recorderOfficeList: RecorderOffice[] = [];
 
   isLoading = false;
   submitted = false;
@@ -40,59 +40,39 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     name: new FormControl('', Validators.required),
     email: new FormControl('', Validators.email),
     instrumentNo: new FormControl(''),
-    agency: new FormControl(''),
+    agency: new FormControl('', Validators.required),
     recorderOffice: new FormControl('', Validators.required)
   });
 
-  constructor(private uiLayer: PresentationLayer) { }
-
   ngOnInit(): void { }
 
-  ngOnChanges() {
-    this.transactionTypeSelected = isEmpty(this.transaction.type) ? null : this.transaction.type;
-    if (isEmpty(this.transaction)){
-      this.resetForm();
-    }else{
-      this.setFormModel();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.transaction) {
+      if (isEmpty(this.transaction)){
+        this.resetForm();
+      }else{
+        this.setFormModel();
+      }
+
+      this.disableForm();
     }
-    this.loadDataLists();
-    this.disableForm();
+
+    this.loadInitialSubtypeList();
   }
 
-  loadDataLists(){
-    this.uiLayer.select<TransactionType[]>(TransactionStateSelector.TRANSACTION_TYPE_LIST, {})
-      .subscribe(x => {
-        this.transactionTypeList = x;
-        this.loadSubtypeList();
-      });
-
-    this.uiLayer.select<RecorderOffice[]>(TransactionStateSelector.RECORDER_OFFICE_LIST, {})
-      .subscribe(x => {
-        this.recorderOfficeList = isEmpty(this.transaction.recorderOffice) ?
-                                  x : insertIfNotExist(x, this.transaction.recorderOffice, 'uid');
-      });
-
-    this.uiLayer.select<Agency[]>(TransactionStateSelector.AGENCY_LIST, {})
-      .subscribe(x => {
-        this.agencyList = isEmpty(this.transaction.agency) ?
-                          x : insertIfNotExist(x, this.transaction.agency, 'uid');
-      });
-  }
-
-  loadSubtypeList(){
+  loadInitialSubtypeList(){
     this.transactionSubtypeList = [];
-    if (!isEmpty(this.transactionTypeSelected)) {
+    if (!isEmpty(this.transaction.type)) {
       const subtypeList =
-        this.transactionTypeList.filter(y => y.uid === this.transactionTypeSelected.uid).length > 0 ?
-        this.transactionTypeList.filter(y => y.uid === this.transactionTypeSelected.uid)[0].subtypes : [];
+        this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid).length > 0 ?
+        this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid)[0].subtypes : [];
 
-      this.transactionSubtypeList = insertIfNotExist(subtypeList, this.transaction.subtype, 'uid');
+      this.transactionSubtypeList = insertToArrayIfNotExist(subtypeList, this.transaction.subtype, 'uid');
     }
   }
 
   transactionTypeChange(change: TransactionType) {
-    this.transactionTypeSelected = change;
-    this.transactionSubtypeList = this.transactionTypeSelected.subtypes;
+    this.transactionSubtypeList = change.subtypes;
 
     const subtypeUID = !isEmpty(this.transaction.subtype) && change.uid === this.transaction.type.uid ?
                        this.transaction.subtype.uid : null;
@@ -108,25 +88,22 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
 
     this.submitted = true;
 
-    let commandType = TransactionCommandType.UPDATE_TRANSACTION;
-    if (isEmpty(this.transaction)) {
-      commandType = TransactionCommandType.CREATE_TRANSACTION;
-    }
-
-    const command: Command = {
-      type: commandType,
-      payload: {
-        transactionUID: this.transaction.uid,
-        transaction: this.getFormData()
-      }
-    };
-
-    console.log(command);
-    // this.uiLayer.execute(command);
+    this.sendEvent(TransactionHeaderEventType.SUBMIT_TRANSACTION_CLICKED, this.getFormData());
   }
 
   getFormControl(name: transactionFormControls) {
     return this.form.get(name);
+  }
+
+  // private methods
+
+  private sendEvent(eventType: TransactionHeaderEventType, payload?: any) {
+    const event: EventInfo = {
+      type: eventType,
+      payload
+    };
+
+    this.transactionHeadertEvent.emit(event);
   }
 
   private setFormModel() {
@@ -135,7 +112,7 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
       subtype: isEmpty(this.transaction.subtype) ? null : this.transaction.subtype.uid,
       name: this.transaction.requestedBy.name,
       email: this.transaction.requestedBy.email,
-      instrumentNo: this.transaction.instrument?.instrumentNo,
+      instrumentNo: this.transaction.instrumentDescriptor,
       agency: isEmpty(this.transaction.agency) ? null : this.transaction.agency.uid,
       recorderOffice: isEmpty(this.transaction.recorderOffice) ? null : this.transaction.recorderOffice.uid,
     });
@@ -152,11 +129,11 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     const data = {
       typeUID: formModel.type,
       subtypeUID: formModel.subtype,
+      recorderOfficeUID: formModel.recorderOffice,
+      agencyUID: formModel.agency,
       requestedBy: (formModel.name as string).toUpperCase(),
       requestedByEmail: formModel.email ? (formModel.email as string).toLowerCase() : '',
-      instrumentDescriptor: formModel.instrumentNo ? (formModel.instrumentNo as string).toUpperCase() : '',
-      agencyUID: formModel.agency ?? '',
-      recorderOfficeUID: formModel.recorderOffice
+      instrumentDescriptor: formModel.instrumentNo ? (formModel.instrumentNo as string).toUpperCase() : ''
     };
 
     return data;
@@ -164,6 +141,7 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
 
   private resetForm() {
     this.form.reset();
+    this.submitted = false;
   }
 
   private disableForm(){
@@ -180,12 +158,4 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
       control.markAsTouched({ onlySelf: true });
     });
   }
-}
-
-function insertIfNotExist<T, K extends keyof T>(array: T[], item: T, key: K): T[] {
-  let newArray = [... array];
-  if (array.filter(element => element[key] === item[key]).length === 0) {
-    newArray = [...array, ... [item]];
-  }
-  return newArray;
 }

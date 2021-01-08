@@ -33,8 +33,6 @@ import { TransactionPresentationHandler } from './land/transaction.presentation.
     { provide: STATE_HANDLERS, useExisting: InstrumentTypesPresentationHandler, multi: true },
     { provide: STATE_HANDLERS, useExisting: TransactionPresentationHandler, multi: true },
     { provide: STATE_HANDLERS, useExisting: RepositoryPresentationHandler, multi: true },
-    { provide: STATE_HANDLERS, useExisting: TransactionPresentationHandler, multi: true },
-
   ]
 
 })
