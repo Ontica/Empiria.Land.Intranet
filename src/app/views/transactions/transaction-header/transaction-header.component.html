@@ -30,9 +30,7 @@
         <label>Tipo de trámite:</label>
         <emp-ng-select formControlName="type"
           [config]="{ clearable: false }"
-          [bindLabel]="'typeName'"
-          [bindValue]="'type'"
-          [items]="transactionTypesList"
+          [items]="transactionTypeList"
           [showError]="getFormControl('type').touched && getFormControl('type').invalid"
           (changes)="transactionTypeChange($event)">
         </emp-ng-select>
@@ -40,8 +38,10 @@
       <div [fxFlex]="100/3">
         <label>Tipo de documento:</label>
         <emp-ng-select formControlName="subtype"
-          [bindValue]="'name'"
-          [items]="transactionSubtypesList">
+          [config]="{ clearable: false }"
+          [placeholder]="transactionTypeSelected ? 'Seleccione' : 'Seleccione el tipo de trámite'"
+          [showError]="getFormControl('subtype').touched && getFormControl('subtype').invalid"
+          [items]="transactionSubtypeList">
         </emp-ng-select>
       </div>
       <div [fxFlex]="100/3">
@@ -56,15 +56,15 @@
       <div fxFlex>
         <label>Tramitado por:</label>
         <emp-ng-select formControlName="agency"
-          [bindValue]="'name'"
           [items]="agencyList">
         </emp-ng-select>
       </div>
       <div [fxFlex]="100/3">
         <label>Distrito:</label>
         <emp-ng-select formControlName="recorderOffice"
-          [bindValue]="'name'"
-          [items]="recorderOfficesList">
+          [config]="{ clearable: false }"
+          [items]="recorderOfficeList"
+          [showError]="getFormControl('recorderOffice').touched && getFormControl('recorderOffice').invalid">
         </emp-ng-select>
       </div>
     </div>

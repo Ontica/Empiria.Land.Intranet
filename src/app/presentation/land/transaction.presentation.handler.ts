@@ -7,13 +7,14 @@
 
 import { Injectable } from '@angular/core';
 
-import { Assertion, Command } from '@app/core';
+import { Assertion, Command, Cache } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
 import { TransactionDataService } from '@app/data-services';
 
-import { EmptyTransaction, EmptyTransactionFilter, TransactionFilter } from '@app/models';
+import { Agency, RecorderOffice, TransactionFilter, TransactionType,
+         EmptyTransaction, EmptyTransactionFilter } from '@app/models';
 import { Observable } from 'rxjs';
 
 
@@ -39,6 +40,9 @@ export enum SelectorType {
   LIST_FILTER = 'Land.Transactions.Selectors.TransactionListFilter',
   SELECTED_TRANSACTION = 'Land.Transactions.Selectors.SelectedTransaction',
   TRANSACTION_LIST = 'Land.Transactions.Selectors.TransactionList',
+  TRANSACTION_TYPE_LIST = 'Land.Transactions.Selectors.TransactionTypeList',
+  AGENCY_LIST = 'Land.Transactions.Selectors.AgencyList',
+  RECORDER_OFFICE_LIST = 'Land.Transactions.Selectors.RecorderOfficeList',
 }
 
 
@@ -46,6 +50,9 @@ const initialState: StateValues = [
   { key: SelectorType.LIST_FILTER, value: EmptyTransactionFilter },
   { key: SelectorType.SELECTED_TRANSACTION, value: EmptyTransaction },
   { key: SelectorType.TRANSACTION_LIST, value: [] },
+  { key: SelectorType.TRANSACTION_TYPE_LIST, value: new Cache<TransactionType[]>() },
+  { key: SelectorType.AGENCY_LIST, value: new Cache<Agency[]>() },
+  { key: SelectorType.RECORDER_OFFICE_LIST, value: new Cache<RecorderOffice[]>() },
 ];
 
 
@@ -62,17 +69,34 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
   }
 
 
-  select<T>(selectorType: SelectorType, params?: any): Observable<T> {
+  select<U>(selectorType: SelectorType, params?: any): Observable<U> {
+    let provider: () => any;
+
     switch (selectorType) {
 
       case SelectorType.TRANSACTION_LIST:
-        return super.select<T>(SelectorType.TRANSACTION_LIST);
+        return super.select<U>(selectorType);
 
       case SelectorType.LIST_FILTER:
-        return super.select<T>(SelectorType.LIST_FILTER);
+        return super.select<U>(selectorType);
+
+      case SelectorType.TRANSACTION_TYPE_LIST:
+        provider = () => this.data.getTransactionTypes();
+
+        return super.selectMemoized<U>(selectorType, provider, selectorType, []);
+
+      case SelectorType.AGENCY_LIST:
+        provider = () => this.data.getAgencies();
+
+        return super.selectMemoized<U>(selectorType, provider, selectorType, []);
+
+      case SelectorType.RECORDER_OFFICE_LIST:
+        provider = () => this.data.getRecorderOffices();
+
+        return super.selectMemoized<U>(selectorType, provider, selectorType, []);
 
       default:
-        return super.select<T>(selectorType, params);
+        return super.select<U>(selectorType, params);
 
     }
   }
@@ -97,7 +121,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
   }
 
 
-  execute<U>(command: Command): Promise<U> {
+  execute<T>(command: Command): Promise<T> {
     switch (command.type as CommandType) {
 
       // case CommandType.CREATE_TRANSACTION:

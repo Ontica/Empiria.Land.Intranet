@@ -10,7 +10,8 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { TransactionShortModel, TransactionFilter, Transaction } from '@app/models';
+import { Agency, RecorderOffice, Transaction,
+         TransactionFilter, TransactionShortModel, TransactionType } from '@app/models';
 
 
 @Injectable()
@@ -43,6 +44,24 @@ export class TransactionDataService {
     const path = `v5/land/transactions/${transactionUID}`;
 
     return this.http.get<Transaction>(path);
+  }
+
+  getTransactionTypes(): Observable<TransactionType[]> {
+    const path = `v5/land/transaction-types`;
+
+    return this.http.get<TransactionType[]>(path);
+  }
+
+  getAgencies(): Observable<Agency[]> {
+    const path = `v5/land/agencies`;
+
+    return this.http.get<Agency[]>(path);
+  }
+
+  getRecorderOffices(): Observable<RecorderOffice[]> {
+    const path = `v5/land/recorder-offices`;
+
+    return this.http.get<RecorderOffice[]>(path);
   }
 
 }

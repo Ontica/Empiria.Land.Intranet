@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Transaction, EmptyTransaction } from '@app/models';
 
 
 @Component({
@@ -6,6 +7,8 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   templateUrl: './transaction-creator.component.html',
 })
 export class TransactionCreatorComponent implements OnInit {
+
+  transaction: Transaction = EmptyTransaction;
 
   @Output() closeEvent = new EventEmitter<void>();
 
