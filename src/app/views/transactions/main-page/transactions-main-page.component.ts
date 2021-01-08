@@ -40,6 +40,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   displayTransactionTabbedView = false;
 
   isLoading = false;
+  isLoadingTransaction = false;
 
   subscriptionHelper: SubscriptionHelper;
 
@@ -63,6 +64,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
     this.subscriptionHelper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .subscribe(x => {
         this.selectedTransaction = x;
+        this.isLoadingTransaction = false;
         this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
       });
 
@@ -111,6 +113,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
         return;
 
       case TransactionListEventType.TRANSACTION_SELECTED:
+        this.isLoadingTransaction = true;
         this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION,
                               {'transactionUID': event.payload.transaction.uid});
         return;
