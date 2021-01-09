@@ -9,13 +9,13 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { Assertion, Command, Cache, toPromise } from '@app/core';
+import { Assertion, Command, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
 import { TransactionDataService } from '@app/data-services';
 
-import { Agency, RecorderOffice, TransactionFilter, TransactionShortModel, TransactionType,
+import { TransactionFilter, TransactionShortModel,
          EmptyTransaction, EmptyTransactionFilter,
          insertItemTopArray, mapTransactionShortModelFromTransaction } from '@app/models';
 
@@ -54,9 +54,9 @@ const initialState: StateValues = [
   { key: SelectorType.LIST_FILTER, value: EmptyTransactionFilter },
   { key: SelectorType.SELECTED_TRANSACTION, value: EmptyTransaction },
   { key: SelectorType.TRANSACTION_LIST, value: [] },
-  { key: SelectorType.TRANSACTION_TYPE_LIST, value: new Cache<TransactionType[]>() },
-  { key: SelectorType.AGENCY_LIST, value: new Cache<Agency[]>() },
-  { key: SelectorType.RECORDER_OFFICE_LIST, value: new Cache<RecorderOffice[]>() },
+  { key: SelectorType.TRANSACTION_TYPE_LIST, value: [] },
+  { key: SelectorType.AGENCY_LIST, value: [] },
+  { key: SelectorType.RECORDER_OFFICE_LIST, value: [] },
 ];
 
 
@@ -88,17 +88,17 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case SelectorType.TRANSACTION_TYPE_LIST:
         provider = () => this.data.getTransactionTypes();
 
-        return super.selectMemoized<U>(selectorType, provider, selectorType, []);
+        return super.selectFirst<U>(selectorType, provider);
 
       case SelectorType.AGENCY_LIST:
         provider = () => this.data.getAgencies();
 
-        return super.selectMemoized<U>(selectorType, provider, selectorType, []);
+        return super.selectFirst<U>(selectorType, provider);
 
       case SelectorType.RECORDER_OFFICE_LIST:
         provider = () => this.data.getRecorderOffices();
 
-        return super.selectMemoized<U>(selectorType, provider, selectorType, []);
+        return super.selectFirst<U>(selectorType, provider);
 
       default:
         return super.select<U>(selectorType, params);
