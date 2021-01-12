@@ -70,12 +70,45 @@
       </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="end">
-      <button *ngIf="!readonly" (click)="submit()" style="margin-right: 8px;"
-        [class.btn]="form?.invalid"
-        [class.btn-action]="form?.valid">
-        {{transaction.uid == '' ? 'Crear la solicitud' : 'Guardar la solicitud'}}
-      </button>
+    <mat-divider class="divider-padding"></mat-divider>
+
+    <div fxLayout="row" *ngIf="editionMode && readonly">
+
+      <div fxFlex="50" fxLayoutAlign="start">
+        <button (click)="submitClone()" type="button" class="btn-action">
+          Crear una copia
+        </button>
+      </div>
+
+      <div fxFlex="50" fxLayoutAlign="end">
+        <button *ngIf="isEditable" (click)="toggleReadonly()" type="button" class="btn-action">
+          Editar
+        </button>
+      </div>
+
     </div>
+
+    <div fxLayout="row" *ngIf="!readonly">
+
+      <div fxFlex="40" fxLayoutAlign="start">
+        <button *ngIf="editionMode" (click)="submitDelete()" type="button" class="btn-warning">
+          Eliminar
+        </button>
+      </div>
+
+      <div fxFlex="60" fxLayoutAlign="end">
+        <button (click)="submit()" type="submit"
+          [class.btn]="form?.invalid"
+          [class.btn-action]="form?.valid">
+          {{editionMode ? 'Guardar la solicitud' : 'Crear la solicitud'}}
+        </button>
+
+        <button *ngIf="editionMode" (click)="discardChanges()" type="button" class="btn">
+          Descartar Cambios
+        </button>
+      </div>
+
+    </div>
+
   </div>
 </form>

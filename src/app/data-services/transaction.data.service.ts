@@ -67,6 +67,24 @@ export class TransactionDataService {
   }
 
 
+  deleteTransaction(transactionUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}`;
+
+    return this.http.delete<Transaction>(path);
+  }
+
+
+  cloneTransaction(transactionUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}/clone`;
+
+    return this.http.post<Transaction>(path);
+  }
+
+
   getTransactionTypes(): Observable<TransactionType[]> {
     const path = `v5/land/transaction-types`;
 

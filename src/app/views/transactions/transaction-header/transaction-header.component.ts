@@ -2,13 +2,16 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 import { Transaction, EmptyTransaction, TransactionType, TransactionSubtype,
-         Agency, RecorderOffice, insertToArrayIfNotExist } from '@app/models';
+         Agency, RecorderOffice, insertToArrayIfNotExist, TransactionStage } from '@app/models';
+import { MessageBoxService } from '@app/shared/containers/message-box';
 
 type transactionFormControls = 'type' | 'subtype' | 'name' | 'email' |
                               'instrumentNo' | 'agency' | 'recorderOffice';
 
 export enum TransactionHeaderEventType {
-  SUBMIT_TRANSACTION_CLICKED  = 'TransactionListComponent.Event.SubmitTransactionClicked'
+  SUBMIT_TRANSACTION_CLICKED  = 'TransactionListComponent.Event.SubmitTransactionClicked',
+  CLONE_TRANSACTION_CLICKED  = 'TransactionListComponent.Event.CloneTransactionClicked',
+  DELETE_TRANSACTION_CLICKED  = 'TransactionListComponent.Event.DeleteTransactionClicked',
 }
 
 @Component({
@@ -25,12 +28,14 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
 
   @Input() recorderOfficeList: RecorderOffice[] = [];
 
-  @Input() readonly = false;
-
   @Output() transactionHeadertEvent = new EventEmitter<EventInfo>();
 
   transactionSubtypeList: TransactionSubtype[] = [];
 
+  TransactionStage = TransactionStage;
+
+  editionMode = false;
+  readonly = false;
   isLoading = false;
   submitted = false;
 
@@ -44,25 +49,31 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     recorderOffice: new FormControl('', Validators.required)
   });
 
+  get isEditable() {
+    return this.transaction.status === 'Payment';
+  }
+
+  constructor(private messageBox: MessageBoxService){ }
+
   ngOnInit(): void { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.transaction) {
-      if (isEmpty(this.transaction)){
-        this.resetForm();
-      }else{
+      this.editionMode = !isEmpty(this.transaction);
+      if (this.editionMode){
         this.setFormModel();
+      }else{
+        this.resetForm();
       }
-
       this.disableForm();
     }
-
     this.loadInitialSubtypeList();
   }
 
   loadInitialSubtypeList(){
     this.transactionSubtypeList = [];
     if (!isEmpty(this.transaction.type)) {
+
       const subtypeList =
         this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid).length > 0 ?
         this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid)[0].subtypes : [];
@@ -80,6 +91,21 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     this.getFormControl('subtype').reset(subtypeUID);
   }
 
+  getFormControl(name: transactionFormControls) {
+    return this.form.get(name);
+  }
+
+  toggleReadonly(){
+    this.readonly = !this.readonly;
+    this.disableForm();
+  }
+
+  discardChanges(){
+    this.setFormModel();
+    this.loadInitialSubtypeList();
+    this.disableForm();
+  }
+
   submit() {
     if (this.submitted || !this.form.valid) {
       this.invalidateForm(this.form);
@@ -91,8 +117,33 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     this.sendEvent(TransactionHeaderEventType.SUBMIT_TRANSACTION_CLICKED, this.getFormData());
   }
 
-  getFormControl(name: transactionFormControls) {
-    return this.form.get(name);
+
+  submitClone() {
+    if (this.submitted) {
+      return;
+    }
+
+    this.submitted = true;
+
+    this.sendEvent(TransactionHeaderEventType.CLONE_TRANSACTION_CLICKED);
+  }
+
+  submitDelete() {
+    if (this.submitted) {
+      return;
+    }
+
+    const message = `Esta operación eliminará el trámite <strong>
+      ${this.transaction.transactionID}</strong>.<br><br>¿Desea eliminar el trámite?`;
+
+    this.messageBox.confirm(message, 'Eliminar Trámite')
+        .toPromise()
+        .then(x => {
+          if (x) {
+            this.submitted = true;
+            this.sendEvent(TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED);
+          }
+        });
   }
 
   // private methods
@@ -118,6 +169,7 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     });
 
     this.submitted = false;
+    this.readonly = true;
   }
 
   private getFormData(): any {
@@ -140,6 +192,7 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
   }
 
   private resetForm() {
+    this.readonly = false;
     this.form.reset();
     this.submitted = false;
   }

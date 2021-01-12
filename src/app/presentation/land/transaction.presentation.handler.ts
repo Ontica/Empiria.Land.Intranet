@@ -30,6 +30,8 @@ export enum ActionType {
 export enum CommandType {
   CREATE_TRANSACTION = 'Land.Transactions.Command.CreateTransaction',
   UPDATE_TRANSACTION = 'Land.Transactions.Command.UpdateTransaction',
+  CLONE_TRANSACTION = 'Land.Transactions.Command.CloneTransaction',
+  DELETE_TRANSACTION = 'Land.Transactions.Command.DeleteTransaction'
 }
 
 
@@ -37,6 +39,8 @@ export enum EffectType {
   SET_LIST_FILTER = ActionType.SET_LIST_FILTER,
   CREATE_TRANSACTION = CommandType.CREATE_TRANSACTION,
   UPDATE_TRANSACTION = CommandType.UPDATE_TRANSACTION,
+  CLONE_TRANSACTION = CommandType.CLONE_TRANSACTION,
+  DELETE_TRANSACTION = CommandType.DELETE_TRANSACTION
 }
 
 
@@ -109,15 +113,19 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
   applyEffects(effectType: EffectType, params?: any): void {
 
+    let transactionList = null;
+
     switch (effectType) {
 
       case EffectType.CREATE_TRANSACTION:
       case EffectType.UPDATE_TRANSACTION:
-        const transactionListOld = this.getValue<TransactionShortModel[]>(SelectorType.TRANSACTION_LIST);
+      case EffectType.CLONE_TRANSACTION:
+
+        transactionList = this.getValue<TransactionShortModel[]>(SelectorType.TRANSACTION_LIST);
 
         const transactionToInsert = mapTransactionShortModelFromTransaction(params.result);
 
-        const transactionListNew = insertItemTopArray(transactionListOld, transactionToInsert, 'uid');
+        const transactionListNew = insertItemTopArray(transactionList, transactionToInsert, 'uid');
 
         this.setValue(SelectorType.TRANSACTION_LIST, transactionListNew);
 
@@ -125,10 +133,22 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         return;
 
+      case EffectType.DELETE_TRANSACTION:
+
+        transactionList = this.getValue<TransactionShortModel[]>(SelectorType.TRANSACTION_LIST);
+
+        this.setValue(SelectorType.TRANSACTION_LIST,
+                      transactionList.filter(x => x.uid !== params.payload.transactionUID));
+
+        this.dispatch(ActionType.UNSELECT_TRANSACTION);
+
+        return;
+
       case EffectType.SET_LIST_FILTER:
+
         const filter = this.getValue<TransactionFilter>(SelectorType.LIST_FILTER);
 
-        const transactionList = this.data.getTransactionList(filter);
+        transactionList = this.data.getTransactionList(filter);
 
         this.setValue(SelectorType.TRANSACTION_LIST, transactionList);
 
@@ -153,6 +173,16 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case CommandType.UPDATE_TRANSACTION:
         return toPromise<T>(
           this.data.updateTransaction(command.payload.transactionUID, command.payload.transaction)
+        );
+
+      case CommandType.CLONE_TRANSACTION:
+        return toPromise<T>(
+          this.data.cloneTransaction(command.payload.transactionUID)
+        );
+
+      case CommandType.DELETE_TRANSACTION:
+        return toPromise<T>(
+          this.data.deleteTransaction(command.payload.transactionUID)
         );
 
       default:

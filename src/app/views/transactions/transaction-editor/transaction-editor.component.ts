@@ -58,25 +58,44 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
   }
 
   onTransactionHeaderEvent(event: EventInfo): void {
+
     switch (event.type as TransactionHeaderEventType) {
 
       case TransactionHeaderEventType.SUBMIT_TRANSACTION_CLICKED:
 
-        const command: Command = {
-          type: TransactionCommandType.UPDATE_TRANSACTION,
-          payload: {
-            transactionUID: this.transaction.uid,
-            transaction: event.payload
-          }
-        };
+        this.executeCommand(TransactionCommandType.UPDATE_TRANSACTION, event.payload);
 
-        this.uiLayer.execute(command);
+        return;
+
+      case TransactionHeaderEventType.CLONE_TRANSACTION_CLICKED:
+
+        this.executeCommand(TransactionCommandType.CLONE_TRANSACTION);
+
+        return;
+
+      case TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED:
+
+        this.executeCommand(TransactionCommandType.DELETE_TRANSACTION);
+
         return;
 
       default:
         console.log(`Unhandled user interface event ${event.type}`);
         return;
     }
+  }
+
+  executeCommand(commandType: TransactionCommandType, transaction?: Transaction){
+    const command: Command = {
+      type: commandType,
+      payload: {
+        transactionUID: this.transaction.uid,
+        transaction
+      }
+    };
+
+    this.uiLayer.execute(command);
+    return;
   }
 
 }
