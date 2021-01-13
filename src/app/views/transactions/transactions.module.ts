@@ -25,6 +25,10 @@ import { TransactionsRoutingModule } from './transactions-routing.module';
 import { TransactionHeaderComponent } from './transaction-header/transaction-header.component';
 import { TransactionCreatorComponent } from './transaction-creator/transaction-creator.component';
 import { TransactionEditorComponent } from './transaction-editor/transaction-editor.component';
+import { RequestedServiceListComponent }
+  from './transaction-editor/requested-services/requested-service-list.component';
+import { RequestedServiceEditorComponent }
+  from './transaction-editor/requested-services/requested-service-editor.component';
 
 
 @NgModule({
@@ -49,6 +53,8 @@ import { TransactionEditorComponent } from './transaction-editor/transaction-edi
     TransactionHeaderComponent,
     TransactionCreatorComponent,
     TransactionEditorComponent,
+    RequestedServiceListComponent,
+    RequestedServiceEditorComponent
   ],
 
   exports: []

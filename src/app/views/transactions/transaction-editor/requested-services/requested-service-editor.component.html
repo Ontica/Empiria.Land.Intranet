@@ -1,0 +1,88 @@
+<form [formGroup]="form" autocomplete="off" class="form-section">
+
+  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div [fxFlex]="100/3">
+        <label>Tipo:</label>
+        <emp-ng-select formControlName="type"
+          [config]="{ clearable: false }"
+          [items]="RequestedServiceTypes"
+          [showError]="getFormControl('type').touched && getFormControl('type').invalid">
+        </emp-ng-select>
+      </div>
+      <div [fxFlex]="100/3">
+        <label>Concepto:</label>
+        <emp-ng-select formControlName="concepto"
+          [config]="{ clearable: false }"
+          [items]="[]"
+          [showError]="getFormControl('concepto').touched && getFormControl('concepto').invalid">
+        </emp-ng-select>
+      </div>
+      <div [fxFlex]="100/3">
+        <label>Fundamento:</label>
+        <emp-ng-select formControlName="fundamento"
+          [config]="{ clearable: false }"
+          [items]="[]"
+          [showError]="getFormControl('fundamento').touched && getFormControl('fundamento').invalid">
+        </emp-ng-select>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div [fxFlex]="100/3">
+        <label>Unidad:</label>
+        <emp-ng-select formControlName="unidadMedida"
+          [config]="{ clearable: false }"
+          [items]="[]"
+          [showError]="getFormControl('unidadMedida').touched && getFormControl('unidadMedida').invalid">
+        </emp-ng-select>
+      </div>
+      <div [fxFlex]="100/3">
+        <label>Base gravable:</label>
+        <div fxLayout="row">
+          <input formControlName="baseGravable" fxFlex="60"
+            type="number"
+            class="text-box"
+            [class.invalid-control]="getFormControl('baseGravable').touched &&
+              getFormControl('baseGravable').invalid">
+          <emp-ng-select formControlName="moneda" fxFlex="40"
+            [config]="{ clearable: false }"
+            [items]="[]"
+            [showError]="getFormControl('moneda').touched && getFormControl('moneda').invalid">
+          </emp-ng-select>
+        </div>
+      </div>
+      <div [fxFlex]="100/3">
+        <label>Cantidad:</label>
+        <input formControlName="cantidad"
+          type="number"
+          class="text-box uppercase"
+          [class.invalid-control]="getFormControl('cantidad').touched && getFormControl('cantidad').invalid"
+          style="width: 100px">
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex>
+        <label>Observaciones:</label>
+        <emp-ng-text-editor formControlName="observaciones">
+        </emp-ng-text-editor>
+      </div>
+    </div>
+
+    <mat-divider class="divider-padding"></mat-divider>
+
+    <div fxLayout="row">
+      <div fxFlex fxLayoutAlign="end">
+        <button (click)="submit()" type="submit"
+          [class.btn]="form?.invalid"
+          [class.btn-action]="form?.valid">
+          Agregar concepto
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</form>

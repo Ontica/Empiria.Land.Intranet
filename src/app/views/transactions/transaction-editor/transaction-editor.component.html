@@ -6,3 +6,31 @@
   (transactionHeadertEvent)="onTransactionHeaderEvent($event)">
 
 </emp-land-transaction-header>
+
+<br>
+
+<emp-land-requested-service-list [requestedServices]="transaction.requestedServices">
+
+</emp-land-requested-service-list>
+
+<div class="tab-container">
+  <mat-accordion [displayMode]="'flat'" hideToggle>
+    <mat-expansion-panel #matExpansionPanel [expanded]="panelAddServiceOpenState"
+      (opened)="panelAddServiceOpenState = true" (closed)="panelAddServiceOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>{{ panelAddServiceOpenState ? 'remove' : 'add' }}</mat-icon>
+          <span style="padding-left: 1rem;">
+            {{ panelAddServiceOpenState ? 'Cancelar agregar concepto' : 'Agregar concepto' }}
+          </span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <emp-land-requested-service-editor *ngIf="panelAddServiceOpenState"
+        (requestedServiceEditortEvent)="onRequestedServiceEditortEvent($event)">
+
+      </emp-land-requested-service-editor>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

@@ -50,11 +50,18 @@ export interface Transaction extends Entity {
   instrument?: Instrument;
   instrumentDescriptor: string;
   baseResource: Resource;
-  services: any[];
+  requestedServices: RequestedService[];
   payment: Payment;
   status: string;
   statusName: string;
   stage: string;
+}
+
+
+export interface RequestedService extends Entity {
+  type: string;
+  typeName: string;
+  treasuryCode: string;
 }
 
 
@@ -138,7 +145,7 @@ export const EmptyTransaction: Transaction = {
   recorderOffice: Empty,
   instrumentDescriptor: '',
   baseResource: EmptyResource,
-  services: [],
+  requestedServices: [],
   payment: EmptyPayment,
   status: '',
   statusName: '',

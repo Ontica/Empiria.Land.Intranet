@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 import { Transaction, EmptyTransaction, TransactionType, TransactionSubtype,
-         Agency, RecorderOffice, insertToArrayIfNotExist, TransactionStage } from '@app/models';
+         Agency, RecorderOffice, insertToArrayIfNotExist } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 type transactionFormControls = 'type' | 'subtype' | 'name' | 'email' |
@@ -31,8 +31,6 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
   @Output() transactionHeadertEvent = new EventEmitter<EventInfo>();
 
   transactionSubtypeList: TransactionSubtype[] = [];
-
-  TransactionStage = TransactionStage;
 
   editionMode = false;
   readonly = false;

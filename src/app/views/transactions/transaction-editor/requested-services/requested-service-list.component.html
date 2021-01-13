@@ -1,0 +1,58 @@
+<div class="section-title">Conceptos</div>
+
+<div class="tab-container">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+    <ng-container matColumnDef="number">
+      <th mat-header-cell *matHeaderCellDef> # </th>
+      <td mat-cell *matCellDef="let row; let i = index;"> <strong>{{i + 1}}</strong> </td>
+    </ng-container>
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> Concepto </th>
+      <td mat-cell *matCellDef="let row"> {{ row.typeName}} </td>
+    </ng-container>
+    <ng-container matColumnDef="baseGravable">
+      <th mat-header-cell *matHeaderCellDef> Base gravable </th>
+      <td mat-cell *matCellDef="let row"> </td>
+    </ng-container>
+    <ng-container matColumnDef="cantidad">
+      <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+      <td mat-cell *matCellDef="let row"> </td>
+    </ng-container>
+    <ng-container matColumnDef="unidadMedida">
+      <th mat-header-cell *matHeaderCellDef> Unidad medida </th>
+      <td mat-cell *matCellDef="let row"> </td>
+    </ng-container>
+    <ng-container matColumnDef="fundamento">
+      <th mat-header-cell *matHeaderCellDef> Fundamento </th>
+      <td mat-cell *matCellDef="let row"> </td>
+    </ng-container>
+    <ng-container matColumnDef="observations">
+      <th mat-header-cell *matHeaderCellDef> Observaciones </th>
+      <td mat-cell *matCellDef="let row"> </td>
+    </ng-container>
+    <ng-container matColumnDef="recibo">
+      <th mat-header-cell *matHeaderCellDef> Recibo </th>
+      <td mat-cell *matCellDef="let row"> </td>
+    </ng-container>
+    <ng-container matColumnDef="Importe">
+      <th mat-header-cell *matHeaderCellDef> Importe </th>
+      <td mat-cell *matCellDef="let row"> </td>
+    </ng-container>
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let row" class="text-align-center">
+        <mat-icon (click)="removeService(row)">delete</mat-icon>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div *ngIf="dataSource.data.length == 0" class="text-align-center" style="padding-bottom: 1rem;">
+    <p>No se han agregado conceptos.</p>
+  </div>
+
+</div>
+
+

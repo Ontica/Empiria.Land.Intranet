@@ -5,6 +5,7 @@ import { TransactionCommandType, TransactionStateSelector } from '@app/core/pres
 import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice,
          insertToArrayIfNotExist } from '@app/models';
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
+import { RequestedServiceEditortEventType } from './requested-services/requested-service-editor.component';
 
 @Component({
   selector: 'emp-land-transaction-editor',
@@ -22,6 +23,8 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
   helper: SubscriptionHelper;
 
+  panelAddServiceOpenState: boolean = false;
+
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
@@ -30,6 +33,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     this.helper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .subscribe(x => {
         this.transaction = x;
+        this.panelAddServiceOpenState = false;
         this.loadDataLists();
       });
   }
@@ -76,6 +80,26 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
       case TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED:
 
         this.executeCommand(TransactionCommandType.DELETE_TRANSACTION);
+
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
+  }
+
+  onRequestedServiceEditortEvent(event: EventInfo): void {
+
+    switch (event.type as RequestedServiceEditortEventType) {
+
+      case RequestedServiceEditortEventType.SUBMIT_REQUESTED_SERVICE_CLICKED:
+
+        console.table(event);
+
+        setTimeout(() => {
+          this.panelAddServiceOpenState = false;
+        }, 500);
 
         return;
 

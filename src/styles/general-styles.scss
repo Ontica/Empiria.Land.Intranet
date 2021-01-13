@@ -412,3 +412,10 @@ i.disabled {
   opacity: 0.8;
   animation: skeleton-opacity 1s infinite linear;
 }
+
+pre {
+  display: block;
+  font-family: $font-family;
+  white-space: pre;
+  margin: 0.5em 0px;
+}
