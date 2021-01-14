@@ -20,8 +20,8 @@ export class TransactionListItemComponent {
 
   @Output() optionsClick = new EventEmitter<boolean>();
 
-  onClickTransactionOptions() {
-    this.optionsClick.emit(true);
+  onClickTransactionOptions(option) {
+    this.optionsClick.emit(option);
   }
 
 }
