@@ -19,6 +19,7 @@ import { FileControlComponent } from './file-control/file-control.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { SelectBoxComponent } from './select-box/select-box.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
+import { MenuComponent } from './menu/menu.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
     SearchBoxComponent,
     SelectBoxComponent,
     TextEditorComponent,
+    MenuComponent,
   ],
 
   exports: [
@@ -46,6 +48,7 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
     SearchBoxComponent,
     SelectBoxComponent,
     TextEditorComponent,
+    MenuComponent,
   ]
 
 })

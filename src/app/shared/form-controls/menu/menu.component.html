@@ -1,0 +1,23 @@
+<a *ngIf="menuConfig.modeOnlyIcon" [matMenuTriggerFor]="menu">
+  <mat-icon>
+    {{menuConfig.icon}}
+  </mat-icon>
+</a>
+
+<button *ngIf="!menuConfig.modeOnlyIcon" mat-button [matMenuTriggerFor]="menu">
+  <mat-icon *ngIf="menuConfig.icon">
+    {{menuConfig.icon}}
+  </mat-icon>
+  {{menuConfig.textButton}}
+</button>
+
+<mat-menu #menu="matMenu" [yPosition]="menuConfig.yPosition" [xPosition]="menuConfig.xPosition">
+
+  <button *ngFor="let item of items" (click)="onSelectItem(item)" mat-menu-item [disabled]="item.disabled">
+    <mat-icon *ngIf="menuConfig.bindIcon">{{item[menuConfig.bindIcon]}}</mat-icon>
+    <span>{{item[menuConfig.bindLabel]}}</span>
+  </button>
+
+  <ng-content></ng-content>
+
+</mat-menu>

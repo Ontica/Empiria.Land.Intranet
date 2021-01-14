@@ -1,0 +1,9 @@
+@import '../../../../styles/variables';
+
+.mat-icon {
+  color: $icon-color;
+}
+
+.mat-icon:hover {
+  color: $icon-color-dark;
+}
