@@ -1,5 +1,5 @@
 import { Component, ContentChild, TemplateRef, ViewChild, EventEmitter, forwardRef,
-         Input, Output, OnDestroy, OnInit } from '@angular/core';
+         Input, Output, OnInit, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { Subject } from 'rxjs';
@@ -8,6 +8,7 @@ export interface SelectBoxConfig {
   addTag?: boolean;
   addTagText?: string;
   appendTo?: string;
+  autoSelect?: boolean;
   clearable?: boolean;
   closeOnSelect?: boolean;
   groupBy?: string;
@@ -24,6 +25,7 @@ const DefaultSelectBoxConfig: SelectBoxConfig = {
   addTag: false,
   addTagText: 'Agregar Item',
   appendTo: 'body',
+  autoSelect: false,
   clearable: true,
   closeOnSelect: true,
   groupBy: null,
@@ -48,7 +50,7 @@ const DefaultSelectBoxConfig: SelectBoxConfig = {
   ]
 })
 
-export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
   @ViewChild(NgSelectComponent) select: NgSelectComponent;
 
   @ContentChild('labelTemplate', { read: TemplateRef }) labelTemplate: TemplateRef<any>;
@@ -103,6 +105,12 @@ export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccess
     window.addEventListener('resize', this.onResize, true);
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.items && this.selectBoxConfig.autoSelect) {
+      this.selectItemIfUnique();
+    }
+  }
+
   ngOnDestroy() {
     window.removeEventListener('scroll', this.onScroll, true);
     window.removeEventListener('resize', this.onResize, true);
@@ -150,5 +158,14 @@ export class SelectBoxComponent implements OnInit, OnDestroy, ControlValueAccess
 
   onBlur(event){
     this.blur.emit(event);
+  }
+
+  selectItemIfUnique(){
+    if (this.items.length === 1 && this.value === null) {
+      setTimeout(() => {
+        this.onChangedEvent(this.items[0]);
+        this.writeValue(this.items[0][this.bindValue]);
+      }, 100);
+    }
   }
 }
