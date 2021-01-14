@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="8px" fxLayoutGap.gt-xs="32px">
 
-  <div fxFlex="35">
+  <div fxFlex="35%">
     <div class="label">Tipo de trámite</div>
     <div class="primary-text nowrap"><strong>{{transaction.type}}</strong></div>
     <div>{{transaction.subtype}}</div>
@@ -22,7 +22,7 @@
     <div>{{transaction.statusName}}</div>
   </div>
 
-  <div fxFlex="5%">
+  <div fxFlex="30px">
     <div class="primary-text nowrap">
 
       <emp-ng-menu [items]="[{'name': 'Agregar Personas'}]"

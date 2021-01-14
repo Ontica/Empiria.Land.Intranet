@@ -5,6 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 import { EventInfo } from '@app/core';
@@ -41,6 +42,7 @@ export class TransactionListComponent implements OnChanges {
 
   keywords = '';
 
+  selection = new SelectionModel<TransactionShortModel>(true, []);
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.filter) {

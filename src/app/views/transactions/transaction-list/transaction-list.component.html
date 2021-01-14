@@ -2,11 +2,21 @@
 
   <div class="card-header card-header-flat">
 
+    <div *ngIf="transactionList.length > 0"
+      style="margin: auto; padding: 0 20px 0 4px;">
+      <emp-ng-check-box-all
+        [(selection)]="selection"
+        [values]="transactionList">
+      </emp-ng-check-box-all>
+    </div>
+
     <div class="card-title">
       {{title}}
       <div class="card-hint" empNgProgressText
            loadingText="Cargando trámites"
-           [finalText]="transactionList.length + ' trámites encontrados'"
+           [finalText]="selection.hasValue() ?
+              selection.selected.length + ' de ' + transactionList.length + ' trámites seleccionados':
+              transactionList.length + ' trámites encontrados'"
            [isLoading]="isLoading"></div>
 
     </div>
@@ -31,6 +41,16 @@
     <div *ngFor="let transaction of transactionList"
           class="list-item" matRipple [matRippleTrigger]="trigger"
           [class.list-item-selected]="isSelected(transaction)">
+
+      <div class="list-item-checkbox">
+        <mat-checkbox
+          [checked]="selection.isSelected(transaction)"
+          (click)="$event.stopPropagation()"
+          (change)="selection.isSelected(transaction) ?
+                    selection.deselect(transaction) :
+                    selection.select(transaction)">
+        </mat-checkbox>
+      </div>
 
       <div class="list-item-container">
 
