@@ -205,11 +205,18 @@ table.mat-table {
 //
 
 .mat-expansion-panel-header {
-  height: 45px;
+  min-height: 36px;
+  height: auto;
+  padding: 4px 24px !important;
+  font-family: $font-family;
+  font-size: 10pt;
+  font-weight: 400;
 }
 
 .mat-expansion-panel-header.mat-expanded {
-  height: 45px;
+  min-height: 36px;
+  height: auto;
+  padding: 4px 24px !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
@@ -223,7 +230,7 @@ table.mat-table {
 }
 
 .mat-expansion-panel .mat-action-row {
-  padding: 16px 30px 16px 24px !important;
+  padding: 8px 30px 8px 24px !important;
 }
 
 //
@@ -242,4 +249,19 @@ table.mat-table {
     background-color: #edeef0;
     margin: 2px 0;
   }
+}
+
+//
+// mat menu item
+//
+
+.mat-menu-panel {
+  max-height: calc(100vh - 35px) !important;
+  min-height: 51px !important;
+}
+
+.mat-menu-item {
+  line-height: 35px !important;
+  height: 35px !important;
+  font-family: $font-family;
 }
