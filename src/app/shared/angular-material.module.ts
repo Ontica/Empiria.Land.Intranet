@@ -25,6 +25,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import {
   MomentDateAdapter,
@@ -97,6 +98,7 @@ export const DATE_FORMATS = {
     MatTabsModule,
     MatTooltipModule,
     MatTableModule,
+    MatCheckboxModule,
   ],
 
   exports: [
@@ -118,7 +120,8 @@ export const DATE_FORMATS = {
     MatStepperModule,
     MatTabsModule,
     MatTooltipModule,
-    MatTableModule
+    MatTableModule,
+    MatCheckboxModule,
   ],
 
   providers: [

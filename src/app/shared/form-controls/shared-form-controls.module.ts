@@ -20,6 +20,7 @@ import { SearchBoxComponent } from './search-box/search-box.component';
 import { SelectBoxComponent } from './select-box/select-box.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
 import { MenuComponent } from './menu/menu.component';
+import { CheckboxAllComponent } from './check-box-all/check-box-all.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { MenuComponent } from './menu/menu.component';
     SelectBoxComponent,
     TextEditorComponent,
     MenuComponent,
+    CheckboxAllComponent,
   ],
 
   exports: [
@@ -49,6 +51,7 @@ import { MenuComponent } from './menu/menu.component';
     SelectBoxComponent,
     TextEditorComponent,
     MenuComponent,
+    CheckboxAllComponent,
   ]
 
 })
