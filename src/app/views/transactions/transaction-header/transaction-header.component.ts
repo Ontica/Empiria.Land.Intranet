@@ -134,7 +134,7 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     const message = `Esta operación eliminará el trámite <strong>
       ${this.transaction.transactionID}</strong>.<br><br>¿Desea eliminar el trámite?`;
 
-    this.messageBox.confirm(message, 'Eliminar Trámite')
+    this.messageBox.confirm(message, 'Eliminar Trámite', 'DeleteCancel')
         .toPromise()
         .then(x => {
           if (x) {
