@@ -106,7 +106,7 @@ export type InstrumentType = 'EscrituraPublica' | 'OficioNotaria' | 'TituloPropi
                              'DocumentoJuzgado' | 'DocumentoTerceros';
 
 
-export interface ModificationInstrument {
+export interface InstrumentFields  {
   uid?: string;
   type?: InstrumentType;
   kind?: string;

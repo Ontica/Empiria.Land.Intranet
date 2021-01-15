@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, DateStringLibrary, HttpService } from '@app/core';
 
-import { Instrument, Issuer, IssuersFilter, ModificationInstrument } from '@app/models';
+import { Instrument, Issuer, IssuersFilter, InstrumentFields } from '@app/models';
 
 
 @Injectable()
@@ -47,7 +47,7 @@ export class InstrumentDataService {
 
 
   createTransactionInstrument(transactionUID: string,
-                              instrument: ModificationInstrument): Observable<Instrument> {
+                              instrument: InstrumentFields): Observable<Instrument> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(instrument, 'instrument');
 
@@ -58,7 +58,7 @@ export class InstrumentDataService {
 
 
   updateTransactionInstrument(transactionUID: string,
-                              instrument: ModificationInstrument): Observable<Instrument> {
+                              instrument: InstrumentFields): Observable<Instrument> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(instrument, 'instrument');
 

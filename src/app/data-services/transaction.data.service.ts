@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { Agency, ModificationTransaction, RecorderOffice, Transaction,
+import { Agency, TransactionFields, RecorderOffice, Transaction,
          TransactionFilter, TransactionShortModel, TransactionType } from '@app/models';
 
 
@@ -47,7 +47,7 @@ export class TransactionDataService {
   }
 
 
-  createTransaction(transaction: ModificationTransaction): Observable<Transaction> {
+  createTransaction(transaction: TransactionFields): Observable<Transaction> {
     Assertion.assertValue(transaction, 'transaction');
 
     const path = `v5/land/transactions`;
@@ -57,7 +57,7 @@ export class TransactionDataService {
 
 
   updateTransaction(transactionUID: string,
-                    transaction: ModificationTransaction): Observable<Transaction> {
+                    transaction: TransactionFields): Observable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(transaction, 'transaction');
 

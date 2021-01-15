@@ -184,7 +184,7 @@ export const EmptyTransactionFilter: TransactionFilter = {
 };
 
 
-export interface ModificationTransaction {
+export interface TransactionFields {
   typeUID?: string;
   subtypeUID?: string;
   recorderOfficeUID?: string;
