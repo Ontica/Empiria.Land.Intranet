@@ -130,7 +130,7 @@
             [config]="{groupBy: 'items'}"
             [placeholder]="'( Seleccionar rol )'"
             [items]="rolesList"
-            [class.invalid-control]="role.touched && role.errors"
+            [showError]="role.touched && role.errors"
             formControlName="role">
           </emp-ng-select>
         </div>
@@ -142,7 +142,7 @@
               <emp-ng-select #selectParticipationTypes
                 [items]="participationTypesList"
                 [placeholder]="'( U de M )'"
-                [class.invalid-control]="participationType.touched && participationType.errors"
+                [showError]="participationType.touched && participationType.errors"
                 formControlName="participationType">
               </emp-ng-select>
             </div>
@@ -166,7 +166,7 @@
                 [placeholder]="'Seleccionar una persona u organización'"
                 [items]="partiesInRecordingActList"
 
-                [class.invalid-control]="of.touched && of.errors"
+                [showError]="of.touched && of.errors"
                 formControlName="of">
               </emp-ng-select>
             </div>
