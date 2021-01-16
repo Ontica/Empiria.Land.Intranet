@@ -62,6 +62,13 @@ export interface RequestedService extends Entity {
   type: string;
   typeName: string;
   treasuryCode: string;
+  legalBasis: string;
+  taxableBase: number;
+  unit: string;
+  unitName: string;
+  quantity: number;
+  subtotal: number;
+  notes: string;
 }
 
 
@@ -194,6 +201,9 @@ export interface TransactionFields {
   instrumentDescriptor?: string;
 }
 
+
+
+// Functions
 
 export function mapTransactionStageFromViewName(viewName: string): TransactionStage {
   switch (viewName) {
