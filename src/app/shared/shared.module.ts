@@ -6,7 +6,7 @@
  */
 
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 
 import { SharedContainersModule } from './containers/shared-containers.module';
 import { SharedPipesModule } from './pipes/shared-pipes.module';
@@ -33,7 +33,7 @@ import { SharedIndicatorsModule } from './indicators/shared-indicators.module';
     SharedPipesModule
   ],
 
-  providers: []
+  providers: [CurrencyPipe]
 
 })
 export class SharedModule { }
