@@ -9,31 +9,36 @@ import { NgModule } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 
 import { SharedContainersModule } from './containers/shared-containers.module';
-import { SharedPipesModule } from './pipes/shared-pipes.module';
+import { SharedDirectivesModule } from './directives/shared-directives.module';
 import { SharedFormControlsModule } from './form-controls/shared-form-controls.module';
 import { SharedIndicatorsModule } from './indicators/shared-indicators.module';
+import { SharedPipesModule } from './pipes/shared-pipes.module';
 
 @NgModule({
 
   imports: [
     CommonModule,
 
-    SharedPipesModule,
     SharedContainersModule,
+    SharedDirectivesModule,
     SharedFormControlsModule,
-    SharedIndicatorsModule
+    SharedIndicatorsModule,
+    SharedPipesModule,
   ],
 
   declarations: [],
 
   exports: [
     SharedContainersModule,
+    SharedDirectivesModule,
     SharedFormControlsModule,
     SharedIndicatorsModule,
-    SharedPipesModule
+    SharedPipesModule,
   ],
 
-  providers: [CurrencyPipe]
+  providers: [
+    CurrencyPipe,
+  ]
 
 })
 export class SharedModule { }
