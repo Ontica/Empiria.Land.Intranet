@@ -27,6 +27,7 @@
       </mat-expansion-panel-header>
 
       <emp-land-requested-service-editor *ngIf="panelAddServiceOpenState"
+        [providedServiceTypeList]="providedServiceTypeList"
         (requestedServiceEditortEvent)="onRequestedServiceEditortEvent($event)">
 
       </emp-land-requested-service-editor>

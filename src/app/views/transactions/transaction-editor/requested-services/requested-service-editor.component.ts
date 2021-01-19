@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Assertion, EventInfo, Identifiable } from '@app/core';
+import { Assertion, EventInfo } from '@app/core';
+import { EmptyFeeConcept, EmptyProvidedService, FeeConcept, ProvidedService, ProvidedServiceType } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
-type requestedServiceFormControls = 'type' | 'concepto' | 'fundamento' | 'baseGravable' | 'moneda' |
-                                    'cantidad' | 'unidadMedida' | 'observaciones';
+type RequestedServiceFormControls = 'providedServiceType' | 'providedService' | 'feeConcept' | 'taxableBase' |
+                                    'quantity' | 'unit' | 'notes';
 
 export enum RequestedServiceEditortEventType {
   SUBMIT_REQUESTED_SERVICE_CLICKED  = 'TransactionListComponent.Event.SubmitRequestedServiceClicked',
@@ -18,31 +19,33 @@ export enum RequestedServiceEditortEventType {
 })
 export class RequestedServiceEditorComponent implements OnInit {
 
-  @Input() RequestedServiceTypes: Identifiable[] = [];
+  @Input() providedServiceTypeList: ProvidedServiceType[] = [];
 
   @Output() requestedServiceEditortEvent = new EventEmitter<EventInfo>();
+
+  providedServiceList: ProvidedService[] = [];
+  providedServiceSelected: ProvidedService = EmptyProvidedService;
+  feeConceptSelected: FeeConcept = EmptyFeeConcept;
 
   submitted = false;
 
   form: FormGroup = new FormGroup({
-    type: new FormControl(''),
-    concepto: new FormControl(''),
-    baseGravable: new FormControl('', Validators.required),
-    moneda: new FormControl(''),
-    cantidad: new FormControl('', Validators.required),
-    unidadMedida: new FormControl(''),
-    fundamento: new FormControl(''),
-    observaciones: new FormControl('')
+    providedServiceType: new FormControl('', Validators.required),
+    providedService: new FormControl('', Validators.required),
+    feeConcept: new FormControl('', Validators.required),
+    taxableBase: new FormControl(''),
+    quantity: new FormControl('', Validators.required),
+    unit: new FormControl({ value: '', disabled: true }),
+    notes: new FormControl('')
   });
 
   constructor(private messageBox: MessageBoxService) { }
 
   ngOnInit(): void {
-    this.form.reset();
-    this.submitted = false;
+    this.resetForm();
   }
 
-  getFormControl(name: requestedServiceFormControls) {
+  getFormControl(name: RequestedServiceFormControls) {
     return this.form.get(name);
   }
 
@@ -53,9 +56,9 @@ export class RequestedServiceEditorComponent implements OnInit {
     }
 
     const message = `${'Nombre del Concepto'} <br>
-      <pre>Base gravable:     ${this.getFormControl('baseGravable').value}</pre>
-      <pre>Cantidad:                ${this.getFormControl('cantidad').value}</pre>
-      <pre>Fundamento:         ${this.getFormControl('fundamento').value}</pre>
+      <pre>Base gravable:     ${this.getFormControl('taxableBase').value}</pre>
+      <pre>Cantidad:                ${this.getFormControl('quantity').value}</pre>
+      <pre>Fundamento:         ${this.getFormControl('feeConcept').value}</pre>
       <br>¿Agrego este concepto al trámite?`;
 
     this.messageBox.confirm(message, 'Agregar un concepto al trámite')
@@ -69,21 +72,49 @@ export class RequestedServiceEditorComponent implements OnInit {
       });
   }
 
+  providedServiceTypeChange(change: ProvidedServiceType) {
+    this.providedServiceList = change.services;
+    this.getFormControl('providedService').reset();
+    this.providedServiceChange(EmptyProvidedService);
+  }
+
+  providedServiceChange(change: ProvidedService) {
+    this.providedServiceSelected = change;
+    this.getFormControl('feeConcept').reset();
+    this.getFormControl('unit').reset(this.providedServiceSelected.unit.name);
+    this.feeConceptChange(EmptyFeeConcept);
+  }
+
+  feeConceptChange(change: FeeConcept) {
+    this.feeConceptSelected = change;
+    this.getFormControl('taxableBase').reset();
+    this.resetValidatorsTaxableBase();
+  }
+
+  resetValidatorsTaxableBase(){
+    this.getFormControl('taxableBase').clearValidators();
+
+    if (this.feeConceptSelected.requiresTaxableBase) {
+      this.getFormControl('taxableBase').setValidators([Validators.required]);
+    }
+
+    this.getFormControl('taxableBase').updateValueAndValidity();
+  }
+
   private getFormData(): any {
     Assertion.assert(this.form.valid,
       'Programming error: form must be validated before command execution.');
 
-    const formModel = this.form.value;
+    const formModel = this.form.getRawValue();
 
     const data = {
-      type: formModel.type,
-      concepto: formModel.concepto,
-      baseGravable: formModel.baseGravable,
-      moneda: formModel.moneda,
-      cantidad: formModel.cantidad,
-      unidadMedida: formModel.unidadMedida,
-      fundamento: formModel.fundamento,
-      observaciones: formModel.observaciones
+      providedServiceType: formModel.providedServiceType,
+      providedService: formModel.providedService,
+      feeConcept: formModel.feeConcept,
+      taxableBase: formModel.taxableBase,
+      quantity: formModel.quantity,
+      unit: formModel.unit,
+      notes: formModel.notes
     };
 
     return data;
@@ -96,6 +127,11 @@ export class RequestedServiceEditorComponent implements OnInit {
     };
 
     this.requestedServiceEditortEvent.emit(event);
+  }
+
+  private resetForm() {
+    this.form.reset();
+    this.submitted = false;
   }
 
   private invalidateForm(form: FormGroup) {

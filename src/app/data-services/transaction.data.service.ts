@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 import { Assertion, HttpService } from '@app/core';
 
 import { Agency, TransactionFields, RecorderOffice, Transaction,
-         TransactionFilter, TransactionShortModel, TransactionType } from '@app/models';
+         TransactionFilter, TransactionShortModel, TransactionType, ProvidedServiceType } from '@app/models';
 
 
 @Injectable()
@@ -96,6 +96,13 @@ export class TransactionDataService {
     const path = `v5/land/agencies`;
 
     return this.http.get<Agency[]>(path);
+  }
+
+
+  getProvidedServices(): Observable<ProvidedServiceType[]> {
+    const path = `v5/land/provided-services`;
+
+    return this.http.get<ProvidedServiceType[]>(path);
   }
 
 

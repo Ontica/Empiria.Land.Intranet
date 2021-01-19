@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Command, EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
-import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice,
-         insertToArrayIfNotExist } from '@app/models';
+import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice, insertToArrayIfNotExist,
+         ProvidedServiceType } from '@app/models';
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
 import { RequestedServiceEditortEventType } from './requested-services/requested-service-editor.component';
 
@@ -20,6 +20,8 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
   agencyList: Agency[] = [];
 
   recorderOfficeList: RecorderOffice[] = [];
+
+  providedServiceTypeList: ProvidedServiceType[] = [];
 
   helper: SubscriptionHelper;
 
@@ -58,6 +60,11 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
       .subscribe(x => {
         this.agencyList = isEmpty(this.transaction.agency) ?
                           x : insertToArrayIfNotExist(x, this.transaction.agency, 'uid');
+      });
+
+    this.helper.select<ProvidedServiceType[]>(TransactionStateSelector.PROVIDED_SERVICE_LIST, {})
+      .subscribe(x => {
+        this.providedServiceTypeList = x;
       });
   }
 

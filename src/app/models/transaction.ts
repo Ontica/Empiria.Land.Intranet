@@ -202,6 +202,36 @@ export interface TransactionFields {
 }
 
 
+export interface ProvidedServiceType extends Identifiable {
+  services: ProvidedService[];
+}
+
+
+export interface ProvidedService extends Identifiable {
+  unit: Identifiable;
+  feeConcepts: FeeConcept[];
+}
+
+
+export interface FeeConcept extends Entity {
+  legalBasis: string;
+  financialCode: string;
+  requiresTaxableBase: boolean;
+}
+
+export const EmptyProvidedService: ProvidedService = {
+  uid: 'empty',
+  name: '',
+  unit: Empty,
+  feeConcepts: []
+};
+
+export const EmptyFeeConcept: FeeConcept = {
+  uid: 'empty',
+  legalBasis: '',
+  financialCode: '',
+  requiresTaxableBase: false
+};
 
 // Functions
 

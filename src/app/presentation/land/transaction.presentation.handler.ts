@@ -50,6 +50,7 @@ export enum SelectorType {
   TRANSACTION_LIST = 'Land.Transactions.Selectors.TransactionList',
   TRANSACTION_TYPE_LIST = 'Land.Transactions.Selectors.TransactionTypeList',
   AGENCY_LIST = 'Land.Transactions.Selectors.AgencyList',
+  PROVIDED_SERVICE_LIST = 'Land.Transactions.Selectors.ProvidedServiceList',
   RECORDER_OFFICE_LIST = 'Land.Transactions.Selectors.RecorderOfficeList',
 }
 
@@ -60,6 +61,7 @@ const initialState: StateValues = [
   { key: SelectorType.TRANSACTION_LIST, value: [] },
   { key: SelectorType.TRANSACTION_TYPE_LIST, value: [] },
   { key: SelectorType.AGENCY_LIST, value: [] },
+  { key: SelectorType.PROVIDED_SERVICE_LIST, value: [] },
   { key: SelectorType.RECORDER_OFFICE_LIST, value: [] },
 ];
 
@@ -96,6 +98,11 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
       case SelectorType.AGENCY_LIST:
         provider = () => this.data.getAgencies();
+
+        return super.selectFirst<U>(selectorType, provider);
+
+      case SelectorType.PROVIDED_SERVICE_LIST:
+        provider = () => this.data.getProvidedServices();
 
         return super.selectFirst<U>(selectorType, provider);
 

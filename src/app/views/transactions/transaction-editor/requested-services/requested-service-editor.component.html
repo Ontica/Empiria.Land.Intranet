@@ -5,26 +5,34 @@
     <div fxLayout="row" fxLayout.lt-md="column">
       <div [fxFlex]="100/3">
         <label>Tipo:</label>
-        <emp-ng-select formControlName="type"
+        <emp-ng-select formControlName="providedServiceType"
           [config]="{ clearable: false }"
-          [items]="RequestedServiceTypes"
-          [showError]="getFormControl('type').touched && getFormControl('type').invalid">
+          [items]="providedServiceTypeList"
+          [showError]="getFormControl('providedServiceType').touched &&
+            getFormControl('providedServiceType').invalid"
+          (changes)="providedServiceTypeChange($event)">
         </emp-ng-select>
       </div>
       <div [fxFlex]="100/3">
         <label>Concepto:</label>
-        <emp-ng-select formControlName="concepto"
+        <emp-ng-select formControlName="providedService"
           [config]="{ clearable: false }"
-          [items]="[]"
-          [showError]="getFormControl('concepto').touched && getFormControl('concepto').invalid">
+          [items]="providedServiceList"
+          [placeholder]="getFormControl('providedServiceType').value === null ? 'Seleccione el tipo de concepto' : 'Seleccione'"
+          [showError]="getFormControl('providedService').touched &&
+            getFormControl('providedService').invalid"
+          (changes)="providedServiceChange($event)">
         </emp-ng-select>
       </div>
       <div [fxFlex]="100/3">
         <label>Fundamento:</label>
-        <emp-ng-select formControlName="fundamento"
-          [config]="{ clearable: false }"
-          [items]="[]"
-          [showError]="getFormControl('fundamento').touched && getFormControl('fundamento').invalid">
+        <emp-ng-select formControlName="feeConcept"
+          [bindLabel]="'legalBasis'"
+          [config]="{ clearable: false, autoSelect: true }"
+          [items]="providedServiceSelected.feeConcepts"
+          [placeholder]="getFormControl('providedService').value === null ? 'Seleccione el concepto' : 'Seleccione'"
+          [showError]="getFormControl('feeConcept').touched && getFormControl('feeConcept').invalid"
+          (changes)="feeConceptChange($event)">
         </emp-ng-select>
       </div>
     </div>
@@ -32,41 +40,39 @@
     <div fxLayout="row" fxLayout.lt-md="column">
       <div [fxFlex]="100/3">
         <label>Unidad:</label>
-        <emp-ng-select formControlName="unidadMedida"
-          [config]="{ clearable: false }"
-          [items]="[]"
-          [showError]="getFormControl('unidadMedida').touched && getFormControl('unidadMedida').invalid">
-        </emp-ng-select>
+        <input formControlName="unit"
+          type="text"
+          class="text-box"
+          placeholder="Seleccione el concepto">
       </div>
       <div [fxFlex]="100/3">
-        <label>Base gravable:</label>
         <div fxLayout="row">
-          <input formControlName="baseGravable" fxFlex="60"
-            type="number"
-            class="text-box"
-            [class.invalid-control]="getFormControl('baseGravable').touched &&
-              getFormControl('baseGravable').invalid">
-          <emp-ng-select formControlName="moneda" fxFlex="40"
-            [config]="{ clearable: false }"
-            [items]="[]"
-            [showError]="getFormControl('moneda').touched && getFormControl('moneda').invalid">
-          </emp-ng-select>
+          <div [fxFlex]="60" *ngIf="feeConceptSelected.requiresTaxableBase">
+            <label>Base gravable:</label>
+            <input formControlName="taxableBase" empNgCurrency
+              type="text"
+              class="text-box"
+              [class.invalid-control]="getFormControl('taxableBase').touched &&
+                getFormControl('taxableBase').invalid">
+          </div>
+
+          <div [fxFlex]="40">
+            <label>Cantidad:</label>
+            <input formControlName="quantity" empNgInteger
+              type="text"
+              class="text-box"
+              [class.invalid-control]="getFormControl('quantity').touched &&
+                getFormControl('quantity').invalid">
+          </div>
         </div>
-      </div>
-      <div [fxFlex]="100/3">
-        <label>Cantidad:</label>
-        <input formControlName="cantidad"
-          type="number"
-          class="text-box uppercase"
-          [class.invalid-control]="getFormControl('cantidad').touched && getFormControl('cantidad').invalid"
-          style="width: 100px">
+
       </div>
     </div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
       <div fxFlex>
         <label>Observaciones:</label>
-        <emp-ng-text-editor formControlName="observaciones">
+        <emp-ng-text-editor formControlName="notes">
         </emp-ng-text-editor>
       </div>
     </div>
