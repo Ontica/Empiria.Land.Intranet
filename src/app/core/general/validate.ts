@@ -48,4 +48,12 @@ export class Validate {
     return true;
   }
 
+  static isPositive(control): { [key: string]: any; } {
+    if (control.value && ( Number(control.value.replace(/[^0-9.-]+/g, '')) <= 0 ) ) {
+        // return what´s not valid
+        return { isPositive: true };
+    }
+    return null;
+  }
+
 }
