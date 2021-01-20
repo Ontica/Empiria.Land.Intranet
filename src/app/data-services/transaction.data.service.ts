@@ -10,8 +10,8 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { Agency, TransactionFields, RecorderOffice, Transaction,
-         TransactionFilter, TransactionShortModel, TransactionType, ProvidedServiceType } from '@app/models';
+import { Agency, ProvidedServiceType, RecorderOffice, RequestedServiceFields, Transaction,
+         TransactionFields, TransactionFilter, TransactionShortModel, TransactionType } from '@app/models';
 
 
 @Injectable()
@@ -99,6 +99,13 @@ export class TransactionDataService {
   }
 
 
+  getRecorderOffices(): Observable<RecorderOffice[]> {
+    const path = `v5/land/recorder-offices`;
+
+    return this.http.get<RecorderOffice[]>(path);
+  }
+
+
   getProvidedServices(): Observable<ProvidedServiceType[]> {
     const path = `v5/land/provided-services`;
 
@@ -106,10 +113,25 @@ export class TransactionDataService {
   }
 
 
-  getRecorderOffices(): Observable<RecorderOffice[]> {
-    const path = `v5/land/recorder-offices`;
+  addTransactionService(transactionUID: string,
+                        requestedService: RequestedServiceFields): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+    Assertion.assertValue(requestedService, 'requestedService');
 
-    return this.http.get<RecorderOffice[]>(path);
+    const path = `v5/land/transactions/${transactionUID}/requested-services`;
+
+    return this.http.post<Transaction>(path, requestedService);
+  }
+
+
+  deleteTransactionService(transactionUID: string,
+                           requestedServiceUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+    Assertion.assertValue(requestedServiceUID, 'requestedServiceUID');
+
+    const path = `v5/land/transactions/${transactionUID}/requested-services/${requestedServiceUID}`;
+
+    return this.http.delete<Transaction>(path);
   }
 
 }

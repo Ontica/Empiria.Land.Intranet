@@ -9,7 +9,9 @@
 
 <br>
 
-<emp-land-requested-service-list [requestedServices]="transaction.requestedServices">
+<emp-land-requested-service-list
+  [requestedServices]="transaction.requestedServices"
+  (requestedServiceListEvent)="onRequestedServiceListEvent($event)">
 
 </emp-land-requested-service-list>
 
@@ -28,7 +30,7 @@
 
       <emp-land-requested-service-editor *ngIf="panelAddServiceOpenState"
         [providedServiceTypeList]="providedServiceTypeList"
-        (requestedServiceEditortEvent)="onRequestedServiceEditortEvent($event)">
+        (requestedServiceEditorEvent)="onRequestedServiceEditorEvent($event)">
 
       </emp-land-requested-service-editor>
 

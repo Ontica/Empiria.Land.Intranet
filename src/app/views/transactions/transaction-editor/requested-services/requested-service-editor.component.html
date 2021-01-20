@@ -5,23 +5,23 @@
     <div fxLayout="row" fxLayout.lt-md="column">
       <div [fxFlex]="100/3">
         <label>Tipo:</label>
-        <emp-ng-select formControlName="providedServiceType"
+        <emp-ng-select formControlName="serviceType"
           [config]="{ clearable: false }"
           [items]="providedServiceTypeList"
-          [showError]="getFormControl('providedServiceType').touched &&
-            getFormControl('providedServiceType').invalid"
-          (changes)="providedServiceTypeChange($event)">
+          [showError]="getFormControl('serviceType').touched &&
+            getFormControl('serviceType').invalid"
+          (changes)="serviceTypeChange($event)">
         </emp-ng-select>
       </div>
       <div [fxFlex]="100/3">
         <label>Concepto:</label>
-        <emp-ng-select formControlName="providedService"
+        <emp-ng-select formControlName="service"
           [config]="{ clearable: false }"
           [items]="providedServiceList"
-          [placeholder]="getFormControl('providedServiceType').value === null ? 'Seleccione el tipo de concepto' : 'Seleccione'"
-          [showError]="getFormControl('providedService').touched &&
-            getFormControl('providedService').invalid"
-          (changes)="providedServiceChange($event)">
+          [placeholder]="getFormControl('serviceType').value === null ? 'Seleccione el tipo de concepto' : 'Seleccione'"
+          [showError]="getFormControl('service').touched &&
+            getFormControl('service').invalid"
+          (changes)="serviceChange($event)">
         </emp-ng-select>
       </div>
       <div [fxFlex]="100/3">
@@ -29,8 +29,8 @@
         <emp-ng-select formControlName="feeConcept"
           [bindLabel]="'legalBasis'"
           [config]="{ clearable: false, autoSelect: true }"
-          [items]="providedServiceSelected.feeConcepts"
-          [placeholder]="getFormControl('providedService').value === null ? 'Seleccione el concepto' : 'Seleccione'"
+          [items]="serviceSelected.feeConcepts"
+          [placeholder]="getFormControl('service').value === null ? 'Seleccione el concepto' : 'Seleccione'"
           [showError]="getFormControl('feeConcept').touched && getFormControl('feeConcept').invalid"
           (changes)="feeConceptChange($event)">
         </emp-ng-select>
@@ -72,8 +72,10 @@
     <div fxLayout="row" fxLayout.lt-md="column">
       <div fxFlex>
         <label>Observaciones:</label>
-        <emp-ng-text-editor formControlName="notes">
-        </emp-ng-text-editor>
+        <textarea formControlName="notes" empNgTextareaAutoresize
+          rows="1"
+          class="text-area uppercase">
+        </textarea>
       </div>
     </div>
 

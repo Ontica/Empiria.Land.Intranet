@@ -3,9 +3,11 @@ import { Command, EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice, insertToArrayIfNotExist,
-         ProvidedServiceType } from '@app/models';
+         ProvidedServiceType,
+         RequestedServiceFields} from '@app/models';
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
-import { RequestedServiceEditortEventType } from './requested-services/requested-service-editor.component';
+import { RequestedServiceEditorEventType } from './requested-services/requested-service-editor.component';
+import { RequestedServiceListEventType } from './requested-services/requested-service-list.component';
 
 @Component({
   selector: 'emp-land-transaction-editor',
@@ -70,23 +72,30 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
   onTransactionHeaderEvent(event: EventInfo): void {
 
+    let payload: any = { transactionUID: this.transaction.uid };
+
     switch (event.type as TransactionHeaderEventType) {
 
       case TransactionHeaderEventType.SUBMIT_TRANSACTION_CLICKED:
 
-        this.executeCommand(TransactionCommandType.UPDATE_TRANSACTION, event.payload);
+        payload = {
+          transactionUID: this.transaction.uid,
+          transaction: event.payload
+        };
+
+        this.executeCommand(TransactionCommandType.UPDATE_TRANSACTION, payload);
 
         return;
 
       case TransactionHeaderEventType.CLONE_TRANSACTION_CLICKED:
 
-        this.executeCommand(TransactionCommandType.CLONE_TRANSACTION);
+        this.executeCommand(TransactionCommandType.CLONE_TRANSACTION, payload);
 
         return;
 
       case TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED:
 
-        this.executeCommand(TransactionCommandType.DELETE_TRANSACTION);
+        this.executeCommand(TransactionCommandType.DELETE_TRANSACTION, payload);
 
         return;
 
@@ -96,17 +105,19 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  onRequestedServiceEditortEvent(event: EventInfo): void {
+  onRequestedServiceEditorEvent(event: EventInfo): void {
 
-    switch (event.type as RequestedServiceEditortEventType) {
+    switch (event.type as RequestedServiceEditorEventType) {
 
-      case RequestedServiceEditortEventType.SUBMIT_REQUESTED_SERVICE_CLICKED:
+      case RequestedServiceEditorEventType.SUBMIT_REQUESTED_SERVICE_CLICKED:
 
-        console.table(event);
+        const payload = {
+          transactionUID: this.transaction.uid,
+          requestedService: event.payload
+        };
 
-        setTimeout(() => {
-          this.panelAddServiceOpenState = false;
-        }, 500);
+        this.executeCommand<Transaction>(TransactionCommandType.ADD_TRANSACTION_SERVICE, payload)
+            .then(x => this.panelAddServiceOpenState = false );
 
         return;
 
@@ -116,17 +127,34 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  executeCommand(commandType: TransactionCommandType, transaction?: Transaction){
+  onRequestedServiceListEvent(event: EventInfo): void {
+
+    switch (event.type as RequestedServiceListEventType) {
+
+      case RequestedServiceListEventType.DELETE_REQUESTED_SERVICE_CLICKED:
+
+        const payload = {
+            transactionUID: this.transaction.uid,
+            requestedServiceUID: event.payload
+        };
+
+        this.executeCommand(TransactionCommandType.DELETE_TRANSACTION_SERVICE, payload);
+
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
+  }
+
+  executeCommand<T>(commandType: TransactionCommandType, payload?: any): Promise<T>{
     const command: Command = {
       type: commandType,
-      payload: {
-        transactionUID: this.transaction.uid,
-        transaction
-      }
+      payload
     };
 
-    this.uiLayer.execute(command);
-    return;
+    return this.uiLayer.execute<T>(command);
   }
 
 }

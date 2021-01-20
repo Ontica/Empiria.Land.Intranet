@@ -157,14 +157,10 @@ export abstract class AbstractPresentationHandler implements PresentationHandler
 
 
     if (stateItem.value && (Array.isArray(stateItem.value) && stateItem.value.length > 0)) {
-      console.log('selectFirst YES, returned', selector, stateItem);
-
       return stateItem.asObservable() as Observable<U>;
     }
 
     this.setValue(selector, funct());
-
-    console.log('selectFirst NO, set value', selector, stateItem);
 
     return this.getSubject<U>(selector).asObservable();
   }

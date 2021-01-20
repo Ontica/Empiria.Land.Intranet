@@ -202,6 +202,16 @@ export interface TransactionFields {
 }
 
 
+export interface RequestedServiceFields {
+  serviceUID: string;
+  feeConceptUID: string;
+  unitUID: string;
+  taxableBase: number;
+  quantity: number;
+  notes: string;
+}
+
+
 export interface ProvidedServiceType extends Identifiable {
   services: ProvidedService[];
 }
@@ -296,4 +306,10 @@ export function insertItemTopArray<T, K extends keyof T>(array: T[], item: T, ke
   const oldArrayFilter = array.filter(element => element[key] !== item[key]);
   const newArray = [... [item], ...oldArrayFilter];
   return newArray;
+}
+
+// Currency string function
+
+export function stringToNumber(value: string): number {
+  return Number(value.replace(/[^0-9.-]+/g, ''));
 }

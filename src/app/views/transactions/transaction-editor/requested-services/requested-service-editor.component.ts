@@ -1,13 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Assertion, EventInfo } from '@app/core';
-import { EmptyFeeConcept, EmptyProvidedService, FeeConcept, ProvidedService, ProvidedServiceType } from '@app/models';
+import { Assertion, EventInfo, Validate } from '@app/core';
+import { stringToNumber, EmptyFeeConcept, EmptyProvidedService, FeeConcept,
+         ProvidedService, ProvidedServiceType, RequestedServiceFields } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
-type RequestedServiceFormControls = 'providedServiceType' | 'providedService' | 'feeConcept' | 'taxableBase' |
+
+type RequestedServiceFormControls = 'serviceType' | 'service' | 'feeConcept' | 'taxableBase' |
                                     'quantity' | 'unit' | 'notes';
 
-export enum RequestedServiceEditortEventType {
+export enum RequestedServiceEditorEventType {
   SUBMIT_REQUESTED_SERVICE_CLICKED  = 'TransactionListComponent.Event.SubmitRequestedServiceClicked',
 }
 
@@ -21,20 +23,20 @@ export class RequestedServiceEditorComponent implements OnInit {
 
   @Input() providedServiceTypeList: ProvidedServiceType[] = [];
 
-  @Output() requestedServiceEditortEvent = new EventEmitter<EventInfo>();
+  @Output() requestedServiceEditorEvent = new EventEmitter<EventInfo>();
 
   providedServiceList: ProvidedService[] = [];
-  providedServiceSelected: ProvidedService = EmptyProvidedService;
+  serviceSelected: ProvidedService = EmptyProvidedService;
   feeConceptSelected: FeeConcept = EmptyFeeConcept;
 
   submitted = false;
 
   form: FormGroup = new FormGroup({
-    providedServiceType: new FormControl('', Validators.required),
-    providedService: new FormControl('', Validators.required),
+    serviceType: new FormControl('', Validators.required),
+    service: new FormControl('', Validators.required),
     feeConcept: new FormControl('', Validators.required),
-    taxableBase: new FormControl(''),
-    quantity: new FormControl('', Validators.required),
+    taxableBase: new FormControl('', Validate.isPositive),
+    quantity: new FormControl('', [Validators.required, Validators.min(1)]),
     unit: new FormControl({ value: '', disabled: true }),
     notes: new FormControl('')
   });
@@ -55,10 +57,11 @@ export class RequestedServiceEditorComponent implements OnInit {
       return;
     }
 
-    const message = `${'Nombre del Concepto'} <br>
-      <pre>Base gravable:     ${this.getFormControl('taxableBase').value}</pre>
+    const message = `<strong>${this.serviceSelected.name}</strong> <br>
+      ${ !this.feeConceptSelected.requiresTaxableBase ? '' : `
+      <pre>Base gravable:     ${this.getFormControl('taxableBase').value}</pre>`}
       <pre>Cantidad:                ${this.getFormControl('quantity').value}</pre>
-      <pre>Fundamento:         ${this.getFormControl('feeConcept').value}</pre>
+      <pre>Fundamento:         ${this.feeConceptSelected.legalBasis}</pre>
       <br>¿Agrego este concepto al trámite?`;
 
     this.messageBox.confirm(message, 'Agregar un concepto al trámite')
@@ -66,36 +69,37 @@ export class RequestedServiceEditorComponent implements OnInit {
       .then(x => {
         if (x) {
           this.submitted = true;
-          this.sendEvent(RequestedServiceEditortEventType.SUBMIT_REQUESTED_SERVICE_CLICKED,
+          this.sendEvent(RequestedServiceEditorEventType.SUBMIT_REQUESTED_SERVICE_CLICKED,
                          this.getFormData());
         }
       });
   }
 
-  providedServiceTypeChange(change: ProvidedServiceType) {
+  serviceTypeChange(change: ProvidedServiceType) {
     this.providedServiceList = change.services;
-    this.getFormControl('providedService').reset();
-    this.providedServiceChange(EmptyProvidedService);
+    this.getFormControl('service').reset();
+    this.serviceChange(EmptyProvidedService);
   }
 
-  providedServiceChange(change: ProvidedService) {
-    this.providedServiceSelected = change;
+  serviceChange(change: ProvidedService) {
+    this.serviceSelected = change;
     this.getFormControl('feeConcept').reset();
-    this.getFormControl('unit').reset(this.providedServiceSelected.unit.name);
+    this.getFormControl('unit').reset(this.serviceSelected.unit.name);
     this.feeConceptChange(EmptyFeeConcept);
   }
 
   feeConceptChange(change: FeeConcept) {
     this.feeConceptSelected = change;
-    this.getFormControl('taxableBase').reset();
     this.resetValidatorsTaxableBase();
   }
 
   resetValidatorsTaxableBase(){
+    this.getFormControl('taxableBase').reset();
+
     this.getFormControl('taxableBase').clearValidators();
 
     if (this.feeConceptSelected.requiresTaxableBase) {
-      this.getFormControl('taxableBase').setValidators([Validators.required]);
+      this.getFormControl('taxableBase').setValidators([Validators.required, Validate.isPositive]);
     }
 
     this.getFormControl('taxableBase').updateValueAndValidity();
@@ -107,26 +111,25 @@ export class RequestedServiceEditorComponent implements OnInit {
 
     const formModel = this.form.getRawValue();
 
-    const data = {
-      providedServiceType: formModel.providedServiceType,
-      providedService: formModel.providedService,
-      feeConcept: formModel.feeConcept,
-      taxableBase: formModel.taxableBase,
-      quantity: formModel.quantity,
-      unit: formModel.unit,
-      notes: formModel.notes
+    const data: RequestedServiceFields = {
+      serviceUID: formModel.service,
+      feeConceptUID: formModel.feeConcept,
+      unitUID: this.serviceSelected.unit.uid,
+      taxableBase: stringToNumber(formModel.taxableBase),
+      quantity: parseFloat(formModel.quantity),
+      notes: formModel.notes ?? ''
     };
 
     return data;
   }
 
-  private sendEvent(eventType: RequestedServiceEditortEventType, payload?: any) {
+  private sendEvent(eventType: RequestedServiceEditorEventType, payload?: any) {
     const event: EventInfo = {
       type: eventType,
       payload
     };
 
-    this.requestedServiceEditortEvent.emit(event);
+    this.requestedServiceEditorEvent.emit(event);
   }
 
   private resetForm() {

@@ -31,7 +31,9 @@ export enum CommandType {
   CREATE_TRANSACTION = 'Land.Transactions.Command.CreateTransaction',
   UPDATE_TRANSACTION = 'Land.Transactions.Command.UpdateTransaction',
   CLONE_TRANSACTION = 'Land.Transactions.Command.CloneTransaction',
-  DELETE_TRANSACTION = 'Land.Transactions.Command.DeleteTransaction'
+  DELETE_TRANSACTION = 'Land.Transactions.Command.DeleteTransaction',
+  ADD_TRANSACTION_SERVICE = 'Land.Transactions.Command.AddTransactionService',
+  DELETE_TRANSACTION_SERVICE = 'Land.Transactions.Command.DeleteTransactionService',
 }
 
 
@@ -40,7 +42,9 @@ export enum EffectType {
   CREATE_TRANSACTION = CommandType.CREATE_TRANSACTION,
   UPDATE_TRANSACTION = CommandType.UPDATE_TRANSACTION,
   CLONE_TRANSACTION = CommandType.CLONE_TRANSACTION,
-  DELETE_TRANSACTION = CommandType.DELETE_TRANSACTION
+  DELETE_TRANSACTION = CommandType.DELETE_TRANSACTION,
+  ADD_TRANSACTION_SERVICE = CommandType.ADD_TRANSACTION_SERVICE,
+  DELETE_TRANSACTION_SERVICE = CommandType.DELETE_TRANSACTION_SERVICE,
 }
 
 
@@ -127,6 +131,8 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case EffectType.CREATE_TRANSACTION:
       case EffectType.UPDATE_TRANSACTION:
       case EffectType.CLONE_TRANSACTION:
+      case EffectType.ADD_TRANSACTION_SERVICE:
+      case EffectType.DELETE_TRANSACTION_SERVICE:
 
         transactionList = this.getValue<TransactionShortModel[]>(SelectorType.TRANSACTION_LIST);
 
@@ -179,7 +185,8 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
       case CommandType.UPDATE_TRANSACTION:
         return toPromise<T>(
-          this.data.updateTransaction(command.payload.transactionUID, command.payload.transaction)
+          this.data.updateTransaction(command.payload.transactionUID,
+                                      command.payload.transaction)
         );
 
       case CommandType.CLONE_TRANSACTION:
@@ -190,6 +197,18 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case CommandType.DELETE_TRANSACTION:
         return toPromise<T>(
           this.data.deleteTransaction(command.payload.transactionUID)
+        );
+
+      case CommandType.ADD_TRANSACTION_SERVICE:
+        return toPromise<T>(
+          this.data.addTransactionService(command.payload.transactionUID,
+                                          command.payload.requestedService)
+        );
+
+      case CommandType.DELETE_TRANSACTION_SERVICE:
+        return toPromise<T>(
+          this.data.deleteTransactionService(command.payload.transactionUID,
+                                             command.payload.requestedServiceUID)
         );
 
       default:

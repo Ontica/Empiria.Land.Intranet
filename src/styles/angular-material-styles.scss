@@ -154,20 +154,16 @@ table.mat-table {
     font-weight: 500;
     background-color: $primary-color;
     color: $white;
+    padding-right: 10px;
   }
 
   th:first-of-type {
     padding-left: 10px;
   }
 
-  th:last-of-type {
-    padding-right: 10px;
-  }
-
   th.text-align-right {
     text-align: right;
     justify-content: flex-end;
-    padding-right: 10px;
   }
 
   td {

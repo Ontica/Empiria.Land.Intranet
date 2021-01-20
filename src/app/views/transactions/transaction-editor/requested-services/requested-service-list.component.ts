@@ -1,8 +1,14 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { EventInfo } from '@app/core';
 import { RequestedService } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
+
+
+export enum RequestedServiceListEventType {
+  DELETE_REQUESTED_SERVICE_CLICKED  = 'TransactionListComponent.Event.DeleteRequestedServiceClicked',
+}
 
 @Component({
   selector: 'emp-land-requested-service-list',
@@ -10,9 +16,11 @@ import { MessageBoxService } from '@app/shared/containers/message-box';
   styles: [
   ]
 })
-export class RequestedServiceListComponent implements OnInit {
+export class RequestedServiceListComponent implements OnInit, OnChanges {
 
   @Input() requestedServices: RequestedService[] = [];
+
+  @Output() requestedServiceListEvent = new EventEmitter<EventInfo>();
 
   dataSource: MatTableDataSource<RequestedService>;
   displayedColumns = ['number', 'typeName', 'taxableBase', 'quantity', 'unitName',
@@ -21,7 +29,9 @@ export class RequestedServiceListComponent implements OnInit {
   constructor(private messageBox: MessageBoxService,
               private currencyPipe: CurrencyPipe) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  ngOnChanges(){
     this.dataSource = new MatTableDataSource(this.requestedServices);
   }
 
@@ -35,9 +45,19 @@ export class RequestedServiceListComponent implements OnInit {
         .toPromise()
         .then(x => {
           if (x) {
-            console.log(service);
+            this.sendEvent(RequestedServiceListEventType.DELETE_REQUESTED_SERVICE_CLICKED,
+                           service.uid);
           }
         });
+  }
+
+  private sendEvent(eventType: RequestedServiceListEventType, payload?: any) {
+    const event: EventInfo = {
+      type: eventType,
+      payload
+    };
+
+    this.requestedServiceListEvent.emit(event);
   }
 
 }
