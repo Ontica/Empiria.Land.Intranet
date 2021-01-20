@@ -9,6 +9,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmpCurrencyDirective } from './currency.directive';
 import { EmpIntegerDirective } from './integer.directive';
+import { EmpTextareaAutoresizeDirective } from './text-area-autoresize.directive';
 
 
 
@@ -21,11 +22,13 @@ import { EmpIntegerDirective } from './integer.directive';
   declarations: [
     EmpCurrencyDirective,
     EmpIntegerDirective,
+    EmpTextareaAutoresizeDirective,
   ],
 
   exports: [
     EmpCurrencyDirective,
     EmpIntegerDirective,
+    EmpTextareaAutoresizeDirective,
   ],
 
 
