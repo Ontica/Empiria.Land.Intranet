@@ -51,10 +51,11 @@ export interface Transaction extends Entity {
   instrumentDescriptor: string;
   baseResource: Resource;
   requestedServices: RequestedService[];
-  payment: Payment;
+  paymentOrder: Payment;
   status: string;
   statusName: string;
   stage: string;
+  actions: Action;
 }
 
 
@@ -111,9 +112,61 @@ export interface Resource extends Entity {
 
 export interface Payment {
   total: number;
-  receiptNo: string;
+  paymentReceiptNo: string;
   mediaUri: string;
+  paymentConfirmed: boolean;
 }
+
+export interface Action {
+  can: ActionCan;
+  show: ActionShow;
+}
+
+
+export interface ActionCan {
+  edit: boolean;
+  delete: boolean;
+  submit: boolean;
+  editServices?: boolean;
+  generatePaymentOrder?: boolean;
+  editPaymentReceipt?: boolean;
+  editInstrument?: boolean;
+  editRecordingActs?: boolean;
+  editCertificates?: boolean;
+  uploadDocuments?: boolean;
+}
+
+
+export interface ActionShow {
+  serviceEditor?: boolean;
+  paymentReceiptEditor?: boolean;
+  uploadDocumentsTab?: boolean;
+  instrumentRecordingTab?: boolean;
+  certificatesEmissionTab?: boolean;
+}
+
+
+export const EmptyAction: Action = {
+  can: {
+    edit: false,
+    delete: false,
+    submit: false,
+    editServices: false,
+    generatePaymentOrder: false,
+    editPaymentReceipt: false,
+    editInstrument: false,
+    editRecordingActs: false,
+    editCertificates: false,
+    uploadDocuments: false,
+  },
+  show: {
+    serviceEditor: false,
+    paymentReceiptEditor: false,
+    uploadDocumentsTab: false,
+    instrumentRecordingTab: false,
+    certificatesEmissionTab: false,
+  }
+};
 
 
 export const EmptyRequester: Requester = {
@@ -135,8 +188,9 @@ export const EmptyResource: Resource = {
 
 export const EmptyPayment: Payment = {
   total: null,
-  receiptNo: '',
-  mediaUri: ''
+  paymentReceiptNo: '',
+  mediaUri: '',
+  paymentConfirmed: false,
 };
 
 
@@ -153,10 +207,11 @@ export const EmptyTransaction: Transaction = {
   instrumentDescriptor: '',
   baseResource: EmptyResource,
   requestedServices: [],
-  payment: EmptyPayment,
+  paymentOrder: EmptyPayment,
   status: '',
   statusName: '',
-  stage: ''
+  stage: '',
+  actions: EmptyAction,
 };
 
 
