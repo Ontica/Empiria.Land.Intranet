@@ -9,9 +9,9 @@ type transactionFormControls = 'type' | 'subtype' | 'name' | 'email' |
                               'instrumentNo' | 'agency' | 'recorderOffice';
 
 export enum TransactionHeaderEventType {
-  SUBMIT_TRANSACTION_CLICKED  = 'TransactionListComponent.Event.SubmitTransactionClicked',
-  CLONE_TRANSACTION_CLICKED  = 'TransactionListComponent.Event.CloneTransactionClicked',
-  DELETE_TRANSACTION_CLICKED  = 'TransactionListComponent.Event.DeleteTransactionClicked',
+  SUBMIT_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.SubmitTransactionClicked',
+  CLONE_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.CloneTransactionClicked',
+  DELETE_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.DeleteTransactionClicked',
 }
 
 @Component({

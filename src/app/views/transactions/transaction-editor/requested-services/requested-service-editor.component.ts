@@ -10,7 +10,7 @@ type RequestedServiceFormControls = 'serviceType' | 'service' | 'feeConcept' | '
                                     'quantity' | 'unit' | 'notes';
 
 export enum RequestedServiceEditorEventType {
-  SUBMIT_REQUESTED_SERVICE_CLICKED  = 'TransactionListComponent.Event.SubmitRequestedServiceClicked',
+  SUBMIT_REQUESTED_SERVICE_CLICKED  = 'RequestedServiceEditorComponent.Event.SubmitRequestedServiceClicked',
 }
 
 @Component({
