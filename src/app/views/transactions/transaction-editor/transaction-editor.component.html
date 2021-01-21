@@ -9,10 +9,11 @@
 
 <br>
 
-<ng-container>
+<ng-container *ngIf="transaction.actions.show.paymentReceiptEditor">
 
   <emp-land-payment-receipt-editor
   [payment]="transaction.paymentOrder"
+  [canEdit]="transaction.actions.can.editPaymentReceipt"
   (paymentReceiptEvent)="onPaymentReceiptEvent($event)">
 
   </emp-land-payment-receipt-editor>
@@ -20,15 +21,16 @@
 
 </ng-container>
 
-<ng-container>
+<ng-container *ngIf="transaction.actions.show.serviceEditor">
 
   <emp-land-requested-service-list
     [requestedServices]="transaction.requestedServices"
+    [canDelete]="transaction.actions.can.editServices"
     (requestedServiceListEvent)="onRequestedServiceListEvent($event)">
 
   </emp-land-requested-service-list>
 
-  <div class="tab-container">
+  <div *ngIf="transaction.actions.can.editServices" class="tab-container">
     <mat-accordion hideToggle>
       <mat-expansion-panel
         [expanded]="panelAddServiceOpenState"

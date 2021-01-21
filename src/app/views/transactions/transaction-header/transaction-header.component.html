@@ -74,15 +74,18 @@
 
     <div fxLayout="row" *ngIf="editionMode && readonly">
 
-      <div fxFlex="50" fxLayoutAlign="start">
+      <div fxFlex="25" fxLayoutAlign="start">
         <button (click)="submitClone()" type="button" class="btn-action">
           Crear una copia
         </button>
       </div>
 
-      <div fxFlex="50" fxLayoutAlign="end">
-        <button *ngIf="isEditable" (click)="toggleReadonly()" type="button" class="btn-action">
+      <div fxFlex="75" fxLayoutAlign="end">
+        <button *ngIf="canEdit" (click)="toggleReadonly()" type="button" class="btn-action">
           Editar
+        </button>
+        <button *ngIf="canGeneratePaymentOrder" type="submit" [class.btn]="true">
+          Generar orden de pago
         </button>
       </div>
 
@@ -90,14 +93,16 @@
 
     <div fxLayout="row" *ngIf="!readonly">
 
-      <div fxFlex="40" fxLayoutAlign="start">
-        <button *ngIf="editionMode" (click)="submitDelete()" type="button" class="btn-warning">
+      <div fxFlex="25" fxLayoutAlign="start">
+        <button *ngIf="canDelete" (click)="submitDelete()" type="button" class="btn-warning">
           Eliminar
         </button>
       </div>
 
-      <div fxFlex="60" fxLayoutAlign="end">
-        <button (click)="submit()" type="submit"
+      <div fxFlex="75" fxLayoutAlign="end">
+        <button *ngIf="canSubmit"
+          type="submit"
+          (click)="submit()"
           [class.btn]="form?.invalid"
           [class.btn-action]="form?.valid">
           {{editionMode ? 'Guardar la solicitud' : 'Crear la solicitud'}}

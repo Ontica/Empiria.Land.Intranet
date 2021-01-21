@@ -19,7 +19,7 @@
           class="text-box"
           [class.invalid-control]="formHandler.showInvalidControl(controls.total)">
       </div>
-      <div fxFlex fxLayoutAlign="end end" style="padding-bottom: 2px;">
+      <div *ngIf="canEdit" fxFlex fxLayoutAlign="end end" style="padding-bottom: 2px;">
 
         <button type="submit"
           (click)="submit(eventType.SUBMIT_PAYMENT_RECEIPT_CLICKED)"

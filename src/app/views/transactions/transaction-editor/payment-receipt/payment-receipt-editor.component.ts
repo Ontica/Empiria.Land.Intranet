@@ -24,6 +24,8 @@ export class PaymentReceiptEditorComponent implements OnChanges {
 
   @Input() payment: Payment = EmptyPayment;
 
+  @Input() canEdit: boolean = false;
+
   @Output() paymentReceiptEvent = new EventEmitter<EventInfo>();
 
   formHandler: FormHandler;
@@ -46,6 +48,8 @@ export class PaymentReceiptEditorComponent implements OnChanges {
       paymentReceiptNo: this.payment?.paymentReceiptNo,
       total: this.payment?.total ? this.currencyPipe.transform(this.payment.total) : null
     });
+
+    this.formHandler.disableForm(!this.canEdit);
   }
 
   submit(eventType: PaymentReceiptEditorEventType){

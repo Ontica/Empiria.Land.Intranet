@@ -47,8 +47,20 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     recorderOffice: new FormControl('', Validators.required)
   });
 
-  get isEditable() {
-    return this.transaction.status === 'Payment';
+  get canEdit() {
+    return this.transaction.actions.can.edit;
+  }
+
+  get canGeneratePaymentOrder() {
+    return this.transaction.actions.can.generatePaymentOrder;
+  }
+
+  get canDelete(){
+    return this.editionMode && this.transaction.actions.can.delete;
+  }
+
+  get canSubmit(){
+    return !this.editionMode || ( this.editionMode && this.transaction.actions.can.submit );
   }
 
   constructor(private messageBox: MessageBoxService){ }
