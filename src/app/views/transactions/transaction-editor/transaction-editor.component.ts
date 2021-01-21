@@ -3,9 +3,9 @@ import { Command, EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice, insertToArrayIfNotExist,
-         ProvidedServiceType,
-         RequestedServiceFields} from '@app/models';
+         ProvidedServiceType } from '@app/models';
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
+import { PaymentReceiptEditorEventType } from './payment-receipt/payment-receipt-editor.component';
 import { RequestedServiceEditorEventType } from './requested-services/requested-service-editor.component';
 import { RequestedServiceListEventType } from './requested-services/requested-service-list.component';
 
@@ -37,9 +37,13 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     this.helper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .subscribe(x => {
         this.transaction = x;
-        this.panelAddServiceOpenState = false;
+        this.resetPanelState();
         this.loadDataLists();
       });
+  }
+
+  resetPanelState(){
+    this.panelAddServiceOpenState = false;
   }
 
   ngOnDestroy() {
@@ -141,6 +145,25 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
         this.executeCommand(TransactionCommandType.DELETE_TRANSACTION_SERVICE, payload);
 
         return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
+  }
+
+  onPaymentReceiptEvent(event: EventInfo): void {
+
+    switch (event.type as PaymentReceiptEditorEventType) {
+
+      case PaymentReceiptEditorEventType.SUBMIT_PAYMENT_RECEIPT_CLICKED:
+
+        console.log(event);
+        break;
+      case PaymentReceiptEditorEventType.SUBMIT_PAYMENT_RECEIPT_AND_RECEIVE_CLICKED:
+
+        console.log(event);
+        break;
 
       default:
         console.log(`Unhandled user interface event ${event.type}`);

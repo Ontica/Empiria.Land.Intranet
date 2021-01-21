@@ -1,0 +1,41 @@
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section">
+
+  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+
+    <div class="section-title">Recibo de pago</div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div [fxFlex]="100/3">
+        <label>Recibo de pago:</label>
+        <input [formControlName]="controls.paymentReceiptNo" empNgInteger
+          type="text"
+          class="text-box"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.paymentReceiptNo)">
+      </div>
+      <div fxFlex="100px">
+        <label>Importe del recibo:</label>
+        <input [formControlName]="controls.total" empNgCurrency
+          type="text"
+          class="text-box"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.total)">
+      </div>
+      <div fxFlex fxLayoutAlign="end end" style="padding-bottom: 2px;">
+
+        <button type="submit"
+          (click)="submit(eventType.SUBMIT_PAYMENT_RECEIPT_CLICKED)"
+          [class.btn]="!formHandler.isValid"
+          [class.btn-action]="formHandler.isValid">
+          Guardar recibo
+        </button>
+
+        <button type="submit"
+          (click)="submit(eventType.SUBMIT_PAYMENT_RECEIPT_AND_RECEIVE_CLICKED)"
+          [class.btn]="!formHandler.isValid"
+          [class.btn-action]="formHandler.isValid">
+          Guardar y recibir
+        </button>
+
+      </div>
+    </div>
+  </div>
+</form>

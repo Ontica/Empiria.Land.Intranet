@@ -9,31 +9,48 @@
 
 <br>
 
-<emp-land-requested-service-list
-  [requestedServices]="transaction.requestedServices"
-  (requestedServiceListEvent)="onRequestedServiceListEvent($event)">
+<ng-container>
 
-</emp-land-requested-service-list>
+  <emp-land-payment-receipt-editor
+  [payment]="transaction.paymentOrder"
+  (paymentReceiptEvent)="onPaymentReceiptEvent($event)">
 
-<div class="tab-container">
-  <mat-accordion [displayMode]="'flat'" hideToggle>
-    <mat-expansion-panel #matExpansionPanel [expanded]="panelAddServiceOpenState"
-      (opened)="panelAddServiceOpenState = true" (closed)="panelAddServiceOpenState = false">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon>{{ panelAddServiceOpenState ? 'remove' : 'add' }}</mat-icon>
-          <span style="padding-left: 1rem;">
-            {{ panelAddServiceOpenState ? 'Cancelar agregar concepto' : 'Agregar concepto' }}
-          </span>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+  </emp-land-payment-receipt-editor>
+  <br>
 
-      <emp-land-requested-service-editor *ngIf="panelAddServiceOpenState"
-        [providedServiceTypeList]="providedServiceTypeList"
-        (requestedServiceEditorEvent)="onRequestedServiceEditorEvent($event)">
+</ng-container>
 
-      </emp-land-requested-service-editor>
+<ng-container>
 
-    </mat-expansion-panel>
-  </mat-accordion>
-</div>
+  <emp-land-requested-service-list
+    [requestedServices]="transaction.requestedServices"
+    (requestedServiceListEvent)="onRequestedServiceListEvent($event)">
+
+  </emp-land-requested-service-list>
+
+  <div class="tab-container">
+    <mat-accordion hideToggle>
+      <mat-expansion-panel
+        [expanded]="panelAddServiceOpenState"
+        (opened)="panelAddServiceOpenState = true"
+        (closed)="panelAddServiceOpenState = false">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>{{ panelAddServiceOpenState ? 'remove' : 'add' }}</mat-icon>
+            <span style="padding-left: 1rem;">
+              {{ panelAddServiceOpenState ? 'Cancelar agregar concepto' : 'Agregar concepto' }}
+            </span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <emp-land-requested-service-editor *ngIf="panelAddServiceOpenState"
+          [providedServiceTypeList]="providedServiceTypeList"
+          (requestedServiceEditorEvent)="onRequestedServiceEditorEvent($event)">
+
+        </emp-land-requested-service-editor>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+</ng-container>

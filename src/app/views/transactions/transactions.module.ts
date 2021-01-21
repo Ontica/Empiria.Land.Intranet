@@ -29,6 +29,8 @@ import { RequestedServiceListComponent }
   from './transaction-editor/requested-services/requested-service-list.component';
 import { RequestedServiceEditorComponent }
   from './transaction-editor/requested-services/requested-service-editor.component';
+import { PaymentReceiptEditorComponent }
+  from './transaction-editor/payment-receipt/payment-receipt-editor.component';
 
 
 @NgModule({
@@ -54,7 +56,8 @@ import { RequestedServiceEditorComponent }
     TransactionCreatorComponent,
     TransactionEditorComponent,
     RequestedServiceListComponent,
-    RequestedServiceEditorComponent
+    RequestedServiceEditorComponent,
+    PaymentReceiptEditorComponent,
   ],
 
   exports: []
