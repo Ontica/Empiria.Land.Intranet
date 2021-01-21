@@ -33,6 +33,7 @@ export class InstrumentHeaderComponent implements OnChanges {
 
   @Input() transactionUID: string = 'Empty';
   @Input() instrument: Instrument = EmptyInstrument;
+  @Input() canEdit: boolean = false;
 
   InstrumentType = InstrumentTypeEnum;
 

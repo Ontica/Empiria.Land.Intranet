@@ -22,6 +22,8 @@ export class InstrumentEditionComponent implements OnChanges, OnDestroy {
 
   @Input() transactionUID: string = 'Empty';
 
+  @Input() canEdit: boolean = false;
+
   instrument: Instrument = EmptyInstrument;
 
   helper: SubscriptionHelper;

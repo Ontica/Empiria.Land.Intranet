@@ -183,7 +183,7 @@
       </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="space-between" >
+    <div *ngIf="canEdit" fxLayout="row" fxLayoutAlign="space-between" >
       <button (click)="enableEditInstrument(readonly)" [ngClass]="readonly ? 'btn-action' : 'btn-warning'">
         {{readonly ? 'Editar Documento' : 'Descartar Cambios'}}
       </button>

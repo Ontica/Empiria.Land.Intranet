@@ -9,19 +9,23 @@
     </ng-template>
   </mat-tab>
 
-  <mat-tab label="Digitalización" disabled>
+  <mat-tab label="Digitalización" *ngIf="transaction.actions.show.uploadDocumentsTab" disabled>
     <ng-template matTabContent>
 
     </ng-template>
   </mat-tab>
 
-  <mat-tab label="Inscripción">
+  <mat-tab label="Inscripción" *ngIf="transaction.actions.show.instrumentRecordingTab">
     <ng-template matTabContent>
-      <emp-land-instrument-edition [transactionUID]="transaction.uid"></emp-land-instrument-edition>
+      <emp-land-instrument-edition
+        [transactionUID]="transaction.uid"
+        [canEdit]="transaction.actions.can.editInstrument">
+
+      </emp-land-instrument-edition>
     </ng-template>
   </mat-tab>
 
-  <mat-tab label="Emisión de certificados" disabled>
+  <mat-tab label="Emisión de certificados" *ngIf="transaction.actions.show.certificatesEmissionTab" disabled>
     <ng-template matTabContent>
 
     </ng-template>
