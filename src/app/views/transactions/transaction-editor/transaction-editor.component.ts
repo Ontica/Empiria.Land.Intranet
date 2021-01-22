@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Command, EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
-import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice, insertToArrayIfNotExist,
+import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice,
          ProvidedServiceType } from '@app/models';
+import { ArrayLibrary } from '@app/shared/utils';
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
 import { PaymentReceiptEditorEventType } from './payment-receipt/payment-receipt-editor.component';
 import { RequestedServiceEditorEventType } from './requested-services/requested-service-editor.component';
@@ -58,14 +59,14 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
     this.helper.select<RecorderOffice[]>(TransactionStateSelector.RECORDER_OFFICE_LIST, {})
       .subscribe(x => {
-        this.recorderOfficeList = isEmpty(this.transaction.recorderOffice) ?
-                                  x : insertToArrayIfNotExist(x, this.transaction.recorderOffice, 'uid');
+        this.recorderOfficeList = isEmpty(this.transaction.recorderOffice) ? x :
+                                  ArrayLibrary.insertIfNotExist(x, this.transaction.recorderOffice, 'uid');
       });
 
     this.helper.select<Agency[]>(TransactionStateSelector.AGENCY_LIST, {})
       .subscribe(x => {
         this.agencyList = isEmpty(this.transaction.agency) ?
-                          x : insertToArrayIfNotExist(x, this.transaction.agency, 'uid');
+                          x : ArrayLibrary.insertIfNotExist(x, this.transaction.agency, 'uid');
       });
 
     this.helper.select<ProvidedServiceType[]>(TransactionStateSelector.PROVIDED_SERVICE_LIST, {})

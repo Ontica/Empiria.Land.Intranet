@@ -345,26 +345,3 @@ export function mapTransactionShortModelFromTransaction(transaction: Transaction
     assignedToName: transaction.assignedTo?.name
   };
 }
-
-// Array Functions
-
-export function insertToArrayIfNotExist<T, K extends keyof T>(array: T[], item: T, key: K): T[] {
-  let newArray = [... array];
-  if (array.filter(element => element[key] === item[key]).length === 0) {
-    newArray = [...array, ... [item]];
-  }
-  return newArray;
-}
-
-
-export function insertItemTopArray<T, K extends keyof T>(array: T[], item: T, key: K): T[] {
-  const oldArrayFilter = array.filter(element => element[key] !== item[key]);
-  const newArray = [... [item], ...oldArrayFilter];
-  return newArray;
-}
-
-// Currency string function
-
-export function stringToNumber(value: string): number {
-  return Number(value.replace(/[^0-9.-]+/g, ''));
-}

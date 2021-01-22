@@ -1,4 +1,5 @@
 import { Directive, HostListener, ElementRef, OnInit, Renderer2, Input } from '@angular/core';
+import { FormatLibrary } from '../utils';
 
 @Directive({
   selector: '[empNgTextareaAutoresize]'
@@ -23,7 +24,7 @@ export class EmpTextareaAutoresizeDirective implements OnInit {
   }
 
   resize() {
-    const currentHeight = this.stringToNumber(this.elementRef.nativeElement.style.height);
+    const currentHeight = FormatLibrary.stringToNumber(this.elementRef.nativeElement.style.height);
     if (currentHeight >= this.maxHeightTextarea) {
       this.renderer.setStyle(this.elementRef.nativeElement, 'overflow', 'auto');
       this.elementRef.nativeElement.style.height = this.maxHeightTextarea + 'px';
@@ -34,7 +35,4 @@ export class EmpTextareaAutoresizeDirective implements OnInit {
     }
   }
 
-  stringToNumber(value: string){
-    return  Number(value.replace(/[^0-9.]+/g, ''));
-  }
 }

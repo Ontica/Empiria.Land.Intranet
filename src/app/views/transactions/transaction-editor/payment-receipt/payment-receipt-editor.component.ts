@@ -2,8 +2,8 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, EventInfo } from '@app/core';
-import { EmptyPayment, Payment, stringToNumber } from '@app/models';
-import { FormHandler } from '@app/shared/utils';
+import { EmptyPayment, Payment } from '@app/models';
+import { FormatLibrary, FormHandler } from '@app/shared/utils';
 
 export enum PaymentReceiptEditorEventType {
   SUBMIT_PAYMENT_RECEIPT_CLICKED = 'PaymentReceiptEditorComponent.Event.SubmitPaymentReceiptClicked',
@@ -69,7 +69,7 @@ export class PaymentReceiptEditorComponent implements OnChanges {
 
     const data: any = {
       paymentReceiptNo: formModel.paymentReceiptNo,
-      total: stringToNumber(formModel.total),
+      total: FormatLibrary.stringToNumber(formModel.total),
     };
 
     return data;

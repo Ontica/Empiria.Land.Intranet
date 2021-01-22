@@ -15,9 +15,11 @@ import { AbstractPresentationHandler, StateValues } from '@app/core/presentation
 
 import { TransactionDataService } from '@app/data-services';
 
+import { ArrayLibrary } from '@app/shared/utils';
+
 import { TransactionFilter, TransactionShortModel,
          EmptyTransaction, EmptyTransactionFilter,
-         insertItemTopArray, mapTransactionShortModelFromTransaction } from '@app/models';
+         mapTransactionShortModelFromTransaction } from '@app/models';
 
 
 export enum ActionType {
@@ -138,7 +140,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         const transactionToInsert = mapTransactionShortModelFromTransaction(params.result);
 
-        const transactionListNew = insertItemTopArray(transactionList, transactionToInsert, 'uid');
+        const transactionListNew = ArrayLibrary.insertItemTop(transactionList, transactionToInsert, 'uid');
 
         this.setValue(SelectorType.TRANSACTION_LIST, transactionListNew);
 

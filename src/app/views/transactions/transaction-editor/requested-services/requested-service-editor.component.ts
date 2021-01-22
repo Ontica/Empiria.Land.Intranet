@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, EventInfo, Validate } from '@app/core';
-import { stringToNumber, EmptyFeeConcept, EmptyProvidedService, FeeConcept,
+import { EmptyFeeConcept, EmptyProvidedService, FeeConcept,
          ProvidedService, ProvidedServiceType, RequestedServiceFields } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
+import { FormatLibrary } from '@app/shared/utils';
 
 
 type RequestedServiceFormControls = 'serviceType' | 'service' | 'feeConcept' | 'taxableBase' |
@@ -115,7 +116,7 @@ export class RequestedServiceEditorComponent implements OnInit {
       serviceUID: formModel.service,
       feeConceptUID: formModel.feeConcept,
       unitUID: this.serviceSelected.unit.uid,
-      taxableBase: stringToNumber(formModel.taxableBase),
+      taxableBase: FormatLibrary.stringToNumber(formModel.taxableBase),
       quantity: parseFloat(formModel.quantity),
       notes: formModel.notes ?? ''
     };

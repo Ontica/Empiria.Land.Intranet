@@ -2,8 +2,9 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 import { Transaction, EmptyTransaction, TransactionType, TransactionSubtype,
-         Agency, RecorderOffice, insertToArrayIfNotExist } from '@app/models';
+         Agency, RecorderOffice } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
+import { ArrayLibrary } from '@app/shared/utils';
 
 type transactionFormControls = 'type' | 'subtype' | 'name' | 'email' |
                               'instrumentNo' | 'agency' | 'recorderOffice';
@@ -88,7 +89,9 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
         this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid).length > 0 ?
         this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid)[0].subtypes : [];
 
-      this.transactionSubtypeList = insertToArrayIfNotExist(subtypeList, this.transaction.subtype, 'uid');
+      this.transactionSubtypeList = ArrayLibrary.insertIfNotExist(subtypeList,
+                                                                  this.transaction.subtype,
+                                                                  'uid');
     }
   }
 
