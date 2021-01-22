@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, Optional } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
@@ -9,7 +9,7 @@ export class EmpCurrencyDirective {
 
   constructor(private _el: ElementRef,
               private currencyPipe: CurrencyPipe,
-              private control?: NgControl) { }
+              @Optional() private control: NgControl) { }
 
   @HostListener('input', ['$event']) onInputChange(event) {
     const initalValue = this._el.nativeElement.value;
