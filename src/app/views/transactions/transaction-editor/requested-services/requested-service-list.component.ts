@@ -54,9 +54,9 @@ export class RequestedServiceListComponent implements OnInit, OnChanges {
     const message = `Esta operación eliminará el concepto
       <strong>${service.typeName}</strong> con importe de
       <strong>${this.currencyPipe.transform(service.subtotal)}</strong>.
-      <br><br>¿Desea eliminar el concepto?`;
+      <br><br>¿Elimino el concepto?`;
 
-    this.messageBox.confirm(message, 'Eliminar Concepto', 'DeleteCancel')
+    this.messageBox.confirm(message, 'Eliminar concepto', 'DeleteCancel')
         .toPromise()
         .then(x => {
           if (x) {
