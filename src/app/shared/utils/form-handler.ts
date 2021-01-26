@@ -14,7 +14,7 @@ export class FormHandler {
   }
 
   get isReadyForSubmit(){
-    return !this.submitted && this.form.valid;
+    return !this.submitted && this.isValid;
   }
 
   getControl(name: string) {

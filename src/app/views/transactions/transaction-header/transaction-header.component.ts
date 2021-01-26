@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Assertion, EventInfo, isEmpty } from '@app/core';
@@ -10,9 +11,11 @@ type transactionFormControls = 'type' | 'subtype' | 'name' | 'email' |
                               'instrumentNo' | 'agency' | 'recorderOffice';
 
 export enum TransactionHeaderEventType {
-  SUBMIT_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.SubmitTransactionClicked',
+  SAVE_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.SaveTransactionClicked',
   CLONE_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.CloneTransactionClicked',
   DELETE_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.DeleteTransactionClicked',
+  GENERATE_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.GeneratePaymentOrderClicked',
+  CANCEL_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.CancelPaymentOrderClicked',
 }
 
 @Component({
@@ -48,6 +51,14 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     recorderOffice: new FormControl('', Validators.required)
   });
 
+  get showEnableEditor() {
+    return this.canEdit || this.canDelete;
+  }
+
+  get canSave() {
+    return !this.editionMode || (this.editionMode && this.transaction.actions.can.edit);
+  }
+
   get canEdit() {
     return this.transaction.actions.can.edit;
   }
@@ -56,15 +67,20 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     return this.transaction.actions.can.generatePaymentOrder;
   }
 
+  get canCancelPaymentOrder() {
+    return this.transaction.actions.can.cancelPaymentOrder;
+  }
+
   get canDelete(){
     return this.editionMode && this.transaction.actions.can.delete;
   }
 
   get canSubmit(){
-    return !this.editionMode || ( this.editionMode && this.transaction.actions.can.submit );
+    return this.transaction.actions.can.submit;
   }
 
-  constructor(private messageBox: MessageBoxService){ }
+  constructor(private messageBox: MessageBoxService,
+              private currencyPipe: CurrencyPipe){ }
 
   ngOnInit(): void { }
 
@@ -127,7 +143,7 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
 
     this.submitted = true;
 
-    this.sendEvent(TransactionHeaderEventType.SUBMIT_TRANSACTION_CLICKED, this.getFormData());
+    this.sendEvent(TransactionHeaderEventType.SAVE_TRANSACTION_CLICKED, this.getFormData());
   }
 
 
@@ -136,9 +152,18 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.submitted = true;
+    const message = `Esta operación creará una copia del trámite
+    <strong> ${this.transaction.transactionID} </strong>.
+    <br><br>¿Creo la copia?`;
 
-    this.sendEvent(TransactionHeaderEventType.CLONE_TRANSACTION_CLICKED);
+    this.messageBox.confirm(message, 'Crear una copia', 'AcceptCancel')
+        .toPromise()
+        .then(x => {
+          if (x) {
+            this.submitted = true;
+            this.sendEvent(TransactionHeaderEventType.CLONE_TRANSACTION_CLICKED);
+          }
+        });
   }
 
   submitDelete() {
@@ -146,15 +171,44 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
       return;
     }
 
-    const message = `Esta operación eliminará el trámite <strong>
-      ${this.transaction.transactionID}</strong>.<br><br>¿Desea eliminar el trámite?`;
+    const message = `Esta operación eliminará el trámite
+      <strong> ${this.transaction.transactionID}</strong>.<br><br>¿Elimino el trámite?`;
 
-    this.messageBox.confirm(message, 'Eliminar Trámite', 'DeleteCancel')
+    this.messageBox.confirm(message, 'Eliminar trámite', 'DeleteCancel')
         .toPromise()
         .then(x => {
           if (x) {
             this.submitted = true;
             this.sendEvent(TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED);
+          }
+        });
+  }
+
+  submitGeneratePaymentOrder() {
+    if (this.submitted) {
+      return;
+    }
+
+    this.submitted = true;
+
+    this.sendEvent(TransactionHeaderEventType.GENERATE_PAYMENT_ORDER);
+  }
+
+  submitCancelPaymentOrder() {
+    if (this.submitted) {
+      return;
+    }
+
+    const message = `Esta operación cancelará la orden de pago con importe de
+      <strong> ${this.currencyPipe.transform(this.transaction.paymentOrder.total)}</strong>.
+      <br><br>¿Cancelo esta orden de pago?`;
+
+    this.messageBox.confirm(message, 'Cancelar orden de pago', 'DeleteCancel')
+        .toPromise()
+        .then(x => {
+          if (x) {
+            this.submitted = true;
+            this.sendEvent(TransactionHeaderEventType.CANCEL_PAYMENT_ORDER);
           }
         });
   }

@@ -19,20 +19,25 @@
           class="text-box"
           [class.invalid-control]="formHandler.showInvalidControl(controls.total)">
       </div>
-      <div *ngIf="canEdit" fxFlex fxLayoutAlign="end end" style="padding-bottom: 2px;">
+      <div fxFlex fxLayoutAlign="end end" style="padding-bottom: 2px;">
 
-        <button type="submit"
-          (click)="submit(eventType.SUBMIT_PAYMENT_RECEIPT_CLICKED)"
+        <button *ngIf="canEdit" type="submit"
+          (click)="setPayment()"
           [class.btn]="!formHandler.isValid"
           [class.btn-action]="formHandler.isValid">
           Guardar recibo
         </button>
 
-        <button type="submit"
-          (click)="submit(eventType.SUBMIT_PAYMENT_RECEIPT_AND_RECEIVE_CLICKED)"
-          [class.btn]="!formHandler.isValid"
-          [class.btn-action]="formHandler.isValid">
-          Guardar y recibir
+        <button *ngIf="canCancel" type="submit"
+          (click)="cancelPayment()"
+          class="btn-warning">
+          Cancelar recibo
+        </button>
+
+        <button *ngIf="canSubmitTransaction" type="submit"
+          (click)="submitTransaction()"
+          class="btn-action">
+          Recibir
         </button>
 
       </div>

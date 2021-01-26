@@ -34,8 +34,13 @@ export enum CommandType {
   UPDATE_TRANSACTION = 'Land.Transactions.Command.UpdateTransaction',
   CLONE_TRANSACTION = 'Land.Transactions.Command.CloneTransaction',
   DELETE_TRANSACTION = 'Land.Transactions.Command.DeleteTransaction',
+  SUBMIT_TRANSACTION = 'Land.Transactions.Command.SubmitTransaction',
   ADD_TRANSACTION_SERVICE = 'Land.Transactions.Command.AddTransactionService',
   DELETE_TRANSACTION_SERVICE = 'Land.Transactions.Command.DeleteTransactionService',
+  GENERATE_PAYMENT_ORDER = 'Land.Transactions.Command.GeneratePaymentOrder',
+  CANCEL_PAYMENT_ORDER = 'Land.Transactions.Command.CancelPaymentOrder',
+  SET_PAYMENT = 'Land.Transactions.Command.SetPayment',
+  CANCEL_PAYMENT = 'Land.Transactions.Command.CancelPayment',
 }
 
 
@@ -45,8 +50,13 @@ export enum EffectType {
   UPDATE_TRANSACTION = CommandType.UPDATE_TRANSACTION,
   CLONE_TRANSACTION = CommandType.CLONE_TRANSACTION,
   DELETE_TRANSACTION = CommandType.DELETE_TRANSACTION,
+  SUBMIT_TRANSACTION = CommandType.SUBMIT_TRANSACTION,
   ADD_TRANSACTION_SERVICE = CommandType.ADD_TRANSACTION_SERVICE,
   DELETE_TRANSACTION_SERVICE = CommandType.DELETE_TRANSACTION_SERVICE,
+  GENERATE_PAYMENT_ORDER = CommandType.GENERATE_PAYMENT_ORDER,
+  CANCEL_PAYMENT_ORDER = CommandType.CANCEL_PAYMENT_ORDER,
+  SET_PAYMENT = CommandType.SET_PAYMENT,
+  CANCEL_PAYMENT = CommandType.CANCEL_PAYMENT,
 }
 
 
@@ -133,8 +143,13 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case EffectType.CREATE_TRANSACTION:
       case EffectType.UPDATE_TRANSACTION:
       case EffectType.CLONE_TRANSACTION:
+      case EffectType.SUBMIT_TRANSACTION:
       case EffectType.ADD_TRANSACTION_SERVICE:
       case EffectType.DELETE_TRANSACTION_SERVICE:
+      case EffectType.GENERATE_PAYMENT_ORDER:
+      case EffectType.CANCEL_PAYMENT_ORDER:
+      case EffectType.SET_PAYMENT:
+      case EffectType.CANCEL_PAYMENT:
 
         transactionList = this.getValue<TransactionShortModel[]>(SelectorType.TRANSACTION_LIST);
 
@@ -170,6 +185,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         this.dispatch(ActionType.UNSELECT_TRANSACTION);
 
         return;
+
       default:
         throw this.unhandledCommandOrActionType(effectType);
     }
@@ -201,6 +217,11 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
           this.data.deleteTransaction(command.payload.transactionUID)
         );
 
+      case CommandType.SUBMIT_TRANSACTION:
+        return toPromise<T>(
+          this.data.submitTransaction(command.payload.transactionUID)
+        );
+
       case CommandType.ADD_TRANSACTION_SERVICE:
         return toPromise<T>(
           this.data.addTransactionService(command.payload.transactionUID,
@@ -211,6 +232,27 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         return toPromise<T>(
           this.data.deleteTransactionService(command.payload.transactionUID,
                                              command.payload.requestedServiceUID)
+        );
+
+      case CommandType.GENERATE_PAYMENT_ORDER:
+        return toPromise<T>(
+          this.data.generatePaymentOrder(command.payload.transactionUID)
+        );
+
+      case CommandType.CANCEL_PAYMENT_ORDER:
+        return toPromise<T>(
+          this.data.cancelPaymentOrder(command.payload.transactionUID)
+        );
+
+      case CommandType.SET_PAYMENT:
+        return toPromise<T>(
+          this.data.setPayment(command.payload.transactionUID,
+                               command.payload.payment)
+        );
+
+      case CommandType.CANCEL_PAYMENT:
+        return toPromise<T>(
+          this.data.cancelPayment(command.payload.transactionUID)
         );
 
       default:

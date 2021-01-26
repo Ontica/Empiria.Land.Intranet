@@ -4,6 +4,7 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice,
          ProvidedServiceType } from '@app/models';
+import { MessageBoxService } from '@app/shared/containers/message-box';
 import { ArrayLibrary } from '@app/shared/utils';
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
 import { PaymentReceiptEditorEventType } from './payment-receipt/payment-receipt-editor.component';
@@ -30,7 +31,8 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
   panelAddServiceOpenState: boolean = false;
 
-  constructor(private uiLayer: PresentationLayer) {
+  constructor(private uiLayer: PresentationLayer,
+              private messageBox: MessageBoxService) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
@@ -81,7 +83,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
     switch (event.type as TransactionHeaderEventType) {
 
-      case TransactionHeaderEventType.SUBMIT_TRANSACTION_CLICKED:
+      case TransactionHeaderEventType.SAVE_TRANSACTION_CLICKED:
 
         payload = {
           transactionUID: this.transaction.uid,
@@ -101,6 +103,23 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
       case TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED:
 
         this.executeCommand(TransactionCommandType.DELETE_TRANSACTION, payload);
+
+        return;
+
+      case TransactionHeaderEventType.GENERATE_PAYMENT_ORDER:
+
+        this.executeCommand<Transaction>(TransactionCommandType.GENERATE_PAYMENT_ORDER, payload)
+            .then(x => {
+              if (x.paymentOrder?.attributes.url) {
+                window.open(this.transaction.paymentOrder?.attributes.url, '_blank');
+              }
+            });
+
+        return;
+
+      case TransactionHeaderEventType.CANCEL_PAYMENT_ORDER:
+
+        this.executeCommand(TransactionCommandType.CANCEL_PAYMENT_ORDER, payload);
 
         return;
 
@@ -155,16 +174,35 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
   onPaymentReceiptEvent(event: EventInfo): void {
 
+    let payload: any = { transactionUID: this.transaction.uid };
+
     switch (event.type as PaymentReceiptEditorEventType) {
 
-      case PaymentReceiptEditorEventType.SUBMIT_PAYMENT_RECEIPT_CLICKED:
+      case PaymentReceiptEditorEventType.SET_PAYMENT_CLICKED:
 
-        console.log(event);
-        break;
-      case PaymentReceiptEditorEventType.SUBMIT_PAYMENT_RECEIPT_AND_RECEIVE_CLICKED:
+        payload = {
+          transactionUID: this.transaction.uid,
+          payment: event.payload
+        };
 
-        console.log(event);
-        break;
+        this.executeCommand<Transaction>(TransactionCommandType.SET_PAYMENT, payload)
+            .catch(e => {
+              this.messageBox.showError(e.error.message);
+            });
+
+        return;
+
+      case PaymentReceiptEditorEventType.CANCEL_PAYMENT_CLICKED:
+
+        this.executeCommand(TransactionCommandType.CANCEL_PAYMENT, payload);
+
+        return;
+
+      case PaymentReceiptEditorEventType.SUBMIT_TRANSACTION_CLICKED:
+
+        this.executeCommand(TransactionCommandType.SUBMIT_TRANSACTION, payload);
+
+        return;
 
       default:
         console.log(`Unhandled user interface event ${event.type}`);

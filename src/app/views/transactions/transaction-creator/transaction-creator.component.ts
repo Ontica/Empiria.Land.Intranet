@@ -52,7 +52,7 @@ export class TransactionCreatorComponent implements OnInit, OnDestroy {
   onTransactionHeaderEvent(event: EventInfo): void {
     switch (event.type as TransactionHeaderEventType) {
 
-      case TransactionHeaderEventType.SUBMIT_TRANSACTION_CLICKED:
+      case TransactionHeaderEventType.SAVE_TRANSACTION_CLICKED:
 
         const command: Command = {
           type: TransactionCommandType.CREATE_TRANSACTION,

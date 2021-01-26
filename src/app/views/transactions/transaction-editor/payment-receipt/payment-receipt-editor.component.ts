@@ -2,13 +2,14 @@ import { CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, EventInfo } from '@app/core';
-import { EmptyPayment, Payment } from '@app/models';
+import { EmptyPayment, PaymentFields } from '@app/models';
+import { MessageBoxService } from '@app/shared/containers/message-box';
 import { FormatLibrary, FormHandler } from '@app/shared/utils';
 
 export enum PaymentReceiptEditorEventType {
-  SUBMIT_PAYMENT_RECEIPT_CLICKED = 'PaymentReceiptEditorComponent.Event.SubmitPaymentReceiptClicked',
-  SUBMIT_PAYMENT_RECEIPT_AND_RECEIVE_CLICKED =
-    'PaymentReceiptEditorComponent.Event.SubmitPaymentReceiptAndReceiveClicked',
+  SET_PAYMENT_CLICKED = 'PaymentReceiptEditorComponent.Event.SetPaymentClicked',
+  CANCEL_PAYMENT_CLICKED = 'PaymentReceiptEditorComponent.Event.CancelPaymentClicked',
+  SUBMIT_TRANSACTION_CLICKED = 'PaymentReceiptEditorComponent.Event.SubmitTransactionClicked',
 }
 
 enum PaymentReceiptFormControls  {
@@ -22,9 +23,13 @@ enum PaymentReceiptFormControls  {
 })
 export class PaymentReceiptEditorComponent implements OnChanges {
 
-  @Input() payment: Payment = EmptyPayment;
+  @Input() payment: PaymentFields = EmptyPayment;
 
   @Input() canEdit: boolean = false;
+
+  @Input() canCancel: boolean = false;
+
+  @Input() canSubmitTransaction: boolean = false;
 
   @Output() paymentReceiptEvent = new EventEmitter<EventInfo>();
 
@@ -34,7 +39,8 @@ export class PaymentReceiptEditorComponent implements OnChanges {
 
   eventType = PaymentReceiptEditorEventType;
 
-  constructor(private currencyPipe: CurrencyPipe) {
+  constructor(private messageBox: MessageBoxService,
+              private currencyPipe: CurrencyPipe) {
     this.formHandler = new FormHandler(
       new FormGroup({
         paymentReceiptNo: new FormControl('', Validators.required),
@@ -45,20 +51,59 @@ export class PaymentReceiptEditorComponent implements OnChanges {
 
   ngOnChanges(){
     this.formHandler.setFormModel({
-      paymentReceiptNo: this.payment?.paymentReceiptNo,
+      paymentReceiptNo: this.payment?.receiptNo,
       total: this.payment?.total ? this.currencyPipe.transform(this.payment.total) : null
     });
 
     this.formHandler.disableForm(!this.canEdit);
   }
 
-  submit(eventType: PaymentReceiptEditorEventType){
+  setPayment(){
     if (!this.formHandler.validateReadyForSubmit()) {
       return;
     }
 
     this.formHandler.submitted = true;
-    this.sendEvent(eventType, this.getFormData());
+    this.sendEvent(PaymentReceiptEditorEventType.SET_PAYMENT_CLICKED, this.getFormData());
+  }
+
+  cancelPayment(){
+    if (this.formHandler.submitted) {
+      return;
+    }
+
+    const message = `Esta operación cancelará el registro del recibo de pago
+      <strong> ${this.payment.receiptNo} </strong>
+      con total de ${this.currencyPipe.transform(this.payment.total)}.
+      <br><br>¿Cancelo este recibo de pago?`;
+
+    this.messageBox.confirm(message, 'Cancelar recibo de pago', 'DeleteCancel')
+        .toPromise()
+        .then(x => {
+          if (x) {
+            this.formHandler.submitted = true;
+            this.sendEvent(PaymentReceiptEditorEventType.CANCEL_PAYMENT_CLICKED);
+          }
+        });
+  }
+
+  submitTransaction(){
+    if (this.formHandler.submitted) {
+      return;
+    }
+
+    const message = `Esta operación cambiara el estatus del trámite a
+    <strong> recibido </strong>.
+    <br><br>¿Recibo este trámite?`;
+
+    this.messageBox.confirm(message, 'Recibir trámite', 'AcceptCancel')
+        .toPromise()
+        .then(x => {
+          if (x) {
+            this.formHandler.submitted = true;
+            this.sendEvent(PaymentReceiptEditorEventType.SUBMIT_TRANSACTION_CLICKED);
+          }
+        });
   }
 
   private getFormData(): any {
@@ -67,8 +112,8 @@ export class PaymentReceiptEditorComponent implements OnChanges {
 
     const formModel = this.formHandler.form.getRawValue();
 
-    const data: any = {
-      paymentReceiptNo: formModel.paymentReceiptNo,
+    const data: PaymentFields = {
+      receiptNo: formModel.paymentReceiptNo,
       total: FormatLibrary.stringToNumber(formModel.total),
     };
 

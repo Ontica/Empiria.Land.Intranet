@@ -81,11 +81,14 @@
       </div>
 
       <div fxFlex="75" fxLayoutAlign="end">
-        <button *ngIf="canEdit" (click)="toggleReadonly()" type="button" class="btn-action">
+        <button *ngIf="showEnableEditor" (click)="toggleReadonly()" type="button" class="btn-action">
           Editar
         </button>
-        <button *ngIf="canGeneratePaymentOrder" type="submit" [class.btn]="true">
+        <button *ngIf="canGeneratePaymentOrder" (click)="submitGeneratePaymentOrder()" type="submit" class="btn-action">
           Generar orden de pago
+        </button>
+        <button *ngIf="canCancelPaymentOrder" (click)="submitCancelPaymentOrder()" type="submit" class="btn-warning">
+          Cancelar orden de pago
         </button>
       </div>
 
@@ -100,8 +103,7 @@
       </div>
 
       <div fxFlex="75" fxLayoutAlign="end">
-        <button *ngIf="canSubmit"
-          type="submit"
+        <button *ngIf="canSave" type="submit"
           (click)="submit()"
           [class.btn]="form?.invalid"
           [class.btn-action]="form?.valid">

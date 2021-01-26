@@ -12,9 +12,11 @@
 <ng-container *ngIf="transaction.actions.show.paymentReceiptEditor">
 
   <emp-land-payment-receipt-editor
-  [payment]="transaction.paymentOrder"
-  [canEdit]="transaction.actions.can.editPaymentReceipt"
-  (paymentReceiptEvent)="onPaymentReceiptEvent($event)">
+    [payment]="transaction.payment"
+    [canEdit]="transaction.actions.can.editPayment"
+    [canCancel]="transaction.actions.can.cancelPayment"
+    [canSubmitTransaction]="transaction.actions.can.submit"
+    (paymentReceiptEvent)="onPaymentReceiptEvent($event)">
 
   </emp-land-payment-receipt-editor>
   <br>

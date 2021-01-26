@@ -51,7 +51,8 @@ export interface Transaction extends Entity {
   instrumentDescriptor: string;
   baseResource: Resource;
   requestedServices: RequestedService[];
-  paymentOrder: Payment;
+  paymentOrder?: PaymentOrder;
+  payment: PaymentFields;
   status: string;
   statusName: string;
   stage: string;
@@ -110,12 +111,27 @@ export interface Resource extends Entity {
 }
 
 
-export interface Payment {
+export interface PaymentFields {
+  receiptNo: string;
   total: number;
-  paymentReceiptNo: string;
-  mediaUri: string;
-  paymentConfirmed: boolean;
+  status?: string;
 }
+
+
+export interface PaymentOrder extends Entity {
+  issueTime: DateString;
+  dueDate: DateString;
+  total: number;
+  status: string;
+  attributes: Attributes;
+}
+
+
+export interface Attributes {
+  controlTag: string;
+  url: string;
+}
+
 
 export interface Action {
   can: ActionCan;
@@ -129,11 +145,13 @@ export interface ActionCan {
   submit: boolean;
   editServices?: boolean;
   generatePaymentOrder?: boolean;
-  editPaymentReceipt?: boolean;
+  cancelPaymentOrder?: boolean;
+  editPayment?: boolean;
+  cancelPayment?: boolean;
+  uploadDocuments?: boolean;
   editInstrument?: boolean;
   editRecordingActs?: boolean;
   editCertificates?: boolean;
-  uploadDocuments?: boolean;
 }
 
 
@@ -153,11 +171,13 @@ export const EmptyAction: Action = {
     submit: false,
     editServices: false,
     generatePaymentOrder: false,
-    editPaymentReceipt: false,
+    cancelPaymentOrder: false,
+    editPayment: false,
+    cancelPayment: false,
+    uploadDocuments: false,
     editInstrument: false,
     editRecordingActs: false,
     editCertificates: false,
-    uploadDocuments: false,
   },
   show: {
     serviceEditor: false,
@@ -186,11 +206,10 @@ export const EmptyResource: Resource = {
 };
 
 
-export const EmptyPayment: Payment = {
+export const EmptyPayment: PaymentFields  = {
   total: null,
-  paymentReceiptNo: '',
-  mediaUri: '',
-  paymentConfirmed: false,
+  receiptNo: '',
+  status: ''
 };
 
 
@@ -207,7 +226,7 @@ export const EmptyTransaction: Transaction = {
   instrumentDescriptor: '',
   baseResource: EmptyResource,
   requestedServices: [],
-  paymentOrder: EmptyPayment,
+  payment: EmptyPayment,
   status: '',
   statusName: '',
   stage: '',

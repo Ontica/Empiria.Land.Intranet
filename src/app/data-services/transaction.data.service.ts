@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { Agency, ProvidedServiceType, RecorderOffice, RequestedServiceFields, Transaction,
+import { Agency, PaymentFields, ProvidedServiceType, RecorderOffice, RequestedServiceFields, Transaction,
          TransactionFields, TransactionFilter, TransactionShortModel, TransactionType } from '@app/models';
 
 
@@ -85,6 +85,15 @@ export class TransactionDataService {
   }
 
 
+  submitTransaction(transactionUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}/submit`;
+
+    return this.http.post<Transaction>(path);
+  }
+
+
   getTransactionTypes(): Observable<TransactionType[]> {
     const path = `v5/land/transaction-types`;
 
@@ -132,6 +141,43 @@ export class TransactionDataService {
     const path = `v5/land/transactions/${transactionUID}/requested-services/${requestedServiceUID}`;
 
     return this.http.delete<Transaction>(path);
+  }
+
+
+  generatePaymentOrder(transactionUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}/generate-payment-order`;
+
+    return this.http.post<Transaction>(path);
+  }
+
+
+  cancelPaymentOrder(transactionUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}/cancel-payment-order`;
+
+    return this.http.post<Transaction>(path);
+  }
+
+
+  setPayment(transactionUID: string, payment: PaymentFields): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+    Assertion.assertValue(payment, 'payment');
+
+    const path = `v5/land/transactions/${transactionUID}/set-payment`;
+
+    return this.http.post<Transaction>(path, payment);
+  }
+
+
+  cancelPayment(transactionUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}/cancel-payment`;
+
+    return this.http.post<Transaction>(path);
   }
 
 }
