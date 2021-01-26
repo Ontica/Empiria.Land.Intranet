@@ -161,6 +161,10 @@ table.mat-table {
     padding-left: 10px;
   }
 
+  th.mat-header-cell:last-of-type {
+    padding-right: 10px;
+  }
+
   th.text-align-right {
     text-align: right;
     justify-content: flex-end;
@@ -184,12 +188,9 @@ table.mat-table {
     padding-left: 10px;
   }
 
-  td:last-of-type {
+  td.mat-cell:last-of-type {
     padding-right: 10px;
     width: auto;
-    vertical-align: middle;
-    padding-top: 0;
-    padding-bottom: 0;
   }
 }
 
