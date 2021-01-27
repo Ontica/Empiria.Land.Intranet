@@ -130,8 +130,13 @@ export interface PaymentOrder extends Entity {
 export interface Attributes {
   controlTag: string;
   url: string;
+  mediaType?: string;
 }
 
+export enum MediaType {
+  html = 'text/html',
+  pdf = 'application/pdf',
+}
 
 export interface Action {
   can: ActionCan;
