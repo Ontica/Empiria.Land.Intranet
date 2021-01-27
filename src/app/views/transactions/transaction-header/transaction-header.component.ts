@@ -16,6 +16,7 @@ export enum TransactionHeaderEventType {
   DELETE_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.DeleteTransactionClicked',
   GENERATE_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.GeneratePaymentOrderClicked',
   CANCEL_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.CancelPaymentOrderClicked',
+  PRINT_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.PrintPaymentOrderClicked',
 }
 
 @Component({
@@ -65,6 +66,10 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
 
   get canGeneratePaymentOrder() {
     return this.transaction.actions.can.generatePaymentOrder;
+  }
+
+  get canPrintPaymentOrder(){
+    return this.transaction.paymentOrder?.attributes.url && this.transaction.actions.can.editPayment;
   }
 
   get canCancelPaymentOrder() {
@@ -192,6 +197,10 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     this.submitted = true;
 
     this.sendEvent(TransactionHeaderEventType.GENERATE_PAYMENT_ORDER);
+  }
+
+  submitPrintPaymentOrder(){
+    this.sendEvent(TransactionHeaderEventType.PRINT_PAYMENT_ORDER);
   }
 
   submitCancelPaymentOrder() {

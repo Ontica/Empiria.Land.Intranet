@@ -1,21 +1,25 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Command, EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice,
          ProvidedServiceType } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
+import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 import { ArrayLibrary } from '@app/shared/utils';
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
 import { PaymentReceiptEditorEventType } from './payment-receipt/payment-receipt-editor.component';
 import { RequestedServiceEditorEventType } from './requested-services/requested-service-editor.component';
 import { RequestedServiceListEventType } from './requested-services/requested-service-list.component';
 
+
 @Component({
   selector: 'emp-land-transaction-editor',
   templateUrl: './transaction-editor.component.html',
 })
 export class TransactionEditorComponent implements OnInit, OnDestroy {
+
+  @ViewChild('filePrintPreview', {static: true}) filePrintPreview: FilePrintPreviewComponent;
 
   transaction: Transaction = EmptyTransaction;
 
@@ -111,9 +115,15 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
         this.executeCommand<Transaction>(TransactionCommandType.GENERATE_PAYMENT_ORDER, payload)
             .then(x => {
               if (x.paymentOrder?.attributes.url) {
-                window.open(this.transaction.paymentOrder?.attributes.url, '_blank');
+                this.printPaymentOrder();
               }
             });
+
+        return;
+
+      case TransactionHeaderEventType.PRINT_PAYMENT_ORDER:
+
+        this.printPaymentOrder();
 
         return;
 
@@ -217,6 +227,11 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     };
 
     return this.uiLayer.execute<T>(command);
+  }
+
+  printPaymentOrder(){
+    this.filePrintPreview.open(this.transaction.paymentOrder.attributes.url,
+                               this.transaction.paymentOrder.attributes.mediaType);
   }
 
 }

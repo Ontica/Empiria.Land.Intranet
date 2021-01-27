@@ -87,6 +87,9 @@
         <button *ngIf="canGeneratePaymentOrder" (click)="submitGeneratePaymentOrder()" type="submit" class="btn-action">
           Generar orden de pago
         </button>
+        <button *ngIf="canPrintPaymentOrder" (click)="submitPrintPaymentOrder()" type="submit" class="btn-action">
+          Imprimir orden de pago
+        </button>
         <button *ngIf="canCancelPaymentOrder" (click)="submitCancelPaymentOrder()" type="submit" class="btn-warning">
           Cancelar orden de pago
         </button>
@@ -119,3 +122,15 @@
 
   </div>
 </form>
+
+<!-- <object [data]="transaction.paymentOrder?.attributes.url | safeUrl"
+  onload="print();"
+  style="height: 100%; width: 1000px; position: absolute;">
+
+</object> -->
+
+<!-- <iframe src="https://drive.google.com/file/d/1hBW-6hIRCB0O0c7o3kZPasMV5QF_hF3g/preview?resourcekey=null"
+onload="print();"
+style="height: 100%; width: 1000px; position: absolute;"
+frameborder="0" marginheight="0" marginwidth="0">
+</iframe> -->
