@@ -8,7 +8,7 @@ import { MessageBoxService } from '@app/shared/containers/message-box';
 import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 import { ArrayLibrary } from '@app/shared/utils';
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
-import { PaymentReceiptEditorEventType } from './payment-receipt/payment-receipt-editor.component';
+import { TransactionSubmitterEventType } from './transaction-submitter/transaction-submitter.component';
 import { RequestedServiceEditorEventType } from './requested-services/requested-service-editor.component';
 import { RequestedServiceListEventType } from './requested-services/requested-service-list.component';
 
@@ -182,13 +182,13 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  onPaymentReceiptEvent(event: EventInfo): void {
+  onTransactionSubmitterEvent(event: EventInfo): void {
 
     let payload: any = { transactionUID: this.transaction.uid };
 
-    switch (event.type as PaymentReceiptEditorEventType) {
+    switch (event.type as TransactionSubmitterEventType) {
 
-      case PaymentReceiptEditorEventType.SET_PAYMENT_CLICKED:
+      case TransactionSubmitterEventType.SET_PAYMENT_CLICKED:
 
         payload = {
           transactionUID: this.transaction.uid,
@@ -202,13 +202,13 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
         return;
 
-      case PaymentReceiptEditorEventType.CANCEL_PAYMENT_CLICKED:
+      case TransactionSubmitterEventType.CANCEL_PAYMENT_CLICKED:
 
         this.executeCommand(TransactionCommandType.CANCEL_PAYMENT, payload);
 
         return;
 
-      case PaymentReceiptEditorEventType.SUBMIT_TRANSACTION_CLICKED:
+      case TransactionSubmitterEventType.SUBMIT_TRANSACTION_CLICKED:
 
         this.executeCommand(TransactionCommandType.SUBMIT_TRANSACTION, payload);
 

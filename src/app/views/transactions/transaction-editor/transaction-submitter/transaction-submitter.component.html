@@ -2,23 +2,29 @@
 
   <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
 
-    <div class="section-title">Recibo de pago</div>
+    <div class="section-title">Recibir Trámite</div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
-      <div [fxFlex]="100/3">
-        <label>Recibo de pago:</label>
-        <input [formControlName]="controls.paymentReceiptNo" empNgInteger
-          type="text"
-          class="text-box"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.paymentReceiptNo)">
-      </div>
-      <div fxFlex="100px">
-        <label>Importe del recibo:</label>
-        <input [formControlName]="controls.total" empNgCurrency
-          type="text"
-          class="text-box"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.total)">
-      </div>
+
+      <ng-container *ngIf="showPaymentReceiptEditor">
+
+        <div [fxFlex]="100/3">
+          <label>Recibo de pago:</label>
+          <input [formControlName]="controls.paymentReceiptNo" empNgInteger
+            type="text"
+            class="text-box"
+            [class.invalid-control]="formHandler.showInvalidControl(controls.paymentReceiptNo)">
+        </div>
+        <div fxFlex="100px">
+          <label>Importe del recibo:</label>
+          <input [formControlName]="controls.total" empNgCurrency
+            type="text"
+            class="text-box"
+            [class.invalid-control]="formHandler.showInvalidControl(controls.total)">
+        </div>
+
+      </ng-container>
+
       <div fxFlex fxLayoutAlign="end end" style="padding-bottom: 2px;">
 
         <button *ngIf="canEdit" type="submit"
@@ -34,7 +40,7 @@
           Cancelar recibo
         </button>
 
-        <button *ngIf="canSubmitTransaction" type="submit"
+        <button *ngIf="canSubmit" type="submit"
           (click)="submitTransaction()"
           class="btn-action">
           Recibir

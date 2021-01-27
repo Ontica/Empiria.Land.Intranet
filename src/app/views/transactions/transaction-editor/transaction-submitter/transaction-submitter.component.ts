@@ -6,38 +6,40 @@ import { EmptyPayment, PaymentFields } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 import { FormatLibrary, FormHandler } from '@app/shared/utils';
 
-export enum PaymentReceiptEditorEventType {
-  SET_PAYMENT_CLICKED = 'PaymentReceiptEditorComponent.Event.SetPaymentClicked',
-  CANCEL_PAYMENT_CLICKED = 'PaymentReceiptEditorComponent.Event.CancelPaymentClicked',
-  SUBMIT_TRANSACTION_CLICKED = 'PaymentReceiptEditorComponent.Event.SubmitTransactionClicked',
+export enum TransactionSubmitterEventType {
+  SET_PAYMENT_CLICKED = 'TransactionSubmitterComponent.Event.SetPaymentClicked',
+  CANCEL_PAYMENT_CLICKED = 'TransactionSubmitterComponent.Event.CancelPaymentClicked',
+  SUBMIT_TRANSACTION_CLICKED = 'TransactionSubmitterComponent.Event.SubmitTransactionClicked',
 }
 
-enum PaymentReceiptFormControls  {
+enum TransactionSubmitterFormControls  {
   paymentReceiptNo = 'paymentReceiptNo',
   total = 'total',
 }
 
 @Component({
-  selector: 'emp-land-payment-receipt-editor',
-  templateUrl: './payment-receipt-editor.component.html',
+  selector: 'emp-land-transaction-submitter',
+  templateUrl: './transaction-submitter.component.html',
 })
-export class PaymentReceiptEditorComponent implements OnChanges {
+export class TransactionSubmitterComponent implements OnChanges {
 
   @Input() payment: PaymentFields = EmptyPayment;
+
+  @Input() showPaymentReceiptEditor: boolean = false;
 
   @Input() canEdit: boolean = false;
 
   @Input() canCancel: boolean = false;
 
-  @Input() canSubmitTransaction: boolean = false;
+  @Input() canSubmit: boolean = false;
 
-  @Output() paymentReceiptEvent = new EventEmitter<EventInfo>();
+  @Output() transactionSubmittertEvent = new EventEmitter<EventInfo>();
 
   formHandler: FormHandler;
 
-  controls = PaymentReceiptFormControls;
+  controls = TransactionSubmitterFormControls;
 
-  eventType = PaymentReceiptEditorEventType;
+  eventType = TransactionSubmitterEventType;
 
   constructor(private messageBox: MessageBoxService,
               private currencyPipe: CurrencyPipe) {
@@ -64,7 +66,7 @@ export class PaymentReceiptEditorComponent implements OnChanges {
     }
 
     this.formHandler.submitted = true;
-    this.sendEvent(PaymentReceiptEditorEventType.SET_PAYMENT_CLICKED, this.getFormData());
+    this.sendEvent(TransactionSubmitterEventType.SET_PAYMENT_CLICKED, this.getFormData());
   }
 
   cancelPayment(){
@@ -82,7 +84,7 @@ export class PaymentReceiptEditorComponent implements OnChanges {
         .then(x => {
           if (x) {
             this.formHandler.submitted = true;
-            this.sendEvent(PaymentReceiptEditorEventType.CANCEL_PAYMENT_CLICKED);
+            this.sendEvent(TransactionSubmitterEventType.CANCEL_PAYMENT_CLICKED);
           }
         });
   }
@@ -101,7 +103,7 @@ export class PaymentReceiptEditorComponent implements OnChanges {
         .then(x => {
           if (x) {
             this.formHandler.submitted = true;
-            this.sendEvent(PaymentReceiptEditorEventType.SUBMIT_TRANSACTION_CLICKED);
+            this.sendEvent(TransactionSubmitterEventType.SUBMIT_TRANSACTION_CLICKED);
           }
         });
   }
@@ -120,13 +122,13 @@ export class PaymentReceiptEditorComponent implements OnChanges {
     return data;
   }
 
-  private sendEvent(eventType: PaymentReceiptEditorEventType, payload?: any) {
+  private sendEvent(eventType: TransactionSubmitterEventType, payload?: any) {
     const event: EventInfo = {
       type: eventType,
       payload
     };
 
-    this.paymentReceiptEvent.emit(event);
+    this.transactionSubmittertEvent.emit(event);
   }
 
 }

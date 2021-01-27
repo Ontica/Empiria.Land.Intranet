@@ -1,37 +1,38 @@
 import { CurrencyPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MessageBoxService } from '@app/shared/containers/message-box';
+import { TransactionSubmitterComponent } from './transaction-submitter.component';
 
-import { PaymentReceiptEditorComponent } from './payment-receipt-editor.component';
-
-describe('PaymentReceiptEditorComponent', () => {
-  let component: PaymentReceiptEditorComponent;
-  let fixture: ComponentFixture<PaymentReceiptEditorComponent>;
+describe('TransactionSubmitterComponent', () => {
+  let component: TransactionSubmitterComponent;
+  let fixture: ComponentFixture<TransactionSubmitterComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule],
-      declarations: [ PaymentReceiptEditorComponent ],
-      providers: [ CurrencyPipe ]
+      imports: [ReactiveFormsModule, FormsModule, MatDialogModule],
+      declarations: [TransactionSubmitterComponent],
+      providers: [CurrencyPipe, MessageBoxService]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PaymentReceiptEditorComponent);
+    fixture = TestBed.createComponent(TransactionSubmitterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  fit('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('form invalid when empty', () => {
+  fit('form invalid when empty', () => {
     expect(component.formHandler.form.valid).toBeFalsy();
   });
 
-  it('form valid', () => {
+  fit('form valid', () => {
     expect(component.formHandler.form.valid).toBeFalsy();
 
     component.formHandler.getControl('paymentReceiptNo').setValue('9186');
