@@ -5,6 +5,8 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
+import { AbstractControl, ValidationErrors } from "@angular/forms";
+
 
 export class Validate {
 
@@ -48,12 +50,31 @@ export class Validate {
     return true;
   }
 
-  static isPositive(control): { [key: string]: any; } {
+
+  static isPositive(control: AbstractControl): ValidationErrors | null {
     if (control.value && ( Number(control.value.replace(/[^0-9.-]+/g, '')) <= 0 ) ) {
-        // return what´s not valid
-        return { isPositive: true };
+      return { isPositive: true };
     }
     return null;
+  }
+
+
+  static maxCurrencyValue(max: number): ValidationErrors | null {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value && ( Number(control.value.replace(/[^0-9.-]+/g, '')) > max )) {
+        return { maxCurrencyValue: true };
+      }
+      return null;
+    };
+  }
+
+  static minCurrencyValue(min: number): ValidationErrors | null {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value && ( Number(control.value.replace(/[^0-9.-]+/g, '')) < min )) {
+        return { minCurrencyValue: true };
+      }
+      return null;
+    };
   }
 
 }
