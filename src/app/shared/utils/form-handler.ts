@@ -1,5 +1,6 @@
 import { FormGroup } from '@angular/forms';
 
+
 export class FormHandler {
 
   form: FormGroup;
@@ -64,4 +65,11 @@ export class FormHandler {
       this.getControl(name).enable();
     }
   }
+
+  setControlValidators(name: string, validator: any | any[]){
+    this.getControl(name).clearValidators();
+    this.getControl(name).setValidators(validator);
+    this.getControl(name).updateValueAndValidity();
+  }
+
 }

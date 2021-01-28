@@ -1,8 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Assertion, EventInfo } from '@app/core';
-import { EmptyPayment, PaymentFields } from '@app/models';
+import { Assertion, EventInfo, Validate } from '@app/core';
+import { EmptyPayment, PaymentFields, PaymentOrder } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 import { FormatLibrary, FormHandler } from '@app/shared/utils';
 
@@ -22,6 +22,8 @@ enum TransactionSubmitterFormControls  {
   templateUrl: './transaction-submitter.component.html',
 })
 export class TransactionSubmitterComponent implements OnChanges {
+
+  @Input() paymentOrder: PaymentOrder;
 
   @Input() payment: PaymentFields = EmptyPayment;
 
@@ -56,6 +58,9 @@ export class TransactionSubmitterComponent implements OnChanges {
       paymentReceiptNo: this.payment?.receiptNo,
       total: this.payment?.total ? this.currencyPipe.transform(this.payment.total) : null
     });
+
+    this.formHandler.setControlValidators(this.controls.total,
+      [Validators.required, Validate.maxCurrencyValue(this.paymentOrder.total)]);
 
     this.formHandler.disableForm(!this.canEdit);
   }
