@@ -6,6 +6,7 @@
  */
 
 import { AbstractControl, ValidationErrors } from "@angular/forms";
+import { FormatLibrary } from "@app/shared/utils";
 
 
 export class Validate {
@@ -52,7 +53,7 @@ export class Validate {
 
 
   static isPositive(control: AbstractControl): ValidationErrors | null {
-    if (control.value && ( Number(control.value.replace(/[^0-9.-]+/g, '')) <= 0 ) ) {
+    if (control.value && ( FormatLibrary.stringToNumber(control.value) <= 0 ) ) {
       return { isPositive: true };
     }
     return null;
@@ -61,7 +62,7 @@ export class Validate {
 
   static maxCurrencyValue(max: number): ValidationErrors | null {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (control.value && ( Number(control.value.replace(/[^0-9.-]+/g, '')) > max )) {
+      if (control.value && ( FormatLibrary.stringToNumber(control.value) > max )) {
         return { maxCurrencyValue: true };
       }
       return null;
@@ -70,7 +71,7 @@ export class Validate {
 
   static minCurrencyValue(min: number): ValidationErrors | null {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (control.value && ( Number(control.value.replace(/[^0-9.-]+/g, '')) < min )) {
+      if (control.value && ( FormatLibrary.stringToNumber(control.value) < min )) {
         return { minCurrencyValue: true };
       }
       return null;
