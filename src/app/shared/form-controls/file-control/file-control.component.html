@@ -1,11 +1,58 @@
-<div class="text-box file-drop-area" (drop)="onDropFile($event)" (dragover)="onDragOver($event)">
-    <label for="file" *ngIf="!fileToUpload" i18n><strong>Choose a file</strong> or drag and drop it here.</label>
-     {{fileToUpload ? fileToUpload.name : ''}}
-     <span class="right">
-       <button *ngIf="fileToUpload" type="button" class="btn remove-file-btn"
-               (click)="removeFile()" i18n>Clear</button>
-     </span>
+<div class="file-drop-area" [class.disabled]="disabled"
+  (drop)="onDropFile($event)" (dragover)="onDragOver($event)">
+
+  <div class="file-area" *ngFor="let file of filesToUpload" [title]="getFileName(file)"
+    [class.show-info]="fileControlConfig.showFileInfo"
+    [class.multiple]="fileControlConfig.maxFiles > 1">
+
+    <div class="file-icon">
+      <span>
+			  <img [src]="getIcon(file)">
+
+        <div *ngIf="!fileControlConfig.showFileInfo" class="overlay file-menu-btn">
+          <emp-ng-menu
+            [items]="menuOptions"
+            (selected)="onClickFileOptions(file, $event.action)">
+
+          </emp-ng-menu>
+        </div>
+      </span>
+    </div>
+
+    <div class="file-info" *ngIf="fileControlConfig.showFileInfo">
+      <p><strong>{{ getFileName(file) }}</strong></p>
+      <p>{{bytesToMegaBytes(file.size)}}</p>
+      <p>{{progress}}</p>
+    </div>
+
+    <div *ngIf="fileControlConfig.showFileInfo && !fileControlConfig.autoUpload && !fileSaved" class="file-menu-btn"
+      (click)="onClickFileOptions(file, 'SAVE')" [title]="fileControlConfig.textSave">
+      <mat-icon>cloud_upload</mat-icon>
+    </div>
+
+    <div *ngIf="fileControlConfig.showFileInfo" class="file-menu-btn">
+      <emp-ng-menu
+        [items]="menuOptions"
+        (selected)="onClickFileOptions(file, $event.action)">
+
+      </emp-ng-menu>
+    </div>
+
+  </div>
+
+  <div class="file-add" *ngIf="!filesToUpload || fileControlConfig.maxFiles > filesToUpload.length"
+    [title]="fileControlConfig.textAccion">
+    <label [for]="idFileControl">
+      <mat-icon>add</mat-icon>
+    </label>
+  </div>
+
+  <div class="placeholder" *ngIf="!filesToUpload?.length">
+    {{fileControlConfig.placeholder}}
+  </div>
+
 </div>
 
-<input type="file" id="file" #fileControl
-       (change)="handleFileInput(fileControl.files)" style='display:none'>
+<input type="file" [id]="idFileControl" #fileControl
+  [multiple]="fileControlConfig.maxFiles > 1" [accept]="acceptedFileTypes" [disabled]="disabled"
+  (change)="handleFileInput(fileControl.files)">

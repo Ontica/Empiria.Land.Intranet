@@ -31,6 +31,8 @@ import { RequestedServiceEditorComponent }
   from './transaction-editor/requested-services/requested-service-editor.component';
 import { TransactionSubmitterComponent }
   from './transaction-editor/transaction-submitter/transaction-submitter.component';
+import { PreprocessingComponent } from './preprocessing/preprocessing.component';
+import { InstrumentFilesEditorComponent } from './preprocessing/instrument-files-editor/instrument-files-editor.component';
 
 
 @NgModule({
@@ -58,6 +60,8 @@ import { TransactionSubmitterComponent }
     RequestedServiceListComponent,
     RequestedServiceEditorComponent,
     TransactionSubmitterComponent,
+    PreprocessingComponent,
+    InstrumentFilesEditorComponent,
   ],
 
   exports: []
