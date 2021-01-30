@@ -7,13 +7,122 @@
 
 @import "../../../../styles/general-styles";
 
-.file-drop-area {
-  border: dashed 1px $primary-color !important;
-  height: 90px !important;
-  padding-top: 36px !important;
+$area-height: 36px;
+$area-width: 36px;
+$line-height: 24px;
+$space: 5px;
+$border-radius: 3px;
+
+input[type=file] {
+  display:none;
 }
 
-.remove-file-btn {
-  margin-top: -26px;
-  margin-right: 16px;
+.file-drop-area {
+  display: flex;
+  flex-wrap: wrap;
+  padding: $space 10px !important;
+  border-radius: $border-radius;
+  margin-right: 8px;
+  border: dashed 1px $border-color-dark !important;
+
+  .file-area {
+    display: flex;
+    border-radius: $border-radius;
+    padding: $space 0;
+    width: auto;
+
+    &.show-info {
+      width: 100%;
+
+      &.multiple {
+        width: calc(100%/3);
+      }
+    }
+
+    .file-icon {
+      position: relative;
+      border-radius: $border-radius;
+      width: $area-width;
+      height: $area-height;
+      margin-right: $space;
+
+      img {
+        height: $area-height;
+        width: $area-width;
+      }
+    }
+
+    .file-icon:hover .overlay {
+      opacity: 0.6;
+    }
+
+    .file-info {
+      margin: auto 0;
+      width: calc(100% - 3 * #{$area-width} - #{$space});
+
+      p {
+        width: auto;
+        font-size: 9pt;
+        padding-right: $space;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+  }
+
+  .file-add {
+    border: solid 1px $border-color-dark !important;
+    border-radius: $border-radius;
+    width: $area-width;
+    height: $area-height;
+    padding: calc(( #{$area-width} - #{$line-height} ) / 2);
+    margin: $space 0;
+
+    label {
+      font-size: $line-height;
+      line-height: $line-height;
+    }
+  }
+
+  .placeholder {
+    color: $border-color-dark;
+    font-size: 9pt;
+    margin: auto 0;
+    padding-left: $space;
+  }
+
+}
+
+.disabled {
+  background: $control-disabled-background;
+
+  .file-add {
+    background: $background-color;
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: .5s ease;
+  background-color: $secondary-color;
+
+  .mat-icon {
+    color: $icon-color-light;
+  }
+}
+
+.file-menu-btn {
+  width: $area-width;
+  height: $area-height;
+  padding: calc(( #{$area-width} - #{$line-height} ) / 2);
 }
