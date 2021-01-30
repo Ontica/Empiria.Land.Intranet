@@ -7,6 +7,12 @@
 
 import { Injectable } from '@angular/core';
 
+import { Cryptography } from './cryptography';
+
+import { EventInfo } from '../data-types/command';
+
+import { Assertion } from '../general/assertion';
+
 import { HttpHandler } from '../http/http-handler';
 
 import { SessionToken, Identity, ClaimsList } from './security-types';
@@ -25,22 +31,33 @@ export class SecurityDataService {
 
   constructor(private httpHandler: HttpHandler) { }
 
+  changePassword(event: EventInfo): Promise<boolean> {
+    Assertion.assertValue(event, 'event');
+
+    return this.httpHandler.post<boolean>('v2/security/change-password', event)
+                           .toPromise();
+  }
 
   closeSession(): Promise<void> {
-    return this.httpHandler.post<void>('v1/security/logout', undefined)
+    return this.httpHandler.post<void>('v1/security/logout')
                .toPromise();
   }
 
-
-  createSession(userID: string, userPassword: string): Promise<SessionToken> {
+  async createSession(userID: string, userPassword: string): Promise<SessionToken> {
     const body = {
       user_name: userID,
-      password: userPassword
+      password: ''
     };
 
-    return this.httpHandler.post<ExternalSessionToken>('v1.6/security/login', body)
-               .toPromise()
-               .then(x => this.mapToSessionToken(x));
+    const token = await this.httpHandler.post<string>('v3/security/login-token', body)
+                                        .toPromise();
+
+    body.password = Cryptography.createHash(userPassword);
+    body.password = Cryptography.createHash(body.password + token);
+
+    return this.httpHandler.post<ExternalSessionToken>('v3/security/login', body)
+      .toPromise()
+      .then(x => this.mapToSessionToken(x));
   }
 
 
@@ -54,7 +71,6 @@ export class SecurityDataService {
     return Promise.resolve(fakeIdentity);
   }
 
-
   getPrincipalClaimsList(): Promise<ClaimsList> {
     const list = [
       { type: 'token', value: 'abc' },
@@ -65,7 +81,6 @@ export class SecurityDataService {
 
     return Promise.resolve(claims);
   }
-
 
   private mapToSessionToken(source: ExternalSessionToken): SessionToken {
     return {
