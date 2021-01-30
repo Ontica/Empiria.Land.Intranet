@@ -1,15 +1,19 @@
 <emp-ng-card [title]="transaction.type.name + ': ' + transaction.transactionID"
-             [hint]="'Presentado el: ' + ( transaction.presentationTime | dateTimeFormat )"
+             [hint]="transaction.presentationTime ?
+                     'Presentado el: ' + ( transaction.presentationTime | dateTimeFormat ) :
+                     ''"
              (cardClose)="onClose()">
 
 <mat-tab-group [selectedIndex]="selectedTabIndex">
   <mat-tab label="Información del trámite">
     <ng-template matTabContent>
-      <emp-land-transaction-editor></emp-land-transaction-editor>
+      <emp-land-transaction-editor>
+
+      </emp-land-transaction-editor>
     </ng-template>
   </mat-tab>
 
-  <mat-tab label="Digitalización" *ngIf="transaction.actions.show.uploadDocumentsTab" disabled>
+  <mat-tab label="Digitalización" *ngIf="transaction.actions.show.preprocessingTab">
     <ng-template matTabContent>
 
     </ng-template>

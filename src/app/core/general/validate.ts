@@ -5,8 +5,8 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { AbstractControl, ValidationErrors } from "@angular/forms";
-import { FormatLibrary } from "@app/shared/utils";
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormatLibrary } from '@app/shared/utils';
 
 
 export class Validate {

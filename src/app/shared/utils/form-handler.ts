@@ -72,4 +72,9 @@ export class FormHandler {
     this.getControl(name).updateValueAndValidity();
   }
 
+  clearControlValidators(name: string){
+    this.getControl(name).clearValidators();
+    this.getControl(name).updateValueAndValidity();
+  }
+
 }

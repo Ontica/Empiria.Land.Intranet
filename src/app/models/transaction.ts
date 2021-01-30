@@ -163,7 +163,7 @@ export interface ActionCan {
 export interface ActionShow {
   serviceEditor?: boolean;
   paymentReceiptEditor?: boolean;
-  uploadDocumentsTab?: boolean;
+  preprocessingTab?: boolean;
   instrumentRecordingTab?: boolean;
   certificatesEmissionTab?: boolean;
 }
@@ -187,7 +187,7 @@ export const EmptyAction: Action = {
   show: {
     serviceEditor: false,
     paymentReceiptEditor: false,
-    uploadDocumentsTab: false,
+    preprocessingTab: false,
     instrumentRecordingTab: false,
     certificatesEmissionTab: false,
   }
