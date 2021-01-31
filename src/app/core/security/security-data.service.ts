@@ -45,7 +45,7 @@ export class SecurityDataService {
 
   async createSession(userID: string, userPassword: string): Promise<SessionToken> {
     const body = {
-      user_name: userID,
+      userID,
       password: ''
     };
 
