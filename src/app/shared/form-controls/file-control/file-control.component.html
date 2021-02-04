@@ -1,17 +1,27 @@
 <div class="file-drop-area" [class.disabled]="disabled"
   (drop)="onDropFile($event)" (dragover)="onDragOver($event)">
 
-  <div class="file-area" *ngFor="let file of filesToUpload" [title]="getFileName(file)"
+  <div class="file-area" *ngFor="let file of filesToUpload" [title]="file.name"
     [class.show-info]="fileControlConfig.showFileInfo"
     [class.multiple]="fileControlConfig.maxFiles > 1">
 
     <div class="file-icon">
       <span>
-			  <img [src]="getIcon(file)">
+        <img [src]="file.fileIcon">
 
-        <div *ngIf="!fileControlConfig.showFileInfo" class="overlay file-menu-btn">
+        <div *ngIf="fileControlConfig.showFileInfo && file.uid" class="overlay-icon file-menu-btn"
+          (click)="onClickFileOptions(file, 'SHOW')">
+
+        </div>
+
+        <div *ngIf="fileControlConfig.showFileInfo && !file.uid" class="overlay-menu file-menu-btn"
+          (click)="onClickFileOptions(file, 'CANCEL')">
+          <mat-icon>clear</mat-icon>
+        </div>
+
+        <div *ngIf="!fileControlConfig.showFileInfo" class="overlay-menu file-menu-btn">
           <emp-ng-menu
-            [items]="menuOptions"
+            [items]="file.menuOptions"
             (selected)="onClickFileOptions(file, $event.action)">
 
           </emp-ng-menu>
@@ -20,27 +30,29 @@
     </div>
 
     <div class="file-info" *ngIf="fileControlConfig.showFileInfo">
-      <p><strong>{{ getFileName(file) }}</strong></p>
-      <p>{{bytesToMegaBytes(file.size)}}</p>
+      <p><strong>{{ file.name }}</strong></p>
+      <p>{{file.sizeString}}</p>
       <p>{{progress}}</p>
     </div>
 
-    <div *ngIf="fileControlConfig.showFileInfo && !fileControlConfig.autoUpload && !fileSaved" class="file-menu-btn"
-      (click)="onClickFileOptions(file, 'SAVE')" [title]="fileControlConfig.textSave">
-      <mat-icon>cloud_upload</mat-icon>
-    </div>
+    <ng-container *ngIf="fileControlConfig.showFileInfo">
+      <div *ngIf="!file.uid && !fileControlConfig.autoUpload" class="file-menu-btn"
+        (click)="onClickFileOptions(file, 'SAVE')" [title]="fileControlConfig.textSave">
+        <mat-icon>cloud_upload</mat-icon>
+      </div>
 
-    <div *ngIf="fileControlConfig.showFileInfo" class="file-menu-btn">
-      <emp-ng-menu
-        [items]="menuOptions"
-        (selected)="onClickFileOptions(file, $event.action)">
+      <div *ngIf="file.uid" class="file-menu-btn">
+        <emp-ng-menu
+          [items]="file.menuOptions"
+          (selected)="onClickFileOptions(file, $event.action)">
 
-      </emp-ng-menu>
-    </div>
+        </emp-ng-menu>
+      </div>
+    </ng-container>
 
   </div>
 
-  <div class="file-add" *ngIf="!filesToUpload || fileControlConfig.maxFiles > filesToUpload.length"
+  <div class="file-add" *ngIf="!readonly && ( !filesToUpload || fileControlConfig.maxFiles > filesToUpload.length )"
     [title]="fileControlConfig.textAccion">
     <label [for]="idFileControl">
       <mat-icon>add</mat-icon>
@@ -55,4 +67,4 @@
 
 <input type="file" [id]="idFileControl" #fileControl
   [multiple]="fileControlConfig.maxFiles > 1" [accept]="acceptedFileTypes" [disabled]="disabled"
-  (change)="handleFileInput(fileControl.files)">
+  (change)="handleFileInput(fileControl);">

@@ -24,6 +24,7 @@ input[type=file] {
   border-radius: $border-radius;
   margin-right: 8px;
   border: dashed 1px $border-color-dark !important;
+  min-height: $area-height + 4 * $space + 2;
 
   .file-area {
     display: flex;
@@ -52,13 +53,13 @@ input[type=file] {
       }
     }
 
-    .file-icon:hover .overlay {
+    .file-icon:hover .overlay-menu {
       opacity: 0.6;
     }
 
     .file-info {
       margin: auto 0;
-      width: calc(100% - 3 * #{$area-width} - #{$space});
+      width: calc(100% - 2 * #{$area-width} - #{$space});
 
       p {
         width: auto;
@@ -78,10 +79,11 @@ input[type=file] {
     border-radius: $border-radius;
     width: $area-width;
     height: $area-height;
-    padding: calc(( #{$area-width} - #{$line-height} ) / 2);
+    padding: calc(( #{$area-width} - #{$line-height} ) / 2 - 1px);
     margin: $space 0;
 
     label {
+      display: flex;
       font-size: $line-height;
       line-height: $line-height;
     }
@@ -104,7 +106,7 @@ input[type=file] {
   }
 }
 
-.overlay {
+.overlay-menu {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -119,6 +121,18 @@ input[type=file] {
   .mat-icon {
     color: $icon-color-light;
   }
+}
+
+.overlay-icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .file-menu-btn {

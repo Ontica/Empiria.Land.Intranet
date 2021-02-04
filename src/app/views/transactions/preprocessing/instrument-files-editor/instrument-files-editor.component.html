@@ -9,7 +9,7 @@
       <div fxFlex="50%">
         <label>Instrumento:</label>
         <emp-ng-file-control
-          (fileControlChange)="setInstrumentFile($event)"
+          [fileControl]="instrumentFile"
           (fileControlEvent)="submitInstrumentFileEvent($event)"
           [config]="{textAccion: 'Agregar archivo PDF con el instrumento',
                      fileName: instrumentDescriptor,
@@ -21,10 +21,10 @@
       <div fxFlex="50%">
         <label>Anexos:</label>
         <emp-ng-file-control
-          (fileControlChange)="setInstrumentAnnexFile($event)"
+          [fileControl]="instrumentAnnexFile"
           (fileControlEvent)="submitInstrumentAnnexFileEvent($event)"
           [config]="{textAccion: 'Agregar archivo PDF con el anexo',
-                     fileName: 'Anexo de ' + firstLetterToLowerCase(instrumentDescriptor),
+                     fileName: getAnnexFileName(),
                      fileTypes: 'pdf'}">
 
         </emp-ng-file-control>

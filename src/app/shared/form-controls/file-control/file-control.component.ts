@@ -6,51 +6,10 @@
  */
 
 import { Component, Output, EventEmitter, Input, OnChanges } from '@angular/core';
+import { FormatLibrary } from '@app/shared/utils';
 
-export enum FileTypeAccepted {
-    all = '*',
-    pdf = 'application/pdf',
-    excel = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
-    image = 'image/*',
-}
-
-export type FileType = 'all' | 'pdf' | 'excel' | 'image';
-
-export interface FileControlConfig {
-  autoUpload?: boolean;
-  fileName?: string;
-  fileTypes?: FileType;
-  maxFiles?: number;
-  placeholder?: string;
-  showFileInfo?: boolean;
-  textAccion?: string;
-  textSave?: string;
-}
-
-const DefaultFileControlConfig: FileControlConfig = {
-  autoUpload: false,
-  fileName: null,
-  fileTypes: 'all',
-  maxFiles: 1,
-  placeholder: 'Elija un archivo o arrástrelo y suéltelo aquí.',
-  showFileInfo: true,
-  textAccion: 'Agregar Archivo',
-  textSave: 'Guardar Archivo',
-};
-
-export type FileControlActions = 'SAVE' | 'DELETE' | 'SHOW' | 'DOWNLOAD';
-
-export class FileControlMenuOptions {
- name: string;
- action: FileControlActions;
- disabled?: boolean;
-}
-
-const defaultMenuOptions: FileControlMenuOptions[] = [
-  {name: 'Eliminar', action: 'DELETE'},
-  {name: 'Ver', action: 'SHOW'},
-  {name: 'Descargar', action: 'DOWNLOAD'}
-];
+import { DefaultFileControlConfig, FileData, FileControlActions, FileControlConfig,
+         FileControlMenuOptions, FileTypeAccepted } from './file-control';
 
 @Component({
   selector: 'emp-ng-file-control',
@@ -59,21 +18,17 @@ const defaultMenuOptions: FileControlMenuOptions[] = [
 })
 export class FileControlComponent implements OnChanges {
 
-  @Input() fileControl: File[] | File | null = null;
+  @Input() fileControl: FileData[] | FileData | null = null;
 
-  @Output() fileControlChange = new EventEmitter<File[] | File | null>();
+  @Output() fileControlChange = new EventEmitter<FileData[] | FileData | null>();
 
   @Output() fileControlEvent = new EventEmitter<any>();
 
-  @Input() menuOptions: FileControlMenuOptions[] = defaultMenuOptions;
-
-  @Input() fileSaved: boolean = false;
+  @Input() readonly: boolean = false;
 
   @Input() disabled: boolean = false;
 
   @Input() progress; // TODO: implement
-
-  @Input() readonly; // TODO: implement
 
   @Input()
   get config() {
@@ -85,7 +40,7 @@ export class FileControlComponent implements OnChanges {
 
   fileControlConfig = DefaultFileControlConfig;
 
-  filesToUpload: File[];
+  filesToUpload: FileData[] = [];
 
   acceptedFileTypes: FileTypeAccepted;
 
@@ -95,9 +50,54 @@ export class FileControlComponent implements OnChanges {
 
   ngOnChanges(){
     this.setAcceptedFileTypes();
+    this.setFilesSaved();
   }
 
-  setAcceptedFileTypes(){
+  handleFileInput(fileInput) {
+    const fileList: FileList = fileInput.files;
+
+    if (!fileList || fileList.length === 0 || this.readonly) {
+      return;
+    }
+
+    const oldFiles = this.filesToUpload ?? [];
+
+    const filesArray = Array.from(fileList);
+
+    const filesByAcceptedType: File[] = filesArray.filter(f => this.validateFileType(f));
+
+    const newFiles: FileData[] = this.mapFileDataArrayFromFileArray(filesByAcceptedType);
+
+    this.filesToUpload = [...oldFiles, ...newFiles];
+
+    this.emitFiles();
+
+    fileInput.value = '';
+  }
+
+  onClickFileOptions(file: FileData, option: FileControlActions){
+    if ('CANCEL' === option){
+      this.removeFile(file);
+    }
+    if ('SHOW' === option && !this.validateShowOption(file.type)){
+      return;
+    }
+    this.fileControlEvent.emit({option, file});
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+    event.stopPropagation();
+  }
+
+  onDropFile(event: DragEvent): void {
+    event.preventDefault();
+    this.handleFileInput(event.dataTransfer);
+    event.stopPropagation();
+  }
+
+  private setAcceptedFileTypes(){
     switch (this.fileControlConfig.fileTypes) {
       case 'pdf':
         this.acceptedFileTypes = FileTypeAccepted.pdf;
@@ -114,57 +114,63 @@ export class FileControlComponent implements OnChanges {
     }
   }
 
-  handleFileInput(fileList: FileList) {
-    if (!fileList || fileList.length === 0) {
+  private setFilesSaved(){
+    if (this.fileControl){
+      this.filesToUpload = this.fileControl instanceof Array ? this.fileControl : [this.fileControl];
+      this.filesToUpload.forEach(file => {
+        file.menuOptions = this.getMenuOptions(file);
+        file.sizeString = FormatLibrary.formatBytes(file.size);
+        file.fileIcon = this.getFileIcon(file.type);
+      });
       return;
     }
-
-    const oldFiles = this.filesToUpload ?? [];
-
-    const files = Array.from(fileList);
-
-    const filesFilterType = files.filter(f => this.validateFileType(f));
-
-    this.filesToUpload = [...oldFiles, ...filesFilterType];
-
-    this.emitFiles();
+    this.filesToUpload = [];
   }
 
-  emitFiles(){
-    if (this.fileControlConfig.maxFiles === 1){
-      const file = this.filesToUpload.length === 1 ? this.filesToUpload[0] : null;
-      this.fileControlChange.emit(file);
-      return;
+  private getMenuOptions(file: FileData): FileControlMenuOptions[]{
+    if (file.uid){
+      let options: FileControlMenuOptions[] = [];
+
+      if (this.validateShowOption(file.type)){
+        options.push({name: 'Ver', action: 'SHOW'});
+      }
+
+      options.push({name: 'Descargar', action: 'DOWNLOAD'});
+
+      if (!this.readonly){
+        options.push({name: 'Eliminar', action: 'DELETE'});
+      }
+
+      return options;
     }
-    this.fileControlChange.emit(this.filesToUpload);
+    return [
+      {name: 'Guardar', action: 'SAVE'},
+      {name: 'Cancelar', action: 'CANCEL'},
+    ];
   }
 
-  onClickFileOptions(file, option: FileControlActions){
-    if (option === 'DELETE'){
-      this.removeFile(file);
+  private validateShowOption(type: string): boolean{
+    return type === FileTypeAccepted.pdf || type.startsWith('image/');
+  }
+
+  private getFileIcon(type: string){
+    const path = 'assets/img/files/';
+    if (type === FileTypeAccepted.pdf){
+      return path + 'pdf.svg';
     }
-    this.fileControlEvent.emit({option, file});
+
+    if (FileTypeAccepted.excel.includes(type)){
+      return path + 'xls.svg';
+    }
+
+    if (type.startsWith('image/')){
+      return path + 'image.svg';
+    }
+
+    return path + 'file.svg';
   }
 
-  removeFile(file) {
-    this.filesToUpload = this.filesToUpload.filter(f => f !== file);
-    this.emitFiles();
-  }
-
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy';
-    event.stopPropagation();
-  }
-
-  onDropFile(event: DragEvent): void {
-    event.preventDefault();
-
-    this.handleFileInput(event.dataTransfer.files);
-    event.stopPropagation();
-  }
-
-  validateFileType(file: File){
+  private validateFileType(file: File){
     switch (this.fileControlConfig.fileTypes) {
       case 'pdf':
         if (file.type === FileTypeAccepted.pdf){
@@ -192,40 +198,50 @@ export class FileControlComponent implements OnChanges {
     }
   }
 
-  printInvalidFormat(file: File){
+  private mapFileDataArrayFromFileArray(fileList: File[]): FileData[]{
+    let files: FileData[] = [];
+    fileList.forEach(item => files.push(this.mapFileDataFromFile(item)));
+    return files;
+  }
+
+  private mapFileDataFromFile(file: File): FileData{
+    return {
+      file,
+      name: this.getFileName(file.name),
+      type: file.type,
+      size: file.size,
+      sizeString: FormatLibrary.formatBytes(file.size),
+      fileIcon: this.getFileIcon(file.type),
+      menuOptions: this.getMenuOptions(file)
+    };
+  }
+
+  private getFileName(name: string){
+    return this.fileControlConfig.fileName ?
+           this.fileControlConfig.fileName + this.getFileNameExtension(name) :
+           name;
+  }
+
+  private getFileNameExtension(name: string){
+    const strings = name.split('.');
+    return strings.length > 1 ? '.' + strings[strings.length - 1] : '';
+  }
+
+  private emitFiles(){
+    let files: FileData | FileData[] = this.filesToUpload;
+    if (this.fileControlConfig.maxFiles === 1){
+      files = this.filesToUpload.length >= 1 ? this.filesToUpload[0] : null;
+    }
+    this.fileControlChange.emit(files);
+  }
+
+  private removeFile(file) {
+    this.filesToUpload = this.filesToUpload.filter(f => f !== file);
+    this.emitFiles();
+  }
+
+  private printInvalidFormat(file: File){
     console.log(`Invalid format: ${file.name}. Is required: ${this.acceptedFileTypes}`);
-  }
-
-  getFileName(file: File){
-    return this.fileControlConfig.fileName ? this.fileControlConfig.fileName + '.pdf' : file.name;
-  }
-
-  getIcon(file: File){
-    const path = 'assets/img/files/';
-    if (file.type === FileTypeAccepted.pdf){
-      return path + 'pdf.svg';
-    }
-
-    if (FileTypeAccepted.excel.includes(file.type)){
-      return path + 'xls.svg';
-    }
-
-    if (file.type.startsWith('image/')){
-      return path + 'image.svg';
-    }
-
-    if (file.type.startsWith('image/')){
-      return path + 'image.svg';
-    }
-
-    return path + 'file.svg';
-  }
-
-  bytesToMegaBytes(bytes) {
-    if (bytes > 1000000){
-      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-    }
-    return (bytes / (1024)).toFixed(0) + ' KB';
   }
 
 }
