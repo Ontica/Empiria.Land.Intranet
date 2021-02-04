@@ -2,7 +2,9 @@
 
 <div class="explorer" fxLayoutGap="32px">
 
-  <div [fxHide.lt-lg]="displayTransactionTabbedView || displayRecordingActEditor" class="primary">
+  <div class="primary"
+       [fxHide]="displayFileViewer"
+       [fxHide.lt-lg]="displayTransactionTabbedView || displayRecordingActEditor || displayFileViewer">
     <emp-land-transaction-list
         [transactionList]="transactionList"
         [selectedTransaction]="selectedTransaction"
@@ -13,8 +15,14 @@
     </emp-land-transaction-list>
   </div>
 
+  <div *ngIf="displayFileViewer" class="primary">
+    <emp-land-file-viewer [selectedFile]="selectedFile" (closeEvent)="onCloseFileViewer()">
 
-  <div *ngIf="displayTransactionTabbedView" class="secondary">
+    </emp-land-file-viewer>
+  </div>
+
+
+  <div *ngIf="displayTransactionTabbedView" [fxHide.lt-lg]="displayFileViewer" class="secondary">
     <emp-land-transaction-tabbed-view
         [transaction]="selectedTransaction"
         (closeEvent)="onCloseEditor()">
@@ -22,7 +30,7 @@
   </div>
 
 
-  <div *ngIf="displayRecordingActEditor" class="secondary">
+  <div *ngIf="displayRecordingActEditor" [fxHide.lt-lg]="displayFileViewer" class="secondary">
     <emp-land-recording-acts
         [transaction]="selectedTransaction"
         (closeEvent)="onCloseEditor()">
@@ -30,6 +38,7 @@
   </div>
 
 </div>
+
 
 <emp-ng-modal-window *ngIf="displayCreateTransactionEditor"
                      [config]="{width:'820px'}">

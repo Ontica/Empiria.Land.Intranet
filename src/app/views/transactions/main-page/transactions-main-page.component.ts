@@ -18,6 +18,8 @@ import { TransactionStateSelector, MainUIStateSelector,
 import { TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
          mapTransactionStageFromViewName, mapTransactionStatusFromViewName } from '@app/models/transaction';
 
+import { FileData, EmptyFileData } from '@app/shared/form-controls/file-control/file-control';
+
 import { View } from '@app/views/main-layout';
 
 import { TransactionListEventType } from '../transaction-list/transaction-list.component';
@@ -34,10 +36,12 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   transactionList: TransactionShortModel[] = [];
   selectedTransaction: Transaction = EmptyTransaction;
   filter: TransactionFilter = EmptyTransactionFilter;
+  selectedFile: FileData = EmptyFileData;
 
   displayCreateTransactionEditor = false;
   displayRecordingActEditor = false;
   displayTransactionTabbedView = false;
+  displayFileViewer = false;
 
   isLoading = false;
   isLoadingTransaction = false;
@@ -77,6 +81,12 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
       .subscribe(x => {
         this.selectedTransaction = x;
         this.displayRecordingActEditor = !isEmpty(this.selectedTransaction);
+      });
+
+    this.subscriptionHelper.select<FileData>(TransactionStateSelector.SELECTED_FILE)
+      .subscribe(x => {
+        this.selectedFile = x;
+        this.displayFileViewer = this.selectedFile && this.selectedFile.url !== '';
       });
   }
 
@@ -122,6 +132,11 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
         console.log(`Unhandled user interface event ${event.type}`);
         return;
     }
+  }
+
+
+  onCloseFileViewer(){
+    this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE);
   }
 
 

@@ -13,15 +13,17 @@ import { AngularMaterialModule } from '@app/shared/angular-material.module';
 import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
 
 import { SharedModule } from '@app/shared/shared.module';
+import { LandControlsModule } from '../land-controls/land.controls.module';
 
 import { InstrumentEditionModule } from '../instrument-edition/instrument-edition.module';
 import { InstrumentRecordingModule } from '../instrument-recording/instrument-recording.module';
+
+import { TransactionsRoutingModule } from './transactions-routing.module';
 
 import { TransactionListComponent } from './transaction-list/transaction-list.component';
 import { TransactionListItemComponent } from './transaction-list/transaction-list-item.component';
 import { TransactionTabbedViewComponent } from './transaction-tabbed-view/transaction-tabbed-view.component';
 import { TransactionsMainPageComponent } from './main-page/transactions-main-page.component';
-import { TransactionsRoutingModule } from './transactions-routing.module';
 import { TransactionHeaderComponent } from './transaction-header/transaction-header.component';
 import { TransactionCreatorComponent } from './transaction-creator/transaction-creator.component';
 import { TransactionEditorComponent } from './transaction-editor/transaction-editor.component';
@@ -44,6 +46,7 @@ import { InstrumentFilesEditorComponent } from './preprocessing/instrument-files
     AngularMaterialModule,
     AngularFlexLayoutModule,
     SharedModule,
+    LandControlsModule,
     TransactionsRoutingModule,
     InstrumentEditionModule,
     InstrumentRecordingModule,

@@ -21,11 +21,15 @@ import { TransactionFilter, TransactionShortModel,
          EmptyTransaction, EmptyTransactionFilter,
          mapTransactionShortModelFromTransaction } from '@app/models';
 
+import { EmptyFileData } from '@app/shared/form-controls/file-control/file-control';
+
 
 export enum ActionType {
   SELECT_TRANSACTION = 'Land.Transactions.Action.SelectTransaction',
   SET_LIST_FILTER = 'Land.Transactions.Action.SetListFilter',
-  UNSELECT_TRANSACTION = 'Land.Transactions.Action.UnselectTransaction'
+  UNSELECT_TRANSACTION = 'Land.Transactions.Action.UnselectTransaction',
+  SELECT_FILE = 'Land.Transactions.Action.SelectFile',
+  UNSELECT_FILE = 'Land.Transactions.Action.UnselectFile'
 }
 
 
@@ -68,6 +72,7 @@ export enum SelectorType {
   AGENCY_LIST = 'Land.Transactions.Selectors.AgencyList',
   PROVIDED_SERVICE_LIST = 'Land.Transactions.Selectors.ProvidedServiceList',
   RECORDER_OFFICE_LIST = 'Land.Transactions.Selectors.RecorderOfficeList',
+  SELECTED_FILE = 'Land.Transactions.Selectors.SelectedFile',
 }
 
 
@@ -79,6 +84,7 @@ const initialState: StateValues = [
   { key: SelectorType.AGENCY_LIST, value: [] },
   { key: SelectorType.PROVIDED_SERVICE_LIST, value: [] },
   { key: SelectorType.RECORDER_OFFICE_LIST, value: [] },
+  { key: SelectorType.SELECTED_FILE, value: EmptyFileData },
 ];
 
 
@@ -276,6 +282,8 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case ActionType.UNSELECT_TRANSACTION:
         this.setValue(SelectorType.SELECTED_TRANSACTION, EmptyTransaction);
 
+        this.setValue(SelectorType.SELECTED_FILE, EmptyFileData);
+
         return;
 
       case ActionType.SET_LIST_FILTER:
@@ -284,6 +292,18 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         const filter = params?.filter || this.getValue(SelectorType.LIST_FILTER);
 
         this.setValue(SelectorType.LIST_FILTER, filter);
+
+        return;
+
+      case ActionType.SELECT_FILE:
+        Assertion.assertValue(params.file, 'payload.file');
+
+        this.setValue(SelectorType.SELECTED_FILE, params.file);
+
+        return;
+
+      case ActionType.UNSELECT_FILE:
+        this.setValue(SelectorType.SELECTED_FILE, EmptyFileData);
 
         return;
 
