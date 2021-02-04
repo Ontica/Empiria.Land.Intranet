@@ -14,7 +14,42 @@ $space: 5px;
 $border-radius: 3px;
 
 input[type=file] {
-  display:none;
+  display: none;
+}
+
+.overlay-menu {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: 0.5s ease;
+  background-color: $secondary-color;
+
+  .mat-icon {
+    color: $icon-color-light;
+  }
+}
+
+.overlay-icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-menu-btn {
+  width: $area-width;
+  height: $area-height;
+  padding: calc(( #{$area-width} - #{$line-height} ) / 2);
 }
 
 .file-drop-area {
@@ -36,7 +71,7 @@ input[type=file] {
       width: 100%;
 
       &.multiple {
-        width: calc(100%/3);
+        width: calc(100% / 3);
       }
     }
 
@@ -65,13 +100,11 @@ input[type=file] {
         width: auto;
         font-size: 9pt;
         padding-right: $space;
-
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
     }
-
   }
 
   .file-add {
@@ -104,39 +137,4 @@ input[type=file] {
   .file-add {
     background: $background-color;
   }
-}
-
-.overlay-menu {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-  transition: .5s ease;
-  background-color: $secondary-color;
-
-  .mat-icon {
-    color: $icon-color-light;
-  }
-}
-
-.overlay-icon {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.file-menu-btn {
-  width: $area-width;
-  height: $area-height;
-  padding: calc(( #{$area-width} - #{$line-height} ) / 2);
 }
