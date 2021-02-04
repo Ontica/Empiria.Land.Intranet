@@ -21,6 +21,8 @@ import { RecordingSeekFormComponent } from './recording-seek-form/recording-seek
 import {
   RealPropertyUIDPickerComponent
  } from './real-property-uid-picker/real-property-uid-picker.component';
+import { FileViewerComponent } from './file-viewer/file-viewer.component';
+import { SharedPipesModule } from '@app/shared/pipes/shared-pipes.module';
 
 
 @NgModule({
@@ -34,17 +36,20 @@ import {
 
     SharedContainersModule,
     SharedFormControlsModule,
-    SharedIndicatorsModule
+    SharedIndicatorsModule,
+    SharedPipesModule,
   ],
 
   declarations: [
     RecordingSeekFormComponent,
-    RealPropertyUIDPickerComponent
+    RealPropertyUIDPickerComponent,
+    FileViewerComponent,
   ],
 
   exports: [
     RecordingSeekFormComponent,
-    RealPropertyUIDPickerComponent
+    RealPropertyUIDPickerComponent,
+    FileViewerComponent,
   ]
 
 })
