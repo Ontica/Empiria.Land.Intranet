@@ -7,7 +7,8 @@
 
     <div class="file-icon">
       <span>
-        <img [src]="file.fileIcon">
+
+        <mat-icon [svgIcon]="file.fileIcon"></mat-icon>
 
         <div *ngIf="fileControlConfig.showFileInfo && file.uid" class="overlay-icon file-menu-btn"
           (click)="onClickFileOptions(file, 'SHOW')">

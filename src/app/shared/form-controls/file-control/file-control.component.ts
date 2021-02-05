@@ -154,20 +154,19 @@ export class FileControlComponent implements OnChanges {
   }
 
   private getFileIcon(type: string){
-    const path = 'assets/img/files/';
     if (type === FileTypeAccepted.pdf){
-      return path + 'pdf.svg';
+      return 'emp-pdf-file';
     }
 
     if (FileTypeAccepted.excel.includes(type)){
-      return path + 'xls.svg';
+      return 'emp-xls-file';
     }
 
     if (type.startsWith('image/')){
-      return path + 'image.svg';
+      return 'emp-image-file';
     }
 
-    return path + 'file.svg';
+    return 'emp-file';
   }
 
   private validateFileType(file: File){

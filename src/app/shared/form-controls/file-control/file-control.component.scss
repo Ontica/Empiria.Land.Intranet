@@ -82,7 +82,7 @@ input[type=file] {
       height: $area-height;
       margin-right: $space;
 
-      img {
+      .mat-icon {
         height: $area-height;
         width: $area-width;
       }
@@ -128,7 +128,6 @@ input[type=file] {
     margin: auto 0;
     padding-left: $space;
   }
-
 }
 
 .disabled {

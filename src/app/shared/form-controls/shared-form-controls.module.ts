@@ -14,6 +14,10 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AngularMaterialModule } from '../angular-material.module';
 
+import { SharedPipesModule } from '../pipes/shared-pipes.module';
+import { SharedContainersModule } from '../containers/shared-containers.module';
+import { IconSvgModule } from '../icon-svg.module';
+
 import { CheckboxAllComponent } from './check-box-all/check-box-all.component';
 import { DatePickerComponent } from './date-picker/date-picker.component';
 import { FileControlComponent } from './file-control/file-control.component';
@@ -22,8 +26,6 @@ import { MenuComponent } from './menu/menu.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { SelectBoxComponent } from './select-box/select-box.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
-import { SharedPipesModule } from '../pipes/shared-pipes.module';
-import { SharedContainersModule } from '../containers/shared-containers.module';
 
 
 @NgModule({
@@ -37,6 +39,7 @@ import { SharedContainersModule } from '../containers/shared-containers.module';
     SharedPipesModule,
     SharedContainersModule,
     QuillModule.forRoot(),
+    IconSvgModule,
   ],
 
   declarations: [
