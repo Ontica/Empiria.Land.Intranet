@@ -13,9 +13,10 @@
     </ng-template>
   </mat-tab>
 
-  <mat-tab label="Digitalización" *ngIf="transaction.actions.show.preprocessingTab">
+  <mat-tab label="Preprocesamiento" *ngIf="transaction.actions.show.preprocessingTab">
     <ng-template matTabContent>
-      <emp-land-preprocessing>
+      <emp-land-preprocessing
+        [transactionUID]="transaction.uid">
 
       </emp-land-preprocessing>
     </ng-template>

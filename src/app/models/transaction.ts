@@ -56,7 +56,7 @@ export interface Transaction extends Entity {
   status: string;
   statusName: string;
   stage: string;
-  actions: Action;
+  actions: TransactionActions;
 }
 
 
@@ -133,43 +133,39 @@ export interface Attributes {
   mediaType?: string;
 }
 
+
 export enum MediaType {
   html = 'text/html',
   pdf = 'application/pdf',
 }
 
-export interface Action {
-  can: ActionCan;
-  show: ActionShow;
+
+export interface TransactionActions {
+  can: {
+    edit?: boolean;
+    delete?: boolean;
+    submit?: boolean;
+    editServices?: boolean;
+    generatePaymentOrder?: boolean;
+    cancelPaymentOrder?: boolean;
+    editPayment?: boolean;
+    cancelPayment?: boolean;
+    uploadDocuments?: boolean;
+    editInstrument?: boolean;
+    editRecordingActs?: boolean;
+    editCertificates?: boolean;
+  };
+  show: {
+    serviceEditor?: boolean;
+    paymentReceiptEditor?: boolean;
+    preprocessingTab?: boolean;
+    instrumentRecordingTab?: boolean;
+    certificatesEmissionTab?: boolean;
+  };
 }
 
 
-export interface ActionCan {
-  edit: boolean;
-  delete: boolean;
-  submit: boolean;
-  editServices?: boolean;
-  generatePaymentOrder?: boolean;
-  cancelPaymentOrder?: boolean;
-  editPayment?: boolean;
-  cancelPayment?: boolean;
-  uploadDocuments?: boolean;
-  editInstrument?: boolean;
-  editRecordingActs?: boolean;
-  editCertificates?: boolean;
-}
-
-
-export interface ActionShow {
-  serviceEditor?: boolean;
-  paymentReceiptEditor?: boolean;
-  preprocessingTab?: boolean;
-  instrumentRecordingTab?: boolean;
-  certificatesEmissionTab?: boolean;
-}
-
-
-export const EmptyAction: Action = {
+export const EmptyAction: TransactionActions = {
   can: {
     edit: false,
     delete: false,
