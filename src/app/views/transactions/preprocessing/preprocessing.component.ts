@@ -1,16 +1,27 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { EventInfo } from '@app/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Command, EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { TransactionAction } from '@app/core/presentation/presentation-types';
+import { TransactionAction, TransactionCommandType,
+         TransactionStateSelector } from '@app/core/presentation/presentation-types';
+import { EmptyInstrument, EmptyPreprocessingData, InstrumentMedia, InstrumentMediaContent,
+         PreprocessingData } from '@app/models';
+import { EmptyFileData, FileData } from '@app/shared/form-controls/file-control/file-control';
 import { InstrumentFilesEditorEventType } from './instrument-files-editor/instrument-files-editor.component';
+
 
 @Component({
   selector: 'emp-land-preprocessing',
   templateUrl: './preprocessing.component.html',
-  styles: [
-  ]
 })
-export class PreprocessingComponent implements OnInit, OnDestroy {
+export class PreprocessingComponent implements OnChanges, OnDestroy {
+
+  @Input() transactionUID: string = 'Empty';
+
+  preprocessingData: PreprocessingData = EmptyPreprocessingData;
+
+  instrumentMainFile: FileData = null;
+
+  instrumentAuxiliaryFile: FileData = null;
 
   helper: SubscriptionHelper;
 
@@ -18,8 +29,46 @@ export class PreprocessingComponent implements OnInit, OnDestroy {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
-  ngOnInit(): void {
+  ngOnChanges() {
+    this.helper.select<PreprocessingData>(
+      TransactionStateSelector.SELECTED_PREPROCESSING_DATA, this.transactionUID)
+        .subscribe(x => {
+          this.preprocessingData = x;
+          this.preprocessingData.instrument = this.isInstrumentEmpty() ?
+                                              EmptyInstrument :
+                                              this.preprocessingData.instrument;
+          this.mapInstrumentFileDataFromInstrumentMedia();
+        });
+  }
 
+  isInstrumentEmpty(){
+    return isEmpty(this.preprocessingData.instrument);
+  }
+
+  mapInstrumentFileDataFromInstrumentMedia(){
+    this.instrumentMainFile = null;
+    this.instrumentAuxiliaryFile = null;
+
+    if (this.getInstrumentFileByContent('InstrumentMainFile')){
+      this.instrumentMainFile =
+        Object.assign({}, EmptyFileData, this.getInstrumentFileByContent('InstrumentMainFile'));
+    }
+
+    if (this.getInstrumentFileByContent('InstrumentAuxiliaryFile')){
+      this.instrumentAuxiliaryFile =
+        Object.assign({}, EmptyFileData, this.getInstrumentFileByContent('InstrumentAuxiliaryFile'));
+    }
+  }
+
+  getInstrumentFileByContent(mediaContent: InstrumentMediaContent): InstrumentMedia {
+    const intrumentFile = this.preprocessingData.instrument.media
+                            .filter(file => file.content === mediaContent);
+
+    if (intrumentFile.length > 0){
+      return intrumentFile[0];
+    }
+
+    return null;
   }
 
   ngOnDestroy() {
@@ -29,42 +78,43 @@ export class PreprocessingComponent implements OnInit, OnDestroy {
   }
 
   onInstrumentFilesEditorEvent(event: EventInfo): void {
+    let payload: any = {};
 
     switch (event.type as InstrumentFilesEditorEventType) {
 
       case InstrumentFilesEditorEventType.SUBMIT_INSTRUMENT_FILE_CLICKED:
 
-        console.log('SUBMIT_INSTRUMENT_FILE_CLICKED', event);
+        payload = {
+          instrumentUID: this.preprocessingData.instrument.uid,
+          file: event.payload.file.file,
+          mediaContent: event.payload.mediaContent,
+          fileName: event.payload.fileName
+        };
+
+        this.executeCommand(TransactionCommandType.UPLOAD_INSTRUMENT_FILE, payload);
 
         return;
 
-      case InstrumentFilesEditorEventType.DELETE_INSTRUMENT_FILE_CLICKED:
+      case InstrumentFilesEditorEventType.REMOVE_INSTRUMENT_FILE_CLICKED:
 
-        console.log('DELETE_INSTRUMENT_FILE_CLICKED', event);
+        payload = {
+          instrumentUID: this.preprocessingData.instrument.uid,
+          mediaFileUID: event.payload.mediaContentUID,
+        };
 
-        return;
-
-      case InstrumentFilesEditorEventType.SUBMIT_INSTRUMENT_ANNEX_FILE_CLICKED:
-
-        console.log('SUBMIT_INSTRUMENT_ANNEX_FILE_CLICKED', event);
-
-        return;
-
-      case InstrumentFilesEditorEventType.DELETE_INSTRUMENT_ANNEX_FILE_CLICKED:
-
-        console.log('DELETE_INSTRUMENT_ANNEX_FILE_CLICKED', event);
+        this.executeCommand(TransactionCommandType.REMOVE_INSTRUMENT_FILE, payload);
 
         return;
 
       case InstrumentFilesEditorEventType.SHOW_FILE_CLICKED:
 
-        this.uiLayer.dispatch(TransactionAction.SELECT_FILE, {'file': event.payload});
+        this.uiLayer.dispatch(TransactionAction.SELECT_FILE, {file: event.payload});
 
         return;
 
       case InstrumentFilesEditorEventType.DOWNLOAD_FILE_CLICKED:
 
-        console.log('DOWNLOAD_FILE_CLICKED', event);
+        this.executeCommand(TransactionCommandType.DOWNLOAD_INSTRUMENT_FILE, event.payload);
 
         return;
 
@@ -72,6 +122,15 @@ export class PreprocessingComponent implements OnInit, OnDestroy {
         console.log(`Unhandled user interface event ${event.type}`);
         return;
     }
+  }
+
+  executeCommand<T>(commandType: TransactionCommandType, payload?: any): Promise<T>{
+    const command: Command = {
+      type: commandType,
+      payload
+    };
+
+    return this.uiLayer.execute<T>(command);
   }
 
 }

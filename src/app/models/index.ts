@@ -22,6 +22,8 @@ export * from './instrument';
 
 export * from './party';
 
+export * from './preprocessing-data';
+
 export * from './property';
 
 export * from './recording-act';

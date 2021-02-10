@@ -159,13 +159,13 @@ export interface ElectronicSignData {
 export interface InstrumentMedia {
   uid: string;
   type: string;
-  typeName: string;
-  mediaType: string;
-  digitalizedBy: Contact;
-  digitalizedTime: DateString;
-  uri: string;
-  instrumentUID: string;
+  content: InstrumentMediaContent;
+  name: string;
+  url: string;
+  size: number;
 }
+
+export type InstrumentMediaContent = 'InstrumentMainFile' | 'InstrumentAuxiliaryFile';
 
 
 export interface Contact {

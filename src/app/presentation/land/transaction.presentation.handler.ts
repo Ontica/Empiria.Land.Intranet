@@ -9,17 +9,24 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
+import { tap } from 'rxjs/operators';
+
 import { Assertion, Command, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
 import { TransactionDataService } from '@app/data-services';
 
+import { FileDownloadService } from '@app/data-services/file-services/file-download.service';
+
 import { ArrayLibrary } from '@app/shared/utils';
 
 import { TransactionFilter, TransactionShortModel,
          EmptyTransaction, EmptyTransactionFilter,
-         mapTransactionShortModelFromTransaction } from '@app/models';
+         mapTransactionShortModelFromTransaction,
+         PreprocessingData,
+         EmptyPreprocessingData,
+         Transaction} from '@app/models';
 
 import { EmptyFileData } from '@app/shared/form-controls/file-control/file-control';
 
@@ -29,7 +36,7 @@ export enum ActionType {
   SET_LIST_FILTER = 'Land.Transactions.Action.SetListFilter',
   UNSELECT_TRANSACTION = 'Land.Transactions.Action.UnselectTransaction',
   SELECT_FILE = 'Land.Transactions.Action.SelectFile',
-  UNSELECT_FILE = 'Land.Transactions.Action.UnselectFile'
+  UNSELECT_FILE = 'Land.Transactions.Action.UnselectFile',
 }
 
 
@@ -45,6 +52,9 @@ export enum CommandType {
   CANCEL_PAYMENT_ORDER = 'Land.Transactions.Command.CancelPaymentOrder',
   SET_PAYMENT = 'Land.Transactions.Command.SetPayment',
   CANCEL_PAYMENT = 'Land.Transactions.Command.CancelPayment',
+  UPLOAD_INSTRUMENT_FILE = 'Land.Transactions.Command.UploadInstrumentFile',
+  REMOVE_INSTRUMENT_FILE = 'Land.Transactions.Command.RemoveInstrumentFile',
+  DOWNLOAD_INSTRUMENT_FILE = 'Land.Transactions.Command.DownloadInstrumentFile',
 }
 
 
@@ -61,6 +71,8 @@ export enum EffectType {
   CANCEL_PAYMENT_ORDER = CommandType.CANCEL_PAYMENT_ORDER,
   SET_PAYMENT = CommandType.SET_PAYMENT,
   CANCEL_PAYMENT = CommandType.CANCEL_PAYMENT,
+  UPLOAD_INSTRUMENT_FILE = CommandType.UPLOAD_INSTRUMENT_FILE,
+  REMOVE_INSTRUMENT_FILE = CommandType.REMOVE_INSTRUMENT_FILE,
 }
 
 
@@ -73,6 +85,7 @@ export enum SelectorType {
   PROVIDED_SERVICE_LIST = 'Land.Transactions.Selectors.ProvidedServiceList',
   RECORDER_OFFICE_LIST = 'Land.Transactions.Selectors.RecorderOfficeList',
   SELECTED_FILE = 'Land.Transactions.Selectors.SelectedFile',
+  SELECTED_PREPROCESSING_DATA = 'Land.Transactions.Selectors.PreprocessingData',
 }
 
 
@@ -85,13 +98,15 @@ const initialState: StateValues = [
   { key: SelectorType.PROVIDED_SERVICE_LIST, value: [] },
   { key: SelectorType.RECORDER_OFFICE_LIST, value: [] },
   { key: SelectorType.SELECTED_FILE, value: EmptyFileData },
+  { key: SelectorType.SELECTED_PREPROCESSING_DATA, value: EmptyPreprocessingData },
 ];
 
 
 @Injectable()
 export class TransactionPresentationHandler extends AbstractPresentationHandler {
 
-  constructor(private data: TransactionDataService) {
+  constructor(private data: TransactionDataService,
+              private fileDownload: FileDownloadService) {
     super({
       initialState,
       selectors: SelectorType,
@@ -167,6 +182,8 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         this.setValue(SelectorType.SELECTED_TRANSACTION, params.result);
 
+        this.getPreprocessingDataInstrument(params.result);
+
         return;
 
       case EffectType.DELETE_TRANSACTION:
@@ -189,6 +206,24 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         this.setValue(SelectorType.TRANSACTION_LIST, transactionList);
 
         this.dispatch(ActionType.UNSELECT_TRANSACTION);
+
+        return;
+
+      case EffectType.UPLOAD_INSTRUMENT_FILE:
+
+        if (params.result.data){
+          this.setPreprocessingDataInstrument(params.result.data);
+
+          this.setValue(SelectorType.SELECTED_FILE, EmptyFileData);
+        }
+
+        return;
+
+      case EffectType.REMOVE_INSTRUMENT_FILE:
+
+        this.setPreprocessingDataInstrument(params.result);
+
+        this.setValue(SelectorType.SELECTED_FILE, EmptyFileData);
 
         return;
 
@@ -261,11 +296,29 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
           this.data.cancelPayment(command.payload.transactionUID)
         );
 
+      case CommandType.UPLOAD_INSTRUMENT_FILE:
+        return toPromise<T>(
+          this.data.uploadInstrumentFile(command.payload.instrumentUID,
+                                         command.payload.file,
+                                         command.payload.mediaContent,
+                                         command.payload.fileName)
+        );
+
+      case CommandType.REMOVE_INSTRUMENT_FILE:
+        return toPromise<T>(
+          this.data.removeInstrumentFile(command.payload.instrumentUID,
+                                         command.payload.mediaFileUID)
+        );
+
+      case CommandType.DOWNLOAD_INSTRUMENT_FILE:
+        return toPromise<T>(
+          this.fileDownload.download(command.payload.file.url, command.payload.file.name)
+        );
+
       default:
         throw this.unhandledCommand(command);
     }
   }
-
 
   dispatch(actionType: ActionType, params?: any): void {
     switch (actionType) {
@@ -273,7 +326,8 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case ActionType.SELECT_TRANSACTION:
         Assertion.assertValue(params.transactionUID, 'payload.transactionUID');
 
-        const transaction = this.data.getTransaction(params.transactionUID);
+        const transaction = this.data.getTransaction(params.transactionUID)
+                              .pipe(tap( t => this.getPreprocessingDataInstrument(t)));
 
         this.setValue(SelectorType.SELECTED_TRANSACTION, transaction);
 
@@ -283,6 +337,8 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         this.setValue(SelectorType.SELECTED_TRANSACTION, EmptyTransaction);
 
         this.setValue(SelectorType.SELECTED_FILE, EmptyFileData);
+
+        this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, EmptyPreprocessingData);
 
         return;
 
@@ -310,6 +366,21 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       default:
         throw this.unhandledCommandOrActionType(actionType);
     }
+  }
+
+
+  getPreprocessingDataInstrument(transaction: Transaction){
+    if (transaction.actions.show.preprocessingTab){
+      const preprocessingData = this.data.getTransactionPreprocessingData(transaction.uid);
+      this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, preprocessingData);
+    }
+  }
+
+
+  setPreprocessingDataInstrument(instrument){
+    let preprocessingData = this.getValue<PreprocessingData>(SelectorType.SELECTED_PREPROCESSING_DATA);
+    preprocessingData.instrument = instrument;
+    this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, preprocessingData);
   }
 
 }

@@ -10,8 +10,11 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { Agency, PaymentFields, ProvidedServiceType, RecorderOffice, RequestedServiceFields, Transaction,
-         TransactionFields, TransactionFilter, TransactionShortModel, TransactionType } from '@app/models';
+import { Agency, Instrument, InstrumentMediaContent, PaymentFields, PreprocessingData, ProvidedServiceType,
+         RecorderOffice, RequestedServiceFields, Transaction, TransactionFields, TransactionFilter,
+         TransactionShortModel, TransactionType } from '@app/models';
+
+import { Progress, reportHttpProgress } from './file-services/http-progress';
 
 
 @Injectable()
@@ -178,6 +181,46 @@ export class TransactionDataService {
     const path = `v5/land/transactions/${transactionUID}/cancel-payment`;
 
     return this.http.post<Transaction>(path);
+  }
+
+
+  getTransactionPreprocessingData(transactionUID: string): Observable<PreprocessingData> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `/v5/land/transactions/${transactionUID}/preprocessing-data`;
+
+    return this.http.get<PreprocessingData>(path);
+  }
+
+
+  uploadInstrumentFile(instrumentUID: string,
+                       fileToUpload: File,
+                       mediaContent: InstrumentMediaContent,
+                       fileName?: string): Observable<Progress> {
+    Assertion.assertValue(instrumentUID, 'instrumentUID');
+    Assertion.assertValue(fileToUpload, 'fileToUpload');
+    Assertion.assertValue(mediaContent, 'mediaContent');
+
+    const formData: FormData = new FormData();
+    formData.append('media', fileToUpload, fileName ?? fileToUpload.name);
+    formData.append('mediaContent', mediaContent);
+
+    const path = `v5/land/instruments/${instrumentUID}/media-files`;
+
+    return this.http.post(path, formData, {observe: 'events', reportProgress: true, dataField: null})
+      .pipe(
+        reportHttpProgress()
+      );
+  }
+
+  removeInstrumentFile(instrumentUID: string,
+                       mediaFileUID: string): Observable<any> {
+    Assertion.assertValue(instrumentUID, 'instrumentUID');
+    Assertion.assertValue(mediaFileUID, 'mediaFileUID');
+
+    const path = `v5/land/instruments/${instrumentUID}/media-files/${mediaFileUID}`;
+
+    return this.http.delete<Instrument>(path);
   }
 
 }

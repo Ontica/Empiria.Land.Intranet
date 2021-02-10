@@ -1,5 +1,8 @@
-<emp-land-instrument-files-editor
-[instrumentDescriptor]="'Escritura pública mock'"
-(instrumentFilesEditorEvent)="onInstrumentFilesEditorEvent($event)">
+<emp-land-instrument-files-editor *ngIf="preprocessingData.actions.show.instrumentFiles"
+  [instrumentFileName]="preprocessingData.instrument.typeName"
+  [instrumentMainFile]="instrumentMainFile"
+  [instrumentAuxiliaryFile]="instrumentAuxiliaryFile"
+  [canEdit]="preprocessingData.actions.can.uploadInstrumentFiles && !isInstrumentEmpty()"
+  (instrumentFilesEditorEvent)="onInstrumentFilesEditorEvent($event)">
 
 </emp-land-instrument-files-editor>

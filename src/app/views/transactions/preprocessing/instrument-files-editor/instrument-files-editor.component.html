@@ -2,18 +2,18 @@
 
   <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
 
-    <div class="section-title">Documentos digitalizacions asociados al trámite</div>
+    <div class="section-title">Documentos digitalizados asociados al trámite</div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
 
       <div fxFlex="50%">
         <label>Instrumento:</label>
         <emp-ng-file-control
-          [fileControl]="instrumentFile"
-          (fileControlEvent)="submitInstrumentFileEvent($event)"
+          [fileControl]="instrumentMainFile"
+          [readonly]="!canEdit"
+          (fileControlEvent)="submitInstrumentFileEvent($event, 'InstrumentMainFile')"
           [config]="{textAccion: 'Agregar archivo PDF con el instrumento',
-                     fileName: instrumentDescriptor,
-                     fileTypes: 'pdf'}">
+                     fileTypes: 'pdf' }">
 
         </emp-ng-file-control>
       </div>
@@ -21,10 +21,10 @@
       <div fxFlex="50%">
         <label>Anexos:</label>
         <emp-ng-file-control
-          [fileControl]="instrumentAnnexFile"
-          (fileControlEvent)="submitInstrumentAnnexFileEvent($event)"
+          [fileControl]="instrumentAuxiliaryFile"
+          [readonly]="!canEdit"
+          (fileControlEvent)="submitInstrumentFileEvent($event, 'InstrumentAuxiliaryFile')"
           [config]="{textAccion: 'Agregar archivo PDF con el anexo',
-                     fileName: getAnnexFileName(),
                      fileTypes: 'pdf'}">
 
         </emp-ng-file-control>

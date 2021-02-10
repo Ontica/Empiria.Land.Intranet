@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { EventInfo } from '@app/core';
+import { InstrumentMediaContent } from '@app/models';
 import { FileData, FileControlActions } from '@app/shared/form-controls/file-control/file-control';
 import { FormatLibrary } from '@app/shared/utils';
 
+
 export enum InstrumentFilesEditorEventType {
   SUBMIT_INSTRUMENT_FILE_CLICKED  = 'InstrumentFilesEditorComponent.Event.SubmitInstrumentFileClicked',
-  DELETE_INSTRUMENT_FILE_CLICKED  = 'InstrumentFilesEditorComponent.Event.DeleteInstrumentFileClicked',
-  SUBMIT_INSTRUMENT_ANNEX_FILE_CLICKED  = 'InstrumentFilesEditorComponent.Event.SubmitInstrumentAnnexFileClicked',
-  DELETE_INSTRUMENT_ANNEX_FILE_CLICKED  = 'InstrumentFilesEditorComponent.Event.DeleteInstrumentAnnexFileClicked',
+  REMOVE_INSTRUMENT_FILE_CLICKED  = 'InstrumentFilesEditorComponent.Event.RemoveInstrumentFileClicked',
   SHOW_FILE_CLICKED  = 'InstrumentFilesEditorComponent.Event.ShowFileClicked',
   DOWNLOAD_FILE_CLICKED  = 'InstrumentFilesEditorComponent.Event.DownloadFileClicked',
 }
@@ -15,16 +15,16 @@ export enum InstrumentFilesEditorEventType {
 @Component({
   selector: 'emp-land-instrument-files-editor',
   templateUrl: './instrument-files-editor.component.html',
-  styles: [
-  ]
 })
 export class InstrumentFilesEditorComponent implements OnInit, OnChanges {
 
-  @Input() instrumentDescriptor: string = null;
+  @Input() instrumentMainFile: FileData;
 
-  @Input() instrumentFile: FileData = null;
+  @Input() instrumentAuxiliaryFile: FileData;
 
-  @Input() instrumentAnnexFile: FileData = null;
+  @Input() instrumentFileName: string = null;
+
+  @Input() canEdit: boolean = false;
 
   @Output() instrumentFilesEditorEvent = new EventEmitter<EventInfo>();
 
@@ -34,21 +34,26 @@ export class InstrumentFilesEditorComponent implements OnInit, OnChanges {
 
   ngOnChanges(){}
 
-  getAnnexFileName(){
-    if (this.instrumentDescriptor && this.instrumentDescriptor !== '' ){
-      return 'Anexo de ' + FormatLibrary.firstLetterToLowerCase(this.instrumentDescriptor);
-    }
-    return null;
-  }
+  submitInstrumentFileEvent(event, mediaContent: InstrumentMediaContent){
 
-  submitInstrumentFileEvent(event){
+    let payload: any = {
+      mediaContent,
+      file: event.file,
+      fileName: this.getFileNameByMediaContent(mediaContent)
+    };
+
     switch (event.option as FileControlActions) {
       case 'SAVE':
-        this.sendEvent(InstrumentFilesEditorEventType.SUBMIT_INSTRUMENT_FILE_CLICKED, event.file);
+        this.sendEvent(InstrumentFilesEditorEventType.SUBMIT_INSTRUMENT_FILE_CLICKED, payload);
         return;
 
-      case 'DELETE':
-        this.sendEvent(InstrumentFilesEditorEventType.DELETE_INSTRUMENT_FILE_CLICKED, event.file);
+      case 'REMOVE':
+        payload = {
+          mediaContent,
+          mediaContentUID: event.file.uid
+        };
+
+        this.sendEvent(InstrumentFilesEditorEventType.REMOVE_INSTRUMENT_FILE_CLICKED, payload);
         return;
 
       case 'SHOW':
@@ -56,40 +61,11 @@ export class InstrumentFilesEditorComponent implements OnInit, OnChanges {
         return;
 
       case 'DOWNLOAD':
-        this.sendEvent(InstrumentFilesEditorEventType.DOWNLOAD_FILE_CLICKED, event.file);
+        this.sendEvent(InstrumentFilesEditorEventType.DOWNLOAD_FILE_CLICKED, payload);
         return;
 
       case 'CANCEL':
-        console.log('CANCEL INSTRUMENT', event.file);
-
-        return;
-
-      default:
-        console.log(`Unhandled user interface event ${event.type}`);
-        return;
-    }
-  }
-
-  submitInstrumentAnnexFileEvent(event){
-    switch (event.option as FileControlActions) {
-      case 'SAVE':
-        this.sendEvent(InstrumentFilesEditorEventType.SUBMIT_INSTRUMENT_ANNEX_FILE_CLICKED, event.file);
-        return;
-
-      case 'DELETE':
-        this.sendEvent(InstrumentFilesEditorEventType.DELETE_INSTRUMENT_ANNEX_FILE_CLICKED, event.file);
-        return;
-
-      case 'SHOW':
-        this.sendEvent(InstrumentFilesEditorEventType.SHOW_FILE_CLICKED, event.file);
-        return;
-
-      case 'DOWNLOAD':
-        this.sendEvent(InstrumentFilesEditorEventType.DOWNLOAD_FILE_CLICKED, event.file);
-        return;
-
-      case 'CANCEL':
-        console.log('CANCEL ANNEX', event.file);
+        console.log('CANCEL AUXILIARY', event.file);
         return;
 
       default:
@@ -105,6 +81,16 @@ export class InstrumentFilesEditorComponent implements OnInit, OnChanges {
     };
 
     this.instrumentFilesEditorEvent.emit(event);
+  }
+
+  getFileNameByMediaContent(mediaContent: InstrumentMediaContent): string{
+    if (this.instrumentFileName && this.instrumentFileName !== '' ){
+      if (mediaContent === 'InstrumentMainFile'){
+        return this.instrumentFileName + '.pdf';
+      }
+      return 'Anexo de ' + FormatLibrary.firstLetterToLowerCase(this.instrumentFileName) + '.pdf';
+    }
+    return null;
   }
 
 }
