@@ -12,16 +12,22 @@ import { InstrumentTypeDataService } from './instrument-type.data.service';
 import { RecordingDataService } from './recording.data.service';
 import { RepositoryDataService } from './repository.data.service';
 import { TransactionDataService } from './transaction.data.service';
+import { FileDownloadService } from './file-services/file-download.service';
+import { getSaver, SAVER } from './file-services/saver.provider';
+
 
 
 @NgModule({
 
   providers: [
+    FileDownloadService,
     InstrumentDataService,
     InstrumentTypeDataService,
     RecordingDataService,
     RepositoryDataService,
-    TransactionDataService
+    TransactionDataService,
+
+    { provide: SAVER, useFactory: getSaver }
   ]
 
 })
