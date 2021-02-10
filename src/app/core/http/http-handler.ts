@@ -67,11 +67,7 @@ export class HttpHandler {
 
     const payloadDataField = this.getPayloadDataField(path, callerOptions, service);
 
-    const requestOptions = DefaultHttpClientOptions();
-
-    if (body) {
-      requestOptions.body = body;
-    }
+    const requestOptions = this.getRequestOptions(body, callerOptions);
 
     return forkJoin([
       this.getUrl(path, service),
@@ -140,6 +136,9 @@ export class HttpHandler {
     if (options && options.dataField) {
       return options.dataField;
 
+    } else if (options && options.dataField === null) {
+      return '';
+
     } else if (service && service.payloadDataField) {
       return service.payloadDataField;
 
@@ -150,6 +149,28 @@ export class HttpHandler {
       return 'data';
 
     }
+  }
+
+  private getRequestOptions(body: any, callerOptions: HttpClientOptions){
+    const requestOptions = DefaultHttpClientOptions();
+
+    if (body) {
+      requestOptions.body = body;
+    }
+
+    if (callerOptions?.responseType) {
+      requestOptions.responseType = callerOptions.responseType;
+    }
+
+    if (callerOptions?.observe) {
+      requestOptions.observe = callerOptions.observe;
+    }
+
+    if (callerOptions?.reportProgress) {
+      requestOptions.reportProgress = callerOptions.reportProgress;
+    }
+
+    return requestOptions;
   }
 
 }
