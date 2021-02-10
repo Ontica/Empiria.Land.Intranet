@@ -17,6 +17,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatRippleModule } from '@angular/material/core';
@@ -99,6 +100,7 @@ export const DATE_FORMATS = {
     MatTooltipModule,
     MatTableModule,
     MatCheckboxModule,
+    MatProgressBarModule
   ],
 
   exports: [
@@ -122,6 +124,7 @@ export const DATE_FORMATS = {
     MatTooltipModule,
     MatTableModule,
     MatCheckboxModule,
+    MatProgressBarModule
   ],
 
   providers: [

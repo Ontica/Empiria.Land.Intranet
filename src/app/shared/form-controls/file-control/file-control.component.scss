@@ -105,6 +105,10 @@ input[type=file] {
         text-overflow: ellipsis;
       }
     }
+
+    .file-download-progress {
+      padding-top: $space;
+    }
   }
 
   .file-add {

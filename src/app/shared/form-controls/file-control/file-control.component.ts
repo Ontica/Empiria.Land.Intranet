@@ -28,8 +28,6 @@ export class FileControlComponent implements OnChanges {
 
   @Input() disabled: boolean = false;
 
-  @Input() progress; // TODO: implement
-
   @Input()
   get config() {
     return this.fileControlConfig;
@@ -119,7 +117,7 @@ export class FileControlComponent implements OnChanges {
       this.filesToUpload = this.fileControl instanceof Array ? this.fileControl : [this.fileControl];
       this.filesToUpload.forEach(file => {
         file.menuOptions = this.getMenuOptions(file);
-        file.sizeString = FormatLibrary.formatBytes(file.size);
+        file.sizeString = this.formatBytes(file.size);
         file.fileIcon = this.getFileIcon(file.type);
       });
       return;
@@ -138,7 +136,7 @@ export class FileControlComponent implements OnChanges {
       options.push({name: 'Descargar', action: 'DOWNLOAD'});
 
       if (!this.readonly){
-        options.push({name: 'Eliminar', action: 'DELETE'});
+        options.push({name: 'Eliminar', action: 'REMOVE'});
       }
 
       return options;
@@ -241,6 +239,10 @@ export class FileControlComponent implements OnChanges {
 
   private printInvalidFormat(file: File){
     console.log(`Invalid format: ${file.name}. Is required: ${this.acceptedFileTypes}`);
+  }
+
+  formatBytes(sizeBytes){
+    return FormatLibrary.formatBytes(sizeBytes);
   }
 
 }

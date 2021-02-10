@@ -1,3 +1,6 @@
+import { Progress } from '@app/data-services/file-services/http-progress';
+import { Observable } from 'rxjs';
+
 export enum FileTypeAccepted {
   all = '*',
   pdf = 'application/pdf',
@@ -13,6 +16,7 @@ export interface FileControlConfig {
   fileTypes?: FileType;
   maxFiles?: number;
   placeholder?: string;
+  placeholderReadonly?: string;
   showFileInfo?: boolean;
   textAccion?: string;
   textSave?: string;
@@ -24,12 +28,13 @@ export const DefaultFileControlConfig: FileControlConfig = {
   fileTypes: 'all',
   maxFiles: 1,
   placeholder: 'Elija un archivo o arrástrelo y suéltelo aquí.',
+  placeholderReadonly: 'No se han agregado archivos.',
   showFileInfo: true,
   textAccion: 'Agregar Archivo',
   textSave: 'Guardar Archivo',
 };
 
-export type FileControlActions = 'SAVE' | 'CANCEL' | 'SHOW' | 'DOWNLOAD' | 'DELETE';
+export type FileControlActions = 'SAVE' | 'CANCEL' | 'SHOW' | 'DOWNLOAD' | 'REMOVE';
 
 export class FileControlMenuOptions {
   name: string;
@@ -47,6 +52,7 @@ export class FileData {
   sizeString?: string;
   fileIcon?: string;
   file?: File;
+  download$?: Observable<Progress>;
 }
 
 export const EmptyFileData: FileData = {
