@@ -13,9 +13,11 @@ import * as moment from 'moment';
 
 export type DateString = Date | string;
 
+export const MINUTES_IN_HOUR = 60;
+
+export const MINUTES_IN_DAY = 1440;
 
 export class DateStringLibrary {
-
 
   static compareDates(value1: DateString, value2: DateString): number {
     const date1 = this.datePart(value1);
@@ -109,8 +111,17 @@ export class DateStringLibrary {
     const year = date.getFullYear();
 
     switch (returnedFormat) {
+      case 'DM':
+        return `${day}/${month}`;
+
+      case 'DM HH:mm':
+        return `${day}/${month} ${this.militaryTimeFormat(value)}`;
+
       case 'DMY':
         return `${day}/${month}/${year}`;
+
+      case 'DMY HH:mm':
+        return `${day}/${month}/${year} ${this.militaryTimeFormat(value)}`;
 
       case 'YMD':
         return `${year}/${month}/${day}`;
@@ -148,7 +159,45 @@ export class DateStringLibrary {
   }
 
 
+  static militaryTimeFormat(value: DateString){
+    if (value instanceof Date || typeof value === 'string' && value.includes('T')) {
+      const time = typeof value === 'string' ? new Date(value) : value;
+
+      const hour = this.padZeros(time.getHours());
+      const minute = this.padZeros(time.getMinutes());
+
+      return `${hour}:${minute}`;
+    }
+
+    return '00:00';
+  }
+
+
+  static addTimes(time0, time1) {
+    const min0 = this.timeSpanToMins(time0 ?? '00:00:00:00');
+    const min1 = this.timeSpanToMins(time1 ?? '00:00:00:00');
+
+    return this.timeFromMins( min0 + min1 );
+  }
+
+
   // private methods
+
+
+  private static timeSpanToMins(time: string) { // format 01:12:30:00 = 1 day 12 hours 30 minutes 00 seconds
+      const b = time.split(':');
+      const min = parseInt(b[0]) * MINUTES_IN_DAY + parseInt(b[1]) * MINUTES_IN_HOUR + parseInt(b[2]);
+      return min;
+  }
+
+
+  private static timeFromMins(minutes: number) {
+      const day = Math.floor(minutes / MINUTES_IN_DAY) | 0;
+      const hour =  Math.floor((minutes % MINUTES_IN_DAY) / MINUTES_IN_HOUR) | 0;
+      const min =  Math.floor(minutes % MINUTES_IN_HOUR);
+      const seg = 0;
+      return `${this.padZeros(day)}:${this.padZeros(hour)}:${this.padZeros(min)}:${this.padZeros(seg)}`;
+  }
 
 
   private static getYearAsString(year: number): string {
