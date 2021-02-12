@@ -7,7 +7,7 @@
 
 import { NgModule } from '@angular/core';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule, MediaMarshaller } from '@angular/flex-layout';
 
 
 @NgModule({
@@ -21,4 +21,24 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   ],
 
 })
-export class AngularFlexLayoutModule { }
+export class AngularFlexLayoutModule {
+  lastValue;
+
+  public constructor( m: MediaMarshaller) {
+    // @ts-ignore
+    m.subject.subscribe((x) => {
+      // @ts-ignore
+      if (m.activatedBreakpoints.filter((b) => b.alias === 'print').length === 0) {
+        // @ts-ignore
+        this.lastValue = [...m.activatedBreakpoints];
+      } else {
+        // @ts-ignore
+        m.activatedBreakpoints = [...this.lastValue];
+        // @ts-ignore
+        m.hook.collectActivations = () => {};
+        // @ts-ignore
+        m.hook.deactivations = [...this.lastValue];
+      }
+    });
+  }
+}
