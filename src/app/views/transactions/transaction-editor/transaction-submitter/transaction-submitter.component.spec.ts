@@ -24,15 +24,15 @@ describe('TransactionSubmitterComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('form invalid when empty', () => {
+  it('form invalid when empty', () => {
     expect(component.formHandler.form.valid).toBeFalsy();
   });
 
-  fit('form valid', () => {
+  it('form valid', () => {
     expect(component.formHandler.form.valid).toBeFalsy();
 
     component.formHandler.getControl('paymentReceiptNo').setValue('9186');

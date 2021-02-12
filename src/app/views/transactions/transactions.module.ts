@@ -34,7 +34,9 @@ import { RequestedServiceEditorComponent }
 import { TransactionSubmitterComponent }
   from './transaction-editor/transaction-submitter/transaction-submitter.component';
 import { PreprocessingComponent } from './preprocessing/preprocessing.component';
-import { InstrumentFilesEditorComponent } from './preprocessing/instrument-files-editor/instrument-files-editor.component';
+import { InstrumentFilesEditorComponent }
+  from './preprocessing/instrument-files-editor/instrument-files-editor.component';
+import { WorkflowHistoryComponent } from './workflow-history/workflow-history.component';
 
 
 @NgModule({
@@ -65,6 +67,7 @@ import { InstrumentFilesEditorComponent } from './preprocessing/instrument-files
     TransactionSubmitterComponent,
     PreprocessingComponent,
     InstrumentFilesEditorComponent,
+    WorkflowHistoryComponent,
   ],
 
   exports: []

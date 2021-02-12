@@ -38,9 +38,12 @@
     </ng-template>
   </mat-tab>
 
-  <mat-tab label="Historia" disabled>
+  <mat-tab label="Historia">
     <ng-template matTabContent>
+      <emp-land-workflow-history
+        [transactionUID]="transaction.uid">
 
+      </emp-land-workflow-history>
     </ng-template>
   </mat-tab>
 

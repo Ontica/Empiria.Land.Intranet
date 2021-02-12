@@ -10,18 +10,18 @@
 .mat-icon {
   color: $icon-color;
   cursor: pointer;
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 
 button .mat-icon {
   color: $icon-color-light;
   cursor: pointer;
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 
 .material-icons-outlined,
 .material-icons.material-icons--outlined {
-  font-family: 'Material Icons Outlined' !important;
+  font-family: "Material Icons Outlined" !important;
 }
 
 //
@@ -143,35 +143,62 @@ table.mat-table {
   width: 100%;
   margin: 0.5rem 0;
   font-family: $font-family;
-  font-size: 9pt !important;
-  font-weight: 400;
+  font-size: $font-size-hint !important;
+  // font-weight: 400;
 
   tr {
     height: 35px;
+
+    &.mat-header-row,
+    &.mat-footer-row {
+      height: 30px;
+
+      th {
+        color: $secondary-text-color;
+      }
+
+      td {
+        color: $text-color;
+      }
+    }
+
+    &.mat-header-row {
+      background-color: $primary-color;
+    }
+
+    &.mat-footer-row {
+      background-color: $disabled-color;
+    }
+
+    &.mat-row {
+      background-color: $white;
+    }
+
+    &:hover .mat-cell {
+      background: $selected-control-background-color;
+    }
   }
 
   th {
     font-weight: 500;
-    background-color: $primary-color;
-    color: $white;
     padding-right: 10px;
-  }
+    padding: 10px 10px 10px 0;
 
-  th:first-of-type {
-    padding-left: 10px;
-  }
+    &.text-align-right {
+      text-align: right;
+      justify-content: flex-end;
+    }
 
-  th.mat-header-cell:last-of-type {
-    padding-right: 10px;
-  }
+    &:last-of-type {
+      padding-right: 10px !important;
+    }
 
-  th.text-align-right {
-    text-align: right;
-    justify-content: flex-end;
+    &:first-of-type {
+      padding-left: 10px;
+    }
   }
 
   td {
-    background-color: white;
     vertical-align: top;
     padding: 10px 10px 10px 0;
 
@@ -182,15 +209,16 @@ table.mat-table {
     .mat-icon:hover {
       color: $icon-color-dark;
     }
-  }
 
-  td:first-of-type {
-    padding-left: 10px;
-  }
+    &.mat-cell:last-of-type,
+    &.mat-footer-cell:last-of-type {
+      padding-right: 10px;
+      width: auto;
+    }
 
-  td.mat-cell:last-of-type {
-    padding-right: 10px;
-    width: auto;
+    &:first-of-type {
+      padding-left: 10px;
+    }
   }
 }
 

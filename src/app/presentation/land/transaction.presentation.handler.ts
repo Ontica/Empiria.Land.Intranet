@@ -86,6 +86,7 @@ export enum SelectorType {
   RECORDER_OFFICE_LIST = 'Land.Transactions.Selectors.RecorderOfficeList',
   SELECTED_FILE = 'Land.Transactions.Selectors.SelectedFile',
   SELECTED_PREPROCESSING_DATA = 'Land.Transactions.Selectors.PreprocessingData',
+  SELECTED_WORKFLOW_HISTORY = 'Land.Transactions.Selectors.WorkflowHistory',
 }
 
 
@@ -99,6 +100,7 @@ const initialState: StateValues = [
   { key: SelectorType.RECORDER_OFFICE_LIST, value: [] },
   { key: SelectorType.SELECTED_FILE, value: EmptyFileData },
   { key: SelectorType.SELECTED_PREPROCESSING_DATA, value: EmptyPreprocessingData },
+  { key: SelectorType.SELECTED_WORKFLOW_HISTORY, value: [] },
 ];
 
 
@@ -327,7 +329,10 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         Assertion.assertValue(params.transactionUID, 'payload.transactionUID');
 
         const transaction = this.data.getTransaction(params.transactionUID)
-                              .pipe(tap( t => this.getPreprocessingDataInstrument(t)));
+                              .pipe(tap( t => {
+                                this.getPreprocessingDataInstrument(t);
+                                this.getWorkflowHistoryForTransaction(t.uid);
+                              }));
 
         this.setValue(SelectorType.SELECTED_TRANSACTION, transaction);
 
@@ -339,6 +344,8 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         this.setValue(SelectorType.SELECTED_FILE, EmptyFileData);
 
         this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, EmptyPreprocessingData);
+
+        this.setValue(SelectorType.SELECTED_WORKFLOW_HISTORY, []);
 
         return;
 
@@ -378,9 +385,15 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
 
   setPreprocessingDataInstrument(instrument){
-    let preprocessingData = this.getValue<PreprocessingData>(SelectorType.SELECTED_PREPROCESSING_DATA);
+    const preprocessingData = this.getValue<PreprocessingData>(SelectorType.SELECTED_PREPROCESSING_DATA);
     preprocessingData.instrument = instrument;
     this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, preprocessingData);
+  }
+
+
+  getWorkflowHistoryForTransaction(transactionUID: string){
+    const workflowHistory = this.data.getWorkflowHistoryForTransaction(transactionUID);
+    this.setValue(SelectorType.SELECTED_WORKFLOW_HISTORY, workflowHistory);
   }
 
 }

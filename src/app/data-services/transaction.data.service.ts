@@ -12,7 +12,7 @@ import { Assertion, HttpService } from '@app/core';
 
 import { Agency, Instrument, InstrumentMediaContent, PaymentFields, PreprocessingData, ProvidedServiceType,
          RecorderOffice, RequestedServiceFields, Transaction, TransactionFields, TransactionFilter,
-         TransactionShortModel, TransactionType } from '@app/models';
+         TransactionShortModel, TransactionType, WorkflowTask } from '@app/models';
 
 import { Progress, reportHttpProgress } from './file-services/http-progress';
 
@@ -213,14 +213,24 @@ export class TransactionDataService {
       );
   }
 
+
   removeInstrumentFile(instrumentUID: string,
-                       mediaFileUID: string): Observable<any> {
+                       mediaFileUID: string): Observable<Instrument> {
     Assertion.assertValue(instrumentUID, 'instrumentUID');
     Assertion.assertValue(mediaFileUID, 'mediaFileUID');
 
     const path = `v5/land/instruments/${instrumentUID}/media-files/${mediaFileUID}`;
 
     return this.http.delete<Instrument>(path);
+  }
+
+
+  getWorkflowHistoryForTransaction(transactionUID: string): Observable<WorkflowTask> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/workflow/${transactionUID}/history`;
+
+    return this.http.get<WorkflowTask>(path);
   }
 
 }

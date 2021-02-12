@@ -29,3 +29,5 @@ export * from './property';
 export * from './recording-act';
 
 export * from './transaction';
+
+export * from './workflow';
