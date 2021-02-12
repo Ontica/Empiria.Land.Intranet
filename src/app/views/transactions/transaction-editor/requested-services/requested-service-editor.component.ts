@@ -116,7 +116,8 @@ export class RequestedServiceEditorComponent implements OnInit {
       serviceUID: formModel.service,
       feeConceptUID: formModel.feeConcept,
       unitUID: this.serviceSelected.unit.uid,
-      taxableBase: FormatLibrary.stringToNumber(formModel.taxableBase),
+      taxableBase: this.feeConceptSelected.requiresTaxableBase ?
+                   FormatLibrary.stringToNumber(formModel.taxableBase) : 0,
       quantity: parseFloat(formModel.quantity),
       notes: formModel.notes ?? ''
     };
