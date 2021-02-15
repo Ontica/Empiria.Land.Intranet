@@ -133,6 +133,12 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
         return;
 
+      case TransactionHeaderEventType.PRINT_SUBMISSION_RECEIPT:
+
+        this.printSubmissionReceipt();
+
+        return
+
       default:
         console.log(`Unhandled user interface event ${event.type}`);
         return;
@@ -230,8 +236,17 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
   }
 
   printPaymentOrder(){
-    this.filePrintPreview.open(this.transaction.paymentOrder.attributes.url,
-                               this.transaction.paymentOrder.attributes.mediaType);
+    this.openPrintViewer(this.transaction.paymentOrder.attributes.url,
+                         this.transaction.paymentOrder.attributes.mediaType);
+  }
+
+  printSubmissionReceipt(){
+    this.openPrintViewer(this.transaction.submissionReceipt.url,
+                         this.transaction.submissionReceipt.mediaType);
+  }
+
+  openPrintViewer(url: string, mediaType: string){
+    this.filePrintPreview.open(url, mediaType);
   }
 
 }

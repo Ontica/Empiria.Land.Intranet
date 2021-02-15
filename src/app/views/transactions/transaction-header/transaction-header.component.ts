@@ -17,6 +17,7 @@ export enum TransactionHeaderEventType {
   GENERATE_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.GeneratePaymentOrderClicked',
   CANCEL_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.CancelPaymentOrderClicked',
   PRINT_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.PrintPaymentOrderClicked',
+  PRINT_SUBMISSION_RECEIPT = 'TransactionHeaderComponent.Event.PrintSubmissionReceiptClicked',
 }
 
 @Component({
@@ -82,6 +83,10 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
 
   get canSubmit(){
     return this.transaction.actions.can.submit;
+  }
+
+  get canPrintSubmissionReceipt(){
+    return this.transaction.actions.can.printSubmissionReceipt;
   }
 
   constructor(private messageBox: MessageBoxService,
@@ -220,6 +225,10 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
             this.sendEvent(TransactionHeaderEventType.CANCEL_PAYMENT_ORDER);
           }
         });
+  }
+
+  submitPrintSubmissionReceipt(){
+    this.sendEvent(TransactionHeaderEventType.PRINT_SUBMISSION_RECEIPT);
   }
 
   // private methods

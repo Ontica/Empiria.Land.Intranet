@@ -53,6 +53,7 @@ export interface Transaction extends Entity {
   requestedServices: RequestedService[];
   paymentOrder?: PaymentOrder;
   payment: PaymentFields;
+  submissionReceipt?: MediaBase;
   status: string;
   statusName: string;
   stage: string;
@@ -126,11 +127,13 @@ export interface PaymentOrder extends Entity {
   attributes: Attributes;
 }
 
-
-export interface Attributes {
-  controlTag: string;
+export interface MediaBase {
   url: string;
   mediaType?: string;
+}
+
+export interface Attributes extends MediaBase{
+  controlTag: string;
 }
 
 
@@ -150,6 +153,7 @@ export interface TransactionActions {
     cancelPaymentOrder?: boolean;
     editPayment?: boolean;
     cancelPayment?: boolean;
+    printSubmissionReceipt?: boolean;
     uploadDocuments?: boolean;
     editInstrument?: boolean;
     editRecordingActs?: boolean;
@@ -175,6 +179,7 @@ export const EmptyAction: TransactionActions = {
     cancelPaymentOrder: false,
     editPayment: false,
     cancelPayment: false,
+    printSubmissionReceipt: false,
     uploadDocuments: false,
     editInstrument: false,
     editRecordingActs: false,

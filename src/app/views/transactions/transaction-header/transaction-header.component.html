@@ -93,6 +93,9 @@
         <button *ngIf="canCancelPaymentOrder" (click)="submitCancelPaymentOrder()" type="submit" class="btn-warning">
           Cancelar orden de pago
         </button>
+        <button *ngIf="canPrintSubmissionReceipt" (click)="submitPrintSubmissionReceipt()" type="submit" class="btn-action">
+          Imprimir boleta de recepción
+        </button>
       </div>
 
     </div>
