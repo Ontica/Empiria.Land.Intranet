@@ -6,45 +6,35 @@
 
 <mat-tab-group [selectedIndex]="selectedTabIndex">
   <mat-tab label="Información del trámite">
-    <ng-template matTabContent>
-      <emp-land-transaction-editor>
+    <emp-land-transaction-editor>
 
-      </emp-land-transaction-editor>
-    </ng-template>
+    </emp-land-transaction-editor>
   </mat-tab>
 
   <mat-tab label="Preprocesamiento" *ngIf="transaction.actions.show.preprocessingTab">
-    <ng-template matTabContent>
-      <emp-land-preprocessing
-        [transactionUID]="transaction.uid">
+    <emp-land-preprocessing
+      [transactionUID]="transaction.uid">
 
-      </emp-land-preprocessing>
-    </ng-template>
+    </emp-land-preprocessing>
   </mat-tab>
 
   <mat-tab label="Inscripción" *ngIf="transaction.actions.show.instrumentRecordingTab">
-    <ng-template matTabContent>
-      <emp-land-instrument-edition
-        [transactionUID]="transaction.uid"
-        [canEdit]="transaction.actions.can.editInstrument">
+    <emp-land-instrument-edition
+      [transactionUID]="transaction.uid"
+      [canEdit]="transaction.actions.can.editInstrument">
 
-      </emp-land-instrument-edition>
-    </ng-template>
+    </emp-land-instrument-edition>
   </mat-tab>
 
   <mat-tab label="Emisión de certificados" *ngIf="transaction.actions.show.certificatesEmissionTab" disabled>
-    <ng-template matTabContent>
 
-    </ng-template>
   </mat-tab>
 
   <mat-tab label="Historia">
-    <ng-template matTabContent>
-      <emp-land-workflow-history
-        [transactionUID]="transaction.uid">
+    <emp-land-workflow-history
+      [transactionUID]="transaction.uid">
 
-      </emp-land-workflow-history>
-    </ng-template>
+    </emp-land-workflow-history>
   </mat-tab>
 
 </mat-tab-group>
