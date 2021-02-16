@@ -186,6 +186,8 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         this.getPreprocessingDataInstrument(params.result);
 
+        this.getWorkflowHistoryForTransaction(params.result.uid);
+
         return;
 
       case EffectType.DELETE_TRANSACTION:
