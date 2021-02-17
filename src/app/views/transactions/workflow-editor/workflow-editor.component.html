@@ -39,14 +39,16 @@
                   [bindValue]="'type'"
                   [config]="{ clearable: false }"
                   [items]="operationSelected.nextStatus"
-                  [showError]="formHandler.showInvalidControl(controls.nextStatus)">
+                  [showError]="formHandler.showInvalidControl(controls.nextStatus)"
+                  (changes)="statusChange($event)">
                 </emp-ng-select>
               </div>
               <div *ngIf="requiredNextUserField" [fxFlex]="200/3">
                 <label>{{labelNextUser}}</label>
                 <emp-ng-select [formControlName]="controls.nextUser"
                   [config]="{ clearable: false }"
-                  [items]="operationSelected.nextUsers"
+                  [items]="statusSelected.users"
+                  [placeholder]="statusSelected.type === 'None' ? 'Seleccione el nuevo estado' : 'Seleccione'"
                   [showError]="formHandler.showInvalidControl(controls.nextUser)">
                 </emp-ng-select>
               </div>

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { Agency, Instrument, InstrumentMediaContent, Operation, PaymentFields, PreprocessingData,
+import { Agency, Instrument, InstrumentMediaContent, WorkflowOperation, PaymentFields, PreprocessingData,
          ProvidedServiceType, RecorderOffice, RequestedServiceFields, Transaction, TransactionFields,
          TransactionFilter, TransactionShortModel, TransactionType, WorkflowCommand, WorkflowTask } from '@app/models';
 
@@ -234,12 +234,12 @@ export class TransactionDataService {
   }
 
 
-  getApplicableOperations(transactionsUidList: string[]): Observable<Operation[]> {
+  getApplicableOperations(transactionsUidList: string[]): Observable<WorkflowOperation[]> {
     Assertion.assertValue(transactionsUidList, 'transactionsUidList');
 
     const path = `v5/land/workflow/applicable-command-types`;
 
-    return this.http.post<Operation[]>(path, transactionsUidList);
+    return this.http.post<WorkflowOperation[]>(path, transactionsUidList);
   }
 
 

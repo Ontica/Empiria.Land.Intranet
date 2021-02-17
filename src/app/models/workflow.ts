@@ -18,20 +18,20 @@ export interface WorkflowTask {
 
 
 export type WorkflowCommandType = 'AssignTo' | 'PullToControlDesk' | 'Receive' | 'Reentry' |
-                                  'ReturnToMe' | 'SetNextStatus' | 'Sign' | 'Unsign';
+                                  'ReturnToMe' | 'SetNextStatus' | 'Sign' | 'Unsign' | 'None';
 
 
-export interface Collection {
+export interface WorkflowStatus {
   type: string;
   name: string;
+  users: Identifiable[];
 }
 
 
-export interface Operation {
+export interface WorkflowOperation {
   type: WorkflowCommandType;
   name: string;
-  nextStatus: Collection[];
-  nextUsers: Identifiable[];
+  nextStatus: WorkflowStatus[];
 }
 
 
@@ -50,9 +50,15 @@ export interface WorkflowPayload {
 }
 
 
-export const EmptyOperation: Operation = {
-  type: null,
+export const EmptyOperation: WorkflowOperation = {
+  type: 'None',
   name: '',
   nextStatus: [],
-  nextUsers: [],
+};
+
+
+export const EmptyWorkflowStatus: WorkflowStatus = {
+  type: 'None',
+  name: '',
+  users: [],
 };

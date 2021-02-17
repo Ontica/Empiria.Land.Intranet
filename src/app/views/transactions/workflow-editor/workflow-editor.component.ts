@@ -3,10 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, Command } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
-import { EmptyOperation, Operation, TransactionShortModel, WorkflowPayload } from '@app/models';
+import { EmptyOperation, EmptyWorkflowStatus, TransactionShortModel,
+         WorkflowOperation, WorkflowPayload, WorkflowStatus } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 import { FormHandler } from '@app/shared/utils';
-
 
 enum WorkflowEditorFormControls  {
   operation = 'operation',
@@ -15,7 +15,6 @@ enum WorkflowEditorFormControls  {
   note = 'note',
   authorization = 'authorization',
 }
-
 
 @Component({
   selector: 'emp-land-workflow-editor',
@@ -29,8 +28,9 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
 
   helper: SubscriptionHelper;
 
-  applicableOperationsList: Operation[] = [];
-  operationSelected: Operation = EmptyOperation;
+  applicableOperationsList: WorkflowOperation[] = [];
+  operationSelected: WorkflowOperation = EmptyOperation;
+  statusSelected: WorkflowStatus = EmptyWorkflowStatus;
 
   formHandler: FormHandler;
   controls = WorkflowEditorFormControls;
@@ -44,7 +44,7 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
 
-    this.helper.select<Operation[]>(TransactionStateSelector.APPLICABLE_OPERATIONS,
+    this.helper.select<WorkflowOperation[]>(TransactionStateSelector.APPLICABLE_OPERATIONS,
                                     this.transactions.map( x => x.uid ))
       .subscribe(x => {
         this.applicableOperationsList = x;
@@ -56,7 +56,7 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
   }
 
   get requiredNextStatusField(){
-    return ['AssignTo', 'SetNextStatus'].includes(this.operationSelected.type);
+    return ['AssignTo', 'Receive', 'SetNextStatus'].includes(this.operationSelected.type);
   }
 
   get requiredNextUserField(){
@@ -71,12 +71,18 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
     this.closeEvent.emit();
   }
 
-  operationChange(change) {
+  operationChange(change: WorkflowOperation) {
     this.operationSelected = change;
+
+    this.statusSelected = EmptyWorkflowStatus;
 
     this.labelNextUser = this.operationSelected.type === 'Receive' ? 'De:' : 'Asignar a:';
 
     this.setControlsValidators();
+  }
+
+  statusChange(change: WorkflowStatus) {
+    this.statusSelected = change;
   }
 
   submitTransaction(){
@@ -146,7 +152,7 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
     const nextStatus = !this.requiredNextStatusField ? '' : this.operationSelected.nextStatus
       .filter(x => x.type === this.formHandler.getControl(this.controls.nextStatus).value)[0].name;
 
-    const nextUser = !this.requiredNextUserField ? '' : this.operationSelected.nextUsers
+    const nextUser = !this.requiredNextUserField ? '' : this.statusSelected.users
       .filter(x => x.uid === this.formHandler.getControl(this.controls.nextUser).value)[0].name;
 
     return `
