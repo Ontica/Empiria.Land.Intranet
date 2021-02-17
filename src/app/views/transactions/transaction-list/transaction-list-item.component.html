@@ -25,10 +25,9 @@
   <div fxFlex="30px">
     <div class="primary-text nowrap">
 
-      <emp-ng-menu [items]="[{'name': 'Agregar Personas'}]"
-        (selected)="onClickTransactionOptions($event)">
-
-      </emp-ng-menu>
+      <a (click)="onClickTransactionOptions('SetNextStatus')" title="Cambiar estado">
+        <mat-icon>more_vert</mat-icon>
+      </a>
 
     </div>
   </div>

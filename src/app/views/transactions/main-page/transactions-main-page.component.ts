@@ -24,6 +24,7 @@ import { View } from '@app/views/main-layout';
 
 import { TransactionListEventType } from '../transaction-list/transaction-list.component';
 
+type TransactionModalOptios = 'CreateTransactionEditor' | 'SetNextStatus';
 
 @Component({
   selector: 'emp-land-transactions-main-page',
@@ -38,7 +39,9 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   filter: TransactionFilter = EmptyTransactionFilter;
   selectedFile: FileData = EmptyFileData;
 
-  displayCreateTransactionEditor = false;
+  displayOptionModalSelected: TransactionModalOptios = null;
+  selectedTransactions: TransactionShortModel[] = [];
+
   displayRecordingActEditor = false;
   displayTransactionTabbedView = false;
   displayFileViewer = false;
@@ -102,7 +105,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
 
   onTransactionCreatorClosed() {
-    this.displayCreateTransactionEditor = false;
+    this.displayOptionModalSelected = null;
   }
 
 
@@ -110,7 +113,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
     switch (event.type as TransactionListEventType) {
 
       case TransactionListEventType.CREATE_TRANSACTION_CLICKED:
-        this.displayCreateTransactionEditor = true;
+        this.displayOptionModalSelected = 'CreateTransactionEditor';
         return;
 
       case TransactionListEventType.FILTER_CHANGED:
@@ -118,14 +121,19 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
         return;
 
       case TransactionListEventType.TRANSACTION_OPTIONS_CLICKED:
-        this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT,
-                              {'transactionUID': event.payload.transaction.uid});
+        this.displayOptionModalSelected = 'SetNextStatus';
+        this.selectedTransactions = [event.payload.transaction];
         return;
 
       case TransactionListEventType.TRANSACTION_SELECTED:
         this.isLoadingTransaction = true;
         this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION,
                               {'transactionUID': event.payload.transaction.uid});
+        return;
+
+      case TransactionListEventType.TRANSACTIONS_SELECTED_OPTIONS_CLICKED:
+        this.displayOptionModalSelected = 'SetNextStatus';
+        this.selectedTransactions = event.payload.transactions;
         return;
 
       default:

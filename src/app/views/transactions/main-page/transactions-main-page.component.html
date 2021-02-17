@@ -40,11 +40,22 @@
 </div>
 
 
-<emp-ng-modal-window *ngIf="displayCreateTransactionEditor"
+<emp-ng-modal-window *ngIf="displayOptionModalSelected"
                      [config]="{width:'820px'}">
 
-  <emp-land-transaction-creator (closeEvent)="onTransactionCreatorClosed()">
+  <ng-container [ngSwitch]="displayOptionModalSelected">
 
-  </emp-land-transaction-creator>
+    <emp-land-transaction-creator *ngSwitchCase="'CreateTransactionEditor'"
+      (closeEvent)="onTransactionCreatorClosed()">
+
+    </emp-land-transaction-creator>
+
+    <emp-land-workflow-editor *ngSwitchCase="'SetNextStatus'"
+      [transactions]="selectedTransactions"
+      (closeEvent)="onTransactionCreatorClosed()">
+
+    </emp-land-workflow-editor>
+
+  </ng-container>
 
 </emp-ng-modal-window>

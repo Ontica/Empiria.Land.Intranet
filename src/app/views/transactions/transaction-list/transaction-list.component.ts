@@ -12,19 +12,24 @@ import { EventInfo } from '@app/core';
 
 import { TransactionShortModel, EmptyTransaction, Transaction,
          TransactionFilter, EmptyTransactionFilter } from '@app/models';
+import { expandCollapse } from '@app/shared/animations/animations';
 
 
 export enum TransactionListEventType {
   CREATE_TRANSACTION_CLICKED  = 'TransactionListComponent.Event.CreateTransactionClicked',
   FILTER_CHANGED              = 'TransactionListComponent.Event.FilterChanged',
   TRANSACTION_OPTIONS_CLICKED =  'TransactionListComponent.Event.TransactionOptionsClicked',
-  TRANSACTION_SELECTED        = 'TransactionListComponent.Event.TransactionSelected'
+  TRANSACTION_SELECTED        = 'TransactionListComponent.Event.TransactionSelected',
+  TRANSACTIONS_SELECTED_OPTIONS_CLICKED = 'TransactionListComponent.Event.TransactionsSelectedOptionsClicked',
 }
 
 
 @Component({
   selector: 'emp-land-transaction-list',
-  templateUrl: './transaction-list.component.html'
+  templateUrl: './transaction-list.component.html',
+  animations: [
+    expandCollapse
+  ],
 })
 export class TransactionListComponent implements OnChanges {
 
@@ -74,6 +79,12 @@ export class TransactionListComponent implements OnChanges {
 
   onSelectTransaction(transaction: TransactionShortModel) {
     this.sendEvent(TransactionListEventType.TRANSACTION_SELECTED, { transaction });
+  }
+
+
+  onClickTransactionsSelectedOptions() {
+    this.sendEvent(TransactionListEventType.TRANSACTIONS_SELECTED_OPTIONS_CLICKED,
+                  { transactions: this.selection.selected });
   }
 
   // private methods
