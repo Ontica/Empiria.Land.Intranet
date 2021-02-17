@@ -30,19 +30,19 @@
 
             <div class="section-title">Datos del nuevo estado</div>
 
-            <div *ngIf="requiredNextStatusField || requiredNextUserField || requiredPasswordField"
+            <div *ngIf="requiredNextStatusField || requiredNextUserField || requiredAuthorizationField"
               fxLayout="row" fxLayout.lt-md="column">
 
               <div *ngIf="requiredNextStatusField" [fxFlex]="100/3">
                 <label>Nuevo estado:</label>
-                <emp-ng-select [formControlName]="controls.nexStatus"
+                <emp-ng-select [formControlName]="controls.nextStatus"
                   [bindValue]="'type'"
                   [config]="{ clearable: false }"
                   [items]="operationSelected.nextStatus"
-                  [showError]="formHandler.showInvalidControl(controls.nexStatus)">
+                  [showError]="formHandler.showInvalidControl(controls.nextStatus)">
                 </emp-ng-select>
               </div>
-              <div *ngIf="requiredNextUserField" fxFlex>
+              <div *ngIf="requiredNextUserField" [fxFlex]="200/3">
                 <label>{{labelNextUser}}</label>
                 <emp-ng-select [formControlName]="controls.nextUser"
                   [config]="{ clearable: false }"
@@ -50,11 +50,11 @@
                   [showError]="formHandler.showInvalidControl(controls.nextUser)">
                 </emp-ng-select>
               </div>
-              <div *ngIf="requiredPasswordField" [fxFlex]="100/3">
+              <div *ngIf="requiredAuthorizationField" [fxFlex]="100/3">
                 <label>Firma electrónica:</label>
-                <input [formControlName]="controls.password" class="text-box"
+                <input [formControlName]="controls.authorization" class="text-box"
                   type="password" autocomplete="new-password"
-                  [class.invalid-control]="formHandler.showInvalidControl(controls.password)">
+                  [class.invalid-control]="formHandler.showInvalidControl(controls.authorization)">
               </div>
 
             </div>
@@ -63,7 +63,8 @@
 
               <div fxFlex>
                 <label>Observaciones:</label>
-                <textarea [formControlName]="controls.notes" empNgTextareaAutoresize rows="1" class="text-area uppercase">
+                <textarea [formControlName]="controls.note" empNgTextareaAutoresize
+                  rows="1" class="text-area">
                 </textarea>
               </div>
 

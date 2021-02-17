@@ -323,6 +323,11 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
           this.fileDownload.download(command.payload.file.url, command.payload.file.name)
         );
 
+      case CommandType.EXECUTE_WORKFLOW_COMMAND:
+        return toPromise<T>(
+          this.data.executeWorkflowCommand(command.payload)
+        );
+
       default:
         throw this.unhandledCommand(command);
     }

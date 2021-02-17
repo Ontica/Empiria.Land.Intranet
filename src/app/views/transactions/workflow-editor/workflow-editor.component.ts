@@ -3,17 +3,17 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, Command } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
-import { EmptyOperation, Operation, TransactionShortModel } from '@app/models';
+import { EmptyOperation, Operation, TransactionShortModel, WorkflowPayload } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 import { FormHandler } from '@app/shared/utils';
 
 
 enum WorkflowEditorFormControls  {
   operation = 'operation',
-  nexStatus = 'nexStatus',
+  nextStatus = 'nextStatus',
   nextUser = 'nextUser',
-  notes = 'notes',
-  password = 'password',
+  note = 'note',
+  authorization = 'authorization',
 }
 
 
@@ -63,7 +63,7 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
     return ['AssignTo', 'Receive'].includes(this.operationSelected.type);
   }
 
-  get requiredPasswordField(){
+  get requiredAuthorizationField(){
     return ['Sign', 'Unsign'].includes(this.operationSelected.type);
   }
 
@@ -98,7 +98,10 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
               payload: this.getFormData()
             };
 
-            this.executeCommand(TransactionCommandType.EXECUTE_WORKFLOW_COMMAND, payload);
+            this.executeCommand(TransactionCommandType.EXECUTE_WORKFLOW_COMMAND, payload)
+                .finally(() => {
+                  this.onClose();
+                });
           }
         });
   }
@@ -107,33 +110,33 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
     this.formHandler = new FormHandler(
       new FormGroup({
         operation: new FormControl('', Validators.required),
-        nexStatus: new FormControl(''),
+        nextStatus: new FormControl(''),
         nextUser: new FormControl(''),
-        notes: new FormControl(''),
-        password: new FormControl(''),
+        note: new FormControl(''),
+        authorization: new FormControl(''),
       })
     );
   }
 
   private setControlsValidators(){
-    this.formHandler.getControl(this.controls.nexStatus).reset();
+    this.formHandler.getControl(this.controls.nextStatus).reset();
     this.formHandler.getControl(this.controls.nextUser).reset();
-    this.formHandler.getControl(this.controls.password).reset();
+    this.formHandler.getControl(this.controls.authorization).reset();
 
-    this.formHandler.clearControlValidators(this.controls.nexStatus);
+    this.formHandler.clearControlValidators(this.controls.nextStatus);
     this.formHandler.clearControlValidators(this.controls.nextUser);
-    this.formHandler.clearControlValidators(this.controls.password);
+    this.formHandler.clearControlValidators(this.controls.authorization);
 
     if (this.requiredNextStatusField) {
-      this.formHandler.setControlValidators(this.controls.nexStatus, [Validators.required]);
+      this.formHandler.setControlValidators(this.controls.nextStatus, [Validators.required]);
     }
 
     if (this.requiredNextUserField) {
       this.formHandler.setControlValidators(this.controls.nextUser, [Validators.required]);
     }
 
-    if (this.requiredPasswordField) {
-      this.formHandler.setControlValidators(this.controls.password, [Validators.required]);
+    if (this.requiredAuthorizationField) {
+      this.formHandler.setControlValidators(this.controls.authorization, [Validators.required]);
     }
   }
 
@@ -141,7 +144,7 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
     const numTransactions = this.transactions.length;
 
     const nextStatus = !this.requiredNextStatusField ? '' : this.operationSelected.nextStatus
-      .filter(x => x.type === this.formHandler.getControl(this.controls.nexStatus).value)[0].name;
+      .filter(x => x.type === this.formHandler.getControl(this.controls.nextStatus).value)[0].name;
 
     const nextUser = !this.requiredNextUserField ? '' : this.operationSelected.nextUsers
       .filter(x => x.uid === this.formHandler.getControl(this.controls.nextUser).value)[0].name;
@@ -161,35 +164,30 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
       ${numTransactions > 1 ? ' de los ' + numTransactions + ' trámites seleccionados' : ' del trámite'}?`;
   }
 
-  private getFormData(): any {
+  private getFormData(): WorkflowPayload {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
 
     const formModel = this.formHandler.form.getRawValue();
 
-    const data: any = {
+    const data: WorkflowPayload = {
       transactionUID: this.transactions.map( x => x.uid ),
-      nexStatus: formModel.nexStatus ?? '',
-      nextUser: formModel.nextUser ?? '',
-      notes: formModel.notes ?? '',
-      password: formModel.password ?? '',
+      nextStatus: formModel.nextStatus ?? '',
+      assignToUID: formModel.nextUser ?? '',
+      note: formModel.note ?? '',
+      authorization: formModel.authorization ?? '',
     };
 
     return data;
   }
 
-  private executeCommand<T>(commandType: any, payload?: any) {
+  private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
     const command: Command = {
       type: commandType,
       payload
     };
 
-    setTimeout(() => {
-      console.log(command);
-      this.onClose();
-    }, 500);
-
-    // return this.uiLayer.execute<T>(command);
+    return this.uiLayer.execute<T>(command);
   }
 
 }

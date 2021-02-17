@@ -52,6 +52,9 @@ export class TransactionListComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.filter) {
       this.keywords = this.filter.keywords;
+    }
+
+    if (changes.filter || changes.transactionList) {
       this.selection.clear();
     }
   }

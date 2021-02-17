@@ -12,7 +12,7 @@ import { Assertion, HttpService } from '@app/core';
 
 import { Agency, Instrument, InstrumentMediaContent, Operation, PaymentFields, PreprocessingData,
          ProvidedServiceType, RecorderOffice, RequestedServiceFields, Transaction, TransactionFields,
-         TransactionFilter, TransactionShortModel, TransactionType, WorkflowTask } from '@app/models';
+         TransactionFilter, TransactionShortModel, TransactionType, WorkflowCommand, WorkflowTask } from '@app/models';
 
 import { Progress, reportHttpProgress } from './file-services/http-progress';
 
@@ -240,6 +240,15 @@ export class TransactionDataService {
     const path = `v5/land/workflow/applicable-command-types`;
 
     return this.http.post<Operation[]>(path, transactionsUidList);
+  }
+
+
+  executeWorkflowCommand(command: WorkflowCommand): Observable<WorkflowTask[]> {
+    Assertion.assertValue(command, 'command');
+
+    const path = `v5/land/workflow/execute-command`;
+
+    return this.http.post<WorkflowTask[]>(path, command);
   }
 
 }

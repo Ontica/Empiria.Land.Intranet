@@ -17,8 +17,8 @@ export interface WorkflowTask {
 }
 
 
-export type OperationType = 'AssignTo' | 'PullToControlDesk' | 'Receive' | 'Reentry' |
-                            'ReturnToMe' | 'SetNextStatus' | 'Sign' | 'Unsign';
+export type WorkflowCommandType = 'AssignTo' | 'PullToControlDesk' | 'Receive' | 'Reentry' |
+                                  'ReturnToMe' | 'SetNextStatus' | 'Sign' | 'Unsign';
 
 
 export interface Collection {
@@ -28,10 +28,25 @@ export interface Collection {
 
 
 export interface Operation {
-  type: OperationType;
+  type: WorkflowCommandType;
   name: string;
   nextStatus: Collection[];
   nextUsers: Identifiable[];
+}
+
+
+export interface WorkflowCommand {
+  type: WorkflowCommandType;
+  payload: WorkflowPayload;
+}
+
+
+export interface WorkflowPayload {
+  transactionUID: string[];
+  nextStatus: string;
+  assignToUID: string;
+  authorization: string;
+  note: string;
 }
 
 
