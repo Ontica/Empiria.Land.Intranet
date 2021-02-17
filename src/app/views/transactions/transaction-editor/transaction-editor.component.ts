@@ -137,7 +137,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
         this.printSubmissionReceipt();
 
-        return
+        return;
 
       default:
         console.log(`Unhandled user interface event ${event.type}`);

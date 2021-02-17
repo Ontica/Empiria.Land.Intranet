@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 
 import { tap } from 'rxjs/operators';
 
-import { Assertion, Command, toPromise } from '@app/core';
+import { Assertion, Command, toObservable, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
@@ -21,12 +21,9 @@ import { FileDownloadService } from '@app/data-services/file-services/file-downl
 
 import { ArrayLibrary } from '@app/shared/utils';
 
-import { TransactionFilter, TransactionShortModel,
-         EmptyTransaction, EmptyTransactionFilter,
-         mapTransactionShortModelFromTransaction,
-         PreprocessingData,
-         EmptyPreprocessingData,
-         Transaction} from '@app/models';
+import { PreprocessingData, Transaction, TransactionFilter, TransactionShortModel,
+         EmptyPreprocessingData, EmptyTransaction, EmptyTransactionFilter,
+         mapTransactionShortModelFromTransaction } from '@app/models';
 
 import { EmptyFileData } from '@app/shared/form-controls/file-control/file-control';
 
@@ -55,6 +52,7 @@ export enum CommandType {
   UPLOAD_INSTRUMENT_FILE = 'Land.Transactions.Command.UploadInstrumentFile',
   REMOVE_INSTRUMENT_FILE = 'Land.Transactions.Command.RemoveInstrumentFile',
   DOWNLOAD_INSTRUMENT_FILE = 'Land.Transactions.Command.DownloadInstrumentFile',
+  EXECUTE_WORKFLOW_COMMAND = 'Land.Transactions.Command.ExecuteWorkflowCommand',
 }
 
 
@@ -73,6 +71,7 @@ export enum EffectType {
   CANCEL_PAYMENT = CommandType.CANCEL_PAYMENT,
   UPLOAD_INSTRUMENT_FILE = CommandType.UPLOAD_INSTRUMENT_FILE,
   REMOVE_INSTRUMENT_FILE = CommandType.REMOVE_INSTRUMENT_FILE,
+  EXECUTE_WORKFLOW_COMMAND = CommandType.EXECUTE_WORKFLOW_COMMAND,
 }
 
 
@@ -87,6 +86,7 @@ export enum SelectorType {
   SELECTED_FILE = 'Land.Transactions.Selectors.SelectedFile',
   SELECTED_PREPROCESSING_DATA = 'Land.Transactions.Selectors.PreprocessingData',
   SELECTED_WORKFLOW_HISTORY = 'Land.Transactions.Selectors.WorkflowHistory',
+  APPLICABLE_OPERATIONS = 'Land.Transactions.Selectors.ApplicableOperations',
 }
 
 
@@ -150,6 +150,9 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         return super.selectFirst<U>(selectorType, provider);
 
+      case SelectorType.APPLICABLE_OPERATIONS:
+        return toObservable<U>(this.data.getApplicableOperations(params));
+
       default:
         return super.select<U>(selectorType, params);
 
@@ -202,6 +205,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         return;
 
       case EffectType.SET_LIST_FILTER:
+      case EffectType.EXECUTE_WORKFLOW_COMMAND:
 
         const filter = this.getValue<TransactionFilter>(SelectorType.LIST_FILTER);
 
@@ -323,6 +327,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         throw this.unhandledCommand(command);
     }
   }
+
 
   dispatch(actionType: ActionType, params?: any): void {
     switch (actionType) {

@@ -10,9 +10,9 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { Agency, Instrument, InstrumentMediaContent, PaymentFields, PreprocessingData, ProvidedServiceType,
-         RecorderOffice, RequestedServiceFields, Transaction, TransactionFields, TransactionFilter,
-         TransactionShortModel, TransactionType, WorkflowTask } from '@app/models';
+import { Agency, Instrument, InstrumentMediaContent, Operation, PaymentFields, PreprocessingData,
+         ProvidedServiceType, RecorderOffice, RequestedServiceFields, Transaction, TransactionFields,
+         TransactionFilter, TransactionShortModel, TransactionType, WorkflowTask } from '@app/models';
 
 import { Progress, reportHttpProgress } from './file-services/http-progress';
 
@@ -231,6 +231,15 @@ export class TransactionDataService {
     const path = `v5/land/workflow/${transactionUID}/history`;
 
     return this.http.get<WorkflowTask>(path);
+  }
+
+
+  getApplicableOperations(transactionsUidList: string[]): Observable<Operation[]> {
+    Assertion.assertValue(transactionsUidList, 'transactionsUidList');
+
+    const path = `v5/land/workflow/applicable-command-types`;
+
+    return this.http.post<Operation[]>(path, transactionsUidList);
   }
 
 }
