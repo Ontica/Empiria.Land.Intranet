@@ -18,6 +18,7 @@ import { MessageBoxComponent } from './message-box/message-box.component';
 import { MessageBoxService } from './message-box/message.box.service';
 
 import { ModalWindowComponent } from './modal-window/modal-window';
+import { ExpansionButtonComponent } from './expansion-button/expansion-button.component';
 
 
 @NgModule({
@@ -34,12 +35,14 @@ import { ModalWindowComponent } from './modal-window/modal-window';
     CardComponent,
     MessageBoxComponent,
     ModalWindowComponent,
+    ExpansionButtonComponent
   ],
 
   exports: [
     CardComponent,
     MessageBoxComponent,
-    ModalWindowComponent
+    ModalWindowComponent,
+    ExpansionButtonComponent
   ],
 
   providers: [
