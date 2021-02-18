@@ -4,3 +4,37 @@
   [canEdit]="canEdit">
 
 </emp-land-instrument-header>
+
+<br>
+
+<emp-land-physical-recording-list
+[physicalRecordings]="instrument.physicalRecordings"
+[canDelete]="true">
+
+</emp-land-physical-recording-list>
+
+<div class="tab-container">
+  <mat-accordion hideToggle>
+    <mat-expansion-panel
+      [expanded]="panelAddPhysicalRecordingState"
+      (opened)="panelAddPhysicalRecordingState = true"
+      (closed)="panelAddPhysicalRecordingState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>{{ panelAddPhysicalRecordingState ? 'remove' : 'add' }}</mat-icon>
+          <span style="padding-left: 1rem;">
+            {{ panelAddPhysicalRecordingState ?
+            'Cancelar agregar registro' :
+            'Agregar registro del documento en libros' }}
+          </span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <emp-land-physical-recording-editor *ngIf="panelAddPhysicalRecordingState"
+        [canEdit]="true">
+
+      </emp-land-physical-recording-editor>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

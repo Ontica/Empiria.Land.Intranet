@@ -1,0 +1,38 @@
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section">
+
+  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div [fxFlex]="100/3">
+        <label>Registrar en:</label>
+        <emp-ng-select [formControlName]="controls.recorderOffice"
+          [config]="{ clearable: false }"
+          [items]="recorderOfficeList"
+          [showError]="formHandler.showInvalidControl(controls.recorderOffice)">
+        </emp-ng-select>
+      </div>
+      <div [fxFlex]="100/3">
+        <label>Sección/Libro:</label>
+        <emp-ng-select [formControlName]="controls.recordingSection"
+          [config]="{ clearable: false }"
+          [items]="recordingSectionList"
+          [showError]="formHandler.showInvalidControl(controls.recordingSection)">
+        </emp-ng-select>
+      </div>
+
+      <div fxFlex fxLayoutAlign="end end" style="padding-bottom: 2px;">
+
+        <button type="submit"
+          (click)="submitPhysicalRecording()"
+          [class.btn]="!formHandler.isValid"
+          [class.btn-action]="formHandler.isValid">
+          Registrar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</form>

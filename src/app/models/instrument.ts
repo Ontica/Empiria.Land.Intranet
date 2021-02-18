@@ -63,6 +63,18 @@ export interface Instrument {
   sheetsCount: number;
   media: InstrumentMedia[];
   status: InstrumentStatus;
+  physicalRecordings: PhysicalRecording[];
+}
+
+
+export interface PhysicalRecording {
+  uid: string;
+  recordingTime: DateString;
+  recorderOfficeName: string;
+  recordingSectionName: string;
+  volumeNo: string;
+  recordingNo: string;
+  recordedBy: string;
 }
 
 
@@ -82,7 +94,8 @@ export const EmptyInstrument: Instrument = {
   endFolio: '',
   sheetsCount: null,
   media: [],
-  status: 'Opened'
+  status: 'Opened',
+  physicalRecordings: [],
 };
 
 export const InstrumentTypesList: any[] = [

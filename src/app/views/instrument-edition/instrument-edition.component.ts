@@ -28,17 +28,26 @@ export class InstrumentEditionComponent implements OnChanges, OnDestroy {
 
   helper: SubscriptionHelper;
 
+  panelAddPhysicalRecordingState: boolean = false;
+
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
   ngOnChanges() {
     this.helper.select<Instrument>(InstrumentsStateSelector.TRANSACTION_INSTRUMENT, this.transactionUID)
-      .subscribe(x => this.instrument = isEmpty(x) ? EmptyInstrument : x);
+      .subscribe(x => {
+        this.instrument = isEmpty(x) ? EmptyInstrument : x;
+        this.resetPanelState();
+      });
   }
 
   ngOnDestroy() {
     this.helper.destroy();
+  }
+
+  resetPanelState(){
+    this.panelAddPhysicalRecordingState = false;
   }
 
 }

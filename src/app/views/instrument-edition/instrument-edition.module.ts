@@ -20,6 +20,8 @@ import { RecordingActsEditorComponent } from './recording-acts/recording-acts-ed
 import { InstrumentHeaderComponent } from './instrument/instrument-header.component';
 import { PartyListComponent } from './parties/party-list.component';
 import { PartyEditorComponent } from './parties/party-editor.component';
+import { PhysicalRecordingEditorComponent } from './physical-recording/physical-recording-editor.component';
+import { PhysicalRecordingListComponent } from './physical-recording/physical-recording-list.component';
 
 
 @NgModule({
@@ -28,7 +30,9 @@ import { PartyEditorComponent } from './parties/party-editor.component';
     InstrumentHeaderComponent,
     PartyListComponent,
     PartyEditorComponent,
-    RecordingActsEditorComponent
+    RecordingActsEditorComponent,
+    PhysicalRecordingListComponent,
+    PhysicalRecordingEditorComponent,
   ],
   imports: [
     CommonModule,
