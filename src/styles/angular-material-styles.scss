@@ -148,7 +148,52 @@ table.mat-table {
   margin: 0.5rem 0;
   font-family: $font-family;
   font-size: $font-size-hint !important;
-  // font-weight: 400;
+
+  th {
+    font-weight: 500;
+    padding: 10px 10px 10px 0;
+
+    &.text-align-right {
+      text-align: right;
+      justify-content: flex-end;
+    }
+
+    &:first-of-type {
+      padding-left: 10px;
+    }
+
+    &:last-of-type {
+      padding-right: 10px !important;
+    }
+  }
+
+  td {
+    vertical-align: top;
+    padding: 10px 10px 10px 0;
+
+    .mat-icon {
+      cursor: pointer;
+    }
+
+    .mat-icon:hover {
+      color: $icon-color-dark;
+    }
+
+    &.padding-icon {
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+
+    &:first-of-type {
+      padding-left: 10px;
+    }
+
+    &.mat-cell:last-of-type,
+    &.mat-footer-cell:last-of-type {
+      padding-right: 10px;
+      width: auto;
+    }
+  }
 
   tr {
     height: 35px;
@@ -180,48 +225,6 @@ table.mat-table {
 
     &:hover .mat-cell {
       background: $selected-control-background-color;
-    }
-  }
-
-  th {
-    font-weight: 500;
-    padding-right: 10px;
-    padding: 10px 10px 10px 0;
-
-    &.text-align-right {
-      text-align: right;
-      justify-content: flex-end;
-    }
-
-    &:last-of-type {
-      padding-right: 10px !important;
-    }
-
-    &:first-of-type {
-      padding-left: 10px;
-    }
-  }
-
-  td {
-    vertical-align: top;
-    padding: 10px 10px 10px 0;
-
-    .mat-icon {
-      cursor: pointer;
-    }
-
-    .mat-icon:hover {
-      color: $icon-color-dark;
-    }
-
-    &.mat-cell:last-of-type,
-    &.mat-footer-cell:last-of-type {
-      padding-right: 10px;
-      width: auto;
-    }
-
-    &:first-of-type {
-      padding-left: 10px;
     }
   }
 }
