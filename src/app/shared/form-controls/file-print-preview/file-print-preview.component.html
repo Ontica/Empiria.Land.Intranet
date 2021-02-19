@@ -8,9 +8,9 @@
 
     <div class="container-iframe-preview">
 
-      <iframe *ngIf="url" [src]="url | safeUrl" class="iframe-preview">
+      <object *ngIf="url" [data]="url | safeUrl" class="iframe-preview">
 
-      </iframe>
+      </object>
 
     </div>
 

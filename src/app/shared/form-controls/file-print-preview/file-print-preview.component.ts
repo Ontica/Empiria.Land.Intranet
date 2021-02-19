@@ -24,7 +24,8 @@ export class FilePrintPreviewComponent {
 
       if (type === MediaType.html){
 
-        this.printerService.printFile(url);
+        this.openWindowCenter(url);
+        // this.printerService.printFile(url);
 
         return;
       }
@@ -35,13 +36,21 @@ export class FilePrintPreviewComponent {
     }
   }
 
-  validUrl(url: string){
-    return url !== null && url !== undefined && url !== '';
-  }
-
   onClose(){
     this.url = null;
     this.display = false;
+  }
+
+  private validUrl(url: string){
+    return url !== null && url !== undefined && url !== '';
+  }
+
+  private openWindowCenter(url: string, width: number = 1100, height: number = 600){
+    const top = Math.floor((screen.height/2)-(height/2));
+    const left = Math.floor((screen.width/2)-(width/2));
+
+    return window.open(url, '_blank',
+                       `resizable=yes,width=${width},height=${height},top=${top},left=${left}`);
   }
 
 }
