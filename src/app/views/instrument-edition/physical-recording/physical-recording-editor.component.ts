@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, EventInfo, Identifiable } from '@app/core';
+import { PhysicalRecordingFields } from '@app/models';
 import { FormHandler } from '@app/shared/utils';
 
 
 export enum PhysicalRecordingEditorEventType {
-  SUBMIT_PHYSICAL_RECORDING_CLICKED = 'PhysicalRecordingEditorComponent.Event.SubmitPhysicalRecordingClicked',
+  CREATE_PHYSICAL_RECORDING_CLICKED = 'PhysicalRecordingEditorComponent.Event.CreatePhysicalRecordingClicked',
 }
 
 enum PhysicalRecordingEditorFormControls  {
@@ -40,8 +41,7 @@ export class PhysicalRecordingEditorComponent implements OnInit {
       return;
     }
 
-    this.formHandler.submitted = true;
-    this.sendEvent(PhysicalRecordingEditorEventType.SUBMIT_PHYSICAL_RECORDING_CLICKED, this.getFormData());
+    this.sendEvent(PhysicalRecordingEditorEventType.CREATE_PHYSICAL_RECORDING_CLICKED, this.getFormData());
   }
 
   private initForm(){
@@ -59,9 +59,9 @@ export class PhysicalRecordingEditorComponent implements OnInit {
 
     const formModel = this.formHandler.form.getRawValue();
 
-    const data: any = {
-      recorderOffice: formModel.recorderOffice ?? '',
-      recordingSection: formModel.recordingSection ?? '',
+    const data: PhysicalRecordingFields = {
+      recorderOfficeUID: formModel.recorderOffice ?? '',
+      sectionUID: formModel.recordingSection ?? '',
     };
 
     return data;

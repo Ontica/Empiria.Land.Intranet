@@ -39,12 +39,14 @@ export const EmptyIssuer: Issuer = {
   period: EmptyPeriod
 };
 
+
 export interface IssuersFilter {
   instrumentType: string;
   instrumentKind: string;
   onDate: DateString;
   keywords: string;
 }
+
 
 export interface Instrument {
   uid: string;
@@ -98,6 +100,7 @@ export const EmptyInstrument: Instrument = {
   physicalRecordings: [],
 };
 
+
 export const InstrumentTypesList: any[] = [
   { type: 'EscrituraPublica', typeName: 'Escritura pública' },
   { type: 'OficioNotaria', typeName: 'Oficio de notaría' },
@@ -105,6 +108,7 @@ export const InstrumentTypesList: any[] = [
   { type: 'TituloPropiedad', typeName: 'Título de propiedad' },
   { type: 'DocumentoTerceros', typeName: 'Documento de terceros' }
 ];
+
 
 export enum InstrumentTypeEnum {
   EscrituraPublica = 'EscrituraPublica',
@@ -178,10 +182,17 @@ export interface InstrumentMedia {
   size: number;
 }
 
+
 export type InstrumentMediaContent = 'InstrumentMainFile' | 'InstrumentAuxiliaryFile';
 
 
 export interface Contact {
   uid: string;
   name: string;
+}
+
+
+export interface PhysicalRecordingFields  {
+  recorderOfficeUID: string;
+  sectionUID: string;
 }

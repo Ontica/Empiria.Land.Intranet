@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, DateStringLibrary, HttpService } from '@app/core';
 
-import { Instrument, Issuer, IssuersFilter, InstrumentFields } from '@app/models';
+import { Instrument, Issuer, IssuersFilter, InstrumentFields, PhysicalRecordingFields } from '@app/models';
 
 
 @Injectable()
@@ -65,6 +65,28 @@ export class InstrumentDataService {
     const path = `v5/land/transactions/${transactionUID}/instrument`;
 
     return this.http.patch<Instrument>(path, instrument );
+  }
+
+
+  createNextPhysicalRecording(instrumentUID: string,
+                              physicalRecording: PhysicalRecordingFields): Observable<Instrument> {
+    Assertion.assertValue(instrumentUID, 'instrumentUID');
+    Assertion.assertValue(physicalRecording, 'physicalRecording');
+
+    const path = `v5/land/instruments/${instrumentUID}/create-next-physical-recording`;
+
+    return this.http.post<Instrument>(path, physicalRecording);
+  }
+
+
+  deletePhysicalRecording(instrumentUID: string,
+                          physicialRecordingUID: string): Observable<Instrument> {
+    Assertion.assertValue(instrumentUID, 'instrumentUID');
+    Assertion.assertValue(physicialRecordingUID, 'physicialRecordingUID');
+
+    const path = `v5/land/instruments/${instrumentUID}/physical-recordings/${physicialRecordingUID}`;
+
+    return this.http.delete<Instrument>(path);
   }
 
 }

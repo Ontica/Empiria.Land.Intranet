@@ -9,16 +9,21 @@
 
 <emp-land-physical-recording-list
   [physicalRecordings]="instrument.physicalRecordings"
-  [canDelete]="true">
+  [canDelete]="true"
+  (physicalRecordingListEvent)="onPhysicalRecordingListEvent($event)">
 
 </emp-land-physical-recording-list>
 
-<emp-ng-expansion-button [(panelState)]="panelAddPhysicalRecordingState"
+<emp-ng-expansion-button
+  [(panelState)]="panelAddPhysicalRecordingState"
   [config]="{textButtonOpen: 'Agregar registro del documento en libros',
              textButtonClose: 'Cancelar agregar registro'}">
 
   <emp-land-physical-recording-editor *ngIf="panelAddPhysicalRecordingState"
-    [canEdit]="true">
+    [recorderOfficeList]="recorderOfficeList"
+    [recordingSectionList]="recordingSectionList"
+    [canEdit]="true"
+    (physicalRecordingEditorEvent)="onPhysicalRecordingEditorEvent($event)">
 
   </emp-land-physical-recording-editor>
 

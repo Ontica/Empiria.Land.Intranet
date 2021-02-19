@@ -25,12 +25,16 @@ export enum SelectorType {
 export enum CommandType {
   CREATE_INSTRUMENT = 'Land.Transaction.Instrument.Create',
   UPDATE_INSTRUMENT = 'Land.Transaction.Instrument.Update',
+  CREATE_PHYSICAL_RECORDING = 'Land.Transaction.Instrument.CreatePhysicalRecording',
+  DELETE_PHYSICAL_RECORDING = 'Land.Transaction.Instrument.DeletePhysicalRecording',
 }
 
 
 export enum EffectType {
   CREATE_INSTRUMENT = CommandType.CREATE_INSTRUMENT,
   UPDATE_INSTRUMENT = CommandType.UPDATE_INSTRUMENT,
+  CREATE_PHYSICAL_RECORDING = CommandType.CREATE_PHYSICAL_RECORDING,
+  DELETE_PHYSICAL_RECORDING = CommandType.DELETE_PHYSICAL_RECORDING,
 }
 
 
@@ -82,6 +86,8 @@ export class InstrumentsPresentationHandler extends AbstractPresentationHandler 
 
       case EffectType.CREATE_INSTRUMENT:
       case EffectType.UPDATE_INSTRUMENT:
+      case EffectType.CREATE_PHYSICAL_RECORDING:
+      case EffectType.DELETE_PHYSICAL_RECORDING:
         super.setMemoized(SelectorType.TRANSACTION_INSTRUMENT, params.result,
                           params.payload.transactionUID);
         return;
@@ -98,12 +104,26 @@ export class InstrumentsPresentationHandler extends AbstractPresentationHandler 
 
       case CommandType.CREATE_INSTRUMENT:
         return toPromise<U>(
-          this.data.createTransactionInstrument(command.payload.transactionUID, command.payload.instrument)
+          this.data.createTransactionInstrument(command.payload.transactionUID,
+                                                command.payload.instrument)
         );
 
       case CommandType.UPDATE_INSTRUMENT:
         return toPromise<U>(
-          this.data.updateTransactionInstrument(command.payload.transactionUID, command.payload.instrument)
+          this.data.updateTransactionInstrument(command.payload.transactionUID,
+                                                command.payload.instrument)
+        );
+
+      case CommandType.CREATE_PHYSICAL_RECORDING:
+        return toPromise<U>(
+          this.data.createNextPhysicalRecording(command.payload.instrumentUID,
+                                                command.payload.physicalRecording)
+        );
+
+      case CommandType.DELETE_PHYSICAL_RECORDING:
+        return toPromise<U>(
+          this.data.deletePhysicalRecording(command.payload.instrumentUID,
+                                            command.payload.physicalRecordingUID)
         );
 
       default:

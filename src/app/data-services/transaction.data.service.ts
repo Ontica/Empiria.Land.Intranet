@@ -11,8 +11,9 @@ import { Observable } from 'rxjs';
 import { Assertion, HttpService } from '@app/core';
 
 import { Agency, Instrument, InstrumentMediaContent, WorkflowOperation, PaymentFields, PreprocessingData,
-         ProvidedServiceType, RecorderOffice, RequestedServiceFields, Transaction, TransactionFields,
-         TransactionFilter, TransactionShortModel, TransactionType, WorkflowCommand, WorkflowTask } from '@app/models';
+         ProvidedServiceType, RecorderOffice, RecordingSection, RequestedServiceFields,
+         Transaction, TransactionFields, TransactionFilter, TransactionShortModel, TransactionType,
+         WorkflowCommand, WorkflowTask } from '@app/models';
 
 import { Progress, reportHttpProgress } from './file-services/http-progress';
 
@@ -115,6 +116,13 @@ export class TransactionDataService {
     const path = `v5/land/recorder-offices`;
 
     return this.http.get<RecorderOffice[]>(path);
+  }
+
+
+  getRecordingSections(): Observable<RecordingSection[]> {
+    const path = `v5/land/recording-sections`;
+
+    return this.http.get<RecordingSection[]>(path);
   }
 
 

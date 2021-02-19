@@ -103,6 +103,10 @@ export interface RecorderOffice extends Identifiable {
 }
 
 
+export interface RecordingSection extends Identifiable {
+
+}
+
 
 export interface Resource extends Entity {
   type: string;
