@@ -53,7 +53,10 @@ export class Validate {
 
 
   static isPositive(control: AbstractControl): ValidationErrors | null {
-    if (control.value && ( FormatLibrary.stringToNumber(control.value) <= 0 ) ) {
+    if (typeof control.value === 'string' && FormatLibrary.stringToNumber(control.value) <= 0 ) {
+      return { isPositive: true };
+    }
+    if (typeof control.value === 'number' && control.value <= 0 ) {
       return { isPositive: true };
     }
     return null;
