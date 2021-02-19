@@ -25,12 +25,11 @@
     <div class="card-header-options">
         <div style="width:32px"></div>
 
+        <button class="btn-action" (click)="onClickCreateTransaction()">Nuevo</button>
+        &nbsp; &nbsp; &nbsp;
         <input type="search" class="text-box" style="width:auto" fxHide.lt-sm="true"
                placeholder="Buscar trámites"
                (search)="onChangeFilter()" [(ngModel)]="keywords">
-        &nbsp; &nbsp; &nbsp;
-        <button class="btn-action"
-                (click)="onClickCreateTransaction()">Nuevo</button>
 
     </div>
 
