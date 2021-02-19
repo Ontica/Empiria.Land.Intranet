@@ -34,30 +34,17 @@
 
   </emp-land-requested-service-list>
 
-  <div *ngIf="transaction.actions.can.editServices" class="tab-container">
-    <mat-accordion hideToggle>
-      <mat-expansion-panel
-        [expanded]="panelAddServiceOpenState"
-        (opened)="panelAddServiceOpenState = true"
-        (closed)="panelAddServiceOpenState = false">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon>{{ panelAddServiceOpenState ? 'remove' : 'add' }}</mat-icon>
-            <span style="padding-left: 1rem;">
-              {{ panelAddServiceOpenState ? 'Cancelar agregar concepto' : 'Agregar concepto' }}
-            </span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
+  <emp-ng-expansion-button *ngIf="transaction.actions.can.editServices"
+    [(panelState)]="panelAddServiceOpenState"
+    [config]="{textButtonOpen: 'Agregar concepto',
+               textButtonClose: 'Cancelar agregar concepto'}">
 
-        <emp-land-requested-service-editor *ngIf="panelAddServiceOpenState"
-          [providedServiceTypeList]="providedServiceTypeList"
-          (requestedServiceEditorEvent)="onRequestedServiceEditorEvent($event)">
+    <emp-land-requested-service-editor *ngIf="panelAddServiceOpenState" [providedServiceTypeList]="providedServiceTypeList"
+      (requestedServiceEditorEvent)="onRequestedServiceEditorEvent($event)">
 
-        </emp-land-requested-service-editor>
+    </emp-land-requested-service-editor>
 
-      </mat-expansion-panel>
-    </mat-accordion>
-  </div>
+  </emp-ng-expansion-button>
 
 </ng-container>
 

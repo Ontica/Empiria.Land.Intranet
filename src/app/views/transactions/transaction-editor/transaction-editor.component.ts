@@ -157,7 +157,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
         };
 
         this.executeCommand<Transaction>(TransactionCommandType.ADD_TRANSACTION_SERVICE, payload)
-            .then(x => this.panelAddServiceOpenState = false );
+            .then(x => this.resetPanelState() );
 
         return;
 
