@@ -3,6 +3,17 @@
 <div class="tab-container">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
 
+    <ng-container matColumnDef="stampMedia">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row" class="text-align-center padding-icon">
+        <mat-icon *ngIf="row.stampMedia.url"
+          (click)="printStampMedia(row)"
+          title="Sello partida">
+          approval
+        </mat-icon>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="recordingTime">
       <th mat-header-cell *matHeaderCellDef> Fecha </th>
       <td mat-cell *matCellDef="let row"> {{ row.recordingTime | dateTimeFormat: 'DMY HH:mm' }} </td>
@@ -31,7 +42,11 @@
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let row" class="text-align-center padding-icon">
-        <mat-icon (click)="removePhysicalRecording(row)">delete</mat-icon>
+        <mat-icon
+          (click)="removePhysicalRecording(row)"
+          title="Eliminar registro">
+          delete
+        </mat-icon>
       </td>
     </ng-container>
 
@@ -44,3 +59,9 @@
   </div>
 
 </div>
+
+<emp-ng-file-print-preview #filePrintPreview
+  title="Impresión de sello partida"
+  [hint]="">
+
+</emp-ng-file-print-preview>

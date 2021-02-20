@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { EventInfo } from '@app/core';
 import { PhysicalRecording } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
+import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 
 export enum PhysicalRecordingListEventType {
   DELETE_PHYSICAL_RECORDING_CLICKED = 'PhysicalRecordingListComponent.Event.DeletePhysicalRecordingClicked',
@@ -14,7 +15,11 @@ export enum PhysicalRecordingListEventType {
 })
 export class PhysicalRecordingListComponent implements OnInit, OnChanges {
 
+  @ViewChild('filePrintPreview', {static: true}) filePrintPreview: FilePrintPreviewComponent;
+
   @Input() physicalRecordings: PhysicalRecording[] = [];
+
+  @Input() showRegistrationStamps: boolean = true;
 
   @Input() canDelete: boolean = true;
 
@@ -38,9 +43,15 @@ export class PhysicalRecordingListComponent implements OnInit, OnChanges {
   }
 
   resetColumns(){
-    this.displayedColumns = [...this.displayedColumnsDefault];
+    this.displayedColumns = [];
 
-    if (this.canDelete){
+    if (this.showRegistrationStamps) {
+      this.displayedColumns.push('stampMedia');
+    }
+
+    this.displayedColumns = [...this.displayedColumns, ...this.displayedColumnsDefault];
+
+    if (this.canDelete) {
       this.displayedColumns.push('action');
     }
   }
@@ -56,6 +67,10 @@ export class PhysicalRecordingListComponent implements OnInit, OnChanges {
                            recording.uid);
           }
         });
+  }
+
+  printStampMedia(recording: PhysicalRecording){
+    this.filePrintPreview.open(recording.stampMedia.url, recording.stampMedia.mediaType);
   }
 
   private getConfirmMessage(recording: PhysicalRecording): string{

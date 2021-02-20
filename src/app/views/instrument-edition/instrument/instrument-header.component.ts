@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { concat, of, Subject, Observable } from 'rxjs';
@@ -21,6 +21,7 @@ import { InstrumentsStateSelector,
 
 import { Instrument, InstrumentTypeEnum, InstrumentTypesList,
          Issuer, IssuersFilter, EmptyInstrument} from '@app/models';
+import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 
 type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'issuer' |
                               'instrumentNo' | 'binderNo' | 'folio' | 'endFolio' | 'summary';
@@ -31,7 +32,10 @@ type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'i
 })
 export class InstrumentHeaderComponent implements OnChanges {
 
+  @ViewChild('filePrintPreview', {static: true}) filePrintPreview: FilePrintPreviewComponent;
+
   @Input() transactionUID: string = 'Empty';
+
   @Input() instrument: Instrument = EmptyInstrument;
 
   InstrumentType = InstrumentTypeEnum;
@@ -151,6 +155,11 @@ export class InstrumentHeaderComponent implements OnChanges {
     };
 
     this.uiLayer.execute(command);
+  }
+
+  submitPrintRegistrationStampMedia(){
+    this.filePrintPreview.open(this.instrument.registration.stampMedia.url,
+                               this.instrument.registration.stampMedia.mediaType);
   }
 
   // private members

@@ -11,6 +11,7 @@
 
   <emp-land-physical-recording-list
     [physicalRecordings]="instrument.registration.physicalRecordings"
+    [showRegistrationStamps]="instrument.actions.show.registrationStamps"
     [canDelete]="instrument.actions.can.deletePhysicalRecordings"
     (physicalRecordingListEvent)="onPhysicalRecordingListEvent($event)">
 
