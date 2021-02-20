@@ -10,10 +10,11 @@
   <br>
 
   <emp-land-physical-recording-list
+    [transactionUID]="transactionUID"
+    [instrumentUID]="instrument.uid"
     [physicalRecordings]="instrument.registration.physicalRecordings"
     [showRegistrationStamps]="instrument.actions.show.registrationStamps"
-    [canDelete]="instrument.actions.can.deletePhysicalRecordings"
-    (physicalRecordingListEvent)="onPhysicalRecordingListEvent($event)">
+    [canDelete]="instrument.actions.can.deletePhysicalRecordings">
 
   </emp-land-physical-recording-list>
 
@@ -23,9 +24,8 @@
                textButtonClose: 'Cancelar agregar registro'}">
 
     <emp-land-physical-recording-editor *ngIf="panelAddPhysicalRecordingState"
-      [recorderOfficeList]="recorderOfficeList"
-      [recordingSectionList]="recordingSectionList"
-      (physicalRecordingEditorEvent)="onPhysicalRecordingEditorEvent($event)">
+      [transactionUID]="transactionUID"
+      [instrumentUID]="instrument.uid">
 
     </emp-land-physical-recording-editor>
 

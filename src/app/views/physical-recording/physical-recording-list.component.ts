@@ -1,36 +1,47 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { EventInfo } from '@app/core';
+import { Command } from '@app/core';
+import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+import { InstrumentsCommandType } from '@app/core/presentation/presentation-types';
 import { PhysicalRecording } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
-import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
+import { FilePrintPreviewComponent }
+  from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 
-export enum PhysicalRecordingListEventType {
-  DELETE_PHYSICAL_RECORDING_CLICKED = 'PhysicalRecordingListComponent.Event.DeletePhysicalRecordingClicked',
-}
 
 @Component({
   selector: 'emp-land-physical-recording-list',
   templateUrl: './physical-recording-list.component.html',
 })
-export class PhysicalRecordingListComponent implements OnInit, OnChanges {
+export class PhysicalRecordingListComponent implements OnInit, OnChanges, OnDestroy {
 
   @ViewChild('filePrintPreview', {static: true}) filePrintPreview: FilePrintPreviewComponent;
 
+  @Input() transactionUID: string;
+
+  @Input() instrumentUID: string;
+
   @Input() physicalRecordings: PhysicalRecording[] = [];
 
-  @Input() showRegistrationStamps: boolean = true;
+  @Input() showRegistrationStamps: boolean = false;
 
-  @Input() canDelete: boolean = true;
+  @Input() canDelete: boolean = false;
 
-  @Output() physicalRecordingListEvent = new EventEmitter<EventInfo>();
+  helper: SubscriptionHelper;
+
+  submitted: boolean = false;
 
   dataSource: MatTableDataSource<PhysicalRecording>;
+
   private displayedColumnsDefault = ['recordingTime', 'recorderOfficeName', 'recordingSectionName',
                                      'volumeNo', 'recordingNo', 'recordedBy'];
+
   displayedColumns = [...this.displayedColumnsDefault];
 
-  constructor(private messageBox: MessageBoxService) { }
+  constructor(private uiLayer: PresentationLayer,
+              private messageBox: MessageBoxService) {
+    this.helper = uiLayer.createSubscriptionHelper();
+  }
 
   ngOnInit(): void {}
 
@@ -40,6 +51,10 @@ export class PhysicalRecordingListComponent implements OnInit, OnChanges {
     }
 
     this.resetColumns();
+  }
+
+  ngOnDestroy() {
+    this.helper.destroy();
   }
 
   resetColumns(){
@@ -57,16 +72,26 @@ export class PhysicalRecordingListComponent implements OnInit, OnChanges {
   }
 
   removePhysicalRecording(recording: PhysicalRecording){
-    const message = this.getConfirmMessage(recording);
+    if (!this.submitted) {
+      const message = this.getConfirmMessage(recording);
 
-    this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
-        .toPromise()
-        .then(x => {
-          if (x) {
-            this.sendEvent(PhysicalRecordingListEventType.DELETE_PHYSICAL_RECORDING_CLICKED,
-                           recording.uid);
-          }
-        });
+      this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
+          .toPromise()
+          .then(x => {
+            if (x) {
+              this.submitted = true;
+
+              const payload = {
+                transactionUID: this.transactionUID,
+                instrumentUID: this.instrumentUID,
+                physicalRecordingUID: recording.uid
+              };
+
+              this.executeCommand(InstrumentsCommandType.DELETE_PHYSICAL_RECORDING, payload)
+                  .then(() => this.submitted = false );
+            }
+          });
+    }
   }
 
   printStampMedia(recording: PhysicalRecording){
@@ -89,13 +114,13 @@ export class PhysicalRecordingListComponent implements OnInit, OnChanges {
       <br>¿Elimino el registro?`;
   }
 
-  private sendEvent(eventType: PhysicalRecordingListEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
+  private executeCommand<T>(commandType: InstrumentsCommandType, payload?: any): Promise<T>{
+    const command: Command = {
+      type: commandType,
       payload
     };
 
-    this.physicalRecordingListEvent.emit(event);
+    return this.uiLayer.execute<T>(command);
   }
 
 }
