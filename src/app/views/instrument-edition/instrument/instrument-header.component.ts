@@ -12,7 +12,7 @@ import { concat, of, Subject, Observable } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter,
          switchMap, take, tap } from 'rxjs/operators';
 
-import { isEmpty } from '@app/core';
+import { isEmpty, Validate } from '@app/core';
 import { Command, PresentationLayer } from '@app/core/presentation';
 
 import { InstrumentsStateSelector,
@@ -45,7 +45,7 @@ export class InstrumentHeaderComponent implements OnChanges {
 
   form: FormGroup = new FormGroup({
     type: new FormControl('', Validators.required),
-    sheetsCount: new FormControl(''),
+    sheetsCount: new FormControl('', [Validators.required, Validate.isPositive]),
     kind: new FormControl(''),
     issueDate: new FormControl(''),
     issuer: new FormControl(''),
