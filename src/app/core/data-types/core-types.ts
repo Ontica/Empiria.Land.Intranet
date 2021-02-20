@@ -32,6 +32,18 @@ export class Cache<T> extends Map<string, T> {
 }
 
 
+export interface MediaBase {
+  url: string;
+  mediaType: string;
+}
+
+
+export const EmptyMediaBase: MediaBase = {
+  url: '',
+  mediaType: ''
+};
+
+
 export interface Quantity {
   unit: Identifiable;
   amount: number;

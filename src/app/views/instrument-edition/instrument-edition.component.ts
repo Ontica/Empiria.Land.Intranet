@@ -11,8 +11,9 @@ import { Command, EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { InstrumentsCommandType, InstrumentsStateSelector,
          TransactionStateSelector } from '@app/core/presentation/presentation-types';
+import { Instrument, EmptyInstrument, RecorderOffice, RecordingSection,
+         EmptyInstrumentActions } from '@app/models';
 
-import { Instrument, EmptyInstrument, RecorderOffice, RecordingSection } from '@app/models';
 import { PhysicalRecordingEditorEventType } from './physical-recording/physical-recording-editor.component';
 import { PhysicalRecordingListEventType } from './physical-recording/physical-recording-list.component';
 
@@ -24,8 +25,6 @@ import { PhysicalRecordingListEventType } from './physical-recording/physical-re
 export class InstrumentEditionComponent implements OnChanges, OnDestroy {
 
   @Input() transactionUID: string = 'Empty';
-
-  @Input() canEdit: boolean = false;
 
   instrument: Instrument = EmptyInstrument;
 
@@ -46,7 +45,12 @@ export class InstrumentEditionComponent implements OnChanges, OnDestroy {
   ngOnChanges() {
     this.helper.select<Instrument>(InstrumentsStateSelector.TRANSACTION_INSTRUMENT, this.transactionUID)
       .subscribe(x => {
-        this.instrument = isEmpty(x) ? EmptyInstrument : x;
+        if (isEmpty(x)) {
+          this.instrument = EmptyInstrument;
+          this.instrument.actions = x.actions ?? EmptyInstrumentActions;
+        }else{
+          this.instrument = x;
+        }
         this.resetPanelState();
       });
 

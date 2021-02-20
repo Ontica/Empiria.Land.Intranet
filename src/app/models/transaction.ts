@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Assertion, DateString, Empty, Entity, Identifiable } from '@app/core';
+import { Assertion, DateString, Empty, Entity, Identifiable, MediaBase } from '@app/core';
 import { Instrument } from './instrument';
 
 
@@ -131,12 +131,8 @@ export interface PaymentOrder extends Entity {
   attributes: Attributes;
 }
 
-export interface MediaBase {
-  url: string;
-  mediaType?: string;
-}
 
-export interface Attributes extends MediaBase{
+export interface Attributes extends MediaBase {
   controlTag: string;
 }
 

@@ -6,6 +6,7 @@
  */
 
 import { DateString } from '@app/core';
+import { EmptyRegistration, Registration } from './registration';
 
 
 export interface Period {
@@ -48,6 +49,50 @@ export interface IssuersFilter {
 }
 
 
+export interface InstrumentActions {
+  can: {
+    edit?: boolean;
+    open?: boolean;
+    close?: boolean;
+    delete?: boolean;
+    uploadFiles?: boolean;
+    editRecordingActs?: boolean;
+    createPhysicalRecordings?: boolean;
+    deletePhysicalRecordings?: boolean;
+    linkPhysicalRecordings?: boolean;
+    editPhysicalRecordingActs?: boolean;
+  };
+  show: {
+    files?: boolean;
+    recordingActs?: boolean;
+    physicalRecordings?: boolean;
+    registrationStamps?: boolean;
+  };
+}
+
+
+export const EmptyInstrumentActions: InstrumentActions = {
+  can: {
+    edit: false,
+    open: false,
+    close: false,
+    delete: false,
+    uploadFiles: false,
+    editRecordingActs: false,
+    createPhysicalRecordings: false,
+    deletePhysicalRecordings: false,
+    linkPhysicalRecordings: false,
+    editPhysicalRecordingActs: false,
+  },
+  show: {
+    files: false,
+    recordingActs: false,
+    physicalRecordings: false,
+    registrationStamps: false,
+  }
+};
+
+
 export interface Instrument {
   uid: string;
   type: InstrumentType;
@@ -65,18 +110,8 @@ export interface Instrument {
   sheetsCount: number;
   media: InstrumentMedia[];
   status: InstrumentStatus;
-  physicalRecordings: PhysicalRecording[];
-}
-
-
-export interface PhysicalRecording {
-  uid: string;
-  recordingTime: DateString;
-  recorderOfficeName: string;
-  recordingSectionName: string;
-  volumeNo: string;
-  recordingNo: string;
-  recordedBy: string;
+  registration: Registration;
+  actions: InstrumentActions;
 }
 
 
@@ -97,7 +132,8 @@ export const EmptyInstrument: Instrument = {
   sheetsCount: null,
   media: [],
   status: 'Opened',
-  physicalRecordings: [],
+  registration: EmptyRegistration,
+  actions: EmptyInstrumentActions,
 };
 
 
@@ -189,10 +225,4 @@ export type InstrumentMediaContent = 'InstrumentMainFile' | 'InstrumentAuxiliary
 export interface Contact {
   uid: string;
   name: string;
-}
-
-
-export interface PhysicalRecordingFields  {
-  recorderOfficeUID: string;
-  sectionUID: string;
 }

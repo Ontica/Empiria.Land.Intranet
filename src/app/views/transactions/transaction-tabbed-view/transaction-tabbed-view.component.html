@@ -20,8 +20,7 @@
 
   <mat-tab label="Inscripción" *ngIf="transaction.actions.show.instrumentRecordingTab">
     <emp-land-instrument-edition
-      [transactionUID]="transaction.uid"
-      [canEdit]="transaction.actions.can.editInstrument">
+      [transactionUID]="transaction.uid">
 
     </emp-land-instrument-edition>
   </mat-tab>

@@ -1,30 +1,33 @@
 <emp-land-instrument-header
   [transactionUID]="transactionUID"
-  [instrument]="instrument"
-  [canEdit]="canEdit">
+  [instrument]="instrument">
 
 </emp-land-instrument-header>
 
-<br>
 
-<emp-land-physical-recording-list
-  [physicalRecordings]="instrument.physicalRecordings"
-  [canDelete]="true"
-  (physicalRecordingListEvent)="onPhysicalRecordingListEvent($event)">
+<ng-container *ngIf="instrument.actions.show.physicalRecordings">
 
-</emp-land-physical-recording-list>
+  <br>
 
-<emp-ng-expansion-button
-  [(panelState)]="panelAddPhysicalRecordingState"
-  [config]="{textButtonOpen: 'Agregar registro del documento en libros',
-             textButtonClose: 'Cancelar agregar registro'}">
+  <emp-land-physical-recording-list
+    [physicalRecordings]="instrument.registration.physicalRecordings"
+    [canDelete]="instrument.actions.can.deletePhysicalRecordings"
+    (physicalRecordingListEvent)="onPhysicalRecordingListEvent($event)">
 
-  <emp-land-physical-recording-editor *ngIf="panelAddPhysicalRecordingState"
-    [recorderOfficeList]="recorderOfficeList"
-    [recordingSectionList]="recordingSectionList"
-    [canEdit]="true"
-    (physicalRecordingEditorEvent)="onPhysicalRecordingEditorEvent($event)">
+  </emp-land-physical-recording-list>
 
-  </emp-land-physical-recording-editor>
+  <emp-ng-expansion-button *ngIf="instrument.actions.can.createPhysicalRecordings"
+    [(panelState)]="panelAddPhysicalRecordingState"
+    [config]="{textButtonOpen: 'Agregar registro del documento en libros',
+               textButtonClose: 'Cancelar agregar registro'}">
 
-</emp-ng-expansion-button>
+    <emp-land-physical-recording-editor *ngIf="panelAddPhysicalRecordingState"
+      [recorderOfficeList]="recorderOfficeList"
+      [recordingSectionList]="recordingSectionList"
+      (physicalRecordingEditorEvent)="onPhysicalRecordingEditorEvent($event)">
+
+    </emp-land-physical-recording-editor>
+
+  </emp-ng-expansion-button>
+
+</ng-container>

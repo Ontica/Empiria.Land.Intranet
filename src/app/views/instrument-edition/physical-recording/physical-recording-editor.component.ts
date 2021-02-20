@@ -20,8 +20,6 @@ enum PhysicalRecordingEditorFormControls  {
 })
 export class PhysicalRecordingEditorComponent implements OnInit {
 
-  @Input() canEdit: boolean = true;
-
   @Input() recorderOfficeList: Identifiable[] = [];
   @Input() recordingSectionList: Identifiable[] = [];
 

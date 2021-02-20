@@ -33,7 +33,6 @@ export class InstrumentHeaderComponent implements OnChanges {
 
   @Input() transactionUID: string = 'Empty';
   @Input() instrument: Instrument = EmptyInstrument;
-  @Input() canEdit: boolean = false;
 
   InstrumentType = InstrumentTypeEnum;
 
@@ -77,14 +76,6 @@ export class InstrumentHeaderComponent implements OnChanges {
       this.form.enable();
     } else {
       this.form.disable();
-    }
-  }
-
-  enableEditInstrument(edit: boolean) {
-    if (this.instrument.status === 'Opened') {
-      this.enableEditor(edit);
-    } else {
-      alert(`No es posible editar el documento, su estatus es ${this.instrument.status}.`);
     }
   }
 
