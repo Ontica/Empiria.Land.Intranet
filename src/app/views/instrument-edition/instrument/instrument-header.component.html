@@ -183,29 +183,36 @@
       </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="space-between" >
+    <div fxLayout="row">
 
-      <ng-container *ngIf="instrument.actions.can.edit">
+      <div fxFlex="50" fxLayoutAlign="start">
 
-        <button (click)="enableEditor(readonly)" [ngClass]="readonly ? 'btn-action' : 'btn-warning'">
+        <button *ngIf="instrument.actions.can.edit"
+          (click)="enableEditor(readonly)"
+          [ngClass]="readonly ? 'btn-action' : 'btn-warning'">
           {{readonly ? 'Editar Documento' : 'Descartar Cambios'}}
         </button>
 
-        <button *ngIf="!readonly" (click)="submit()"
-          [class.btn]="form?.invalid" [class.btn-action]="form?.valid">
+      </div>
+
+      <div fxFlex="50" fxLayoutAlign="end">
+
+        <button *ngIf="!readonly && instrument.actions.can.edit"
+          (click)="submit()"
+          [class.btn]="form?.invalid"
+          [class.btn-action]="form?.valid">
           Guardar los Cambios
         </button>
 
-      </ng-container>
-
-      <ng-container *ngIf="instrument.actions.show.registrationStamps &&
-                           instrument.registration.stampMedia.url !== ''">
-
-        <button (click)="submitPrintRegistrationStampMedia()" class="btn-action">
+        <button *ngIf="readonly &&
+                       instrument.actions.show.registrationStamps &&
+                       instrument.registration.stampMedia.url !== ''"
+          (click)="submitPrintRegistrationStampMedia()"
+          class="btn-action">
           Imprimir sello interesado
         </button>
 
-      </ng-container>
+      </div>
 
     </div>
   </div>

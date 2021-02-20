@@ -21,7 +21,8 @@ import { InstrumentsStateSelector,
 
 import { Instrument, InstrumentTypeEnum, InstrumentTypesList,
          Issuer, IssuersFilter, EmptyInstrument} from '@app/models';
-import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
+import { FilePrintPreviewComponent }
+  from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 
 type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'issuer' |
                               'instrumentNo' | 'binderNo' | 'folio' | 'endFolio' | 'summary';
