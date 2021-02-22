@@ -256,6 +256,10 @@ export class TransactionDataService {
 
     const path = `v5/land/workflow/execute-command`;
 
+    if (!command.payload.nextStatus) {
+      command.payload.nextStatus = 'Undefined';
+    }
+
     return this.http.post<WorkflowTask[]>(path, command);
   }
 
