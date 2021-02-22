@@ -108,6 +108,9 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
             };
 
             this.executeCommand(TransactionCommandType.EXECUTE_WORKFLOW_COMMAND, payload)
+                .catch(error => {
+                  this.handleError(error);
+                })
                 .finally(() => {
                   this.onClose();
                 });
@@ -197,6 +200,12 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
     };
 
     return this.uiLayer.execute<T>(command);
+  }
+
+  private handleError(error){
+    if ([400, 500].includes(error.status)) {
+      this.messageBox.show(error.error.message, 'Ocurió un problema');
+    }
   }
 
 }
