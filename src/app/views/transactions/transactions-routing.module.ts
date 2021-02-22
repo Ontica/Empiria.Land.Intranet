@@ -13,10 +13,8 @@ import { TransactionsMainPageComponent } from './main-page/transactions-main-pag
 
 const routes: Routes = [
   { path: 'my-inbox', component: TransactionsMainPageComponent },
-  { path: 'in-progress', component: TransactionsMainPageComponent },
-  { path: 'on-sign', component: TransactionsMainPageComponent },
+  { path: 'control-desk', component: TransactionsMainPageComponent },
   { path: 'finished', component: TransactionsMainPageComponent },
-  { path: 'returned', component: TransactionsMainPageComponent },
   { path: 'pending', component: TransactionsMainPageComponent },
   { path: 'all', component: TransactionsMainPageComponent },
   { path: '', redirectTo: 'my-inbox', pathMatch: 'full' }

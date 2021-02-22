@@ -1,7 +1,5 @@
-<emp-ng-card [title]="transaction.type.name + ': ' + transaction.transactionID"
-             [hint]="transaction.presentationTime ?
-                     'Presentado el: ' + ( transaction.presentationTime | dateTimeFormat ) :
-                     ''"
+<emp-ng-card [title]="this.transaction.requestedBy.name"
+             [hint]="cardHint"
              (cardClose)="onClose()">
 
 <mat-tab-group [(selectedIndex)]="selectedTabIndex">

@@ -15,28 +15,16 @@ export const TransactionViews: View[] = [
     url: '/transactions/my-inbox'
   },
   {
-    name: 'Transactions.InProgress',
-    title: 'Trámites en elaboración',
-    menuTitle: 'En elaboración',
-    url: '/transactions/in-progress'
-  },
-  {
-    name: 'Transactions.OnSign',
-    title: 'Trámites pendientes de firma',
-    menuTitle: 'En firma',
-    url: '/transactions/on-sign'
+    name: 'Transactions.ControlDesk',
+    title: 'Mesa de control',
+    menuTitle: 'Mesa de control',
+    url: '/transactions/control-desk'
   },
   {
     name: 'Transactions.Finished',
-    title: 'Trámites finalizados',
-    menuTitle: 'Finalizados',
+    title: 'Trámites terminados',
+    menuTitle: 'Terminados',
     url: '/transactions/finished'
-  },
-  {
-    name: 'Transactions.Returned',
-    title: 'Trámites devueltos',
-    menuTitle: 'Devueltos',
-    url: '/transactions/returned'
   },
   {
     name: 'Transactions.Pending',

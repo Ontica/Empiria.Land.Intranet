@@ -15,11 +15,15 @@ export interface TransactionShortModel extends Entity {
   transactionID: string;
   requestedBy: string;
   presentationTime: DateString;
+  internalControlNo: string;
   stage: string;
   status: string;
   statusName: string;
   assignedToUID: string;
   assignedToName: string;
+  nextStatus: string;
+  nextStatusName: string;
+  nextAssignedToName: string;
 }
 
 
@@ -30,11 +34,15 @@ export const EmptyTransactionShortModel: TransactionShortModel = {
   transactionID: '',
   requestedBy: '',
   presentationTime: '',
+  internalControlNo: '',
   stage: '',
   status: '',
   statusName: '',
   assignedToUID: '',
-  assignedToName: ''
+  assignedToName: '',
+  nextStatus: '',
+  nextStatusName: '',
+  nextAssignedToName: ''
 };
 
 
@@ -43,6 +51,7 @@ export interface Transaction extends Entity {
   subtype: TransactionSubtype;
   transactionID: string;
   presentationTime: DateString;
+  internalControlNo: string;
   requestedBy: Requester;
   assignedTo: Identifiable;
   agency: Agency;
@@ -225,6 +234,7 @@ export const EmptyTransaction: Transaction = {
   subtype: Empty,
   transactionID: '',
   presentationTime: '',
+  internalControlNo: '',
   requestedBy: EmptyRequester,
   assignedTo: Empty,
   agency: Empty,
@@ -245,7 +255,7 @@ export enum TransactionStage  {
   Pending = 'Pending',
   InProgress = 'InProgress',
   Completed = 'Completed',
-  Returned = 'Returned',
+  ControlDesk = 'ControlDesk',
   OnHold = 'OnHold',
   All = 'All'
 }
@@ -335,8 +345,8 @@ export function mapTransactionStageFromViewName(viewName: string): TransactionSt
       return TransactionStage.InProgress;
     case 'Transactions.Finished':
       return TransactionStage.Completed;
-    case 'Transactions.Returned':
-      return TransactionStage.Returned;
+    case 'Transactions.ControlDesk':
+      return TransactionStage.ControlDesk;
     case 'Transactions.Pending':
       return TransactionStage.Pending;
     case 'Transactions.All':
@@ -363,10 +373,14 @@ export function mapTransactionShortModelFromTransaction(transaction: Transaction
     transactionID: transaction.transactionID,
     requestedBy: transaction.requestedBy.name,
     presentationTime: transaction.presentationTime,
+    internalControlNo: transaction.internalControlNo,
     stage: transaction.stage,
     status: transaction.status,
     statusName: transaction.statusName,
     assignedToUID: transaction.assignedTo?.uid,
-    assignedToName: transaction.assignedTo?.name
+    assignedToName: transaction.assignedTo?.name,
+    nextStatus: '',
+    nextStatusName: '',
+    nextAssignedToName: ''
   };
 }

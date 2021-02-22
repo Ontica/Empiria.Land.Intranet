@@ -2,24 +2,31 @@
 
   <div fxFlex="35%">
     <div class="label">Tipo de trámite</div>
-    <div class="primary-text nowrap"><strong>{{transaction.type}}</strong></div>
-    <div>{{transaction.subtype}}</div>
+    <div class="primary-text nowrap"><strong>{{transaction.subtype}}</strong></div>
+    <div>{{transaction.type}}</div>
   </div>
 
-  <div fxFlex="30%">
+  <div fxFlex="20%">
     <div *ngIf="transaction?.transactionID">
       <div class="label">Trámite RPP</div>
       <div>
         <div class="primary-text nowrap"><strong>{{transaction?.transactionID}}</strong></div>
-        <div>{{transaction?.presentationTime | dateTimeFormat}}</div>
+        <div>{{transaction?.presentationTime | dateTimeFormat}} &nbsp; <strong>{{transaction.internalControlNo}}</strong></div>
       </div>
     </div>
   </div>
 
-  <div fxFlex="30%">
+  <div fxFlex="20%">
     <div class="label">Lo tiene:</div>
     <div class="primary-text nowrap"><strong>{{transaction.assignedToName}}</strong></div>
     <div>{{transaction.statusName}}</div>
+  </div>
+
+  <div fxFlex="20%">
+    <ng-container *ngIf="transaction.nextStatusName !== 'No determinado'">
+      <div class="label">Siguiente estado:</div>
+      <div>{{transaction.nextStatusName}}</div>
+    </ng-container>
   </div>
 
   <div fxFlex="30px">

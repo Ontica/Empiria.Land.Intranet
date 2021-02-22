@@ -3,8 +3,8 @@
   <div class="card-header">
 
     <div class="card-title">
-      {{title}}
-      <div class="card-hint">{{hint}}</div>
+      <span [innerHTML]="title | safeHtml"></span>
+      <div class="card-hint" [innerHTML]="hint | safeHtml"></div>
     </div>
 
     <div *ngIf="!disableClose" class="card-header-options">

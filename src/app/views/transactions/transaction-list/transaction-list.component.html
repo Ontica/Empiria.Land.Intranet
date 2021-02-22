@@ -2,13 +2,13 @@
 
   <div class="card-header card-header-flat">
 
-    <div *ngIf="transactionList.length > 0"
+    <!-- <div *ngIf="transactionList.length > 0"
       style="margin: auto; padding: 0 20px 0 4px;">
       <emp-ng-check-box-all
         [(selection)]="selection"
         [values]="transactionList">
       </emp-ng-check-box-all>
-    </div>
+    </div> -->
 
     <div class="card-title">
       {{title}}
@@ -27,7 +27,7 @@
 
         <button class="btn-action" (click)="onClickCreateTransaction()">Nuevo</button>
         &nbsp; &nbsp; &nbsp;
-        <input type="search" class="text-box" style="width:auto" fxHide.lt-sm="true"
+        <input type="search" class="text-box" style="min-width:240px" fxHide.lt-sm="true"
                placeholder="Buscar trámites"
                (search)="onChangeFilter()" [(ngModel)]="keywords">
 
@@ -54,7 +54,7 @@
           class="list-item" [class.list-item-selected]="isSelected(transaction)"
           matRipple [matRippleTrigger]="trigger" matRippleColor="rgb(44, 57, 66, 0.05)">
 
-      <div class="list-item-checkbox">
+      <!-- <div class="list-item-checkbox">
         <mat-checkbox
           [checked]="selection.isSelected(transaction)"
           (click)="$event.stopPropagation()"
@@ -62,7 +62,7 @@
                     selection.deselect(transaction) :
                     selection.select(transaction)">
         </mat-checkbox>
-      </div>
+      </div> -->
 
       <div class="list-item-container">
 

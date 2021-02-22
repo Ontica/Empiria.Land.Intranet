@@ -56,15 +56,18 @@ export class WorkflowEditorComponent implements OnInit, OnDestroy {
   }
 
   get requiredNextStatusField(){
-    return ['AssignTo', 'Receive', 'SetNextStatus'].includes(this.operationSelected.type);
+    return ['AssignTo', 'SetNextStatus'].includes(this.operationSelected.type);
   }
 
   get requiredNextUserField(){
-    return ['AssignTo', 'Receive'].includes(this.operationSelected.type);
+    return false;
+    // return ['AssignTo', 'Receive'].includes(this.operationSelected.type);
   }
 
   get requiredAuthorizationField(){
-    return ['Sign', 'Unsign'].includes(this.operationSelected.type);
+    return false;
+
+    // return ['Sign', 'Unsign'].includes(this.operationSelected.type);
   }
 
   onClose() {
