@@ -27,7 +27,6 @@ export class TransactionTabbedViewComponent implements OnChanges {
   selectedTabIndex = 0;
 
   ngOnChanges() {
-    this.setSelectedTabIndex();
     this.setCardHint();
   }
 
