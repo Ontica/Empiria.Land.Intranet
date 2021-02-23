@@ -3,7 +3,7 @@
   <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
 
     <div fxLayout="row" fxLayout.lt-md="column">
-      <div [fxFlex]="100/3">
+      <div [fxFlex]="100/4">
         <label>Tipo:</label>
         <emp-ng-select formControlName="serviceType"
           [config]="{ clearable: false }"
@@ -13,7 +13,7 @@
           (changes)="serviceTypeChange($event)">
         </emp-ng-select>
       </div>
-      <div [fxFlex]="100/3">
+      <div [fxFlex]="100/2">
         <label>Concepto:</label>
         <emp-ng-select formControlName="service"
           [config]="{ clearable: false }"
@@ -24,7 +24,7 @@
           (changes)="serviceChange($event)">
         </emp-ng-select>
       </div>
-      <div [fxFlex]="100/3">
+      <div [fxFlex]="100/4">
         <label>Fundamento:</label>
         <emp-ng-select formControlName="feeConcept"
           [bindLabel]="'legalBasis'"
@@ -38,14 +38,14 @@
     </div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
-      <div [fxFlex]="100/3">
+      <div [fxFlex]="100/4">
         <label>Unidad:</label>
         <input formControlName="unit"
           type="text"
           class="text-box"
           placeholder="Seleccione el concepto">
       </div>
-      <div [fxFlex]="100/3">
+      <div [fxFlex]="100/2">
         <div fxLayout="row">
           <div [fxFlex]="60" *ngIf="feeConceptSelected.requiresTaxableBase">
             <label>Base gravable:</label>
