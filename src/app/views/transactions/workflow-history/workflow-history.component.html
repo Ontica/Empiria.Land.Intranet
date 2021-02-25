@@ -60,7 +60,7 @@
     <tr mat-footer-row *matFooterRowDef="displayedFooterColumns" [hidden]="dataSource.data.length == 0"></tr>
   </table>
 
-  <div *ngIf="dataSource.data.length == 0" class="text-align-center" style="padding: 1rem;">
+  <div *ngIf="dataSource.data.length == 0" class="text-not-found">
     <p>No se han encontrado registros.</p>
   </div>
 

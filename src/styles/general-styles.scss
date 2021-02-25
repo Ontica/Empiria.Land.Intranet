@@ -211,6 +211,11 @@ textarea:focus {
   text-align: center;
 }
 
+.text-not-found {
+  text-align: center;
+  padding: 1rem;
+}
+
 .left {
   float: left;
 }
@@ -288,11 +293,11 @@ textarea:disabled {
   @include disabled-element;
 }
 
-input[type=text]:disabled {
+input[type="text"]:disabled {
   @include disabled-element;
 }
 
-input[type=number]:disabled {
+input[type="number"]:disabled {
   @include disabled-element;
 }
 
