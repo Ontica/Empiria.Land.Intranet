@@ -53,7 +53,7 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
   validateAllCommandsMode(){
     this.allCommandsMode = this.transactionList.length === 0;
 
-    this.titleText = this.allCommandsMode ? 'Recibir Trámites' : 'Cambio de estado';
+    this.titleText = this.allCommandsMode ? 'Paquete de trámites' : 'Cambio de estado';
   }
 
   loadCommandList(){
@@ -182,13 +182,13 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
 
   private handleError(error){
     if ([400, 500].includes(error.status)) {
-      this.messageBox.show(error.error.message, 'Ocurió un problema');
+      this.messageBox.show(error.error.message, 'Ocurrió un problema');
     }
   }
 
   private handleErrorNotFound(error) {
-    if ([404].includes(error.status)) {
-      this.messageBox.show(error.error.message, 'No encontre resultados');
+    if ([400, 404].includes(error.status)) {
+      this.messageBox.show(error.error.message, 'No encontré información');
     }
   }
 

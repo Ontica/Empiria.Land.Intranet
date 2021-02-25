@@ -1,8 +1,8 @@
 <emp-ng-card
   [title]='titleText'
   [hint]="transactionList.length > 1 ?
-         '¿Qué debo hacer con los ' + transactionList.length + ' trámites?' :
-         '¿Qué debo hacer con el trámite?'"
+         '¿Qué debo hacer con los ' + transactionList.length + ' trámites del paquete?' :
+         '¿Qué debo hacer con el trámite seleccionado?'"
   (cardClose)="onClose()">
 
   <div style="padding: 0 16px 16px 16px !important;">

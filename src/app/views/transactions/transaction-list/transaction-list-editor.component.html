@@ -10,7 +10,7 @@
   </div>
 
   <input type="search" class="text-box" [fxFlex]="100/3" fxHide.lt-sm="true"
-    *ngIf="canEdit" placeholder="Buscar trámite"
+    *ngIf="canEdit" placeholder="Buscar trámites por clave y agregarlos a la lista"
     [(ngModel)]="searchUID" (search)="onChangeFilter()">
 
 </div>
@@ -38,7 +38,7 @@
   </div>
 
   <div *ngIf="transactionList.length == 0" class="text-not-found">
-    <p>Agregue los trámites.</p>
+    <p>La lista de trámites está vacía.</p>
   </div>
 
 </div>

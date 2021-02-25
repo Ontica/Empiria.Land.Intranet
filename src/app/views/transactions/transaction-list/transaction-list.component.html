@@ -25,15 +25,15 @@
     <div class="card-header-options">
         <div style="width:32px"></div>
 
-        <button class="btn" (click)="onClickReceiveTransactionsOptions()">Recibir</button>
+        <button class="btn" (click)="onClickReceiveTransactionsOptions()">Paquetes</button>
 
-        <div style="width: 0.75rem;"></div>
+        <div style="width:3rem"></div>
 
         <button class="btn-action" (click)="onClickCreateTransaction()">Nuevo</button>
 
-        <div style="width: 0.75rem;"></div>
+        <div style="width:1rem"></div>
 
-        <input type="search" class="text-box" style="min-width:240px" fxHide.lt-sm="true"
+        <input type="search" class="text-box" style="min-width:220px" fxHide.lt-sm="true"
                placeholder="Buscar trámites"
                (search)="onChangeFilter()" [(ngModel)]="keywords">
 
