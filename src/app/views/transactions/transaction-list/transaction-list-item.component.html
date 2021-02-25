@@ -32,9 +32,10 @@
   <div fxFlex="30px">
     <div class="primary-text nowrap">
 
-      <a (click)="onClickTransactionOptions('SetNextStatus')" title="Cambiar estado">
-        <mat-icon>more_vert</mat-icon>
-      </a>
+      <emp-ng-menu [items]="listOptions" [config]="{hideMenuIfOneItem: true}"
+        (selected)="onClickTransactionOptions($event)">
+
+      </emp-ng-menu>
 
     </div>
   </div>

@@ -18,10 +18,12 @@ export class TransactionListItemComponent {
 
   @Input() transaction: TransactionShortModel;
 
+  @Input() listOptions: any[] = [{name: 'Cambiar estado', value: 'SetNextStatus'}];
+
   @Output() optionsClick = new EventEmitter<boolean>();
 
   onClickTransactionOptions(option) {
-    this.optionsClick.emit(option);
+    this.optionsClick.emit(option.value);
   }
 
 }
