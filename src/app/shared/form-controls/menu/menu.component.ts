@@ -3,6 +3,7 @@ import { MenuPositionX, MenuPositionY } from '@angular/material/menu';
 
 export interface MenuConfig {
   modeOnlyIcon?: boolean;
+  hideMenuIfOneItem?: boolean;
   textButton?: string;
   icon?: string;
   bindLabel?: string;
@@ -13,10 +14,11 @@ export interface MenuConfig {
 
 const DefaultMenuConfig: MenuConfig = {
   modeOnlyIcon: true,
+  hideMenuIfOneItem: false,
   textButton: 'Menu',
   icon: 'more_vert',
   bindLabel: 'name',
-  bindIcon: null,
+  bindIcon: 'icon',
   yPosition: 'below',
   xPosition: 'after'
 };
@@ -28,6 +30,7 @@ const DefaultMenuConfig: MenuConfig = {
 })
 export class MenuComponent implements OnInit {
   @Input() items: any[] = [];
+
   @Output() selected = new EventEmitter<any>();
 
   @Input()
@@ -47,6 +50,19 @@ export class MenuComponent implements OnInit {
 
   onSelectItem(item){
     this.selected.next(item);
+  }
+
+  get getFirstIfOneItem(){
+    return this.items.length === 1 ? this.items[0] : null;
+  }
+
+  get hideMenuIfOneItem(){
+    return this.menuConfig.hideMenuIfOneItem && this.getFirstIfOneItem;
+  }
+
+  get showMenu(){
+    return !this.menuConfig.hideMenuIfOneItem ||
+           ( this.menuConfig.hideMenuIfOneItem && this.items.length > 1 );
   }
 
 }
