@@ -1,0 +1,44 @@
+<br>
+
+<div class="section-title">Lista de trámites</div>
+
+<div fxLayout="row" fxLayoutAlign="space-between end" style="min-height: 32px;">
+
+  <div fxFlex style="margin: auto 0;">
+    {{ transactionList.length +
+     ( transactionList.length === 1 ? ' trámite seleccionado' : ' trámites seleccionados') }}
+  </div>
+
+  <input type="search" class="text-box" [fxFlex]="100/3" fxHide.lt-sm="true"
+    *ngIf="canEdit" placeholder="Buscar trámite"
+    [(ngModel)]="searchUID" (search)="onChangeFilter()">
+
+</div>
+
+<div class="list-container">
+
+  <div *ngFor="let transaction of transactionList" class="list-item">
+
+    <div class="list-item-container">
+
+      <div class="list-item-name">
+        <strong>
+          <a>{{transaction.requestedBy}}</a>
+        </strong>
+      </div>
+
+      <emp-land-transaction-list-item [transaction]="transaction"
+        [listOptions]="listOptions"
+        (optionsClick)="removeTransactionFromList(transaction)">
+
+      </emp-land-transaction-list-item>
+
+    </div>
+
+  </div>
+
+  <div *ngIf="transactionList.length == 0" class="text-not-found">
+    <p>Agregue los trámites.</p>
+  </div>
+
+</div>

@@ -21,6 +21,7 @@ import { InstrumentRecordingModule } from '../instrument-recording/instrument-re
 import { TransactionsRoutingModule } from './transactions-routing.module';
 
 import { TransactionListComponent } from './transaction-list/transaction-list.component';
+import { TransactionListEditorComponent } from './transaction-list/transaction-list-editor.component';
 import { TransactionListItemComponent } from './transaction-list/transaction-list-item.component';
 import { TransactionTabbedViewComponent } from './transaction-tabbed-view/transaction-tabbed-view.component';
 import { TransactionsMainPageComponent } from './main-page/transactions-main-page.component';
@@ -58,6 +59,7 @@ import { WorkflowEditorComponent } from './workflow-editor/workflow-editor.compo
   declarations: [
     TransactionsMainPageComponent,
     TransactionListComponent,
+    TransactionListEditorComponent,
     TransactionListItemComponent,
     TransactionTabbedViewComponent,
     TransactionHeaderComponent,
