@@ -1,0 +1,41 @@
+<emp-ng-card
+  [title]='titleText'
+  [hint]="transactionList.length > 1 ?
+         '¿Qué debo hacer con los ' + transactionList.length + ' trámites?' :
+         '¿Qué debo hacer con el trámite?'"
+  (cardClose)="onClose()">
+
+  <div style="padding: 0 16px 16px 16px !important;">
+
+    <emp-land-workflow-command-config
+      [applicableCommandsList]="applicableCommandsList"
+      (formData)="setFormData($event)">
+
+    </emp-land-workflow-command-config>
+
+    <emp-land-transaction-list-editor *ngIf="formWorkflow.isValid" [canEdit]="canEditList"
+      [(transactionList)]="transactionList"
+      (transactionListEditorEvent)="onTransactionListEditorEventEvent($event)">
+
+    </emp-land-transaction-list-editor>
+
+    <mat-divider class="divider-padding"></mat-divider>
+
+    <div fxLayout="row">
+
+      <div fxFlex fxLayoutAlign="end end" style="padding-right: 8px;">
+
+        <button type="submit"
+          [class.btn]="!formWorkflow.isValid || transactionList.length === 0"
+          [class.btn-action]="formWorkflow.isValid && transactionList.length > 0"
+          (click)="submitCommand()">
+          Ejecutar la operación
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</emp-ng-card>

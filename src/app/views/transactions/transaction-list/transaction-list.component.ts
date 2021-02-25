@@ -21,6 +21,7 @@ export enum TransactionListEventType {
   TRANSACTION_OPTIONS_CLICKED =  'TransactionListComponent.Event.TransactionOptionsClicked',
   TRANSACTION_SELECTED        = 'TransactionListComponent.Event.TransactionSelected',
   TRANSACTIONS_SELECTED_OPTIONS_CLICKED = 'TransactionListComponent.Event.TransactionsSelectedOptionsClicked',
+  RECEIVE_TRANSACTIONS_CLICKED = 'TransactionListComponent.Event.ReceiveTransactionsClicked',
 }
 
 
@@ -88,6 +89,10 @@ export class TransactionListComponent implements OnChanges {
   onClickTransactionsSelectedOptions() {
     this.sendEvent(TransactionListEventType.TRANSACTIONS_SELECTED_OPTIONS_CLICKED,
                   { transactions: this.selection.selected });
+  }
+
+  onClickReceiveTransactionsOptions() {
+    this.sendEvent(TransactionListEventType.RECEIVE_TRANSACTIONS_CLICKED);
   }
 
   // private methods

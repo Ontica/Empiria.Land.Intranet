@@ -28,7 +28,7 @@ export interface WorkflowStatus {
 }
 
 
-export interface WorkflowOperation {
+export interface ApplicableCommand {
   type: WorkflowCommandType;
   name: string;
   nextStatus: WorkflowStatus[];
@@ -42,15 +42,16 @@ export interface WorkflowCommand {
 
 
 export interface WorkflowPayload {
-  transactionUID: string[];
-  nextStatus: string;
-  assignToUID: string;
-  authorization: string;
-  note: string;
+  searchUID?: string;
+  transactionUID?: string[];
+  nextStatus?: string;
+  assignToUID?: string;
+  authorization?: string;
+  note?: string;
 }
 
 
-export const EmptyOperation: WorkflowOperation = {
+export const EmptyApplicableCommand: ApplicableCommand = {
   type: 'None',
   name: '',
   nextStatus: [],

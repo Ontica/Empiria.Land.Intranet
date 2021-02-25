@@ -1,0 +1,59 @@
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section">
+
+  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div [fxFlex]="100/3">
+        <label>Operación:</label>
+        <emp-ng-select [formControlName]="controls.command"
+          [bindValue]="'type'"
+          [config]="{ clearable: false }"
+          [items]="applicableCommandsList"
+          [showError]="formHandler.showInvalidControl(controls.command)"
+          (changes)="commandChange($event)">
+        </emp-ng-select>
+      </div>
+
+      <div *ngIf="requiredNextStatusField" [fxFlex]="100/3">
+        <label>Nuevo estado:</label>
+        <emp-ng-select [formControlName]="controls.nextStatus" [bindValue]="'type'" [config]="{ clearable: false }"
+          [items]="commandSelected.nextStatus" [showError]="formHandler.showInvalidControl(controls.nextStatus)"
+          (changes)="statusChange($event)">
+        </emp-ng-select>
+      </div>
+
+      <div *ngIf="requiredNextUserField" [fxFlex]="100/3">
+        <label>{{labelNextUser}}</label>
+        <emp-ng-select [formControlName]="controls.nextUser" [config]="{ clearable: false }" [items]="statusSelected.users"
+          [placeholder]="statusSelected.type === 'None' ? 'Seleccione el nuevo estado' : 'Seleccione'"
+          [showError]="formHandler.showInvalidControl(controls.nextUser)">
+        </emp-ng-select>
+      </div>
+
+      <div *ngIf="requiredAuthorizationField" [fxFlex]="100/3">
+        <label>Firma electrónica:</label>
+        <input [formControlName]="controls.authorization" class="text-box" type="password" autocomplete="new-password"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.authorization)">
+      </div>
+
+    </div>
+
+    <ng-container *ngIf="commandSelected.type !== 'None'">
+
+      <div fxLayout="row" fxLayout.lt-md="column">
+
+        <div fxFlex>
+          <label>Observaciones:</label>
+          <textarea [formControlName]="controls.note" empNgTextareaAutoresize
+            rows="1" class="text-area">
+          </textarea>
+        </div>
+
+      </div>
+
+    </ng-container>
+
+  </div>
+
+</form>

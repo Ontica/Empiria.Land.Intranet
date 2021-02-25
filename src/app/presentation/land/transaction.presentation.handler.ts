@@ -87,7 +87,9 @@ export enum SelectorType {
   SELECTED_FILE = 'Land.Transactions.Selectors.SelectedFile',
   SELECTED_PREPROCESSING_DATA = 'Land.Transactions.Selectors.PreprocessingData',
   SELECTED_WORKFLOW_HISTORY = 'Land.Transactions.Selectors.WorkflowHistory',
-  APPLICABLE_OPERATIONS = 'Land.Transactions.Selectors.ApplicableOperations',
+  APPLICABLE_COMMANDS = 'Land.Transactions.Selectors.ApplicableCommands',
+  ALL_AVAILABLE_COMMANDS = 'Land.Transactions.Selectors.AllAvailableCommands',
+  TRANSACTION_FROM_COMMAND_EXECUTION = 'Land.Transactions.Selectors.TransactionFromCommandExecution',
 }
 
 
@@ -157,8 +159,14 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         return super.selectFirst<U>(selectorType, provider);
 
-      case SelectorType.APPLICABLE_OPERATIONS:
-        return toObservable<U>(this.data.getApplicableOperations(params));
+      case SelectorType.APPLICABLE_COMMANDS:
+        return toObservable<U>(this.data.getApplicableCommands(params));
+
+      case SelectorType.ALL_AVAILABLE_COMMANDS:
+        return toObservable<U>(this.data.getAllAvailableCommandTypes());
+
+      case SelectorType.TRANSACTION_FROM_COMMAND_EXECUTION:
+        return toObservable<U>(this.data.searchAndAssertCommandExecution(params));
 
       default:
         return super.select<U>(selectorType, params);

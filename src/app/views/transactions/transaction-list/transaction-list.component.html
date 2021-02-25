@@ -25,8 +25,14 @@
     <div class="card-header-options">
         <div style="width:32px"></div>
 
+        <button class="btn" (click)="onClickReceiveTransactionsOptions()">Recibir</button>
+
+        <div style="width: 0.75rem;"></div>
+
         <button class="btn-action" (click)="onClickCreateTransaction()">Nuevo</button>
-        &nbsp; &nbsp; &nbsp;
+
+        <div style="width: 0.75rem;"></div>
+
         <input type="search" class="text-box" style="min-width:240px" fxHide.lt-sm="true"
                placeholder="Buscar trámites"
                (search)="onChangeFilter()" [(ngModel)]="keywords">
@@ -40,7 +46,7 @@
 
     <div [@expandCollapse] *ngIf="selection.hasValue()">
       <div class="list-selection-header" fxLayoutAlign="start center">
-        <span fxFlex="35%">¿Qué debo hacer con
+        <span fxFlex="29%">¿Qué debo hacer con
           <span *ngIf="selection.selected.length === 1">el trámite?</span>
           <span *ngIf="selection.selected.length > 1">los {{selection.selected.length}} trámites?</span>
         </span>

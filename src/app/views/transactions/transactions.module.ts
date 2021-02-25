@@ -38,7 +38,8 @@ import { PreprocessingComponent } from './preprocessing/preprocessing.component'
 import { InstrumentFilesEditorComponent }
   from './preprocessing/instrument-files-editor/instrument-files-editor.component';
 import { WorkflowHistoryComponent } from './workflow-history/workflow-history.component';
-import { WorkflowEditorComponent } from './workflow-editor/workflow-editor.component';
+import { WorkflowCommanderComponent } from './workflow-commander/workflow-commander.component';
+import { WorkflowCommandConfigComponent } from './workflow-commander/workflow-command-config.component';
 
 
 @NgModule({
@@ -71,7 +72,8 @@ import { WorkflowEditorComponent } from './workflow-editor/workflow-editor.compo
     PreprocessingComponent,
     InstrumentFilesEditorComponent,
     WorkflowHistoryComponent,
-    WorkflowEditorComponent,
+    WorkflowCommanderComponent,
+    WorkflowCommandConfigComponent,
   ],
 
   exports: []

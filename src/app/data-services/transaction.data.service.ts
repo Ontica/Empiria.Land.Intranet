@@ -10,10 +10,10 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { Agency, Instrument, InstrumentMediaContent, WorkflowOperation, PaymentFields, PreprocessingData,
+import { Agency, Instrument, InstrumentMediaContent, PaymentFields, PreprocessingData,
          ProvidedServiceType, RecorderOffice, RecordingSection, RequestedServiceFields,
          Transaction, TransactionFields, TransactionFilter, TransactionShortModel, TransactionType,
-         WorkflowCommand, WorkflowTask } from '@app/models';
+         WorkflowCommand, WorkflowTask, ApplicableCommand } from '@app/models';
 
 import { Progress, reportHttpProgress } from './file-services/http-progress';
 
@@ -242,12 +242,28 @@ export class TransactionDataService {
   }
 
 
-  getApplicableOperations(transactionsUidList: string[]): Observable<WorkflowOperation[]> {
+  getApplicableCommands(transactionsUidList: string[]): Observable<ApplicableCommand[]> {
     Assertion.assertValue(transactionsUidList, 'transactionsUidList');
 
     const path = `v5/land/workflow/applicable-command-types`;
 
-    return this.http.post<WorkflowOperation[]>(path, transactionsUidList);
+    return this.http.post<ApplicableCommand[]>(path, transactionsUidList);
+  }
+
+
+  getAllAvailableCommandTypes(): Observable<ApplicableCommand[]> {
+    const path = `v5/land/workflow/all-command-types`;
+
+    return this.http.get<ApplicableCommand[]>(path);
+  }
+
+
+  searchAndAssertCommandExecution(command: WorkflowCommand): Observable<TransactionShortModel> {
+    Assertion.assertValue(command, 'command');
+
+    const path = `v5/land/workflow/search-and-assert-command-execution`;
+
+    return this.http.post<TransactionShortModel>(path, command);
   }
 
 

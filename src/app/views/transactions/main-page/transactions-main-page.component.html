@@ -46,15 +46,16 @@
   <ng-container [ngSwitch]="displayOptionModalSelected">
 
     <emp-land-transaction-creator *ngSwitchCase="'CreateTransactionEditor'"
-      (closeEvent)="onTransactionCreatorClosed()">
+      (closeEvent)="onOptionModalClosed()">
 
     </emp-land-transaction-creator>
 
-    <emp-land-workflow-editor *ngSwitchCase="'SetNextStatus'"
-      [transactions]="selectedTransactions"
-      (closeEvent)="onTransactionCreatorClosed()">
+    <emp-land-workflow-commander *ngSwitchDefault
+      [transactionList]="displayOptionModalSelected === 'ReceiveTransactions' ? [] : selectedTransactions"
+      [canEditList]="displayOptionModalSelected !== 'ExecuteCommand'"
+      (closeEvent)="onOptionModalClosed()">
 
-    </emp-land-workflow-editor>
+    </emp-land-workflow-commander>
 
   </ng-container>
 

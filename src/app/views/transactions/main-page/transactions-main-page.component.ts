@@ -24,7 +24,8 @@ import { View } from '@app/views/main-layout';
 
 import { TransactionListEventType } from '../transaction-list/transaction-list.component';
 
-type TransactionModalOptios = 'CreateTransactionEditor' | 'SetNextStatus';
+type TransactionModalOptios = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
+                              'ReceiveTransactions';
 
 @Component({
   selector: 'emp-land-transactions-main-page',
@@ -104,7 +105,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  onTransactionCreatorClosed() {
+  onOptionModalClosed() {
     this.displayOptionModalSelected = null;
   }
 
@@ -121,7 +122,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
         return;
 
       case TransactionListEventType.TRANSACTION_OPTIONS_CLICKED:
-        this.displayOptionModalSelected = 'SetNextStatus';
+        this.displayOptionModalSelected = 'ExecuteCommand';
         this.selectedTransactions = [event.payload.transaction];
         return;
 
@@ -132,8 +133,12 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
         return;
 
       case TransactionListEventType.TRANSACTIONS_SELECTED_OPTIONS_CLICKED:
-        this.displayOptionModalSelected = 'SetNextStatus';
+        this.displayOptionModalSelected = 'ExecuteCommandMultiple';
         this.selectedTransactions = event.payload.transactions;
+        return;
+
+      case TransactionListEventType.RECEIVE_TRANSACTIONS_CLICKED:
+        this.displayOptionModalSelected = 'ReceiveTransactions';
         return;
 
       default:
