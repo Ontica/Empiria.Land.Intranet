@@ -7,7 +7,7 @@
 
 export * from './data-types';
 
-export { ExceptionHandler } from './general/exception-handler';
+
 export { Exception } from './general/exception';
 
 export { Assertion } from './general/assertion';

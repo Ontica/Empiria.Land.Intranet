@@ -18,12 +18,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 
-// Define global exception handler provider
-import { ErrorHandler } from '@angular/core';
-import { ExceptionHandler } from './core/general/exception-handler';
-
-const EXCEPTION_HANDLER_PROVIDER = { provide: ErrorHandler, useClass: ExceptionHandler };
-
 @NgModule({
 
   bootstrap: [ AppComponent ],
@@ -41,10 +35,6 @@ const EXCEPTION_HANDLER_PROVIDER = { provide: ErrorHandler, useClass: ExceptionH
 
     AppRoutingModule
   ],
-
-  providers: [
-    EXCEPTION_HANDLER_PROVIDER
-  ]
 
 })
 export class AppModule { }

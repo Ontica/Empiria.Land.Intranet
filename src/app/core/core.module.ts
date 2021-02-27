@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { CommonModule } from '@angular/common';
@@ -14,7 +14,6 @@ import { DataServicesModule } from '@app/data-services/data.services.module';
 
 import { PresentationModule } from './presentation/presentation.module';
 
-import { ExceptionHandler } from './general/exception-handler';
 import { SessionService } from './general/session.service';
 import { LoggerService } from './general/logger.service';
 import { ApplicationSettingsService } from './general/application-settings.service';
@@ -29,6 +28,11 @@ import { AuthenticationService } from './security/authentication.service';
 import { SecurityGuardService } from './security/security-guard.service';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
+
+// Define global exception handler provider
+import { ExceptionHandler } from './general/exception-handler';
+
+import { ErrorMessageService } from './errors/error-message.service';
 
 
 @NgModule({
@@ -45,7 +49,7 @@ import { throwIfAlreadyLoaded } from './module-import-guard';
   exports: [],
 
   providers: [
-    ExceptionHandler,
+    ErrorMessageService,
     SessionService,
     ApplicationSettingsService,
     LoggerService,
@@ -56,6 +60,7 @@ import { throwIfAlreadyLoaded } from './module-import-guard';
     HttpService,
     DirectoryService,
 
+    { provide: ErrorHandler, useClass: ExceptionHandler },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
 
   ]

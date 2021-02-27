@@ -16,10 +16,15 @@ import {
 } from '@angular/common/http';
 
 import { HttpException } from '../general/exception';
+import { ErrorMessageService } from '../errors/error-message.service';
 
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
+
+  constructor(private errorService: ErrorMessageService){
+
+  }
 
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -33,15 +38,19 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
   private getNormalizedHttpErrorResponse(sourceErr: any,
                                          request: HttpRequest<any>): HttpErrorResponse {
+
     if (!(sourceErr instanceof HttpErrorResponse)) {
       return this.getUnknownHttpError(sourceErr, request);
     }
 
     if (this.isEmpiriaServerError(sourceErr)) {
-      return this.getNormalizedErrorResponse(sourceErr, request);
+      const normalizedErrorResponse = this.getNormalizedErrorResponse(sourceErr, request);
+      this.errorService.handleServerSideError(normalizedErrorResponse);
+      return normalizedErrorResponse;
     }
 
     if (sourceErr.status === 0 && this.isInternetDisconnected()) {
+      this.errorService.handleOfflineError();
       return this.getInternetDisconnectedError(sourceErr, request);
     }
 
