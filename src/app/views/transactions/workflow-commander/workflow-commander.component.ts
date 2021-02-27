@@ -1,12 +1,23 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+
 import { Command, EventInfo } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
+
 import { TransactionShortModel, ApplicableCommand, WorkflowCommand } from '@app/models';
+
 import { MessageBoxService } from '@app/shared/containers/message-box';
 import { ArrayLibrary } from '@app/shared/utils';
 import { TransactionListEditorEventType } from '../transaction-list/transaction-list-editor.component';
 import { FormDataEmitted } from './workflow-command-config.component';
+
 
 @Component({
   selector: 'emp-land-workflow-commander',
@@ -50,18 +61,18 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
     this.helper.destroy();
   }
 
-  validateAllCommandsMode(){
+  validateAllCommandsMode() {
     this.allCommandsMode = this.transactionList.length === 0;
 
     this.titleText = this.allCommandsMode ? 'Paquete de trámites' : 'Cambio de estado';
   }
 
-  loadCommandList(){
+  loadCommandList() {
     const selector = this.allCommandsMode ?
       TransactionStateSelector.ALL_AVAILABLE_COMMANDS :
       TransactionStateSelector.APPLICABLE_COMMANDS;
 
-    const params = this.allCommandsMode ? null : this.transactionList.map( x => x.uid );
+    const params = this.allCommandsMode ? null : this.transactionList.map(x => x.uid);
 
     this.helper.select<ApplicableCommand[]>(selector, params)
       .subscribe(x => {
@@ -73,11 +84,11 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
     this.closeEvent.emit();
   }
 
-  setFormData(event: FormDataEmitted){
+  setFormData(event: FormDataEmitted) {
     this.formWorkflow = event;
   }
 
-  submitCommand(){
+  submitCommand() {
     if (this.submitted || !this.formWorkflow.isValid || this.transactionList.length === 0) {
       return;
     }
@@ -85,23 +96,23 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
     const message = this.getConfirmMessage();
 
     this.messageBox.confirm(message, 'Cambiar estado', 'AcceptCancel')
-        .toPromise()
-        .then(x => {
-          if (x) {
+      .toPromise()
+      .then(x => {
+        if (x) {
 
-            this.formWorkflow.formData.transactionUID = this.transactionList.map( t => t.uid );
+          this.formWorkflow.formData.transactionUID = this.transactionList.map(t => t.uid);
 
-            const payload = {
-              type: this.formWorkflow.commandType,
-              payload: this.formWorkflow.formData
-            };
+          const payload = {
+            type: this.formWorkflow.commandType,
+            payload: this.formWorkflow.formData
+          };
 
-            this.executeCommand(TransactionCommandType.EXECUTE_WORKFLOW_COMMAND, payload)
-                .finally(() => {
-                  this.onClose();
-                });
-          }
-        });
+          this.executeCommand(TransactionCommandType.EXECUTE_WORKFLOW_COMMAND, payload)
+            .finally(() => {
+              this.onClose();
+            });
+        }
+      });
   }
 
   onTransactionListEditorEventEvent(event: EventInfo): void {
@@ -117,21 +128,27 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
     }
   }
 
+
   private searchTransaction(data: { searchUID: string }) {
-    const payload: WorkflowCommand = {
+    const workflowCommand: WorkflowCommand = {
       type: this.formWorkflow.commandType,
       payload: data
     };
 
+    if (this.formWorkflow.formData.nextStatus) {
+      workflowCommand.payload.nextStatus = this.formWorkflow.formData.nextStatus;
+    }
+
     this.helper.select<TransactionShortModel>(TransactionStateSelector.TRANSACTION_FROM_COMMAND_EXECUTION,
-                                              payload)
+      workflowCommand)
       .subscribe(x => {
         this.handleTransactionDuplicate(data.searchUID, x.uid);
         this.transactionList = ArrayLibrary.insertItemTop(this.transactionList, x, 'uid');
       });
   }
 
-  private getConfirmMessage(): string{
+
+  private getConfirmMessage(): string {
     const numTransactions = this.transactionList.length;
 
     const commandType = this.applicableCommandsList.filter(x => x.type === this.formWorkflow.commandType)[0];
@@ -156,8 +173,8 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
       ${numTransactions > 1 ? ' de los ' + numTransactions + ' trámites seleccionados' : ' del trámite'}?`;
   }
 
-  private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
 
+  private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
     this.submitted = true;
 
     const command: Command = {
@@ -166,7 +183,7 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
     };
 
     return this.uiLayer.execute<T>(command)
-               .finally(() => this.submitted = false);
+      .finally(() => this.submitted = false);
   }
 
   private handleTransactionDuplicate(keyword: string, transactionUID: string) {
