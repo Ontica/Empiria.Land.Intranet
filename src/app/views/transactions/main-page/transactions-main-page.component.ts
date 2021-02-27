@@ -62,6 +62,8 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
       .subscribe(x => {
         this.transactionList = x;
         this.isLoading = false;
+      }, error => {
+        this.isLoading = false;
       });
 
 
@@ -74,6 +76,8 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
         this.selectedTransaction = x;
         this.isLoadingTransaction = false;
         this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
+      }, error => {
+        this.isLoadingTransaction = false;
       });
 
 

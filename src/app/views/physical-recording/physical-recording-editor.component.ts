@@ -33,6 +33,8 @@ export class PhysicalRecordingEditorComponent implements OnInit, OnDestroy {
 
   controls = PhysicalRecordingEditorFormControls;
 
+  submitted = false;
+
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
@@ -47,11 +49,9 @@ export class PhysicalRecordingEditorComponent implements OnInit, OnDestroy {
   }
 
   submitPhysicalRecording(){
-    if (!this.formHandler.validateReadyForSubmit()) {
+    if (this.submitted || !this.formHandler.validateReadyForSubmit()) {
       return;
     }
-
-    this.formHandler.submitted = true;
 
     const payload = {
       transactionUID: this.transactionUID,
@@ -59,8 +59,7 @@ export class PhysicalRecordingEditorComponent implements OnInit, OnDestroy {
       physicalRecording: this.getFormData()
     };
 
-    this.executeCommand<Instrument>(InstrumentsCommandType.CREATE_PHYSICAL_RECORDING, payload)
-        .then(() => this.formHandler.submitted = false );
+    this.executeCommand<Instrument>(InstrumentsCommandType.CREATE_PHYSICAL_RECORDING, payload);
   }
 
   private initForm(){
@@ -99,12 +98,15 @@ export class PhysicalRecordingEditorComponent implements OnInit, OnDestroy {
   }
 
   private executeCommand<T>(commandType: InstrumentsCommandType, payload?: any): Promise<T>{
+    this.submitted = true;
+
     const command: Command = {
       type: commandType,
       payload
     };
 
-    return this.uiLayer.execute<T>(command);
+    return this.uiLayer.execute<T>(command)
+               .finally(() => this.submitted = false );
   }
 
 }

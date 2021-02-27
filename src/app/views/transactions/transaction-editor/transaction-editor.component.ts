@@ -4,7 +4,6 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice,
          ProvidedServiceType } from '@app/models';
-import { MessageBoxService } from '@app/shared/containers/message-box';
 import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 import { ArrayLibrary } from '@app/shared/utils';
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
@@ -35,8 +34,9 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
   panelAddServiceOpenState: boolean = false;
 
-  constructor(private uiLayer: PresentationLayer,
-              private messageBox: MessageBoxService) {
+  submitted = false;
+
+  constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
@@ -82,6 +82,9 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
   }
 
   onTransactionHeaderEvent(event: EventInfo): void {
+    if (this.submitted) {
+      return;
+    }
 
     let payload: any = { transactionUID: this.transaction.uid };
 
@@ -146,6 +149,9 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
   }
 
   onRequestedServiceEditorEvent(event: EventInfo): void {
+    if (this.submitted) {
+      return;
+    }
 
     switch (event.type as RequestedServiceEditorEventType) {
 
@@ -168,6 +174,9 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
   }
 
   onRequestedServiceListEvent(event: EventInfo): void {
+    if (this.submitted) {
+      return;
+    }
 
     switch (event.type as RequestedServiceListEventType) {
 
@@ -189,6 +198,9 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
   }
 
   onTransactionSubmitterEvent(event: EventInfo): void {
+    if (this.submitted) {
+      return;
+    }
 
     let payload: any = { transactionUID: this.transaction.uid };
 
@@ -201,10 +213,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
           payment: event.payload
         };
 
-        this.executeCommand<Transaction>(TransactionCommandType.SET_PAYMENT, payload)
-            .catch(e => {
-              this.messageBox.showError(e.error.message);
-            });
+        this.executeCommand<Transaction>(TransactionCommandType.SET_PAYMENT, payload);
 
         return;
 
@@ -226,13 +235,16 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  executeCommand<T>(commandType: TransactionCommandType, payload?: any): Promise<T>{
+  private executeCommand<T>(commandType: TransactionCommandType, payload?: any): Promise<T>{
+    this.submitted = true;
+
     const command: Command = {
       type: commandType,
       payload
     };
 
-    return this.uiLayer.execute<T>(command);
+    return this.uiLayer.execute<T>(command)
+               .finally(() => this.submitted = false);
   }
 
   printPaymentOrder(){

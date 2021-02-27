@@ -74,15 +74,10 @@ export class TransactionSubmitterComponent implements OnChanges {
       return;
     }
 
-    this.formHandler.submitted = true;
     this.sendEvent(TransactionSubmitterEventType.SET_PAYMENT_CLICKED, this.getFormData());
   }
 
   cancelPayment(){
-    if (this.formHandler.submitted) {
-      return;
-    }
-
     const message = `Esta operación cancelará el registro del recibo de pago
       <strong> ${this.payment.receiptNo} </strong>
       con total de ${this.currencyPipe.transform(this.payment.total)}.
@@ -92,17 +87,12 @@ export class TransactionSubmitterComponent implements OnChanges {
         .toPromise()
         .then(x => {
           if (x) {
-            this.formHandler.submitted = true;
             this.sendEvent(TransactionSubmitterEventType.CANCEL_PAYMENT_CLICKED);
           }
         });
   }
 
   submitTransaction(){
-    if (this.formHandler.submitted) {
-      return;
-    }
-
     const message = `Esta operación cambiara el estatus del trámite a
     <strong> recibido </strong>.
     <br><br>¿Recibo este trámite?`;
@@ -111,7 +101,6 @@ export class TransactionSubmitterComponent implements OnChanges {
         .toPromise()
         .then(x => {
           if (x) {
-            this.formHandler.submitted = true;
             this.sendEvent(TransactionSubmitterEventType.SUBMIT_TRANSACTION_CLICKED);
           }
         });
@@ -125,7 +114,7 @@ export class TransactionSubmitterComponent implements OnChanges {
 
     const data: PaymentFields = {
       receiptNo: formModel.paymentReceiptNo,
-      total: FormatLibrary.stringToNumber(formModel.total),
+      total: FormatLibrary.stringToNumber(formModel.total ?? ''),
     };
 
     return data;

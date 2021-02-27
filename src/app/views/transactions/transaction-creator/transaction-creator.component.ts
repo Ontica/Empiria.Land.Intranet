@@ -24,6 +24,8 @@ export class TransactionCreatorComponent implements OnInit, OnDestroy {
 
   helper: SubscriptionHelper;
 
+  submitted = false;
+
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
@@ -50,20 +52,22 @@ export class TransactionCreatorComponent implements OnInit, OnDestroy {
   }
 
   onTransactionHeaderEvent(event: EventInfo): void {
+
+    if (this.submitted) {
+      return;
+    }
+
     switch (event.type as TransactionHeaderEventType) {
 
       case TransactionHeaderEventType.SAVE_TRANSACTION_CLICKED:
 
-        const command: Command = {
-          type: TransactionCommandType.CREATE_TRANSACTION,
-          payload: {
-            transactionUID: '',
-            transaction: event.payload
-          }
+        const payload = {
+          transactionUID: '',
+          transaction: event.payload
         };
 
-        this.uiLayer.execute<Transaction>(command)
-          .then(x => this.onClose());
+        this.executeCommand(TransactionCommandType.CREATE_TRANSACTION, payload)
+            .then(x => this.onClose());
 
         return;
 
@@ -75,6 +79,19 @@ export class TransactionCreatorComponent implements OnInit, OnDestroy {
 
   onClose() {
     this.closeEvent.emit();
+  }
+
+  private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
+
+    this.submitted = true;
+
+    const command: Command = {
+      type: commandType,
+      payload
+    };
+
+    return this.uiLayer.execute<T>(command)
+               .finally(() => this.submitted = false);
   }
 
 }

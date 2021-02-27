@@ -78,7 +78,7 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
   }
 
   submitCommand(){
-    if (!this.formWorkflow.isValid || this.transactionList.length === 0) {
+    if (this.submitted || !this.formWorkflow.isValid || this.transactionList.length === 0) {
       return;
     }
 
@@ -97,9 +97,6 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
             };
 
             this.executeCommand(TransactionCommandType.EXECUTE_WORKFLOW_COMMAND, payload)
-                .catch(error => {
-                  this.handleError(error);
-                })
                 .finally(() => {
                   this.onClose();
                 });
@@ -131,8 +128,6 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
       .subscribe(x => {
         this.handleTransactionDuplicate(data.searchUID, x.uid);
         this.transactionList = ArrayLibrary.insertItemTop(this.transactionList, x, 'uid');
-      }, error => {
-        this.handleErrorNotFound(error);
       });
   }
 
@@ -177,18 +172,6 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
   private handleTransactionDuplicate(keyword: string, transactionUID: string) {
     if (this.transactionList.filter(t => t.uid === transactionUID).length > 0) {
       this.messageBox.show(`El trámite '${keyword}' ya se encuentra en la lista.`, 'Trámite duplicado');
-    }
-  }
-
-  private handleError(error){
-    if ([400, 500].includes(error.status)) {
-      this.messageBox.show(error.error.message, 'Ocurrió un problema');
-    }
-  }
-
-  private handleErrorNotFound(error) {
-    if ([400, 404].includes(error.status)) {
-      this.messageBox.show(error.error.message, 'No encontré información');
     }
   }
 

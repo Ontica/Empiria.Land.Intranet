@@ -4,7 +4,6 @@ import { FormGroup } from '@angular/forms';
 export class FormHandler {
 
   form: FormGroup;
-  submitted = false;
 
   constructor(formGroup: FormGroup){
     this.form = formGroup;
@@ -15,7 +14,7 @@ export class FormHandler {
   }
 
   get isReadyForSubmit(){
-    return !this.submitted && this.isValid;
+    return this.isValid;
   }
 
   getControl(name: string) {
@@ -24,7 +23,6 @@ export class FormHandler {
 
   setFormModel(values: any) {
     this.form.reset(values);
-    this.submitted = false;
   }
 
   showInvalidControl(name: string){
@@ -47,7 +45,6 @@ export class FormHandler {
 
   resetForm() {
     this.form.reset();
-    this.submitted = false;
   }
 
   disableForm(disable: boolean = true){

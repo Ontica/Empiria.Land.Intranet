@@ -41,7 +41,6 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
   editionMode = false;
   readonly = false;
   isLoading = false;
-  submitted = false;
 
   form: FormGroup = new FormGroup({
     type: new FormControl('', Validators.required),
@@ -146,22 +145,16 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
   }
 
   submit() {
-    if (this.submitted || !this.form.valid) {
+    if (!this.form.valid) {
       this.invalidateForm(this.form);
       return;
     }
-
-    this.submitted = true;
 
     this.sendEvent(TransactionHeaderEventType.SAVE_TRANSACTION_CLICKED, this.getFormData());
   }
 
 
   submitClone() {
-    if (this.submitted) {
-      return;
-    }
-
     const message = `Esta operación creará una copia del trámite
     <strong> ${this.transaction.transactionID} </strong>.
     <br><br>¿Creo la copia?`;
@@ -170,17 +163,12 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
         .toPromise()
         .then(x => {
           if (x) {
-            this.submitted = true;
             this.sendEvent(TransactionHeaderEventType.CLONE_TRANSACTION_CLICKED);
           }
         });
   }
 
   submitDelete() {
-    if (this.submitted) {
-      return;
-    }
-
     const message = `Esta operación eliminará el trámite
       <strong> ${this.transaction.transactionID}</strong>.<br><br>¿Elimino el trámite?`;
 
@@ -188,19 +176,12 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
         .toPromise()
         .then(x => {
           if (x) {
-            this.submitted = true;
             this.sendEvent(TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED);
           }
         });
   }
 
   submitGeneratePaymentOrder() {
-    if (this.submitted) {
-      return;
-    }
-
-    this.submitted = true;
-
     this.sendEvent(TransactionHeaderEventType.GENERATE_PAYMENT_ORDER);
   }
 
@@ -209,10 +190,6 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
   }
 
   submitCancelPaymentOrder() {
-    if (this.submitted) {
-      return;
-    }
-
     const message = `Esta operación cancelará la orden de pago con importe de
       <strong> ${this.currencyPipe.transform(this.transaction.paymentOrder.total)}</strong>.
       <br><br>¿Cancelo esta orden de pago?`;
@@ -221,7 +198,6 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
         .toPromise()
         .then(x => {
           if (x) {
-            this.submitted = true;
             this.sendEvent(TransactionHeaderEventType.CANCEL_PAYMENT_ORDER);
           }
         });
@@ -253,7 +229,6 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
       recorderOffice: isEmpty(this.transaction.recorderOffice) ? null : this.transaction.recorderOffice.uid,
     });
 
-    this.submitted = false;
     this.readonly = true;
   }
 
@@ -279,7 +254,6 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
   private resetForm() {
     this.readonly = false;
     this.form.reset();
-    this.submitted = false;
   }
 
   private disableForm(){

@@ -30,8 +30,6 @@ export class RequestedServiceEditorComponent implements OnInit {
   serviceSelected: ProvidedService = EmptyProvidedService;
   feeConceptSelected: FeeConcept = EmptyFeeConcept;
 
-  submitted = false;
-
   form: FormGroup = new FormGroup({
     serviceType: new FormControl('', Validators.required),
     service: new FormControl('', Validators.required),
@@ -53,7 +51,7 @@ export class RequestedServiceEditorComponent implements OnInit {
   }
 
   submit(){
-    if (this.submitted || !this.form.valid) {
+    if (!this.form.valid) {
       this.invalidateForm(this.form);
       return;
     }
@@ -69,7 +67,6 @@ export class RequestedServiceEditorComponent implements OnInit {
       .toPromise()
       .then(x => {
         if (x) {
-          this.submitted = true;
           this.sendEvent(RequestedServiceEditorEventType.SUBMIT_REQUESTED_SERVICE_CLICKED,
                          this.getFormData());
         }
@@ -136,7 +133,6 @@ export class RequestedServiceEditorComponent implements OnInit {
 
   private resetForm() {
     this.form.reset();
-    this.submitted = false;
   }
 
   private invalidateForm(form: FormGroup) {
