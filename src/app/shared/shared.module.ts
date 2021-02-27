@@ -15,6 +15,7 @@ import { SharedIndicatorsModule } from './indicators/shared-indicators.module';
 import { SharedPipesModule } from './pipes/shared-pipes.module';
 import { PrinterService } from './utils/printer.service';
 
+
 @NgModule({
 
   imports: [

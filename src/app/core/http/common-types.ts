@@ -1,12 +1,13 @@
 /**
  * @license
- * Copyright (c) 2017 La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
  *
  * See LICENSE.txt in the project root for complete license information.
- *
  */
 
+
 import { HttpHeaders, HttpParams } from '@angular/common/http';
+
 
 export enum HttpMethod {
   GET = 1,
@@ -17,6 +18,7 @@ export enum HttpMethod {
   HEAD = 32,
   OPTIONS = 64
 }
+
 
 export interface HttpClientOptions {
 
@@ -39,12 +41,14 @@ export interface HttpClientOptions {
   serviceParams?: any[];
 }
 
+
 export function DefaultHttpClientOptions(): HttpClientOptions {
   return {
     observe: 'response',
     responseType: 'json',
   };
 }
+
 
 export interface Service {
 

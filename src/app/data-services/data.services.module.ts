@@ -16,7 +16,6 @@ import { FileDownloadService } from './file-services/file-download.service';
 import { getSaver, SAVER } from './file-services/saver.provider';
 
 
-
 @NgModule({
 
   providers: [

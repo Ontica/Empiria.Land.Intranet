@@ -1,30 +1,46 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+
 import { Assertion, EventInfo, isEmpty } from '@app/core';
-import { Transaction, EmptyTransaction, TransactionType, TransactionSubtype,
-         Agency, RecorderOffice } from '@app/models';
+
+import {
+  Transaction, EmptyTransaction, TransactionType, TransactionSubtype,
+  Agency, RecorderOffice
+} from '@app/models';
+
 import { MessageBoxService } from '@app/shared/containers/message-box';
 import { ArrayLibrary } from '@app/shared/utils';
 
+
 type transactionFormControls = 'type' | 'subtype' | 'name' | 'email' |
-                              'instrumentNo' | 'agency' | 'recorderOffice';
+  'instrumentNo' | 'agency' | 'recorderOffice';
+
 
 export enum TransactionHeaderEventType {
-  SAVE_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.SaveTransactionClicked',
-  CLONE_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.CloneTransactionClicked',
-  DELETE_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.DeleteTransactionClicked',
+  SAVE_TRANSACTION_CLICKED = 'TransactionHeaderComponent.Event.SaveTransactionClicked',
+  CLONE_TRANSACTION_CLICKED = 'TransactionHeaderComponent.Event.CloneTransactionClicked',
+  DELETE_TRANSACTION_CLICKED = 'TransactionHeaderComponent.Event.DeleteTransactionClicked',
   GENERATE_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.GeneratePaymentOrderClicked',
   CANCEL_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.CancelPaymentOrderClicked',
   PRINT_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.PrintPaymentOrderClicked',
   PRINT_SUBMISSION_RECEIPT = 'TransactionHeaderComponent.Event.PrintSubmissionReceiptClicked',
 }
 
+
 @Component({
   selector: 'emp-land-transaction-header',
   templateUrl: './transaction-header.component.html'
 })
-export class TransactionHeaderComponent implements OnInit, OnChanges {
+export class TransactionHeaderComponent implements OnChanges {
 
   @Input() transaction: Transaction = EmptyTransaction;
 
@@ -52,6 +68,10 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     recorderOffice: new FormControl('', Validators.required)
   });
 
+  constructor(private messageBox: MessageBoxService,
+              private currencyPipe: CurrencyPipe) { }
+
+
   get showEnableEditor() {
     return this.canEdit || this.canDelete;
   }
@@ -68,7 +88,7 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     return this.transaction.actions.can.generatePaymentOrder;
   }
 
-  get canPrintPaymentOrder(){
+  get canPrintPaymentOrder() {
     return this.transaction.paymentOrder?.attributes.url && this.transaction.actions.can.editPayment;
   }
 
@@ -76,29 +96,24 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     return this.transaction.actions.can.cancelPaymentOrder;
   }
 
-  get canDelete(){
+  get canDelete() {
     return this.editionMode && this.transaction.actions.can.delete;
   }
 
-  get canSubmit(){
+  get canSubmit() {
     return this.transaction.actions.can.submit;
   }
 
-  get canPrintSubmissionReceipt(){
+  get canPrintSubmissionReceipt() {
     return this.transaction.actions.can.printSubmissionReceipt;
   }
-
-  constructor(private messageBox: MessageBoxService,
-              private currencyPipe: CurrencyPipe){ }
-
-  ngOnInit(): void { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.transaction) {
       this.editionMode = !isEmpty(this.transaction);
-      if (this.editionMode){
+      if (this.editionMode) {
         this.setFormModel();
-      }else{
+      } else {
         this.resetForm();
       }
       this.disableForm();
@@ -106,39 +121,42 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     this.loadInitialSubtypeList();
   }
 
-  loadInitialSubtypeList(){
+
+  loadInitialSubtypeList() {
     this.transactionSubtypeList = [];
     if (!isEmpty(this.transaction.type)) {
 
       const subtypeList =
         this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid).length > 0 ?
-        this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid)[0].subtypes : [];
+          this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid)[0].subtypes : [];
 
       this.transactionSubtypeList = ArrayLibrary.insertIfNotExist(subtypeList,
-                                                                  this.transaction.subtype,
-                                                                  'uid');
+        this.transaction.subtype,
+        'uid');
     }
   }
+
 
   transactionTypeChange(change: TransactionType) {
     this.transactionSubtypeList = change.subtypes;
 
     const subtypeUID = !isEmpty(this.transaction.subtype) && change.uid === this.transaction.type.uid ?
-                       this.transaction.subtype.uid : null;
+      this.transaction.subtype.uid : null;
 
     this.getFormControl('subtype').reset(subtypeUID);
   }
+
 
   getFormControl(name: transactionFormControls) {
     return this.form.get(name);
   }
 
-  toggleReadonly(){
+  toggleReadonly() {
     this.readonly = !this.readonly;
     this.disableForm();
   }
 
-  discardChanges(){
+  discardChanges() {
     this.setFormModel();
     this.loadInitialSubtypeList();
     this.disableForm();
@@ -160,12 +178,12 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     <br><br>¿Creo la copia?`;
 
     this.messageBox.confirm(message, 'Crear una copia', 'AcceptCancel')
-        .toPromise()
-        .then(x => {
-          if (x) {
-            this.sendEvent(TransactionHeaderEventType.CLONE_TRANSACTION_CLICKED);
-          }
-        });
+      .toPromise()
+      .then(x => {
+        if (x) {
+          this.sendEvent(TransactionHeaderEventType.CLONE_TRANSACTION_CLICKED);
+        }
+      });
   }
 
   submitDelete() {
@@ -173,19 +191,19 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
       <strong> ${this.transaction.transactionID}</strong>.<br><br>¿Elimino el trámite?`;
 
     this.messageBox.confirm(message, 'Eliminar trámite', 'DeleteCancel')
-        .toPromise()
-        .then(x => {
-          if (x) {
-            this.sendEvent(TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED);
-          }
-        });
+      .toPromise()
+      .then(x => {
+        if (x) {
+          this.sendEvent(TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED);
+        }
+      });
   }
 
   submitGeneratePaymentOrder() {
     this.sendEvent(TransactionHeaderEventType.GENERATE_PAYMENT_ORDER);
   }
 
-  submitPrintPaymentOrder(){
+  submitPrintPaymentOrder() {
     this.sendEvent(TransactionHeaderEventType.PRINT_PAYMENT_ORDER);
   }
 
@@ -195,15 +213,15 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
       <br><br>¿Cancelo esta orden de pago?`;
 
     this.messageBox.confirm(message, 'Cancelar orden de pago', 'DeleteCancel')
-        .toPromise()
-        .then(x => {
-          if (x) {
-            this.sendEvent(TransactionHeaderEventType.CANCEL_PAYMENT_ORDER);
-          }
-        });
+      .toPromise()
+      .then(x => {
+        if (x) {
+          this.sendEvent(TransactionHeaderEventType.CANCEL_PAYMENT_ORDER);
+        }
+      });
   }
 
-  submitPrintSubmissionReceipt(){
+  submitPrintSubmissionReceipt() {
     this.sendEvent(TransactionHeaderEventType.PRINT_SUBMISSION_RECEIPT);
   }
 
@@ -220,7 +238,7 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
 
   private setFormModel() {
     this.form.reset({
-      type:  this.transaction.type.uid,
+      type: this.transaction.type.uid,
       subtype: isEmpty(this.transaction.subtype) ? null : this.transaction.subtype.uid,
       name: this.transaction.requestedBy.name,
       email: this.transaction.requestedBy.email,
@@ -256,7 +274,7 @@ export class TransactionHeaderComponent implements OnInit, OnChanges {
     this.form.reset();
   }
 
-  private disableForm(){
+  private disableForm() {
     if (this.readonly) {
       this.form.disable();
     } else {

@@ -5,8 +5,10 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter,
-         Input, Output } from '@angular/core';
+import {
+  Component, EventEmitter,
+  Input, Output
+} from '@angular/core';
 
 
 export interface ExpansionButtonConfig {
@@ -20,14 +22,14 @@ const DefaultExpansionButtonConfig: ExpansionButtonConfig = {
   textButtonClose: 'Cancelar',
 };
 
+
 @Component({
   selector: 'emp-ng-expansion-button',
-  templateUrl: './expansion-button.component.html',
-  styleUrls: ['./expansion-button.component.scss']
+  templateUrl: './expansion-button.component.html'
 })
 export class ExpansionButtonComponent {
 
-  @Input() panelState: boolean = false;
+  @Input() panelState = false;
 
   @Output() panelStateChange = new EventEmitter<boolean>();
 
@@ -43,7 +45,7 @@ export class ExpansionButtonComponent {
 
   expansionButtonConfig = DefaultExpansionButtonConfig;
 
-  setPanelState(state: boolean){
+  setPanelState(state: boolean) {
     this.panelState = state;
     this.panelStateChange.emit(this.panelState);
   }

@@ -1,10 +1,22 @@
-import { CurrencyPipe } from '@angular/common';
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CurrencyPipe } from '@angular/common';
+
 import { Assertion, EventInfo, Validate } from '@app/core';
+
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { EmptyPayment, PaymentFields, PaymentOrder } from '@app/models';
+
 import { MessageBoxService } from '@app/shared/containers/message-box';
 import { FormatLibrary, FormHandler } from '@app/shared/utils';
+
 
 export enum TransactionSubmitterEventType {
   SET_PAYMENT_CLICKED = 'TransactionSubmitterComponent.Event.SetPaymentClicked',
@@ -12,10 +24,12 @@ export enum TransactionSubmitterEventType {
   SUBMIT_TRANSACTION_CLICKED = 'TransactionSubmitterComponent.Event.SubmitTransactionClicked',
 }
 
-enum TransactionSubmitterFormControls  {
+
+enum TransactionSubmitterFormControls {
   paymentReceiptNo = 'paymentReceiptNo',
   total = 'total',
 }
+
 
 @Component({
   selector: 'emp-land-transaction-submitter',
@@ -27,13 +41,13 @@ export class TransactionSubmitterComponent implements OnChanges {
 
   @Input() payment: PaymentFields = EmptyPayment;
 
-  @Input() showPaymentReceiptEditor: boolean = false;
+  @Input() showPaymentReceiptEditor = false;
 
-  @Input() canEdit: boolean = false;
+  @Input() canEdit = false;
 
-  @Input() canCancel: boolean = false;
+  @Input() canCancel = false;
 
-  @Input() canSubmit: boolean = false;
+  @Input() canSubmit = false;
 
   @Output() transactionSubmittertEvent = new EventEmitter<EventInfo>();
 
@@ -53,23 +67,25 @@ export class TransactionSubmitterComponent implements OnChanges {
     );
   }
 
-  ngOnChanges(){
+
+  ngOnChanges() {
     this.formHandler.setFormModel({
       paymentReceiptNo: this.payment?.receiptNo,
       total: this.payment?.total ? this.currencyPipe.transform(this.payment.total) : null
     });
 
-    if (this.paymentOrder?.total){
+    if (this.paymentOrder?.total) {
       this.formHandler.setControlValidators(this.controls.total,
         [Validators.required, Validate.maxCurrencyValue(this.paymentOrder.total)]);
-    }else{
+    } else {
       this.formHandler.clearControlValidators(this.controls.total);
     }
 
     this.formHandler.disableForm(!this.canEdit);
   }
 
-  setPayment(){
+
+  setPayment() {
     if (!this.formHandler.validateReadyForSubmit()) {
       return;
     }
@@ -77,33 +93,35 @@ export class TransactionSubmitterComponent implements OnChanges {
     this.sendEvent(TransactionSubmitterEventType.SET_PAYMENT_CLICKED, this.getFormData());
   }
 
-  cancelPayment(){
+
+  cancelPayment() {
     const message = `Esta operación cancelará el registro del recibo de pago
       <strong> ${this.payment.receiptNo} </strong>
       con total de ${this.currencyPipe.transform(this.payment.total)}.
       <br><br>¿Cancelo este recibo de pago?`;
 
     this.messageBox.confirm(message, 'Cancelar recibo de pago', 'DeleteCancel')
-        .toPromise()
-        .then(x => {
-          if (x) {
-            this.sendEvent(TransactionSubmitterEventType.CANCEL_PAYMENT_CLICKED);
-          }
-        });
+      .toPromise()
+      .then(x => {
+        if (x) {
+          this.sendEvent(TransactionSubmitterEventType.CANCEL_PAYMENT_CLICKED);
+        }
+      });
   }
 
-  submitTransaction(){
+
+  submitTransaction() {
     const message = `Esta operación cambiara el estatus del trámite a
     <strong> recibido </strong>.
     <br><br>¿Recibo este trámite?`;
 
     this.messageBox.confirm(message, 'Recibir trámite', 'AcceptCancel')
-        .toPromise()
-        .then(x => {
-          if (x) {
-            this.sendEvent(TransactionSubmitterEventType.SUBMIT_TRANSACTION_CLICKED);
-          }
-        });
+      .toPromise()
+      .then(x => {
+        if (x) {
+          this.sendEvent(TransactionSubmitterEventType.SUBMIT_TRANSACTION_CLICKED);
+        }
+      });
   }
 
   private getFormData(): any {

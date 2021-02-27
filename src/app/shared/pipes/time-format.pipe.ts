@@ -8,7 +8,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 
-
 @Pipe({
   name: 'timeFormat'
 })
@@ -39,7 +38,7 @@ export class TimeFormatPipe implements PipeTransform {
   }
 
 
-  timeFormat(timeParts){
+  timeFormat(timeParts) {
     let time = '';
 
     time += +timeParts[0] > 0 ? +timeParts[0] + ' días ' : '';

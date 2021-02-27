@@ -1,6 +1,16 @@
-import { SelectionModel } from '@angular/cdk/collections';
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
+import { SelectionModel } from '@angular/cdk/collections';
+
 import { MatCheckboxChange } from '@angular/material/checkbox';
+
 
 @Component({
   selector: 'emp-ng-check-box-all',
@@ -37,7 +47,7 @@ export class CheckboxAllComponent implements OnInit {
   toggleSelection(change: MatCheckboxChange): void {
     if (change.checked) {
 
-      this.values.forEach( value => {
+      this.values.forEach(value => {
         this.selection.select(value);
       });
 

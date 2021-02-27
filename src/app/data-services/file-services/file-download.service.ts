@@ -1,8 +1,16 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Inject, Injectable } from '@angular/core';
 import { HttpService } from '@app/core';
 import { Observable } from 'rxjs';
 import { reportHttpProgress, Progress } from './http-progress';
 import { Saver, SAVER } from './saver.provider';
+
 
 @Injectable({
   providedIn: 'root'

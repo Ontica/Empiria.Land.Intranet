@@ -1,21 +1,35 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
+
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+
 import { MatTableDataSource } from '@angular/material/table';
+
 import { Command } from '@app/core';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { InstrumentsCommandType } from '@app/core/presentation/presentation-types';
+
 import { PhysicalRecording } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
-import { FilePrintPreviewComponent }
-  from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
+
+import {
+  FilePrintPreviewComponent
+} from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 
 
 @Component({
   selector: 'emp-land-physical-recording-list',
   templateUrl: './physical-recording-list.component.html',
 })
-export class PhysicalRecordingListComponent implements OnInit, OnChanges, OnDestroy {
+export class PhysicalRecordingListComponent implements OnChanges, OnDestroy {
 
-  @ViewChild('filePrintPreview', {static: true}) filePrintPreview: FilePrintPreviewComponent;
+  @ViewChild('filePrintPreview', { static: true }) filePrintPreview: FilePrintPreviewComponent;
 
   @Input() transactionUID: string;
 
@@ -23,13 +37,13 @@ export class PhysicalRecordingListComponent implements OnInit, OnChanges, OnDest
 
   @Input() physicalRecordings: PhysicalRecording[] = [];
 
-  @Input() showRegistrationStamps: boolean = false;
+  @Input() showRegistrationStamps = false;
 
-  @Input() canDelete: boolean = false;
+  @Input() canDelete = false;
 
   helper: SubscriptionHelper;
 
-  submitted: boolean = false;
+  submitted = false;
 
   dataSource: MatTableDataSource<PhysicalRecording>;
 
@@ -38,26 +52,28 @@ export class PhysicalRecordingListComponent implements OnInit, OnChanges, OnDest
 
   displayedColumns = [...this.displayedColumnsDefault];
 
+
   constructor(private uiLayer: PresentationLayer,
               private messageBox: MessageBoxService) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
-  ngOnInit(): void {}
 
-  ngOnChanges(changes: SimpleChanges){
-    if (changes.physicalRecordings){
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.physicalRecordings) {
       this.dataSource = new MatTableDataSource(this.physicalRecordings);
     }
 
     this.resetColumns();
   }
 
+
   ngOnDestroy() {
     this.helper.destroy();
   }
 
-  resetColumns(){
+
+  resetColumns() {
     this.displayedColumns = [];
 
     if (this.showRegistrationStamps) {
@@ -71,34 +87,37 @@ export class PhysicalRecordingListComponent implements OnInit, OnChanges, OnDest
     }
   }
 
-  removePhysicalRecording(recording: PhysicalRecording){
+
+  removePhysicalRecording(recording: PhysicalRecording) {
     if (!this.submitted) {
       const message = this.getConfirmMessage(recording);
 
       this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
-          .toPromise()
-          .then(x => {
-            if (x) {
-              this.submitted = true;
+        .toPromise()
+        .then(x => {
+          if (x) {
+            this.submitted = true;
 
-              const payload = {
-                transactionUID: this.transactionUID,
-                instrumentUID: this.instrumentUID,
-                physicalRecordingUID: recording.uid
-              };
+            const payload = {
+              transactionUID: this.transactionUID,
+              instrumentUID: this.instrumentUID,
+              physicalRecordingUID: recording.uid
+            };
 
-              this.executeCommand(InstrumentsCommandType.DELETE_PHYSICAL_RECORDING, payload)
-                  .then(() => this.submitted = false );
-            }
-          });
+            this.executeCommand(InstrumentsCommandType.DELETE_PHYSICAL_RECORDING, payload)
+              .then(() => this.submitted = false);
+          }
+        });
     }
   }
 
-  printStampMedia(recording: PhysicalRecording){
+
+  printStampMedia(recording: PhysicalRecording) {
     this.filePrintPreview.open(recording.stampMedia.url, recording.stampMedia.mediaType);
   }
 
-  private getConfirmMessage(recording: PhysicalRecording): string{
+
+  private getConfirmMessage(recording: PhysicalRecording): string {
     return `
       <table style="margin: 0;">
         <tr><td>Distrito: </td><td><strong> ${recording.recorderOfficeName} </strong></td></tr>
@@ -114,7 +133,8 @@ export class PhysicalRecordingListComponent implements OnInit, OnChanges, OnDest
       <br>¿Elimino el registro?`;
   }
 
-  private executeCommand<T>(commandType: InstrumentsCommandType, payload?: any): Promise<T>{
+
+  private executeCommand<T>(commandType: InstrumentsCommandType, payload?: any): Promise<T> {
     const command: Command = {
       type: commandType,
       payload

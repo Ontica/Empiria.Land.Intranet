@@ -5,13 +5,16 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter,
-         Input, Output, forwardRef } from '@angular/core';
+import {
+  Component, EventEmitter,
+  Input, Output, forwardRef
+} from '@angular/core';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DateString, DateStringLibrary } from '@app/core/data-types/date-string-library';
 
 import { isMoment } from 'moment';
+
 
 @Component({
   selector: 'emp-ng-datepicker',

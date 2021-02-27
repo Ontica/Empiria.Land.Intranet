@@ -5,7 +5,9 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
+
 import * as CryptoJS from 'crypto-js';
+
 
 export class Cryptography {
 
@@ -13,4 +15,4 @@ export class Cryptography {
     return CryptoJS.SHA256(value).toString();
   }
 
-} // class Cryptography
+}

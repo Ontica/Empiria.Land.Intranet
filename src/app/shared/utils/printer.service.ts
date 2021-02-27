@@ -1,4 +1,12 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Injectable } from '@angular/core';
+
 
 @Injectable({
   providedIn: 'root'
@@ -7,15 +15,15 @@ export class PrinterService {
 
   constructor() { }
 
-  printFile(url){
-    if (url !== null && url !== undefined && url !== ''){
+  printFile(url) {
+    if (url !== null && url !== undefined && url !== '') {
       const proxyIframe = this.createProxyIframe();
       this.createContent(proxyIframe.contentWindow, url);
       this.removeProxyIframe(proxyIframe);
     }
   }
 
-  createProxyIframe(){
+  createProxyIframe() {
     const proxyIframe = document.createElement('iframe');
     const body = document.getElementsByTagName('body')[0];
     body.appendChild(proxyIframe);
@@ -28,7 +36,7 @@ export class PrinterService {
     return proxyIframe;
   }
 
-  createContent(contentIframe, url){
+  createContent(contentIframe, url) {
     contentIframe.document.open();
 
     contentIframe.document.write(`
@@ -41,7 +49,7 @@ export class PrinterService {
     contentIframe.document.close();
   }
 
-  removeProxyIframe(proxyIframe){
+  removeProxyIframe(proxyIframe) {
     setTimeout(() => {
       proxyIframe.remove();
     }, 1000);

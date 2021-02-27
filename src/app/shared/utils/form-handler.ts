@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { FormGroup } from '@angular/forms';
 
 
@@ -5,15 +12,15 @@ export class FormHandler {
 
   form: FormGroup;
 
-  constructor(formGroup: FormGroup){
+  constructor(formGroup: FormGroup) {
     this.form = formGroup;
   }
 
-  get isValid(){
+  get isValid() {
     return this.form.valid && this.form.dirty;
   }
 
-  get isReadyForSubmit(){
+  get isReadyForSubmit() {
     return this.isValid;
   }
 
@@ -25,11 +32,11 @@ export class FormHandler {
     this.form.reset(values);
   }
 
-  showInvalidControl(name: string){
+  showInvalidControl(name: string) {
     return this.getControl(name).touched && !this.getControl(name).valid;
   }
 
-  validateReadyForSubmit(){
+  validateReadyForSubmit() {
     if (!this.isReadyForSubmit) {
       this.invalidateForm();
     }
@@ -47,7 +54,7 @@ export class FormHandler {
     this.form.reset();
   }
 
-  disableForm(disable: boolean = true){
+  disableForm(disable: boolean = true) {
     if (disable) {
       this.form.disable();
     } else {
@@ -55,7 +62,7 @@ export class FormHandler {
     }
   }
 
-  disableControl(name: string, disable: boolean = true){
+  disableControl(name: string, disable: boolean = true) {
     if (disable) {
       this.getControl(name).disable();
     } else {
@@ -63,13 +70,13 @@ export class FormHandler {
     }
   }
 
-  setControlValidators(name: string, validator: any | any[]){
+  setControlValidators(name: string, validator: any | any[]) {
     this.getControl(name).clearValidators();
     this.getControl(name).setValidators(validator);
     this.getControl(name).updateValueAndValidity();
   }
 
-  clearControlValidators(name: string){
+  clearControlValidators(name: string) {
     this.getControl(name).clearValidators();
     this.getControl(name).updateValueAndValidity();
   }

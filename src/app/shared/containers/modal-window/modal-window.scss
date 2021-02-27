@@ -5,6 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
+
 .backdrop {
   position: fixed;
   width: 100%;
@@ -18,6 +19,7 @@
   z-index: 200;
 }
 
+
 .modal-container {
   background-color: white;
   overflow-y: auto;
@@ -26,6 +28,7 @@
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 500;
 }
+
 
 .transparent {
   background-color: transparent;

@@ -1,16 +1,27 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+
 import { EventInfo } from '@app/core';
+
 import { InstrumentMediaContent } from '@app/models';
+
 import { FileData, FileControlActions } from '@app/shared/form-controls/file-control/file-control';
 import { FormatLibrary } from '@app/shared/utils';
 
 
 export enum InstrumentFilesEditorEventType {
-  SUBMIT_INSTRUMENT_FILE_CLICKED  = 'InstrumentFilesEditorComponent.Event.SubmitInstrumentFileClicked',
-  REMOVE_INSTRUMENT_FILE_CLICKED  = 'InstrumentFilesEditorComponent.Event.RemoveInstrumentFileClicked',
-  SHOW_FILE_CLICKED  = 'InstrumentFilesEditorComponent.Event.ShowFileClicked',
-  DOWNLOAD_FILE_CLICKED  = 'InstrumentFilesEditorComponent.Event.DownloadFileClicked',
+  SUBMIT_INSTRUMENT_FILE_CLICKED = 'InstrumentFilesEditorComponent.Event.SubmitInstrumentFileClicked',
+  REMOVE_INSTRUMENT_FILE_CLICKED = 'InstrumentFilesEditorComponent.Event.RemoveInstrumentFileClicked',
+  SHOW_FILE_CLICKED = 'InstrumentFilesEditorComponent.Event.ShowFileClicked',
+  DOWNLOAD_FILE_CLICKED = 'InstrumentFilesEditorComponent.Event.DownloadFileClicked',
 }
+
 
 @Component({
   selector: 'emp-land-instrument-files-editor',
@@ -24,17 +35,17 @@ export class InstrumentFilesEditorComponent implements OnInit, OnChanges {
 
   @Input() instrumentFileName: string = null;
 
-  @Input() canEdit: boolean = false;
+  @Input() canEdit = false;
 
   @Output() instrumentFilesEditorEvent = new EventEmitter<EventInfo>();
 
   constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  ngOnChanges(){}
+  ngOnChanges() { }
 
-  submitInstrumentFileEvent(event, mediaContent: InstrumentMediaContent){
+  submitInstrumentFileEvent(event, mediaContent: InstrumentMediaContent) {
 
     let payload: any = {
       mediaContent,
@@ -83,9 +94,9 @@ export class InstrumentFilesEditorComponent implements OnInit, OnChanges {
     this.instrumentFilesEditorEvent.emit(event);
   }
 
-  getFileNameByMediaContent(mediaContent: InstrumentMediaContent): string{
-    if (this.instrumentFileName && this.instrumentFileName !== '' ){
-      if (mediaContent === 'InstrumentMainFile'){
+  getFileNameByMediaContent(mediaContent: InstrumentMediaContent): string {
+    if (this.instrumentFileName && this.instrumentFileName !== '') {
+      if (mediaContent === 'InstrumentMainFile') {
         return this.instrumentFileName + '.pdf';
       }
       return 'Anexo de ' + FormatLibrary.firstLetterToLowerCase(this.instrumentFileName) + '.pdf';

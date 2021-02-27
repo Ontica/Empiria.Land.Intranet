@@ -10,16 +10,19 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 
 import { EventInfo } from '@app/core';
 
-import { TransactionShortModel, EmptyTransaction, Transaction,
-         TransactionFilter, EmptyTransactionFilter } from '@app/models';
+import {
+  TransactionShortModel, EmptyTransaction, Transaction,
+  TransactionFilter, EmptyTransactionFilter
+} from '@app/models';
+
 import { expandCollapse } from '@app/shared/animations/animations';
 
 
 export enum TransactionListEventType {
-  CREATE_TRANSACTION_CLICKED  = 'TransactionListComponent.Event.CreateTransactionClicked',
-  FILTER_CHANGED              = 'TransactionListComponent.Event.FilterChanged',
-  TRANSACTION_OPTIONS_CLICKED =  'TransactionListComponent.Event.TransactionOptionsClicked',
-  TRANSACTION_SELECTED        = 'TransactionListComponent.Event.TransactionSelected',
+  CREATE_TRANSACTION_CLICKED = 'TransactionListComponent.Event.CreateTransactionClicked',
+  FILTER_CHANGED = 'TransactionListComponent.Event.FilterChanged',
+  TRANSACTION_OPTIONS_CLICKED = 'TransactionListComponent.Event.TransactionOptionsClicked',
+  TRANSACTION_SELECTED = 'TransactionListComponent.Event.TransactionSelected',
   TRANSACTIONS_SELECTED_OPTIONS_CLICKED = 'TransactionListComponent.Event.TransactionsSelectedOptionsClicked',
   RECEIVE_TRANSACTIONS_CLICKED = 'TransactionListComponent.Event.ReceiveTransactionsClicked',
 }
@@ -88,7 +91,7 @@ export class TransactionListComponent implements OnChanges {
 
   onClickTransactionsSelectedOptions() {
     this.sendEvent(TransactionListEventType.TRANSACTIONS_SELECTED_OPTIONS_CLICKED,
-                  { transactions: this.selection.selected });
+      { transactions: this.selection.selected });
   }
 
   onClickReceiveTransactionsOptions() {

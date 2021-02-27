@@ -53,7 +53,7 @@ export class InstrumentDataService {
 
     const path = `v5/land/transactions/${transactionUID}/instrument`;
 
-    return this.http.post<Instrument>(path, instrument );
+    return this.http.post<Instrument>(path, instrument);
   }
 
 
@@ -64,7 +64,7 @@ export class InstrumentDataService {
 
     const path = `v5/land/transactions/${transactionUID}/instrument`;
 
-    return this.http.patch<Instrument>(path, instrument );
+    return this.http.patch<Instrument>(path, instrument);
   }
 
 

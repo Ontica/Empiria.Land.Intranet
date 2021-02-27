@@ -17,7 +17,7 @@ import { EmptyRecordingAct } from '@app/models';
 
 
 export enum ActionType {
-  SELECT_RECORDING_ACT   = 'Land.Recording.Action.SelectRecordingAct',
+  SELECT_RECORDING_ACT = 'Land.Recording.Action.SelectRecordingAct',
   UNSELECT_RECORDING_ACT = 'Land.Recording.Action.UnselectRecordingAct',
 }
 

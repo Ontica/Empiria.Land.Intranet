@@ -12,7 +12,6 @@ import { EmpIntegerDirective } from './integer.directive';
 import { EmpTextareaAutoresizeDirective } from './text-area-autoresize.directive';
 
 
-
 @NgModule({
 
   imports: [
@@ -30,7 +29,6 @@ import { EmpTextareaAutoresizeDirective } from './text-area-autoresize.directive
     EmpIntegerDirective,
     EmpTextareaAutoresizeDirective,
   ],
-
 
 })
 export class SharedDirectivesModule { }

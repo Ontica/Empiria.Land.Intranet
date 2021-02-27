@@ -1,8 +1,19 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+
 import { Command, EventInfo } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
+
 import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice } from '@app/models';
+
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
 
 
@@ -67,7 +78,7 @@ export class TransactionCreatorComponent implements OnInit, OnDestroy {
         };
 
         this.executeCommand(TransactionCommandType.CREATE_TRANSACTION, payload)
-            .then(x => this.onClose());
+          .then(x => this.onClose());
 
         return;
 
@@ -91,7 +102,7 @@ export class TransactionCreatorComponent implements OnInit, OnDestroy {
     };
 
     return this.uiLayer.execute<T>(command)
-               .finally(() => this.submitted = false);
+      .finally(() => this.submitted = false);
   }
 
 }

@@ -28,15 +28,25 @@ import { TransactionsMainPageComponent } from './main-page/transactions-main-pag
 import { TransactionHeaderComponent } from './transaction-header/transaction-header.component';
 import { TransactionCreatorComponent } from './transaction-creator/transaction-creator.component';
 import { TransactionEditorComponent } from './transaction-editor/transaction-editor.component';
-import { RequestedServiceListComponent }
-  from './transaction-editor/requested-services/requested-service-list.component';
-import { RequestedServiceEditorComponent }
-  from './transaction-editor/requested-services/requested-service-editor.component';
-import { TransactionSubmitterComponent }
-  from './transaction-editor/transaction-submitter/transaction-submitter.component';
+
+import {
+  RequestedServiceListComponent
+} from './transaction-editor/requested-services/requested-service-list.component';
+
+import {
+  RequestedServiceEditorComponent
+} from './transaction-editor/requested-services/requested-service-editor.component';
+
+import {
+  TransactionSubmitterComponent
+} from './transaction-editor/transaction-submitter/transaction-submitter.component';
+
 import { PreprocessingComponent } from './preprocessing/preprocessing.component';
-import { InstrumentFilesEditorComponent }
-  from './preprocessing/instrument-files-editor/instrument-files-editor.component';
+
+import {
+  InstrumentFilesEditorComponent
+} from './preprocessing/instrument-files-editor/instrument-files-editor.component';
+
 import { WorkflowHistoryComponent } from './workflow-history/workflow-history.component';
 import { WorkflowCommanderComponent } from './workflow-commander/workflow-commander.component';
 import { WorkflowCommandConfigComponent } from './workflow-commander/workflow-command-config.component';
@@ -58,22 +68,22 @@ import { WorkflowCommandConfigComponent } from './workflow-commander/workflow-co
   ],
 
   declarations: [
-    TransactionsMainPageComponent,
-    TransactionListComponent,
-    TransactionListEditorComponent,
-    TransactionListItemComponent,
-    TransactionTabbedViewComponent,
-    TransactionHeaderComponent,
-    TransactionCreatorComponent,
-    TransactionEditorComponent,
-    RequestedServiceListComponent,
-    RequestedServiceEditorComponent,
-    TransactionSubmitterComponent,
-    PreprocessingComponent,
-    InstrumentFilesEditorComponent,
-    WorkflowHistoryComponent,
-    WorkflowCommanderComponent,
-    WorkflowCommandConfigComponent,
+    InstrumentFilesEditorComponent,
+    PreprocessingComponent,
+    RequestedServiceEditorComponent,
+    RequestedServiceListComponent,
+    TransactionCreatorComponent,
+    TransactionEditorComponent,
+    TransactionHeaderComponent,
+    TransactionListComponent,
+    TransactionListEditorComponent,
+    TransactionListItemComponent,
+    TransactionsMainPageComponent,
+    TransactionSubmitterComponent,
+    TransactionTabbedViewComponent,
+    WorkflowCommandConfigComponent,
+    WorkflowCommanderComponent,
+    WorkflowHistoryComponent
   ],
 
   exports: []

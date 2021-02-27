@@ -22,9 +22,7 @@ import { ErrorMessageService } from '../errors/error-message.service';
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
 
-  constructor(private errorService: ErrorMessageService){
-
-  }
+  constructor(private errorService: ErrorMessageService) { }
 
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

@@ -47,8 +47,8 @@ export class TransactionTabbedViewComponent implements OnChanges {
       const presentationTime = DateStringLibrary.format(this.transaction.presentationTime);
 
       this.cardHint += ` &nbsp; &nbsp; | &nbsp; &nbsp; <strong> ${this.transaction.internalControlNo} </strong> &nbsp; &nbsp;` +
-                       ` | ${this.transaction.subtype.name}` +
-                       ` | Presentado el: ${presentationTime}`;
+        ` | ${this.transaction.subtype.name}` +
+        ` | Presentado el: ${presentationTime}`;
     }
   }
 

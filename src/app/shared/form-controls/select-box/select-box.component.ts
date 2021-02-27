@@ -1,8 +1,21 @@
-import { Component, ContentChild, TemplateRef, ViewChild, EventEmitter, forwardRef,
-         Input, Output, OnInit, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgSelectComponent } from '@ng-select/ng-select';
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
+import {
+  Component, ContentChild, TemplateRef, ViewChild, EventEmitter, forwardRef,
+  Input, Output, OnInit, OnChanges, OnDestroy, SimpleChanges
+} from '@angular/core';
+
 import { Subject } from 'rxjs';
+
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import { NgSelectComponent } from '@ng-select/ng-select';
+
 
 export interface SelectBoxConfig {
   addTag?: boolean;
@@ -21,6 +34,7 @@ export interface SelectBoxConfig {
   virtualScroll?: boolean;
 }
 
+
 const DefaultSelectBoxConfig: SelectBoxConfig = {
   addTag: false,
   addTagText: 'Agregar Item',
@@ -38,6 +52,7 @@ const DefaultSelectBoxConfig: SelectBoxConfig = {
   virtualScroll: false,
 };
 
+
 @Component({
   selector: 'emp-ng-select',
   templateUrl: './select-box.component.html',
@@ -49,7 +64,6 @@ const DefaultSelectBoxConfig: SelectBoxConfig = {
     }
   ]
 })
-
 export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
   @ViewChild(NgSelectComponent) select: NgSelectComponent;
 
@@ -60,7 +74,8 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
   @Input() items: any[];
   @Input() bindLabel: string = 'name';
   @Input() bindValue: string = 'uid';
-  @Input() placeholder: string = 'Seleccione';
+  @Input() placeholder: string = 'Seleccionar';
+
   @Input() loading = false;
   @Input() typeahead: Subject<string>;
   @Input() showError = false;
@@ -82,23 +97,9 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
 
   onChange: (value: any) => void;
   onTouched: (event: any) => void;
+
   disabled: boolean;
   value: any = null;
-
-  private onScroll = (event: any) => {
-    const autoscroll = event.srcElement.classList.contains('ng-dropdown-panel-items');
-    if (this.select && this.select.isOpen && !autoscroll) {
-      this.select.close();
-    }
-  }
-
-  private onResize = (event: any) => {
-    if (this.select && this.select.isOpen) {
-      this.select.close();
-    }
-  }
-
-  constructor() { }
 
   ngOnInit() {
     window.addEventListener('scroll', this.onScroll, true);
@@ -132,8 +133,10 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
     this.disabled = isDisabled;
   }
 
-  onChangedEvent(event){
+
+  onChangedEvent(event) {
     let value = event;
+
     if (Array.isArray(event)) {
       value = event.map(item => item[this.bindValue]);
     } else if (event) {
@@ -144,28 +147,49 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
     this.changes.emit(event);
   }
 
+
   onClear() {
     this.clear.emit(true);
   }
 
-  clearModel(){
+  clearModel() {
     this.select.clearModel();
   }
 
-  onSearch(event){
+  onSearch(event) {
     this.search.emit(event);
   }
 
-  onBlur(event){
+  onBlur(event) {
     this.blur.emit(event);
   }
 
-  selectItemIfUnique(){
-    if (this.items.length === 1 && this.value === null) {
-      setTimeout(() => {
-        this.onChangedEvent(this.items[0]);
-        this.writeValue(this.items[0][this.bindValue]);
-      }, 100);
+  selectItemIfUnique() {
+    if (this.items.length !== 1 || this.value !== null) {
+      return;
+    }
+
+    setTimeout(() => {
+      this.onChangedEvent(this.items[0]);
+      this.writeValue(this.items[0][this.bindValue]);
+    }, 100);
+
+  }
+
+
+  private onResize = (event: any) => {
+    if (this.select && this.select.isOpen) {
+      this.select.close();
     }
   }
+
+
+  private onScroll = (event: any) => {
+    const autoscroll = event.srcElement.classList.contains('ng-dropdown-panel-items');
+
+    if (this.select && this.select.isOpen && !autoscroll) {
+      this.select.close();
+    }
+  }
+
 }

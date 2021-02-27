@@ -159,7 +159,7 @@ export class DateStringLibrary {
   }
 
 
-  static militaryTimeFormat(value: DateString){
+  static militaryTimeFormat(value: DateString) {
     if (value instanceof Date || typeof value === 'string' && value.includes('T')) {
       const time = typeof value === 'string' ? new Date(value) : value;
 
@@ -177,7 +177,7 @@ export class DateStringLibrary {
     const min0 = this.timeSpanToMins(time0 ?? '00:00:00:00');
     const min1 = this.timeSpanToMins(time1 ?? '00:00:00:00');
 
-    return this.timeFromMins( min0 + min1 );
+    return this.timeFromMins(min0 + min1);
   }
 
 
@@ -185,18 +185,21 @@ export class DateStringLibrary {
 
 
   private static timeSpanToMins(time: string) { // format 01:12:30:00 = 1 day 12 hours 30 minutes 00 seconds
-      const b = time.split(':');
-      const min = parseInt(b[0]) * MINUTES_IN_DAY + parseInt(b[1]) * MINUTES_IN_HOUR + parseInt(b[2]);
-      return min;
+    const b = time.split(':');
+
+    const min = parseInt(b[0]) * MINUTES_IN_DAY + parseInt(b[1]) * MINUTES_IN_HOUR + parseInt(b[2]);
+
+    return min;
   }
 
 
   private static timeFromMins(minutes: number) {
-      const day = Math.floor(minutes / MINUTES_IN_DAY) | 0;
-      const hour =  Math.floor((minutes % MINUTES_IN_DAY) / MINUTES_IN_HOUR) | 0;
-      const min =  Math.floor(minutes % MINUTES_IN_HOUR);
-      const seg = 0;
-      return `${this.padZeros(day)}:${this.padZeros(hour)}:${this.padZeros(min)}:${this.padZeros(seg)}`;
+    const day = Math.floor(minutes / MINUTES_IN_DAY) || 0;
+    const hour = Math.floor((minutes % MINUTES_IN_DAY) / MINUTES_IN_HOUR) || 0;
+    const min = Math.floor(minutes % MINUTES_IN_HOUR);
+    const seg = 0;
+
+    return `${this.padZeros(day)}:${this.padZeros(hour)}:${this.padZeros(min)}:${this.padZeros(seg)}`;
   }
 
 
@@ -219,7 +222,6 @@ export class DateStringLibrary {
   private static isValidDate(year: number, month: number, dayOfMonth: number): boolean {
     const monthsWith30Days = [3, 5, 8, 10];
     const monthsWith31Days = [0, 2, 4, 6, 7, 9, 11];
-
 
     if (!(1900 <= year && year <= 2078)) {
       return false;
@@ -302,7 +304,7 @@ export class DateStringLibrary {
 
   private static getArrayIndexWithYear(dateParts: string[]): number {
     let yearIndex = dateParts.findIndex(x => this.isNumericValue(x) &&
-                                       (1900 <= +x && +x <= 2078) || x.length === 4);
+      (1900 <= +x && +x <= 2078) || x.length === 4);
     if (yearIndex === -1) {
       yearIndex = 2;
     }
@@ -357,8 +359,8 @@ export class DateStringLibrary {
   private static tryToGetParsedDate(dateParts: string[], yearIndex: number,
                                     monthIndex: number, dayIndex: number): Date {
     const parsedDate = moment(`${+dateParts[yearIndex]}-` +
-                              `${this.padZeros(+dateParts[monthIndex] + 1)}-` +
-                              `${this.padZeros(+dateParts[dayIndex])}`).toDate();
+      `${this.padZeros(+dateParts[monthIndex] + 1)}-` +
+      `${this.padZeros(+dateParts[dayIndex])}`).toDate();
 
     if (parsedDate && !isNaN(parsedDate.getFullYear())) {
       return parsedDate;

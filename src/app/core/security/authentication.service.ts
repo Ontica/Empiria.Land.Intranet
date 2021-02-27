@@ -30,11 +30,11 @@ export class AuthenticationService {
     const claimsList = this.securityService.getPrincipalClaimsList();
 
     return Promise.all([sessionToken, identity, claimsList])
-                  .then(([a, b, c]) => {
-                    const principal = new Principal(a, b, c);
-                    this.session.setPrincipal(principal);
-                    })
-                  .catch((e) => this.handleAuthenticationError(e));
+      .then(([a, b, c]) => {
+        const principal = new Principal(a, b, c);
+        this.session.setPrincipal(principal);
+      })
+      .catch((e) => this.handleAuthenticationError(e));
   }
 
 
@@ -46,7 +46,7 @@ export class AuthenticationService {
     }
 
     return this.securityService.closeSession()
-               .then(() => Promise.resolve(true));
+      .then(() => Promise.resolve(true));
   }
 
 
@@ -59,7 +59,7 @@ export class AuthenticationService {
                                       'Favor de intentar nuevamente.'));
     } else {
       return Promise.reject(new Error(`Tuve un problema al intentar acceder al sistema: ` +
-                                      `${error.status} ${error.statusText} ${error.message}`));
+        `${error.status} ${error.statusText} ${error.message}`));
     }
   }
 

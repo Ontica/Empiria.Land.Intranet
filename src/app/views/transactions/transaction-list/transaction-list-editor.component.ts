@@ -1,10 +1,21 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+
 import { EventInfo } from '@app/core';
+
 import { TransactionShortModel } from '@app/models';
+
 
 export enum TransactionListEditorEventType {
   FILTER_CHANGED = 'TransactionListEditorComponent.Event.FilterChanged',
 }
+
 
 @Component({
   selector: 'emp-land-transaction-list-editor',
@@ -14,13 +25,13 @@ export class TransactionListEditorComponent implements OnInit, OnChanges {
 
   @Input() transactionList: TransactionShortModel[] = [];
 
-  @Input() canEdit: boolean = true;
+  @Input() canEdit = true;
 
   @Output() transactionListChange = new EventEmitter<TransactionShortModel[]>();
 
   @Output() transactionListEditorEvent = new EventEmitter<EventInfo>();
 
-  listOptions = [{name: 'Remover trámite', value: 'RemoveTransaction', icon: 'close'}];
+  listOptions = [{ name: 'Remover trámite', value: 'RemoveTransaction', icon: 'close' }];
 
   searchUID = '';
 
@@ -35,7 +46,7 @@ export class TransactionListEditorComponent implements OnInit, OnChanges {
   ngOnInit(): void {
   }
 
-  removeTransactionFromList(row: TransactionShortModel){
+  removeTransactionFromList(row: TransactionShortModel) {
     this.transactionList = this.transactionList.filter(x => x.uid !== row.uid);
     this.transactionListChange.emit(this.transactionList);
   }
@@ -43,7 +54,7 @@ export class TransactionListEditorComponent implements OnInit, OnChanges {
   onChangeFilter() {
     if (this.searchUID) {
       this.sendEvent(TransactionListEditorEventType.FILTER_CHANGED,
-                    { searchUID: this.searchUID });
+                     { searchUID: this.searchUID });
 
       this.searchUID = '';
     }

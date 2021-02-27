@@ -1,18 +1,32 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { Assertion, EventInfo, Validate } from '@app/core';
-import { EmptyFeeConcept, EmptyProvidedService, FeeConcept,
-         ProvidedService, ProvidedServiceType, RequestedServiceFields } from '@app/models';
+
+import {
+  EmptyFeeConcept, EmptyProvidedService, FeeConcept,
+  ProvidedService, ProvidedServiceType, RequestedServiceFields
+} from '@app/models';
+
 import { MessageBoxService } from '@app/shared/containers/message-box';
 import { FormatLibrary } from '@app/shared/utils';
 
 
 type RequestedServiceFormControls = 'serviceType' | 'service' | 'feeConcept' | 'taxableBase' |
-                                    'quantity' | 'unit' | 'notes';
+  'quantity' | 'unit' | 'notes';
+
 
 export enum RequestedServiceEditorEventType {
-  SUBMIT_REQUESTED_SERVICE_CLICKED  = 'RequestedServiceEditorComponent.Event.SubmitRequestedServiceClicked',
+  SUBMIT_REQUESTED_SERVICE_CLICKED = 'RequestedServiceEditorComponent.Event.SubmitRequestedServiceClicked',
 }
+
 
 @Component({
   selector: 'emp-land-requested-service-editor',
@@ -50,14 +64,14 @@ export class RequestedServiceEditorComponent implements OnInit {
     return this.form.get(name);
   }
 
-  submit(){
+  submit() {
     if (!this.form.valid) {
       this.invalidateForm(this.form);
       return;
     }
 
     const message = `<strong>${this.serviceSelected.name}</strong> <br>
-      ${ !this.feeConceptSelected.requiresTaxableBase ? '' : `
+      ${!this.feeConceptSelected.requiresTaxableBase ? '' : `
       <pre>Base gravable:     ${this.getFormControl('taxableBase').value}</pre>`}
       <pre>Cantidad:                ${this.getFormControl('quantity').value}</pre>
       <pre>Fundamento:         ${this.feeConceptSelected.legalBasis}</pre>
@@ -68,7 +82,7 @@ export class RequestedServiceEditorComponent implements OnInit {
       .then(x => {
         if (x) {
           this.sendEvent(RequestedServiceEditorEventType.SUBMIT_REQUESTED_SERVICE_CLICKED,
-                         this.getFormData());
+            this.getFormData());
         }
       });
   }
@@ -91,7 +105,7 @@ export class RequestedServiceEditorComponent implements OnInit {
     this.resetValidatorsTaxableBase();
   }
 
-  resetValidatorsTaxableBase(){
+  resetValidatorsTaxableBase() {
     this.getFormControl('taxableBase').reset();
 
     this.getFormControl('taxableBase').clearValidators();
@@ -114,7 +128,7 @@ export class RequestedServiceEditorComponent implements OnInit {
       feeConceptUID: formModel.feeConcept,
       unitUID: this.serviceSelected.unit.uid,
       taxableBase: this.feeConceptSelected.requiresTaxableBase ?
-                   FormatLibrary.stringToNumber(formModel.taxableBase) : 0,
+        FormatLibrary.stringToNumber(formModel.taxableBase) : 0,
       quantity: parseFloat(formModel.quantity),
       notes: formModel.notes ?? ''
     };

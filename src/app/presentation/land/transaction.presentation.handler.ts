@@ -21,9 +21,11 @@ import { FileDownloadService } from '@app/data-services/file-services/file-downl
 
 import { ArrayLibrary } from '@app/shared/utils';
 
-import { PreprocessingData, Transaction, TransactionFilter, TransactionShortModel,
-         EmptyPreprocessingData, EmptyTransaction, EmptyTransactionFilter,
-         mapTransactionShortModelFromTransaction } from '@app/models';
+import {
+  PreprocessingData, Transaction, TransactionFilter, TransactionShortModel,
+  EmptyPreprocessingData, EmptyTransaction, EmptyTransactionFilter,
+  mapTransactionShortModelFromTransaction
+} from '@app/models';
 
 import { EmptyFileData } from '@app/shared/form-controls/file-control/file-control';
 
@@ -213,7 +215,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         transactionList = this.getValue<TransactionShortModel[]>(SelectorType.TRANSACTION_LIST);
 
         this.setValue(SelectorType.TRANSACTION_LIST,
-                      transactionList.filter(x => x.uid !== params.payload.transactionUID));
+          transactionList.filter(x => x.uid !== params.payload.transactionUID));
 
         this.dispatch(ActionType.UNSELECT_TRANSACTION);
 
@@ -225,7 +227,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         let filter = this.getValue<TransactionFilter>(SelectorType.LIST_FILTER);
 
         if (effectType === EffectType.EXECUTE_WORKFLOW_COMMAND) {
-          filter = {...filter, ...{keywords: ''}};
+          filter = { ...filter, ...{ keywords: '' } };
 
           this.setValue(SelectorType.LIST_FILTER, filter);
         }
@@ -240,7 +242,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
       case EffectType.UPLOAD_INSTRUMENT_FILE:
 
-        if (params.result.data){
+        if (params.result.data) {
           this.setPreprocessingDataInstrument(params.result.data);
 
           this.setValue(SelectorType.SELECTED_FILE, EmptyFileData);
@@ -274,7 +276,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case CommandType.UPDATE_TRANSACTION:
         return toPromise<T>(
           this.data.updateTransaction(command.payload.transactionUID,
-                                      command.payload.transaction)
+            command.payload.transaction)
         );
 
       case CommandType.CLONE_TRANSACTION:
@@ -295,13 +297,13 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case CommandType.ADD_TRANSACTION_SERVICE:
         return toPromise<T>(
           this.data.addTransactionService(command.payload.transactionUID,
-                                          command.payload.requestedService)
+            command.payload.requestedService)
         );
 
       case CommandType.DELETE_TRANSACTION_SERVICE:
         return toPromise<T>(
           this.data.deleteTransactionService(command.payload.transactionUID,
-                                             command.payload.requestedServiceUID)
+            command.payload.requestedServiceUID)
         );
 
       case CommandType.GENERATE_PAYMENT_ORDER:
@@ -317,7 +319,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case CommandType.SET_PAYMENT:
         return toPromise<T>(
           this.data.setPayment(command.payload.transactionUID,
-                               command.payload.payment)
+            command.payload.payment)
         );
 
       case CommandType.CANCEL_PAYMENT:
@@ -328,15 +330,15 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case CommandType.UPLOAD_INSTRUMENT_FILE:
         return toPromise<T>(
           this.data.uploadInstrumentFile(command.payload.instrumentUID,
-                                         command.payload.file,
-                                         command.payload.mediaContent,
-                                         command.payload.fileName)
+            command.payload.file,
+            command.payload.mediaContent,
+            command.payload.fileName)
         );
 
       case CommandType.REMOVE_INSTRUMENT_FILE:
         return toPromise<T>(
           this.data.removeInstrumentFile(command.payload.instrumentUID,
-                                         command.payload.mediaFileUID)
+            command.payload.mediaFileUID)
         );
 
       case CommandType.DOWNLOAD_INSTRUMENT_FILE:
@@ -362,10 +364,10 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         Assertion.assertValue(params.transactionUID, 'payload.transactionUID');
 
         const transaction = this.data.getTransaction(params.transactionUID)
-                              .pipe(tap( t => {
-                                this.getPreprocessingDataInstrument(t);
-                                this.getWorkflowHistoryForTransaction(t.uid);
-                              }));
+          .pipe(tap(t => {
+            this.getPreprocessingDataInstrument(t);
+            this.getWorkflowHistoryForTransaction(t.uid);
+          }));
 
         this.setValue(SelectorType.SELECTED_TRANSACTION, transaction);
 
@@ -409,23 +411,25 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
   }
 
 
-  getPreprocessingDataInstrument(transaction: Transaction){
-    if (transaction.actions.show.preprocessingTab){
+  getPreprocessingDataInstrument(transaction: Transaction) {
+    if (transaction.actions.show.preprocessingTab) {
       const preprocessingData = this.data.getTransactionPreprocessingData(transaction.uid);
       this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, preprocessingData);
     }
   }
 
 
-  setPreprocessingDataInstrument(instrument){
+  setPreprocessingDataInstrument(instrument) {
     const preprocessingData = this.getValue<PreprocessingData>(SelectorType.SELECTED_PREPROCESSING_DATA);
+
     preprocessingData.instrument = instrument;
     this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, preprocessingData);
   }
 
 
-  getWorkflowHistoryForTransaction(transactionUID: string){
+  getWorkflowHistoryForTransaction(transactionUID: string) {
     const workflowHistory = this.data.getWorkflowHistoryForTransaction(transactionUID);
+
     this.setValue(SelectorType.SELECTED_WORKFLOW_HISTORY, workflowHistory);
   }
 

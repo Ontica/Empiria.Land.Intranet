@@ -10,10 +10,12 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { Agency, Instrument, InstrumentMediaContent, PaymentFields, PreprocessingData,
-         ProvidedServiceType, RecorderOffice, RecordingSection, RequestedServiceFields,
-         Transaction, TransactionFields, TransactionFilter, TransactionShortModel, TransactionType,
-         WorkflowCommand, WorkflowTask, ApplicableCommand } from '@app/models';
+import {
+  Agency, Instrument, InstrumentMediaContent, PaymentFields, PreprocessingData,
+  ProvidedServiceType, RecorderOffice, RecordingSection, RequestedServiceFields,
+  Transaction, TransactionFields, TransactionFilter, TransactionShortModel, TransactionType,
+  WorkflowCommand, WorkflowTask, ApplicableCommand
+} from '@app/models';
 
 import { Progress, reportHttpProgress } from './file-services/http-progress';
 
@@ -23,92 +25,33 @@ export class TransactionDataService {
 
   constructor(private http: HttpService) { }
 
-  getTransactionList(filter: TransactionFilter): Observable<TransactionShortModel[]> {
-    let path = `v5/land/transactions`;
-
-    if (filter.stage) {
-      path += `/?stage=${filter.stage}`;
-    }
-
-    if (filter.status) {
-        path += `&status=${filter.status}`;
-    }
-
-    if (filter.keywords) {
-        path += `&keywords=${filter.keywords}`;
-    }
-
-    return this.http.get<TransactionShortModel[]>(path);
-  }
-
-
-  getTransaction(transactionUID: string): Observable<Transaction> {
-    Assertion.assertValue(transactionUID, 'transactionUID');
-
-    const path = `v5/land/transactions/${transactionUID}`;
-
-    return this.http.get<Transaction>(path);
-  }
-
-
-  createTransaction(transaction: TransactionFields): Observable<Transaction> {
-    Assertion.assertValue(transaction, 'transaction');
-
-    const path = `v5/land/transactions`;
-
-    return this.http.post<Transaction>(path, transaction);
-  }
-
-
-  updateTransaction(transactionUID: string,
-                    transaction: TransactionFields): Observable<Transaction> {
-    Assertion.assertValue(transactionUID, 'transactionUID');
-    Assertion.assertValue(transaction, 'transaction');
-
-    const path = `v5/land/transactions/${transactionUID}`;
-
-    return this.http.put<Transaction>(path, transaction);
-  }
-
-
-  deleteTransaction(transactionUID: string): Observable<Transaction> {
-    Assertion.assertValue(transactionUID, 'transactionUID');
-
-    const path = `v5/land/transactions/${transactionUID}`;
-
-    return this.http.delete<Transaction>(path);
-  }
-
-
-  cloneTransaction(transactionUID: string): Observable<Transaction> {
-    Assertion.assertValue(transactionUID, 'transactionUID');
-
-    const path = `v5/land/transactions/${transactionUID}/clone`;
-
-    return this.http.post<Transaction>(path);
-  }
-
-
-  submitTransaction(transactionUID: string): Observable<Transaction> {
-    Assertion.assertValue(transactionUID, 'transactionUID');
-
-    const path = `v5/land/transactions/${transactionUID}/submit`;
-
-    return this.http.post<Transaction>(path);
-  }
-
-
-  getTransactionTypes(): Observable<TransactionType[]> {
-    const path = `v5/land/transaction-types`;
-
-    return this.http.get<TransactionType[]>(path);
-  }
-
-
   getAgencies(): Observable<Agency[]> {
     const path = `v5/land/agencies`;
 
     return this.http.get<Agency[]>(path);
+  }
+
+
+  getAllAvailableCommandTypes(): Observable<ApplicableCommand[]> {
+    const path = `v5/land/workflow/all-command-types`;
+
+    return this.http.get<ApplicableCommand[]>(path);
+  }
+
+
+  getApplicableCommands(transactionsUidList: string[]): Observable<ApplicableCommand[]> {
+    Assertion.assertValue(transactionsUidList, 'transactionsUidList');
+
+    const path = `v5/land/workflow/applicable-command-types`;
+
+    return this.http.post<ApplicableCommand[]>(path, transactionsUidList);
+  }
+
+
+  getProvidedServices(): Observable<ProvidedServiceType[]> {
+    const path = `v5/land/provided-services`;
+
+    return this.http.get<ProvidedServiceType[]>(path);
   }
 
 
@@ -126,10 +69,54 @@ export class TransactionDataService {
   }
 
 
-  getProvidedServices(): Observable<ProvidedServiceType[]> {
-    const path = `v5/land/provided-services`;
+  getTransactionTypes(): Observable<TransactionType[]> {
+    const path = `v5/land/transaction-types`;
 
-    return this.http.get<ProvidedServiceType[]>(path);
+    return this.http.get<TransactionType[]>(path);
+  }
+
+  getTransactionPreprocessingData(transactionUID: string): Observable<PreprocessingData> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `/v5/land/transactions/${transactionUID}/preprocessing-data`;
+
+    return this.http.get<PreprocessingData>(path);
+  }
+
+  getTransaction(transactionUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}`;
+
+    return this.http.get<Transaction>(path);
+  }
+
+
+  getTransactionList(filter: TransactionFilter): Observable<TransactionShortModel[]> {
+    let path = `v5/land/transactions`;
+
+    if (filter.stage) {
+      path += `/?stage=${filter.stage}`;
+    }
+
+    if (filter.status) {
+      path += `&status=${filter.status}`;
+    }
+
+    if (filter.keywords) {
+      path += `&keywords=${filter.keywords}`;
+    }
+
+    return this.http.get<TransactionShortModel[]>(path);
+  }
+
+
+  getWorkflowHistoryForTransaction(transactionUID: string): Observable<WorkflowTask> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/workflow/${transactionUID}/history`;
+
+    return this.http.get<WorkflowTask>(path);
   }
 
 
@@ -144,21 +131,10 @@ export class TransactionDataService {
   }
 
 
-  deleteTransactionService(transactionUID: string,
-                           requestedServiceUID: string): Observable<Transaction> {
-    Assertion.assertValue(transactionUID, 'transactionUID');
-    Assertion.assertValue(requestedServiceUID, 'requestedServiceUID');
-
-    const path = `v5/land/transactions/${transactionUID}/requested-services/${requestedServiceUID}`;
-
-    return this.http.delete<Transaction>(path);
-  }
-
-
-  generatePaymentOrder(transactionUID: string): Observable<Transaction> {
+  cancelPayment(transactionUID: string): Observable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
-    const path = `v5/land/transactions/${transactionUID}/generate-payment-order`;
+    const path = `v5/land/transactions/${transactionUID}/cancel-payment`;
 
     return this.http.post<Transaction>(path);
   }
@@ -173,6 +149,86 @@ export class TransactionDataService {
   }
 
 
+  cloneTransaction(transactionUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}/clone`;
+
+    return this.http.post<Transaction>(path);
+  }
+
+
+  createTransaction(transaction: TransactionFields): Observable<Transaction> {
+    Assertion.assertValue(transaction, 'transaction');
+
+    const path = `v5/land/transactions`;
+
+    return this.http.post<Transaction>(path, transaction);
+  }
+
+
+  deleteTransaction(transactionUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}`;
+
+    return this.http.delete<Transaction>(path);
+  }
+
+
+  deleteTransactionService(transactionUID: string,
+                           requestedServiceUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+    Assertion.assertValue(requestedServiceUID, 'requestedServiceUID');
+
+    const path = `v5/land/transactions/${transactionUID}/requested-services/${requestedServiceUID}`;
+
+    return this.http.delete<Transaction>(path);
+  }
+
+
+  executeWorkflowCommand(command: WorkflowCommand): Observable<WorkflowTask[]> {
+    Assertion.assertValue(command, 'command');
+
+    const path = `v5/land/workflow/execute-command`;
+
+    if (!command.payload.nextStatus) {
+      command.payload.nextStatus = 'Undefined';
+    }
+
+    return this.http.post<WorkflowTask[]>(path, command);
+  }
+
+
+  generatePaymentOrder(transactionUID: string): Observable<Transaction> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+
+    const path = `v5/land/transactions/${transactionUID}/generate-payment-order`;
+
+    return this.http.post<Transaction>(path);
+  }
+
+
+  removeInstrumentFile(instrumentUID: string,
+                       mediaFileUID: string): Observable<Instrument> {
+    Assertion.assertValue(instrumentUID, 'instrumentUID');
+    Assertion.assertValue(mediaFileUID, 'mediaFileUID');
+
+    const path = `v5/land/instruments/${instrumentUID}/media-files/${mediaFileUID}`;
+
+    return this.http.delete<Instrument>(path);
+  }
+
+
+  searchAndAssertCommandExecution(command: WorkflowCommand): Observable<TransactionShortModel> {
+    Assertion.assertValue(command, 'command');
+
+    const path = `v5/land/workflow/search-and-assert-command-execution`;
+
+    return this.http.post<TransactionShortModel>(path, command);
+  }
+
+
   setPayment(transactionUID: string, payment: PaymentFields): Observable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(payment, 'payment');
@@ -183,21 +239,23 @@ export class TransactionDataService {
   }
 
 
-  cancelPayment(transactionUID: string): Observable<Transaction> {
+  submitTransaction(transactionUID: string): Observable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
-    const path = `v5/land/transactions/${transactionUID}/cancel-payment`;
+    const path = `v5/land/transactions/${transactionUID}/submit`;
 
     return this.http.post<Transaction>(path);
   }
 
 
-  getTransactionPreprocessingData(transactionUID: string): Observable<PreprocessingData> {
+  updateTransaction(transactionUID: string,
+                    transaction: TransactionFields): Observable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
+    Assertion.assertValue(transaction, 'transaction');
 
-    const path = `/v5/land/transactions/${transactionUID}/preprocessing-data`;
+    const path = `v5/land/transactions/${transactionUID}`;
 
-    return this.http.get<PreprocessingData>(path);
+    return this.http.put<Transaction>(path, transaction);
   }
 
 
@@ -215,68 +273,10 @@ export class TransactionDataService {
 
     const path = `v5/land/instruments/${instrumentUID}/media-files`;
 
-    return this.http.post(path, formData, {observe: 'events', reportProgress: true, dataField: null})
+    return this.http.post(path, formData, { observe: 'events', reportProgress: true, dataField: null })
       .pipe(
         reportHttpProgress()
       );
-  }
-
-
-  removeInstrumentFile(instrumentUID: string,
-                       mediaFileUID: string): Observable<Instrument> {
-    Assertion.assertValue(instrumentUID, 'instrumentUID');
-    Assertion.assertValue(mediaFileUID, 'mediaFileUID');
-
-    const path = `v5/land/instruments/${instrumentUID}/media-files/${mediaFileUID}`;
-
-    return this.http.delete<Instrument>(path);
-  }
-
-
-  getWorkflowHistoryForTransaction(transactionUID: string): Observable<WorkflowTask> {
-    Assertion.assertValue(transactionUID, 'transactionUID');
-
-    const path = `v5/land/workflow/${transactionUID}/history`;
-
-    return this.http.get<WorkflowTask>(path);
-  }
-
-
-  getApplicableCommands(transactionsUidList: string[]): Observable<ApplicableCommand[]> {
-    Assertion.assertValue(transactionsUidList, 'transactionsUidList');
-
-    const path = `v5/land/workflow/applicable-command-types`;
-
-    return this.http.post<ApplicableCommand[]>(path, transactionsUidList);
-  }
-
-
-  getAllAvailableCommandTypes(): Observable<ApplicableCommand[]> {
-    const path = `v5/land/workflow/all-command-types`;
-
-    return this.http.get<ApplicableCommand[]>(path);
-  }
-
-
-  searchAndAssertCommandExecution(command: WorkflowCommand): Observable<TransactionShortModel> {
-    Assertion.assertValue(command, 'command');
-
-    const path = `v5/land/workflow/search-and-assert-command-execution`;
-
-    return this.http.post<TransactionShortModel>(path, command);
-  }
-
-
-  executeWorkflowCommand(command: WorkflowCommand): Observable<WorkflowTask[]> {
-    Assertion.assertValue(command, 'command');
-
-    const path = `v5/land/workflow/execute-command`;
-
-    if (!command.payload.nextStatus) {
-      command.payload.nextStatus = 'Undefined';
-    }
-
-    return this.http.post<WorkflowTask[]>(path, command);
   }
 
 }

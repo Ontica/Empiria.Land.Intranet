@@ -1,5 +1,13 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Progress } from '@app/data-services/file-services/http-progress';
 import { Observable } from 'rxjs';
+
 
 export enum FileTypeAccepted {
   all = '*',
@@ -8,7 +16,9 @@ export enum FileTypeAccepted {
   image = 'image/*',
 }
 
+
 export type FileType = 'all' | 'pdf' | 'excel' | 'image';
+
 
 export interface FileControlConfig {
   autoUpload?: boolean;
@@ -22,6 +32,7 @@ export interface FileControlConfig {
   textSave?: string;
 }
 
+
 export const DefaultFileControlConfig: FileControlConfig = {
   autoUpload: false,
   fileName: null,
@@ -34,13 +45,16 @@ export const DefaultFileControlConfig: FileControlConfig = {
   textSave: 'Guardar Archivo',
 };
 
+
 export type FileControlActions = 'SAVE' | 'CANCEL' | 'SHOW' | 'DOWNLOAD' | 'REMOVE';
+
 
 export class FileControlMenuOptions {
   name: string;
   action: FileControlActions;
   disabled?: boolean;
 }
+
 
 export class FileData {
   uid?: string;
@@ -54,6 +68,7 @@ export class FileData {
   file?: File;
   download$?: Observable<Progress>;
 }
+
 
 export const EmptyFileData: FileData = {
   uid: '',

@@ -8,8 +8,11 @@
 import { Component, Output, EventEmitter, Input, OnChanges } from '@angular/core';
 import { FormatLibrary } from '@app/shared/utils';
 
-import { DefaultFileControlConfig, FileData, FileControlActions, FileControlConfig,
-         FileControlMenuOptions, FileTypeAccepted } from './file-control';
+import {
+  DefaultFileControlConfig, FileData, FileControlActions, FileControlConfig,
+  FileControlMenuOptions, FileTypeAccepted
+} from './file-control';
+
 
 @Component({
   selector: 'emp-ng-file-control',
@@ -24,9 +27,9 @@ export class FileControlComponent implements OnChanges {
 
   @Output() fileControlEvent = new EventEmitter<any>();
 
-  @Input() readonly: boolean = false;
+  @Input() readonly = false;
 
-  @Input() disabled: boolean = false;
+  @Input() disabled = false;
 
   @Input()
   get config() {
@@ -46,10 +49,11 @@ export class FileControlComponent implements OnChanges {
 
   constructor() { }
 
-  ngOnChanges(){
+  ngOnChanges() {
     this.setAcceptedFileTypes();
     this.setFilesSaved();
   }
+
 
   handleFileInput(fileInput) {
     const fileList: FileList = fileInput.files;
@@ -73,15 +77,17 @@ export class FileControlComponent implements OnChanges {
     fileInput.value = '';
   }
 
-  onClickFileOptions(file: FileData, option: FileControlActions){
-    if ('CANCEL' === option){
+
+  onClickFileOptions(file: FileData, option: FileControlActions) {
+    if ('CANCEL' === option) {
       this.removeFile(file);
     }
-    if ('SHOW' === option && !this.validateShowOption(file.type)){
+    if ('SHOW' === option && !this.validateShowOption(file.type)) {
       return;
     }
-    this.fileControlEvent.emit({option, file});
+    this.fileControlEvent.emit({ option, file });
   }
+
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -89,13 +95,15 @@ export class FileControlComponent implements OnChanges {
     event.stopPropagation();
   }
 
+
   onDropFile(event: DragEvent): void {
     event.preventDefault();
     this.handleFileInput(event.dataTransfer);
     event.stopPropagation();
   }
 
-  private setAcceptedFileTypes(){
+
+  private setAcceptedFileTypes() {
     switch (this.fileControlConfig.fileTypes) {
       case 'pdf':
         this.acceptedFileTypes = FileTypeAccepted.pdf;
@@ -112,8 +120,8 @@ export class FileControlComponent implements OnChanges {
     }
   }
 
-  private setFilesSaved(){
-    if (this.fileControl){
+  private setFilesSaved() {
+    if (this.fileControl) {
       this.filesToUpload = this.fileControl instanceof Array ? this.fileControl : [this.fileControl];
       this.filesToUpload.forEach(file => {
         file.menuOptions = this.getMenuOptions(file);
@@ -125,66 +133,69 @@ export class FileControlComponent implements OnChanges {
     this.filesToUpload = [];
   }
 
-  private getMenuOptions(file: FileData): FileControlMenuOptions[]{
-    if (file.uid){
-      let options: FileControlMenuOptions[] = [];
+  private getMenuOptions(file: FileData): FileControlMenuOptions[] {
+    if (file.uid) {
+      const options: FileControlMenuOptions[] = [];
 
-      if (this.validateShowOption(file.type)){
-        options.push({name: 'Ver', action: 'SHOW'});
+      if (this.validateShowOption(file.type)) {
+        options.push({ name: 'Ver', action: 'SHOW' });
       }
 
-      options.push({name: 'Descargar', action: 'DOWNLOAD'});
+      options.push({ name: 'Descargar', action: 'DOWNLOAD' });
 
-      if (!this.readonly){
-        options.push({name: 'Eliminar', action: 'REMOVE'});
+      if (!this.readonly) {
+        options.push({ name: 'Eliminar', action: 'REMOVE' });
       }
 
       return options;
     }
     return [
-      {name: 'Guardar', action: 'SAVE'},
-      {name: 'Cancelar', action: 'CANCEL'},
+      { name: 'Guardar', action: 'SAVE' },
+      { name: 'Cancelar', action: 'CANCEL' },
     ];
   }
 
-  private validateShowOption(type: string): boolean{
+
+  private validateShowOption(type: string): boolean {
     return type === FileTypeAccepted.pdf || type.startsWith('image/');
   }
 
-  private getFileIcon(type: string){
-    if (type === FileTypeAccepted.pdf){
+
+  private getFileIcon(type: string) {
+    if (type === FileTypeAccepted.pdf) {
       return 'emp-pdf-file';
     }
 
-    if (FileTypeAccepted.excel.includes(type)){
+    if (FileTypeAccepted.excel.includes(type)) {
       return 'emp-xls-file';
     }
 
-    if (type.startsWith('image/')){
+    if (type.startsWith('image/')) {
       return 'emp-image-file';
     }
 
     return 'emp-file';
   }
 
-  private validateFileType(file: File){
+
+  private validateFileType(file: File) {
     switch (this.fileControlConfig.fileTypes) {
       case 'pdf':
-        if (file.type === FileTypeAccepted.pdf){
+        if (file.type === FileTypeAccepted.pdf) {
           return true;
         }
         this.printInvalidFormat(file);
         return false;
 
       case 'excel':
-        if (FileTypeAccepted.excel.includes(file.type)){
+        if (FileTypeAccepted.excel.includes(file.type)) {
           return true;
         }
         this.printInvalidFormat(file);
         return false;
 
       case 'image':
-        if (file.type.startsWith('image/')){
+        if (file.type.startsWith('image/')) {
           return true;
         }
         this.printInvalidFormat(file);
@@ -195,13 +206,16 @@ export class FileControlComponent implements OnChanges {
     }
   }
 
-  private mapFileDataArrayFromFileArray(fileList: File[]): FileData[]{
-    let files: FileData[] = [];
+
+  private mapFileDataArrayFromFileArray(fileList: File[]): FileData[] {
+    const files: FileData[] = [];
+
     fileList.forEach(item => files.push(this.mapFileDataFromFile(item)));
+
     return files;
   }
 
-  private mapFileDataFromFile(file: File): FileData{
+  private mapFileDataFromFile(file: File): FileData {
     return {
       file,
       name: this.getFileName(file.name),
@@ -213,35 +227,41 @@ export class FileControlComponent implements OnChanges {
     };
   }
 
-  private getFileName(name: string){
+  private getFileName(name: string) {
     return this.fileControlConfig.fileName ?
-           this.fileControlConfig.fileName + this.getFileNameExtension(name) :
-           name;
+      this.fileControlConfig.fileName + this.getFileNameExtension(name) :
+      name;
   }
 
-  private getFileNameExtension(name: string){
+  private getFileNameExtension(name: string) {
     const strings = name.split('.');
+
     return strings.length > 1 ? '.' + strings[strings.length - 1] : '';
   }
 
-  private emitFiles(){
+  private emitFiles() {
     let files: FileData | FileData[] = this.filesToUpload;
-    if (this.fileControlConfig.maxFiles === 1){
+
+    if (this.fileControlConfig.maxFiles === 1) {
       files = this.filesToUpload.length >= 1 ? this.filesToUpload[0] : null;
     }
+
     this.fileControlChange.emit(files);
   }
+
 
   private removeFile(file) {
     this.filesToUpload = this.filesToUpload.filter(f => f !== file);
     this.emitFiles();
   }
 
-  private printInvalidFormat(file: File){
+
+  private printInvalidFormat(file: File) {
     console.log(`Invalid format: ${file.name}. Is required: ${this.acceptedFileTypes}`);
   }
 
-  formatBytes(sizeBytes){
+
+  formatBytes(sizeBytes) {
     return FormatLibrary.formatBytes(sizeBytes);
   }
 

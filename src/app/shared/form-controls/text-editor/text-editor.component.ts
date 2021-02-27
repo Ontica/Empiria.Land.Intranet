@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, forwardRef} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -13,7 +20,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ]
 })
-
 export class TextEditorComponent implements ControlValueAccessor {
   value: any;
   onChange: (value: any) => void;
@@ -28,12 +34,6 @@ export class TextEditorComponent implements ControlValueAccessor {
       ['clean'],
     ]
   };
-
-  constructor() { }
-
-  writeValue(value: any): void {
-    this.value = value ? value : '';
-  }
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
@@ -50,4 +50,9 @@ export class TextEditorComponent implements ControlValueAccessor {
   setFocus(editor) {
     editor.focus();
   }
+
+  writeValue(value: any): void {
+    this.value = value ? value : '';
+  }
+
 }

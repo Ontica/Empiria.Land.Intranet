@@ -1,10 +1,23 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { Assertion } from '@app/core';
-import { EmptyApplicableCommand, EmptyWorkflowStatus,
-         ApplicableCommand, WorkflowPayload, WorkflowStatus, WorkflowCommandType } from '@app/models';
+
+import {
+  EmptyApplicableCommand, EmptyWorkflowStatus,
+  ApplicableCommand, WorkflowPayload, WorkflowStatus, WorkflowCommandType
+} from '@app/models';
+
 import { FormHandler } from '@app/shared/utils';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
 
 enum WorkflowCommandConfigControls {
   command = 'command',
@@ -14,11 +27,13 @@ enum WorkflowCommandConfigControls {
   authorization = 'authorization',
 }
 
+
 export interface FormDataEmitted {
   commandType: WorkflowCommandType;
   formData: any;
   isValid: boolean;
 }
+
 
 @Component({
   selector: 'emp-land-workflow-command-config',
@@ -37,24 +52,20 @@ export class WorkflowCommandConfigComponent implements OnInit {
   controls = WorkflowCommandConfigControls;
   labelNextUser: string;
 
-  constructor() {
-
-  }
-
   ngOnInit(): void {
     this.initForm();
   }
 
-  get requiredNextStatusField(){
+  get requiredNextStatusField() {
     return ['AssignTo', 'SetNextStatus'].includes(this.commandSelected.type);
   }
 
-  get requiredNextUserField(){
+  get requiredNextUserField() {
     return false;
     // return ['AssignTo', 'Receive'].includes(this.commandSelected.type);
   }
 
-  get requiredAuthorizationField(){
+  get requiredAuthorizationField() {
     return false;
     // return ['Sign', 'Unsign'].includes(this.commandSelected.type);
   }
@@ -75,7 +86,7 @@ export class WorkflowCommandConfigComponent implements OnInit {
     this.statusSelected = change;
   }
 
-  private initForm(){
+  private initForm() {
     this.formHandler = new FormHandler(
       new FormGroup({
         command: new FormControl('', Validators.required),
@@ -98,10 +109,10 @@ export class WorkflowCommandConfigComponent implements OnInit {
           formData: this.formHandler.isValid ? this.getFormData() : {},
           isValid: this.formHandler.isValid
         });
-    });
+      });
   }
 
-  private setControlsValidators(){
+  private setControlsValidators() {
     this.formHandler.getControl(this.controls.nextStatus).reset();
     this.formHandler.getControl(this.controls.nextUser).reset();
     this.formHandler.getControl(this.controls.authorization).reset();

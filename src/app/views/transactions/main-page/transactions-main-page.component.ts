@@ -11,12 +11,16 @@ import { EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { TransactionStateSelector, MainUIStateSelector,
-         DocumentsRecordingAction, DocumentsRecordingStateSelector,
-         TransactionAction} from '@app/core/presentation/presentation-types';
+import {
+  TransactionStateSelector, MainUIStateSelector,
+  DocumentsRecordingAction, DocumentsRecordingStateSelector,
+  TransactionAction
+} from '@app/core/presentation/presentation-types';
 
-import { TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
-         mapTransactionStageFromViewName, mapTransactionStatusFromViewName } from '@app/models/transaction';
+import {
+  TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
+  mapTransactionStageFromViewName, mapTransactionStatusFromViewName
+} from '@app/models/transaction';
 
 import { FileData, EmptyFileData } from '@app/shared/form-controls/file-control/file-control';
 
@@ -24,8 +28,10 @@ import { View } from '@app/views/main-layout';
 
 import { TransactionListEventType } from '../transaction-list/transaction-list.component';
 
-type TransactionModalOptios = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
-                              'ReceiveTransactions';
+
+type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
+                               'ReceiveTransactions';
+
 
 @Component({
   selector: 'emp-land-transactions-main-page',
@@ -40,7 +46,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   filter: TransactionFilter = EmptyTransactionFilter;
   selectedFile: FileData = EmptyFileData;
 
-  displayOptionModalSelected: TransactionModalOptios = null;
+  displayOptionModalSelected: TransactionModalOptions = null;
   selectedTransactions: TransactionShortModel[] = [];
 
   displayRecordingActEditor = false;
@@ -133,7 +139,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
       case TransactionListEventType.TRANSACTION_SELECTED:
         this.isLoadingTransaction = true;
         this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION,
-                              {'transactionUID': event.payload.transaction.uid});
+                              { transactionUID: event.payload.transaction.uid });
         return;
 
       case TransactionListEventType.TRANSACTIONS_SELECTED_OPTIONS_CLICKED:
@@ -152,7 +158,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  onCloseFileViewer(){
+  onCloseFileViewer() {
     this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE);
   }
 
@@ -161,7 +167,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   private applyTransactionsFilter(data?: { keywords: string }) {
     const currentKeywords =
-        this.uiLayer.selectValue<TransactionFilter>(TransactionStateSelector.LIST_FILTER).keywords;
+      this.uiLayer.selectValue<TransactionFilter>(TransactionStateSelector.LIST_FILTER).keywords;
 
     const filter: TransactionFilter = {
       stage: mapTransactionStageFromViewName(this.currentView.name),

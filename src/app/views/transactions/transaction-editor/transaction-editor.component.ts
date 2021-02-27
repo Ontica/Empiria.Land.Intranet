@@ -1,11 +1,25 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+
 import { Command, EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
-import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice,
-         ProvidedServiceType } from '@app/models';
+
+import {
+  Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice,
+  ProvidedServiceType
+} from '@app/models';
+
 import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 import { ArrayLibrary } from '@app/shared/utils';
+
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
 import { TransactionSubmitterEventType } from './transaction-submitter/transaction-submitter.component';
 import { RequestedServiceEditorEventType } from './requested-services/requested-service-editor.component';
@@ -18,7 +32,7 @@ import { RequestedServiceListEventType } from './requested-services/requested-se
 })
 export class TransactionEditorComponent implements OnInit, OnDestroy {
 
-  @ViewChild('filePrintPreview', {static: true}) filePrintPreview: FilePrintPreviewComponent;
+  @ViewChild('filePrintPreview', { static: true }) filePrintPreview: FilePrintPreviewComponent;
 
   transaction: Transaction = EmptyTransaction;
 
@@ -32,7 +46,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
   helper: SubscriptionHelper;
 
-  panelAddServiceOpenState: boolean = false;
+  panelAddServiceOpenState = false;
 
   submitted = false;
 
@@ -49,7 +63,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
       });
   }
 
-  resetPanelState(){
+  resetPanelState() {
     this.panelAddServiceOpenState = false;
   }
 
@@ -57,7 +71,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     this.helper.destroy();
   }
 
-  loadDataLists(){
+  loadDataLists() {
     this.helper.select<TransactionType[]>(TransactionStateSelector.TRANSACTION_TYPE_LIST, {})
       .subscribe(x => {
         this.transactionTypeList = x;
@@ -66,13 +80,13 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     this.helper.select<RecorderOffice[]>(TransactionStateSelector.RECORDER_OFFICE_LIST, {})
       .subscribe(x => {
         this.recorderOfficeList = isEmpty(this.transaction.recorderOffice) ? x :
-                                  ArrayLibrary.insertIfNotExist(x, this.transaction.recorderOffice, 'uid');
+          ArrayLibrary.insertIfNotExist(x, this.transaction.recorderOffice, 'uid');
       });
 
     this.helper.select<Agency[]>(TransactionStateSelector.AGENCY_LIST, {})
       .subscribe(x => {
         this.agencyList = isEmpty(this.transaction.agency) ?
-                          x : ArrayLibrary.insertIfNotExist(x, this.transaction.agency, 'uid');
+          x : ArrayLibrary.insertIfNotExist(x, this.transaction.agency, 'uid');
       });
 
     this.helper.select<ProvidedServiceType[]>(TransactionStateSelector.PROVIDED_SERVICE_LIST, {})
@@ -116,11 +130,11 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
       case TransactionHeaderEventType.GENERATE_PAYMENT_ORDER:
 
         this.executeCommand<Transaction>(TransactionCommandType.GENERATE_PAYMENT_ORDER, payload)
-            .then(x => {
-              if (x.paymentOrder?.attributes.url) {
-                this.printPaymentOrder();
-              }
-            });
+          .then(x => {
+            if (x.paymentOrder?.attributes.url) {
+              this.printPaymentOrder();
+            }
+          });
 
         return;
 
@@ -163,7 +177,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
         };
 
         this.executeCommand<Transaction>(TransactionCommandType.ADD_TRANSACTION_SERVICE, payload)
-            .then(x => this.resetPanelState() );
+          .then(x => this.resetPanelState());
 
         return;
 
@@ -183,8 +197,8 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
       case RequestedServiceListEventType.DELETE_REQUESTED_SERVICE_CLICKED:
 
         const payload = {
-            transactionUID: this.transaction.uid,
-            requestedServiceUID: event.payload
+          transactionUID: this.transaction.uid,
+          requestedServiceUID: event.payload
         };
 
         this.executeCommand(TransactionCommandType.DELETE_TRANSACTION_SERVICE, payload);
@@ -235,7 +249,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  private executeCommand<T>(commandType: TransactionCommandType, payload?: any): Promise<T>{
+  private executeCommand<T>(commandType: TransactionCommandType, payload?: any): Promise<T> {
     this.submitted = true;
 
     const command: Command = {
@@ -244,20 +258,20 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     };
 
     return this.uiLayer.execute<T>(command)
-               .finally(() => this.submitted = false);
+      .finally(() => this.submitted = false);
   }
 
-  printPaymentOrder(){
+  printPaymentOrder() {
     this.openPrintViewer(this.transaction.paymentOrder.attributes.url,
-                         this.transaction.paymentOrder.attributes.mediaType);
+      this.transaction.paymentOrder.attributes.mediaType);
   }
 
-  printSubmissionReceipt(){
+  printSubmissionReceipt() {
     this.openPrintViewer(this.transaction.submissionReceipt.url,
-                         this.transaction.submissionReceipt.mediaType);
+      this.transaction.submissionReceipt.mediaType);
   }
 
-  openPrintViewer(url: string, mediaType: string){
+  openPrintViewer(url: string, mediaType: string) {
     this.filePrintPreview.open(url, mediaType);
   }
 

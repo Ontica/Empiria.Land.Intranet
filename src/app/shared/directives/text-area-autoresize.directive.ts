@@ -1,12 +1,20 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Directive, HostListener, ElementRef, OnInit, Renderer2, Input } from '@angular/core';
 import { FormatLibrary } from '../utils';
+
 
 @Directive({
   selector: '[empNgTextareaAutoresize]'
 })
 export class EmpTextareaAutoresizeDirective implements OnInit {
 
-  @Input() maxHeightTextarea: number = 75;
+  @Input() maxHeightTextarea = 75;
 
   constructor(private elementRef: ElementRef, private renderer: Renderer2) { }
 

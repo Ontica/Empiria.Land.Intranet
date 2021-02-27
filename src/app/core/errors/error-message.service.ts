@@ -1,22 +1,28 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Injectable } from '@angular/core';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
+
 @Injectable()
-export class  ErrorMessageService {
+export class ErrorMessageService {
 
-  constructor(private messageBox: MessageBoxService){
+  constructor(private messageBox: MessageBoxService) { }
 
-  }
-
-  handleOfflineError(){
+  handleOfflineError() {
     this.showErrorMessage('Sin conexión a Internet', '');
   }
 
-  handleClientSideError(error){
+  handleClientSideError(error) {
     this.showErrorMessage(error.message || 'Ocurrió un error de aplicación indefinido.');
   }
 
-  handleServerSideError(error, request?){
+  handleServerSideError(error, request?) {
 
     switch (error.status) {
       case 400:
@@ -53,7 +59,7 @@ export class  ErrorMessageService {
     this.showErrorMessage(error.error.message, error.status);
   }
 
-  private showErrorMessage(message: string, status?: string){
+  private showErrorMessage(message: string, status?: string) {
     const statusMessage = status ? `<strong>(${status})</strong>  ` : '';
     this.messageBox.showError(statusMessage + message);
   }

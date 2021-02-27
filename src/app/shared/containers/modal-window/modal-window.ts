@@ -30,6 +30,7 @@ const DefaultModalDialogConfig: ModalDialogConfig = {
   backdropClick: false,
 };
 
+
 @Component({
   selector: 'emp-ng-modal-window',
   templateUrl: './modal-window.html',

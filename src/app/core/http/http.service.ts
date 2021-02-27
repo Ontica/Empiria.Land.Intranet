@@ -17,6 +17,7 @@ import { HttpHandler } from './http-handler';
 
 import { HttpClientOptions, HttpMethod } from './common-types';
 
+
 @Injectable()
 export class HttpService {
 

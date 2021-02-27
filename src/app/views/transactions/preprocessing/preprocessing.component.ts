@@ -1,11 +1,27 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+
 import { Command, EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { TransactionAction, TransactionCommandType,
-         TransactionStateSelector } from '@app/core/presentation/presentation-types';
-import { EmptyInstrument, EmptyPreprocessingData, InstrumentMedia, InstrumentMediaContent,
-         PreprocessingData } from '@app/models';
+
+import {
+  TransactionAction, TransactionCommandType,
+  TransactionStateSelector
+} from '@app/core/presentation/presentation-types';
+
+import {
+  EmptyInstrument, EmptyPreprocessingData, InstrumentMedia, InstrumentMediaContent,
+  PreprocessingData
+} from '@app/models';
+
 import { EmptyFileData, FileData } from '@app/shared/form-controls/file-control/file-control';
+
 import { InstrumentFilesEditorEventType } from './instrument-files-editor/instrument-files-editor.component';
 
 
@@ -15,7 +31,7 @@ import { InstrumentFilesEditorEventType } from './instrument-files-editor/instru
 })
 export class PreprocessingComponent implements OnChanges, OnDestroy {
 
-  @Input() transactionUID: string = 'Empty';
+  @Input() transactionUID = 'Empty';
 
   preprocessingData: PreprocessingData = EmptyPreprocessingData;
 
@@ -32,29 +48,29 @@ export class PreprocessingComponent implements OnChanges, OnDestroy {
   ngOnChanges() {
     this.helper.select<PreprocessingData>(
       TransactionStateSelector.SELECTED_PREPROCESSING_DATA, this.transactionUID)
-        .subscribe(x => {
-          this.preprocessingData = x;
-          this.preprocessingData.instrument = this.isInstrumentEmpty() ?
-                                              EmptyInstrument :
-                                              this.preprocessingData.instrument;
-          this.mapInstrumentFileDataFromInstrumentMedia();
-        });
+      .subscribe(x => {
+        this.preprocessingData = x;
+        this.preprocessingData.instrument = this.isInstrumentEmpty() ?
+          EmptyInstrument :
+          this.preprocessingData.instrument;
+        this.mapInstrumentFileDataFromInstrumentMedia();
+      });
   }
 
-  isInstrumentEmpty(){
+  isInstrumentEmpty() {
     return isEmpty(this.preprocessingData.instrument);
   }
 
-  mapInstrumentFileDataFromInstrumentMedia(){
+  mapInstrumentFileDataFromInstrumentMedia() {
     this.instrumentMainFile = null;
     this.instrumentAuxiliaryFile = null;
 
-    if (this.getInstrumentFileByContent('InstrumentMainFile')){
+    if (this.getInstrumentFileByContent('InstrumentMainFile')) {
       this.instrumentMainFile =
         Object.assign({}, EmptyFileData, this.getInstrumentFileByContent('InstrumentMainFile'));
     }
 
-    if (this.getInstrumentFileByContent('InstrumentAuxiliaryFile')){
+    if (this.getInstrumentFileByContent('InstrumentAuxiliaryFile')) {
       this.instrumentAuxiliaryFile =
         Object.assign({}, EmptyFileData, this.getInstrumentFileByContent('InstrumentAuxiliaryFile'));
     }
@@ -62,9 +78,9 @@ export class PreprocessingComponent implements OnChanges, OnDestroy {
 
   getInstrumentFileByContent(mediaContent: InstrumentMediaContent): InstrumentMedia {
     const intrumentFile = this.preprocessingData.instrument.media
-                            .filter(file => file.content === mediaContent);
+      .filter(file => file.content === mediaContent);
 
-    if (intrumentFile.length > 0){
+    if (intrumentFile.length > 0) {
       return intrumentFile[0];
     }
 
@@ -108,7 +124,7 @@ export class PreprocessingComponent implements OnChanges, OnDestroy {
 
       case InstrumentFilesEditorEventType.SHOW_FILE_CLICKED:
 
-        this.uiLayer.dispatch(TransactionAction.SELECT_FILE, {file: event.payload});
+        this.uiLayer.dispatch(TransactionAction.SELECT_FILE, { file: event.payload });
 
         return;
 
@@ -124,7 +140,7 @@ export class PreprocessingComponent implements OnChanges, OnDestroy {
     }
   }
 
-  executeCommand<T>(commandType: TransactionCommandType, payload?: any): Promise<T>{
+  executeCommand<T>(commandType: TransactionCommandType, payload?: any): Promise<T> {
     const command: Command = {
       type: commandType,
       payload

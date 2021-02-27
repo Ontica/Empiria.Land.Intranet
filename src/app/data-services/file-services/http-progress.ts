@@ -1,5 +1,17 @@
-import { HttpErrorResponse, HttpEvent, HttpEventType, HttpProgressEvent, HttpResponse } from '@angular/common/http';
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
+import {
+  HttpErrorResponse, HttpEvent,
+  HttpEventType, HttpProgressEvent,
+  HttpResponse } from '@angular/common/http';
+
 import { Observable, of } from 'rxjs';
+
 import { distinctUntilChanged, scan } from 'rxjs/operators';
 
 
@@ -24,34 +36,34 @@ export interface Progress {
 }
 
 
-export function reportHttpProgress(saver?: (b: Blob) => void ):
+export function reportHttpProgress(saver?: (b: Blob) => void):
   (source: Observable<HttpEvent<Blob>>) => Observable<Progress> {
 
-    return (source: Observable<HttpEvent<Blob>>) =>
+  return (source: Observable<HttpEvent<Blob>>) =>
     source.pipe(
-      scan( (progress: Progress, event): Progress => {
-          if (isHttpProgressEvent(event)) {
-            return {
-              progress: event.total ? Math.round((100 * event.loaded) / event.total) : progress.progress,
-              loaded: event.loaded,
-              state: 'IN_PROGRESS',
-              data: null
-            };
+      scan((progress: Progress, event): Progress => {
+        if (isHttpProgressEvent(event)) {
+          return {
+            progress: event.total ? Math.round((100 * event.loaded) / event.total) : progress.progress,
+            loaded: event.loaded,
+            state: 'IN_PROGRESS',
+            data: null
+          };
+        }
+        if (isHttpResponse(event)) {
+          if (saver) {
+            saver(event.body['data'] ?? event.body);
           }
-          if (isHttpResponse(event)) {
-            if (saver) {
-              saver(event.body['data'] ?? event.body);
-            }
 
-            return {
-              progress: 100,
-              loaded: event.body.size,
-              state: 'DONE',
-              data: event.body['data'] ?? event.body
-            };
-          }
-          return progress;
-        },
+          return {
+            progress: 100,
+            loaded: event.body.size,
+            state: 'DONE',
+            data: event.body['data'] ?? event.body
+          };
+        }
+        return progress;
+      },
         { state: 'PENDING', progress: 0, loaded: 0, data: null }
       ),
       distinctUntilChanged((a, b) => a.state === b.state

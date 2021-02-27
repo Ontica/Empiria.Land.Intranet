@@ -1,13 +1,25 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { Assertion, Command } from '@app/core';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { InstrumentsCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
+
 import { Instrument, PhysicalRecordingFields, RecorderOffice, RecordingSection } from '@app/models';
+
 import { FormHandler } from '@app/shared/utils';
 
 
-enum PhysicalRecordingEditorFormControls  {
+enum PhysicalRecordingEditorFormControls {
   recorderOffice = 'recorderOffice',
   recordingSection = 'recordingSection',
 }
@@ -48,7 +60,7 @@ export class PhysicalRecordingEditorComponent implements OnInit, OnDestroy {
     this.helper.destroy();
   }
 
-  submitPhysicalRecording(){
+  submitPhysicalRecording() {
     if (this.submitted || !this.formHandler.validateReadyForSubmit()) {
       return;
     }
@@ -62,7 +74,8 @@ export class PhysicalRecordingEditorComponent implements OnInit, OnDestroy {
     this.executeCommand<Instrument>(InstrumentsCommandType.CREATE_PHYSICAL_RECORDING, payload);
   }
 
-  private initForm(){
+
+  private initForm() {
     this.formHandler = new FormHandler(
       new FormGroup({
         recorderOffice: new FormControl('', Validators.required),
@@ -71,7 +84,8 @@ export class PhysicalRecordingEditorComponent implements OnInit, OnDestroy {
     );
   }
 
-  private loadData(){
+
+  private loadData() {
     this.helper.select<RecorderOffice[]>(TransactionStateSelector.RECORDER_OFFICE_LIST, {})
       .subscribe(x => {
         this.recorderOfficeList = x;
@@ -82,6 +96,7 @@ export class PhysicalRecordingEditorComponent implements OnInit, OnDestroy {
         this.recordingSectionList = x;
       });
   }
+
 
   private getFormData(): any {
     Assertion.assert(this.formHandler.form.valid,
@@ -97,7 +112,8 @@ export class PhysicalRecordingEditorComponent implements OnInit, OnDestroy {
     return data;
   }
 
-  private executeCommand<T>(commandType: InstrumentsCommandType, payload?: any): Promise<T>{
+
+  private executeCommand<T>(commandType: InstrumentsCommandType, payload?: any): Promise<T> {
     this.submitted = true;
 
     const command: Command = {
@@ -106,7 +122,7 @@ export class PhysicalRecordingEditorComponent implements OnInit, OnDestroy {
     };
 
     return this.uiLayer.execute<T>(command)
-               .finally(() => this.submitted = false );
+      .finally(() => this.submitted = false);
   }
 
 }

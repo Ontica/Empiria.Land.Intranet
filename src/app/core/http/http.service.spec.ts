@@ -1,8 +1,16 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { TestBed, inject, async } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 
 import { HttpService } from './http.service';
 import { DirectoryService } from './directory.service';
+
 
 // describe('HttpService', () => {
 

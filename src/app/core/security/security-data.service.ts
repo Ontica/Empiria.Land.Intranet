@@ -38,10 +38,12 @@ export class SecurityDataService {
                            .toPromise();
   }
 
+
   closeSession(): Promise<void> {
     return this.httpHandler.post<void>('v1/security/logout')
                .toPromise();
   }
+
 
   async createSession(userID: string, userPassword: string): Promise<SessionToken> {
     const body = {
@@ -61,16 +63,6 @@ export class SecurityDataService {
   }
 
 
-  getPrincipalIdentity(): Promise<Identity> {
-    const fakeIdentity = {
-      username: 'jrulfo',
-      email: 'jrulfo@escritores.com',
-      fullname: '{Nombre del usuario} || settings'
-    };
-
-    return Promise.resolve(fakeIdentity);
-  }
-
   getPrincipalClaimsList(): Promise<ClaimsList> {
     const list = [
       { type: 'token', value: 'abc' },
@@ -80,6 +72,17 @@ export class SecurityDataService {
     const claims = new ClaimsList(list);
 
     return Promise.resolve(claims);
+  }
+
+
+  getPrincipalIdentity(): Promise<Identity> {
+    const fakeIdentity = {
+      username: 'jrulfo',
+      email: 'jrulfo@escritores.com',
+      fullname: '{Nombre del usuario} || settings'
+    };
+
+    return Promise.resolve(fakeIdentity);
   }
 
   private mapToSessionToken(source: ExternalSessionToken): SessionToken {

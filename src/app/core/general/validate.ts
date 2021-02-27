@@ -11,7 +11,6 @@ import { FormatLibrary } from '@app/shared/utils';
 
 export class Validate {
 
-
   static hasValue(object: any): boolean {
     if (object === null) {
       return false;

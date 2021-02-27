@@ -6,7 +6,7 @@
  */
 
 
- /* Actions */
+/* Actions */
 
 import { ActionType as DocumentsRecordingAction } from './recordings.presentation.handler';
 export { ActionType as DocumentsRecordingAction } from './recordings.presentation.handler';

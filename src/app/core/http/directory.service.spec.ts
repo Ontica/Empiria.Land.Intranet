@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
+
 import { TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -7,6 +15,7 @@ import { HttpHandler } from './http-handler';
 
 import { SessionService } from '../general/session.service';
 import { ApplicationSettingsService } from '../general/application-settings.service';
+
 
 describe('DirectoryService', () => {
 

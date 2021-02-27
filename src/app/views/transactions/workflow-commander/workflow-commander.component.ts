@@ -52,20 +52,17 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
+
   ngOnInit(): void {
     this.validateAllCommandsMode();
     this.loadCommandList();
   }
 
+
   ngOnDestroy() {
     this.helper.destroy();
   }
 
-  validateAllCommandsMode() {
-    this.allCommandsMode = this.transactionList.length === 0;
-
-    this.titleText = this.allCommandsMode ? 'Paquete de trámites' : 'Cambio de estado';
-  }
 
   loadCommandList() {
     const selector = this.allCommandsMode ?
@@ -126,6 +123,13 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
         console.log(`Unhandled user interface event ${event.type}`);
         return;
     }
+  }
+
+
+  validateAllCommandsMode() {
+    this.allCommandsMode = this.transactionList.length === 0;
+
+    this.titleText = this.allCommandsMode ? 'Paquete de trámites' : 'Cambio de estado';
   }
 
 

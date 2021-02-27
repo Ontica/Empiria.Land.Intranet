@@ -12,7 +12,7 @@ export class FileViewerComponent implements OnInit {
 
   @Output() closeEvent = new EventEmitter<void>();
 
-  isLoading: boolean = false;
+  isLoading = false;
 
   constructor() { }
 
