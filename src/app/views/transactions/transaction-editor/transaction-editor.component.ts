@@ -54,6 +54,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
+
   ngOnInit() {
     this.helper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .subscribe(x => {
@@ -63,13 +64,16 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
       });
   }
 
+
   resetPanelState() {
     this.panelAddServiceOpenState = false;
   }
 
+
   ngOnDestroy() {
     this.helper.destroy();
   }
+
 
   loadDataLists() {
     this.helper.select<TransactionType[]>(TransactionStateSelector.TRANSACTION_TYPE_LIST, {})
@@ -94,6 +98,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
         this.providedServiceTypeList = x;
       });
   }
+
 
   onTransactionHeaderEvent(event: EventInfo): void {
     if (this.submitted) {
