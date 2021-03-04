@@ -13,11 +13,6 @@ export interface Property extends Identifiable, PartitionedType {
 }
 
 
-export interface Association extends Property {
-  associationType: Identifiable;
-}
-
-
 export interface RealEstate extends Property {
   realEstateType: Identifiable;
   cadastralKey: string;
