@@ -1,0 +1,27 @@
+
+<emp-ng-card
+  [title]="cardTitle"
+  [hint]="cardHint"
+  (cardClose)="onClose()">
+
+  <mat-tab-group>
+
+    <mat-tab label="Datos del predio">
+
+      <emp-land-real-estate-editor [realEstate]="recording">
+
+      </emp-land-real-estate-editor>
+
+    </mat-tab>
+
+    <mat-tab label="Estructura" disabled>
+
+    </mat-tab>
+
+    <mat-tab label="Historia" disabled>
+
+    </mat-tab>
+
+  </mat-tab-group>
+
+</emp-ng-card>

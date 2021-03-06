@@ -16,12 +16,18 @@ import { RecordingActsListComponent }
   from './recording-acts/recording-acts-list/recording-acts-list.component';
 import { RecordingActCreatorComponent }
   from './recording-acts/recording-act-creator/recording-act-creator.component';
+import { RecordingActEditorComponent }
+  from './recording-acts/recording-act-editor/recording-act-editor.component';
+import { RealEstateEditorComponent }
+  from './recording-acts/recording-act-editor/real-estate-editor.component';
 
 
 @NgModule({
   declarations: [
     RecordingActsListComponent,
     RecordingActCreatorComponent,
+    RecordingActEditorComponent,
+    RealEstateEditorComponent,
   ],
   imports: [
     CommonModule,
@@ -36,6 +42,7 @@ import { RecordingActCreatorComponent }
   exports: [
     RecordingActsListComponent,
     RecordingActCreatorComponent,
+    RecordingActEditorComponent,
   ]
 })
 export class RegistrationModule { }

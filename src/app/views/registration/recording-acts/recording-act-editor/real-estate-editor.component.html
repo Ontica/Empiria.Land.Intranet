@@ -1,0 +1,134 @@
+<emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section" [empNgSpinnerHost]="spinner">
+
+  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div fxFlex="290px">
+        <label>Folio real:</label>
+
+        <div fxLayout="row">
+          <input type="text" class="text-box" fxFlex [formControlName]="controls.electronicID">
+          <button type="button" class="btn" fxFlex="82px" [style.marginTop.px]="2">Historia</button>
+        </div>
+      </div>
+
+      <div fxFlex>
+        <label>Clave catastral:</label>
+        <input type="text" class="text-box" [formControlName]="controls.cadastralID">
+      </div>
+
+      <div fxFlex="92px">
+        <label>Vinculado el:</label>
+        <input type="text" class="text-box" [formControlName]="controls.cadastralDate">
+      </div>
+
+      <div fxFlex="119px">
+        <label>
+          <a class="link">Cédula catastral</a>
+        </label>
+        <button type="button" class="btn" [style.marginTop.px]="2" [style.width.px]="111">
+          {{realEstate.cadastralID ? 'Desvincular' : 'Vincular'}}
+        </button>
+      </div>
+
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div fxFlex="290px">
+        <label>Distrito:</label>
+        <emp-ng-select #districtControl [formControlName]="controls.districtUID"
+          [config]="{ clearable: false }"
+          [items]="districtList" >
+        </emp-ng-select>
+      </div>
+
+      <div fxFlex="70">
+        <label>Municipio:</label>
+        <emp-ng-select [formControlName]="controls.municipalityUID"
+          [config]="{ clearable: false }"
+          [items]="municipalityList">
+        </emp-ng-select>
+      </div>
+
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div fxFlex="290px">
+        <label>Tipo de predio:</label>
+        <emp-ng-select [formControlName]="controls.type"
+          [config]="{ clearable: false }"
+          [items]="realEstateTypeList">
+        </emp-ng-select>
+      </div>
+
+      <div fxFlex="175px">
+        <label>Superficie total:</label>
+        <input type="number" class="text-box" [formControlName]="controls.lotSize">
+      </div>
+
+      <div fxFlex="175px" fxLayoutAlign="start end">
+        <emp-ng-select [formControlName]="controls.lotSizeUnitUID"
+          [config]="{ clearable: false }"
+          [items]="lotSizeUnitList"
+          [style.width.%]="100">
+        </emp-ng-select>
+      </div>
+
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div fxFlex="100">
+        <label>Descripción del predio (denominación y ubicación):</label>
+        <textarea class="text-area" empNgTextareaAutoresize rows="1" [formControlName]="controls.location">
+
+        </textarea>
+      </div>
+
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div fxFlex="100">
+        <label>Medidas y colindancias:</label>
+        <textarea class="text-area" empNgTextareaAutoresize rows="1" [formControlName]="controls.metesAndBounds">
+
+        </textarea>
+      </div>
+
+    </div>
+
+    <div fxLayout="row">
+
+      <div fxFlex="50" fxLayoutAlign="start">
+
+        <button *ngIf="editorMode" (click)="enableEditor(false)" class="btn-warning">
+          Cancelar edición
+        </button>
+
+      </div>
+
+      <div fxFlex="50" fxLayoutAlign="end">
+
+        <button *ngIf="!readonly && !editorMode" (click)="enableEditor(true)"
+          class="btn-action">
+          Editar
+        </button>
+
+        <button *ngIf="editorMode" (click)="submitRecordingAct()" [class.btn]="!formHandler.isValid"
+          [class.btn-action]="formHandler.isValid">
+          Guardar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</form>
