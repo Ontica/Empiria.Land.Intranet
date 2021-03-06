@@ -17,6 +17,7 @@ import { LandControlsModule } from '../land-controls/land.controls.module';
 
 import { InstrumentEditionModule } from '../instrument-edition/instrument-edition.module';
 import { InstrumentRecordingModule } from '../instrument-recording/instrument-recording.module';
+import { RegistrationModule } from '../registration/registration.module';
 
 import { TransactionsRoutingModule } from './transactions-routing.module';
 
@@ -65,6 +66,7 @@ import { WorkflowCommandConfigComponent } from './workflow-commander/workflow-co
     TransactionsRoutingModule,
     InstrumentEditionModule,
     InstrumentRecordingModule,
+    RegistrationModule,
   ],
 
   declarations: [

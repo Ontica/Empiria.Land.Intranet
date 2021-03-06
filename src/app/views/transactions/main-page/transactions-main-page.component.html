@@ -4,7 +4,8 @@
 
   <div class="primary"
        [fxHide]="displayFileViewer"
-       [fxHide.lt-lg]="displayTransactionTabbedView || displayRecordingActEditor || displayFileViewer">
+       [fxHide.lt-lg]="displayTransactionTabbedView || displayFileViewer || displayRecordingActEditor">
+
     <emp-land-transaction-list
         [transactionList]="transactionList"
         [selectedTransaction]="selectedTransaction"
@@ -13,28 +14,46 @@
         [isLoading]="isLoading"
         (transactionListEvent)="onTransactionListEvent($event)">
     </emp-land-transaction-list>
+
   </div>
 
-  <div *ngIf="displayFileViewer" class="primary">
-    <emp-land-file-viewer [selectedFile]="selectedFile" (closeEvent)="onCloseFileViewer()">
+
+  <div *ngIf="displayFileViewer"
+    class="primary-resizable"
+    [fxHide.lt-lg]="displayRecordingActEditor"
+    empNgResizable>
+
+    <emp-land-file-viewer
+      [selectedFile]="selectedFile"
+      (closeEvent)="onCloseFileViewer()">
 
     </emp-land-file-viewer>
+
   </div>
 
 
-  <div *ngIf="displayTransactionTabbedView" [fxHide.lt-lg]="displayFileViewer" class="secondary">
+  <div *ngIf="displayTransactionTabbedView"
+    class="secondary"
+    [fxHide]="displayRecordingActEditor"
+    [fxHide.lt-lg]="displayRecordingActEditor || displayFileViewer" >
+
     <emp-land-transaction-tabbed-view
         [transaction]="selectedTransaction"
         (closeEvent)="onCloseEditor()">
     </emp-land-transaction-tabbed-view>
+
   </div>
 
 
-  <div *ngIf="displayRecordingActEditor" [fxHide.lt-lg]="displayFileViewer" class="secondary">
-    <emp-land-recording-acts
-        [transaction]="selectedTransaction"
-        (closeEvent)="onCloseEditor()">
-    </emp-land-recording-acts>
+  <div *ngIf="displayRecordingActEditor"
+    class="secondary">
+
+    <emp-land-recording-act-editor
+      [recording]="selectedRecordingAct"
+      (closeEvent)="onCloseRecordingActEditor()">
+
+    </emp-land-recording-act-editor>
+
   </div>
 
 </div>

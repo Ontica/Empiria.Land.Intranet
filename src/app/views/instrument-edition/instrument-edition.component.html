@@ -19,15 +19,41 @@
   </emp-land-physical-recording-list>
 
   <emp-ng-expansion-button *ngIf="instrument.actions.can.createPhysicalRecordings"
-    [(panelState)]="panelAddPhysicalRecordingState"
+    [(panelState)]="panelAddState"
     [config]="{textButtonOpen: 'Agregar registro del documento en libros',
                textButtonClose: 'Cancelar agregar registro'}">
 
-    <emp-land-physical-recording-editor *ngIf="panelAddPhysicalRecordingState"
+    <emp-land-physical-recording-editor *ngIf="panelAddState"
       [transactionUID]="transactionUID"
       [instrumentUID]="instrument.uid">
 
     </emp-land-physical-recording-editor>
+
+  </emp-ng-expansion-button>
+
+</ng-container>
+
+
+<ng-container *ngIf="false">
+
+  <br>
+
+  <emp-land-recording-acts-list
+    [instrumentUID]="instrument.uid"
+    [recordingActs]="[]"
+    [canDelete]="true">
+
+  </emp-land-recording-acts-list>
+
+  <emp-ng-expansion-button *ngIf="false"
+    [(panelState)]="panelAddState"
+    [config]="{textButtonOpen: 'Agregar un acto jurídico al instrumento',
+               textButtonClose: 'Cancelar agregar registro'}">
+
+    <emp-land-recording-act-creator *ngIf="panelAddState"
+      [instrumentUID]="instrument.uid">
+
+    </emp-land-recording-act-creator>
 
   </emp-ng-expansion-button>
 

@@ -16,6 +16,7 @@ import {
   DocumentsRecordingAction, DocumentsRecordingStateSelector,
   TransactionAction
 } from '@app/core/presentation/presentation-types';
+import { EmptyRecordableSubjectFields, RecordableSubjectFields } from '@app/models/recordable-subjects';
 
 import {
   TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
@@ -42,9 +43,11 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   currentView: View;
 
   transactionList: TransactionShortModel[] = [];
-  selectedTransaction: Transaction = EmptyTransaction;
   filter: TransactionFilter = EmptyTransactionFilter;
+
+  selectedTransaction: Transaction = EmptyTransaction;
   selectedFile: FileData = EmptyFileData;
+  selectedRecordingAct: RecordableSubjectFields = EmptyRecordableSubjectFields;
 
   displayOptionModalSelected: TransactionModalOptions = null;
   selectedTransactions: TransactionShortModel[] = [];
@@ -68,6 +71,8 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
       .subscribe(x => {
         this.transactionList = x;
         this.isLoading = false;
+
+        this.unselectCurrentRecordingAct();
       }, error => {
         this.isLoading = false;
       });
@@ -82,6 +87,8 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
         this.selectedTransaction = x;
         this.isLoadingTransaction = false;
         this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
+
+        this.unselectCurrentRecordingAct();
       }, error => {
         this.isLoadingTransaction = false;
       });
@@ -91,10 +98,11 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
       .subscribe(x => this.filter = x);
 
 
-    this.subscriptionHelper.select<Transaction>(DocumentsRecordingStateSelector.SELECTED_RECORDING_ACT)
+    this.subscriptionHelper.select<RecordableSubjectFields>
+      (DocumentsRecordingStateSelector.SELECTED_RECORDING_ACT)
       .subscribe(x => {
-        this.selectedTransaction = x;
-        this.displayRecordingActEditor = !isEmpty(this.selectedTransaction);
+        this.selectedRecordingAct = x;
+        this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct);
       });
 
     this.subscriptionHelper.select<FileData>(TransactionStateSelector.SELECTED_FILE)
@@ -159,7 +167,14 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
 
   onCloseFileViewer() {
-    this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE);
+    this.unselectCurrentFile();
+    this.unselectCurrentRecordingAct();
+  }
+
+
+  onCloseRecordingActEditor() {
+    this.unselectCurrentFile();
+    this.unselectCurrentRecordingAct();
   }
 
 
@@ -189,6 +204,14 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   private unselectCurrentTransaction() {
     this.uiLayer.dispatch(TransactionAction.UNSELECT_TRANSACTION);
+  }
+
+
+  private unselectCurrentFile() {
+    this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE);
+  }
+
+  private unselectCurrentRecordingAct() {
     this.uiLayer.dispatch(DocumentsRecordingAction.UNSELECT_RECORDING_ACT);
   }
 

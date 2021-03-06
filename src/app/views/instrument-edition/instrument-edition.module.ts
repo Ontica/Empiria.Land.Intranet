@@ -21,6 +21,7 @@ import { InstrumentHeaderComponent } from './instrument/instrument-header.compon
 import { PartyListComponent } from './parties/party-list.component';
 import { PartyEditorComponent } from './parties/party-editor.component';
 import { PhysicalRecordingModule } from '../physical-recording/physical-recording.module';
+import { RegistrationModule } from '../registration/registration.module';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { PhysicalRecordingModule } from '../physical-recording/physical-recordin
     AngularFlexLayoutModule,
     SharedModule,
     PhysicalRecordingModule,
+    RegistrationModule
   ],
   exports: [
     InstrumentEditionComponent,

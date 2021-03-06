@@ -25,7 +25,7 @@ export class InstrumentEditionComponent implements OnChanges, OnDestroy {
 
   helper: SubscriptionHelper;
 
-  panelAddPhysicalRecordingState = false;
+  panelAddState = false;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
@@ -52,7 +52,7 @@ export class InstrumentEditionComponent implements OnChanges, OnDestroy {
 
 
   resetPanelState() {
-    this.panelAddPhysicalRecordingState = false;
+    this.panelAddState = false;
   }
 
 }
