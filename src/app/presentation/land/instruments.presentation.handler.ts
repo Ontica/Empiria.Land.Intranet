@@ -19,7 +19,8 @@ import { InstrumentDataService } from '@app/data-services';
 
 export enum SelectorType {
   TRANSACTION_INSTRUMENT = 'Land.Instruments.CurrentTransactionInstrument',
-  ISSUER_LIST = 'Land.Instruments.InstrumentIssuers.List'
+  ISSUER_LIST = 'Land.Instruments.InstrumentIssuers.List',
+  RECORDING_ACT_TYPE_FOR_INSTRUMENT_LIST = 'Land.Instruments.RecordingActTypeForInstrument.List',
 }
 
 
@@ -74,6 +75,11 @@ export class InstrumentsPresentationHandler extends AbstractPresentationHandler 
         Assertion.assertValue(params.instrumentType, 'params.instrumentType');
 
         return toObservable<U>(this.data.findIssuers(params as IssuersFilter));
+
+      case SelectorType.RECORDING_ACT_TYPE_FOR_INSTRUMENT_LIST:
+        Assertion.assertValue(params.instrumentUID, 'params.instrumentUID');
+
+        return toObservable<U>(this.data.getRecordingActTypesForInstrument(params.instrumentUID));
 
       default:
         return super.select<U>(selectorType, params);

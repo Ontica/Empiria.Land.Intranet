@@ -10,7 +10,8 @@ import { Observable } from 'rxjs';
 
 import { Assertion, DateStringLibrary, HttpService } from '@app/core';
 
-import { Instrument, Issuer, IssuersFilter, InstrumentFields, PhysicalRecordingFields } from '@app/models';
+import { Instrument, Issuer, IssuersFilter, InstrumentFields,
+         PhysicalRecordingFields, RecordingActTypeGroup } from '@app/models';
 
 
 @Injectable()
@@ -87,6 +88,15 @@ export class InstrumentDataService {
     const path = `v5/land/instruments/${instrumentUID}/physical-recordings/${physicialRecordingUID}`;
 
     return this.http.delete<Instrument>(path);
+  }
+
+
+  getRecordingActTypesForInstrument(instrumentUID: string): Observable<RecordingActTypeGroup[]> {
+    Assertion.assertValue(instrumentUID, 'instrumentUID');
+
+    const path = `v5/land/registration/${instrumentUID}/recording-act-types`;
+
+    return this.http.get<RecordingActTypeGroup[]>(path);
   }
 
 }

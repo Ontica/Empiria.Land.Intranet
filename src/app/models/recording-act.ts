@@ -5,19 +5,24 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Identifiable, PartitionedType, Money } from '@app/core';
+import { Identifiable, Money, PartitionedType } from '@app/core';
 
 import { Property } from './property';
 import { RoledParty } from './party';
 
 
-export interface RecordingDocument extends Identifiable, PartitionedType {
-  recordingActs: RecordingAct[];
+export interface RecordingActTypeGroup extends Identifiable {
+  recordingActTypes: RecordingActType[];
 }
 
 
-export interface RecordingActType extends Identifiable, PartitionedType {
+export interface RecordingActType extends Identifiable {
+  subjectCommands?: Identifiable[];
+}
 
+
+export interface RecordingDocument extends Identifiable, PartitionedType {
+  recordingActs: RecordingAct[];
 }
 
 
@@ -49,7 +54,7 @@ export interface ModificationAct extends BaseRecordingAct {
 
 
 export const EmptyRecordingAct: RecordingAct = {
-  uid: '',
+  uid: 'Empty',
   name: '',
   type: null,
   property: null,

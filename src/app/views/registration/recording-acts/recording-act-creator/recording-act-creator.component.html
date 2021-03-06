@@ -1,0 +1,76 @@
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section">
+
+  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div fxFlex="30">
+        <label>Tipo de acto:</label>
+        <emp-ng-select [formControlName]="controls.recordingActTypeGroup"
+          [config]="{ clearable: false }"
+          [items]="recordingActTypeGroupList"
+          [showError]="formHandler.showInvalidControl(controls.recordingActTypeGroup)"
+          (changes)="onRecordingActTypeGroupChange($event)">
+        </emp-ng-select>
+      </div>
+
+      <div fxFlex>
+        <label>Acto jurídico a registrar:</label>
+        <emp-ng-select [formControlName]="controls.recordingActType"
+          [config]="{ clearable: false }"
+          [items]="recordingActTypeList"
+          [placeholder]="recordingActTypeList.length === 0 ? 'Seleccione el tipo de acto' : 'Seleccione'"
+          [showError]="formHandler.showInvalidControl(controls.recordingActType)" [style.width.%]="100"
+          (changes)="onRecordingActTypeChange($event)">
+        </emp-ng-select>
+      </div>
+
+      <div fxFlex="150px" fxLayoutAlign="end end" style="padding-bottom: 2px;">
+        <button type="submit" (click)="submitRecordingAct()" [class.btn]="!formHandler.isValid"
+          [class.btn-action]="formHandler.isValid" [style.width.px]="150">
+          Agregar el acto
+        </button>
+      </div>
+
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex="30">
+        <label>Sobre:</label>
+        <emp-ng-select [formControlName]="controls.subjectCommand"
+          [config]="{ clearable: false }"
+          [items]="subjectCommandList"
+          [placeholder]="subjectCommandList.length === 0 ? 'Seleccione el acto jurídico a registrar' : 'Seleccione'"
+          [showError]="formHandler.showInvalidControl(controls.subjectCommand)"
+          (changes)="subjectCommandChange()">
+        </emp-ng-select>
+      </div>
+
+      <ng-container *ngIf="showRealEstateField">
+        <div fxFlex>
+          <label>Buscar y seleccionar el folio real:</label>
+
+          <emp-ng-select [formControlName]="controls.realEstate" [config]="{ hideSelected: true, minTermLength: realEstateMinTermLength }"
+            [items]="realEstateList$ | async" [typeahead]="realEstateInput$" [loading]="realEstateLoading" [style.width.%]="100"
+            [showError]="formHandler.showInvalidControl(controls.realEstate)">
+
+          </emp-ng-select>
+        </div>
+
+        <div fxFlex="75px" fxLayoutAlign="end end" style="padding-bottom: 2px;">
+          <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
+            Ver
+          </button>
+        </div>
+
+        <div fxFlex="75px" fxLayoutAlign="end end" style="padding-bottom: 2px;">
+          <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
+            Sello
+          </button>
+        </div>
+      </ng-container>
+
+    </div>
+
+  </div>
+</form>
