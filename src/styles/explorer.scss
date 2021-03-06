@@ -26,6 +26,11 @@
     max-width: 960px;
   }
 
+  .primary-resizable {
+    min-width: 400px;
+    flex-grow: 1;
+  }
+
   .secondary {
     flex: 3 1 720px;
     min-width: 400px;
