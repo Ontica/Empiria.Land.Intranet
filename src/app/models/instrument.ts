@@ -6,6 +6,7 @@
  */
 
 import { DateString } from '@app/core';
+
 import { EmptyRegistration, Registration } from './registration';
 
 
@@ -176,39 +177,6 @@ export interface InstrumentFields  {
 export type InstrumentStatus = 'Opened' | 'Closed' | 'ReadOnly' | 'Secured' | 'Confidential';
 
 
-export interface Recording {
-  uid: string;
-  recordingID: string;
-  instrumentUID: string;
-  transactionUID: string;
-  recordedBy: Contact;
-  recordingTime: DateString;
-  reviewedBy: Contact;
-  presentationTime: DateString;
-  recordingSign: ElectronicSignData;
-  recordingStatus: RecordingStatus;
-}
-
-
-export type RecordingStatus = 'Opened' | 'Closed' | 'Secured';
-
-
-export interface ElectronicSignData {
-  uid: string;
-  documentUID: string;
-  inputData: string;
-  digitalSeal: string;
-  securityCode: string;
-  securityLabels: string[];
-  esignature: string;
-  signPurpose: string;
-  mediaUID: string;
-  signTime: DateString;
-  signedBy: Contact;
-  signedByPosition: string;
-}
-
-
 export interface InstrumentMedia {
   uid: string;
   type: string;
@@ -220,9 +188,3 @@ export interface InstrumentMedia {
 
 
 export type InstrumentMediaContent = 'InstrumentMainFile' | 'InstrumentAuxiliaryFile';
-
-
-export interface Contact {
-  uid: string;
-  name: string;
-}

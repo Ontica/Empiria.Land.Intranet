@@ -7,15 +7,13 @@
 
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
-import { Command, EventInfo, isEmpty } from '@app/core';
+import { Command, EventInfo, Identifiable, isEmpty } from '@app/core';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
-import {
-  Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice,
-  ProvidedServiceType
-} from '@app/models';
+import { Agency, Transaction, EmptyTransaction, TransactionType, RecorderOffice, ProvidedServiceType } from '@app/models';
 
 import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 import { ArrayLibrary } from '@app/shared/utils';
@@ -38,9 +36,9 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
   transactionTypeList: TransactionType[] = [];
 
-  agencyList: Agency[] = [];
+  agencyList: Identifiable[] = [];
 
-  recorderOfficeList: RecorderOffice[] = [];
+  recorderOfficeList: Identifiable[] = [];
 
   providedServiceTypeList: ProvidedServiceType[] = [];
 
@@ -136,7 +134,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
         this.executeCommand<Transaction>(TransactionCommandType.GENERATE_PAYMENT_ORDER, payload)
           .then(x => {
-            if (x.paymentOrder?.attributes.url) {
+            if (x.paymentOrder?.media.url) {
               this.printPaymentOrder();
             }
           });
@@ -267,8 +265,8 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
   }
 
   printPaymentOrder() {
-    this.openPrintViewer(this.transaction.paymentOrder.attributes.url,
-      this.transaction.paymentOrder.attributes.mediaType);
+    this.openPrintViewer(this.transaction.paymentOrder.media.url,
+      this.transaction.paymentOrder.media.mediaType);
   }
 
   printSubmissionReceipt() {

@@ -7,9 +7,9 @@
 
 import { Component, Input } from '@angular/core';
 
-import { PrinterService } from '@app/shared/utils/printer.service';
+import { MediaType } from '@app/core/data-types';
 
-import { MediaType } from '@app/models';
+import { PrinterService } from '@app/shared/utils/printer.service';
 
 
 @Component({

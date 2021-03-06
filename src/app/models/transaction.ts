@@ -7,67 +7,48 @@
 
 import { Assertion, DateString, Empty, Entity, Identifiable, MediaBase } from '@app/core';
 
-import { Instrument } from './instrument';
+import { RecorderOffice } from './registration';
 
 
-export interface TransactionShortModel extends Entity {
-  type: string;
-  subtype: string;
-  transactionID: string;
-  requestedBy: string;
-  presentationTime: DateString;
-  internalControlNo: string;
-  stage: string;
-  status: string;
-  statusName: string;
-  assignedToUID: string;
-  assignedToName: string;
-  nextStatus: string;
-  nextStatusName: string;
-  nextAssignedToName: string;
+export enum TransactionStage  {
+  MyInbox = 'MyInbox',
+  Pending = 'Pending',
+  InProgress = 'InProgress',
+  Completed = 'Completed',
+  ControlDesk = 'ControlDesk',
+  OnHold = 'OnHold',
+  All = 'All'
 }
 
 
-export const EmptyTransactionShortModel: TransactionShortModel = {
-  uid: '',
-  type: '',
-  subtype: '',
-  transactionID: '',
-  requestedBy: '',
-  presentationTime: '',
-  internalControlNo: '',
-  stage: '',
-  status: '',
-  statusName: '',
-  assignedToUID: '',
-  assignedToName: '',
-  nextStatus: '',
-  nextStatusName: '',
-  nextAssignedToName: ''
+export enum TransactionStatus {
+  OnSign = 'OnSign',
+  All = ''
+}
+
+
+export interface TransactionFilter {
+  stage?: TransactionStage;
+  status?: TransactionStatus;
+  keywords: string;
+}
+
+
+export const EmptyTransactionFilter: TransactionFilter = {
+  stage: TransactionStage.All,
+  status: TransactionStatus.All,
+  keywords: '',
 };
 
 
-export interface Transaction extends Entity {
-  type: TransactionType;
-  subtype: TransactionSubtype;
-  transactionID: string;
-  presentationTime: DateString;
-  internalControlNo: string;
-  requestedBy: Requester;
-  assignedTo: Identifiable;
-  agency: Agency;
-  recorderOffice: RecorderOffice;
-  instrument?: Instrument;
-  instrumentDescriptor: string;
-  baseResource: Resource;
-  requestedServices: RequestedService[];
-  paymentOrder?: PaymentOrder;
-  payment: PaymentFields;
-  submissionReceipt?: MediaBase;
-  status: string;
-  statusName: string;
-  stage: string;
-  actions: TransactionActions;
+export interface TransactionType extends Identifiable {
+  subtypes?: TransactionSubtype[];
+}
+
+
+// tslint:disable-next-line: no-empty-interface
+export interface TransactionSubtype extends Identifiable {
+
 }
 
 
@@ -85,16 +66,6 @@ export interface RequestedService extends Entity {
 }
 
 
-export interface TransactionType extends Identifiable {
-  subtypes?: TransactionSubtype[];
-}
-
-
-export interface TransactionSubtype extends Identifiable {
-
-}
-
-
 export interface Requester {
   name: string;
   email?: string;
@@ -103,26 +74,17 @@ export interface Requester {
 }
 
 
+export const EmptyRequester: Requester = {
+  name: '',
+  email: '',
+  phone: '',
+  rfc: ''
+};
+
+
+// tslint:disable-next-line: no-empty-interface
 export interface Agency extends Identifiable {
 
-}
-
-
-export interface RecorderOffice extends Identifiable {
-
-}
-
-
-export interface RecordingSection extends Identifiable {
-
-}
-
-
-export interface Resource extends Entity {
-  type: string;
-  subtype: string;
-  resourceID: string;
-  mediaUri: string;
 }
 
 
@@ -133,23 +95,19 @@ export interface PaymentFields {
 }
 
 
+export const EmptyPayment: PaymentFields  = {
+  total: null,
+  receiptNo: '',
+  status: ''
+};
+
+
 export interface PaymentOrder extends Entity {
   issueTime: DateString;
   dueDate: DateString;
   total: number;
   status: string;
-  attributes: Attributes;
-}
-
-
-export interface Attributes extends MediaBase {
-  controlTag: string;
-}
-
-
-export enum MediaType {
-  html = 'text/html',
-  pdf = 'application/pdf',
+  media: MediaBase;
 }
 
 
@@ -205,28 +163,55 @@ export const EmptyAction: TransactionActions = {
 };
 
 
-export const EmptyRequester: Requester = {
-  name: '',
-  email: '',
-  phone: '',
-  rfc: ''
-};
+export interface TransactionShortModel extends Entity {
+  type: string;
+  subtype: string;
+  transactionID: string;
+  requestedBy: string;
+  presentationTime: DateString;
+  internalControlNo: string;
+  statusName: string;
+  assignedToName: string;
+  nextStatusName: string;
+  nextAssignedToName: string;
+}
 
 
-export const EmptyResource: Resource = {
+export const EmptyTransactionShortModel: TransactionShortModel = {
   uid: '',
   type: '',
   subtype: '',
-  resourceID: '',
-  mediaUri: ''
+  transactionID: '',
+  requestedBy: '',
+  presentationTime: '',
+  internalControlNo: '',
+  statusName: '',
+  assignedToName: '',
+  nextStatusName: '',
+  nextAssignedToName: ''
 };
 
 
-export const EmptyPayment: PaymentFields  = {
-  total: null,
-  receiptNo: '',
-  status: ''
-};
+export interface Transaction extends Entity {
+  type: TransactionType;
+  subtype: TransactionSubtype;
+  transactionID: string;
+  requestedBy: Requester;
+  presentationTime: DateString;
+  internalControlNo: string;
+  agency: Agency;
+  recorderOffice: RecorderOffice;
+  instrumentDescriptor: string;
+  requestedServices: RequestedService[];
+  paymentOrder?: PaymentOrder;
+  payment: PaymentFields;
+  submissionReceipt?: MediaBase;
+  statusName: string;
+  assignedTo: Identifiable;
+  nextStatusName: string;
+  nextAssignedTo: Identifiable;
+  actions: TransactionActions;
+}
 
 
 export const EmptyTransaction: Transaction = {
@@ -234,51 +219,51 @@ export const EmptyTransaction: Transaction = {
   type: Empty,
   subtype: Empty,
   transactionID: '',
+  requestedBy: EmptyRequester,
   presentationTime: '',
   internalControlNo: '',
-  requestedBy: EmptyRequester,
-  assignedTo: Empty,
   agency: Empty,
   recorderOffice: Empty,
   instrumentDescriptor: '',
-  baseResource: EmptyResource,
   requestedServices: [],
   payment: EmptyPayment,
-  status: '',
   statusName: '',
-  stage: '',
-  actions: EmptyAction,
+  assignedTo: Empty,
+  nextStatusName: '',
+  nextAssignedTo: Empty,
+  actions: EmptyAction
 };
 
 
-export enum TransactionStage  {
-  MyInbox = 'MyInbox',
-  Pending = 'Pending',
-  InProgress = 'InProgress',
-  Completed = 'Completed',
-  ControlDesk = 'ControlDesk',
-  OnHold = 'OnHold',
-  All = 'All'
+export interface ProvidedServiceType extends Identifiable {
+  services: ProvidedService[];
 }
 
 
-export enum TransactionStatus {
-  OnSign = 'OnSign',
-  All = ''
+export interface ProvidedService extends Identifiable {
+  unit: Identifiable;
+  feeConcepts: FeeConcept[];
 }
 
+export const EmptyProvidedService: ProvidedService = {
+  uid: 'empty',
+  name: '',
+  unit: Empty,
+  feeConcepts: []
+};
 
-export interface TransactionFilter {
-  stage?: TransactionStage;
-  status?: TransactionStatus;
-  keywords: string;
+
+export interface FeeConcept extends Entity {
+  legalBasis: string;
+  financialCode: string;
+  requiresTaxableBase: boolean;
 }
 
-
-export const EmptyTransactionFilter: TransactionFilter = {
-  stage: TransactionStage.All,
-  status: TransactionStatus.All,
-  keywords: '',
+export const EmptyFeeConcept: FeeConcept = {
+  uid: 'empty',
+  legalBasis: '',
+  financialCode: '',
+  requiresTaxableBase: false
 };
 
 
@@ -302,37 +287,6 @@ export interface RequestedServiceFields {
   notes: string;
 }
 
-
-export interface ProvidedServiceType extends Identifiable {
-  services: ProvidedService[];
-}
-
-
-export interface ProvidedService extends Identifiable {
-  unit: Identifiable;
-  feeConcepts: FeeConcept[];
-}
-
-
-export interface FeeConcept extends Entity {
-  legalBasis: string;
-  financialCode: string;
-  requiresTaxableBase: boolean;
-}
-
-export const EmptyProvidedService: ProvidedService = {
-  uid: 'empty',
-  name: '',
-  unit: Empty,
-  feeConcepts: []
-};
-
-export const EmptyFeeConcept: FeeConcept = {
-  uid: 'empty',
-  legalBasis: '',
-  financialCode: '',
-  requiresTaxableBase: false
-};
 
 // Functions
 
@@ -375,13 +329,9 @@ export function mapTransactionShortModelFromTransaction(transaction: Transaction
     requestedBy: transaction.requestedBy.name,
     presentationTime: transaction.presentationTime,
     internalControlNo: transaction.internalControlNo,
-    stage: transaction.stage,
-    status: transaction.status,
     statusName: transaction.statusName,
-    assignedToUID: transaction.assignedTo?.uid,
-    assignedToName: transaction.assignedTo?.name,
-    nextStatus: '',
-    nextStatusName: '',
-    nextAssignedToName: ''
+    assignedToName: transaction.assignedTo.name,
+    nextStatusName: transaction.nextStatusName,
+    nextAssignedToName: transaction.nextAssignedTo.name
   };
 }

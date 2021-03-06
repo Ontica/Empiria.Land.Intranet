@@ -12,10 +12,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 
-import {
-  Transaction, EmptyTransaction, TransactionType, TransactionSubtype,
-  Agency, RecorderOffice
-} from '@app/models';
+import { Agency, Transaction, EmptyTransaction, TransactionType, TransactionSubtype, RecorderOffice } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 import { ArrayLibrary } from '@app/shared/utils';
@@ -89,7 +86,7 @@ export class TransactionHeaderComponent implements OnChanges {
   }
 
   get canPrintPaymentOrder() {
-    return this.transaction.paymentOrder?.attributes.url && this.transaction.actions.can.editPayment;
+    return this.transaction.paymentOrder?.media.url && this.transaction.actions.can.editPayment;
   }
 
   get canCancelPaymentOrder() {

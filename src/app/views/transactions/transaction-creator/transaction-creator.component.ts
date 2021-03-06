@@ -12,7 +12,7 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
-import { Transaction, EmptyTransaction, TransactionType, Agency, RecorderOffice } from '@app/models';
+import { Agency, Transaction, EmptyTransaction, TransactionType, RecorderOffice } from '@app/models';
 
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
 

@@ -44,6 +44,11 @@ export const EmptyMediaBase: MediaBase = {
 };
 
 
+export enum MediaType {
+  html = 'text/html',
+  pdf = 'application/pdf',
+}
+
 export interface Quantity {
   unit: Identifiable;
   amount: number;
