@@ -23,6 +23,7 @@ import {
  } from './real-property-uid-picker/real-property-uid-picker.component';
 import { FileViewerComponent } from './file-viewer/file-viewer.component';
 import { SharedPipesModule } from '@app/shared/pipes/shared-pipes.module';
+import { SharedDirectivesModule } from '@app/shared/directives/shared-directives.module';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { SharedPipesModule } from '@app/shared/pipes/shared-pipes.module';
     SharedFormControlsModule,
     SharedIndicatorsModule,
     SharedPipesModule,
+    SharedDirectivesModule,
   ],
 
   declarations: [
