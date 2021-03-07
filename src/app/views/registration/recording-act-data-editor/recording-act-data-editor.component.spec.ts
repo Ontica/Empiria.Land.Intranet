@@ -6,22 +6,22 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RecordingActsEditorComponent } from './recording-acts-editor.component';
+import { RecordingActDataEditorComponent } from './recording-act-data-editor.component';
 
 
 describe('RecordingActsEditorComponent', () => {
-  let component: RecordingActsEditorComponent;
-  let fixture: ComponentFixture<RecordingActsEditorComponent>;
+  let component: RecordingActDataEditorComponent;
+  let fixture: ComponentFixture<RecordingActDataEditorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RecordingActsEditorComponent ]
+      declarations: [ RecordingActDataEditorComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RecordingActsEditorComponent);
+    fixture = TestBed.createComponent(RecordingActDataEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

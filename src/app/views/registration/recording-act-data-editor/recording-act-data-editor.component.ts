@@ -10,10 +10,10 @@ import { Transaction, EmptyTransaction } from '@app/models';
 
 
 @Component({
-  selector: 'emp-land-recording-acts',
-  templateUrl: './recording-acts-editor.component.html'
+  selector: 'emp-land-recording-act-data-editor',
+  templateUrl: './recording-act-data-editor.component.html'
 })
-export class RecordingActsEditorComponent {
+export class RecordingActDataEditorComponent {
 
   @Input() transaction: Transaction = EmptyTransaction;
 
