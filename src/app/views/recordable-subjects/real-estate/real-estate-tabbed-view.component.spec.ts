@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RecordingActEditorComponent } from './recording-act-editor.component';
+import { RealEstateTabbedViewComponent } from './real-estate-tabbed-view.component';
 
 
-describe('RecordingActEditorComponent', () => {
-  let component: RecordingActEditorComponent;
-  let fixture: ComponentFixture<RecordingActEditorComponent>;
+describe('RealEstateTabbedViewComponent', () => {
+  let component: RealEstateTabbedViewComponent;
+  let fixture: ComponentFixture<RealEstateTabbedViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RecordingActEditorComponent ]
+      declarations: [ RealEstateTabbedViewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RecordingActEditorComponent);
+    fixture = TestBed.createComponent(RealEstateTabbedViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

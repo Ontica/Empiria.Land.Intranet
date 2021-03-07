@@ -8,14 +8,15 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
 import { RecordableSubjectFields } from '@app/models/recordable-subjects';
 
 
 @Component({
-  selector: 'emp-land-recording-act-editor',
-  templateUrl: './recording-act-editor.component.html',
+  selector: 'emp-land-real-estate-tabbed-view',
+  templateUrl: './real-estate-tabbed-view.component.html',
 })
-export class RecordingActEditorComponent implements OnInit, OnDestroy {
+export class RealEstateTabbedViewComponent implements OnInit, OnDestroy {
 
   @Input() recording: RecordableSubjectFields;
 

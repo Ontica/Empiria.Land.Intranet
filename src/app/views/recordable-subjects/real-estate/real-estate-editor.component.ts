@@ -1,9 +1,19 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+
 import { Assertion, Command } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
 import { RealEstateFields } from '@app/models/recordable-subjects';
 import { FormHandler } from '@app/shared/utils';
+
 
 enum RealEstateEditorFormControls {
   electronicID = 'electronicID',
@@ -17,6 +27,7 @@ enum RealEstateEditorFormControls {
   location = 'location',
   metesAndBounds = 'metesAndBounds',
 }
+
 
 @Component({
   selector: 'emp-land-real-estate-editor',
