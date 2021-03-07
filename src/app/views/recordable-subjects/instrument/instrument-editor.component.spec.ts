@@ -6,22 +6,22 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InstrumentHeaderComponent } from './instrument-header.component';
+import { InstrumentEditorComponent } from './instrument-editor.component';
 
 
-describe('InstrumentHeaderComponent', () => {
-  let component: InstrumentHeaderComponent;
-  let fixture: ComponentFixture<InstrumentHeaderComponent>;
+describe('InstrumentEditorComponent', () => {
+  let component: InstrumentEditorComponent;
+  let fixture: ComponentFixture<InstrumentEditorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InstrumentHeaderComponent ]
+      declarations: [ InstrumentEditorComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InstrumentHeaderComponent);
+    fixture = TestBed.createComponent(InstrumentEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

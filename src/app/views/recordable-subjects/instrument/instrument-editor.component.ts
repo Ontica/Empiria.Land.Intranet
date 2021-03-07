@@ -32,10 +32,10 @@ type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'i
 
 
 @Component({
-  selector: 'emp-land-instrument-header',
-  templateUrl: './instrument-header.component.html'
+  selector: 'emp-land-instrument-editor',
+  templateUrl: './instrument-editor.component.html'
 })
-export class InstrumentHeaderComponent implements OnChanges {
+export class InstrumentEditorComponent implements OnChanges {
 
   @ViewChild('filePrintPreview', {static: true}) filePrintPreview: FilePrintPreviewComponent;
 
