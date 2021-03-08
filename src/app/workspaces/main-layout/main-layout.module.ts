@@ -23,8 +23,6 @@ import { NavigationMenuComponent } from './nav-menu/nav-menu.component';
 import { NoContentComponent } from './no-content.component';
 
 
-
-
 @NgModule({
 
   imports: [

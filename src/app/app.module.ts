@@ -12,7 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CoreModule } from './core/core.module';
 
-import { MainLayoutModule } from './views/main-layout/main-layout.module';
+import { MainLayoutModule } from './workspaces/main-layout/main-layout.module';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';

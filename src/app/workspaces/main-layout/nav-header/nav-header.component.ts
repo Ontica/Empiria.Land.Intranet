@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 
 import { PresentationState } from '@app/core/presentation';
 
-import { MenuItem, NavigationHeader } from '@app/views/main-layout';
+import { MenuItem, NavigationHeader } from '../common-models';
 import { MainUIStateSelector } from '@app/core/presentation/presentation-types';
 
 

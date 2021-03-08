@@ -7,8 +7,7 @@
 
 import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
 
-import { MenuItem } from '@app/views/main-layout';
-
+import { MenuItem } from '../common-models';
 
 @Component({
   selector: 'emp-ng-nav-menu',
@@ -18,7 +17,6 @@ import { MenuItem } from '@app/views/main-layout';
 export class NavigationMenuComponent implements OnChanges {
 
   @Input() items: MenuItem[];
-
 
   @Output() navMenuItemClick = new EventEmitter<MenuItem>();
 

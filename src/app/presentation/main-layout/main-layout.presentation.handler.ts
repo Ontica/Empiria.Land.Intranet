@@ -13,9 +13,9 @@ import { AbstractPresentationHandler, StateValues } from '@app/core/presentation
 
 import { NavigationHeader, DefaultNavigationHeader,
          buildNavigationHeader,
-         Layout, View, DefaultView } from '@app/views/main-layout/common-models';
+         Layout, View, DefaultView } from '@app/workspaces/main-layout/common-models';
 
-import { APP_LAYOUTS, APP_VIEWS } from '@app/views/main-layout/config-data';
+import { APP_LAYOUTS, APP_VIEWS } from '@app/workspaces/main-layout/config-data';
 
 
 export enum ActionType {
