@@ -8,27 +8,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { AngularMaterialModule } from '@app/shared/angular-material.module';
 import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
 import { SharedModule } from '@app/shared/shared.module';
+
 import { LandControlsModule } from '../land-controls/land.controls.module';
-import { RecordingActsListComponent }
-  from './recording-acts/recording-acts-list/recording-acts-list.component';
-import { RecordingActCreatorComponent }
-  from './recording-acts/recording-act-creator/recording-act-creator.component';
-import { RecordingActEditorComponent }
-  from './recording-acts/recording-act-editor/recording-act-editor.component';
-import { RealEstateEditorComponent }
-  from './recording-acts/recording-act-editor/real-estate-editor.component';
+import { RecordableSubjectsModule } from '../recordable-subjects/recordable-subjects.module';
+import { PhysicalRecordingModule } from './physical-recording/physical-recording.module';
+
+import { RecordingActCreatorComponent } from './recording-act-creator/recording-act-creator.component';
+import { RecordingActDataEditorComponent } from './recording-act-data-editor/recording-act-data-editor.component';
+import { RecordingActsListComponent } from './recording-acts-list/recording-acts-list.component';
+import { RegistrationMainPageComponent } from './main-page/registration-main-page.component';
 
 
 @NgModule({
-  declarations: [
-    RecordingActsListComponent,
-    RecordingActCreatorComponent,
-    RecordingActEditorComponent,
-    RealEstateEditorComponent,
-  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -37,12 +32,23 @@ import { RealEstateEditorComponent }
     AngularFlexLayoutModule,
     SharedModule,
 
-    LandControlsModule
+    LandControlsModule,
+    PhysicalRecordingModule,
+    RecordableSubjectsModule,
   ],
+
+  declarations: [
+    RecordingActsListComponent,
+    RecordingActCreatorComponent,
+    RecordingActDataEditorComponent,
+    RegistrationMainPageComponent
+  ],
+
   exports: [
     RecordingActsListComponent,
     RecordingActCreatorComponent,
-    RecordingActEditorComponent,
+    RecordingActDataEditorComponent,
+    RegistrationMainPageComponent
   ]
 })
 export class RegistrationModule { }

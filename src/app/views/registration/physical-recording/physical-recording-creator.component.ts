@@ -26,10 +26,10 @@ enum PhysicalRecordingEditorFormControls {
 
 
 @Component({
-  selector: 'emp-land-physical-recording-editor',
-  templateUrl: './physical-recording-editor.component.html',
+  selector: 'emp-land-physical-recording-creator',
+  templateUrl: './physical-recording-creator.component.html',
 })
-export class PhysicalRecordingEditorComponent implements OnInit, OnDestroy {
+export class PhysicalRecordingCreatorComponent implements OnInit, OnDestroy {
 
   @Input() transactionUID: string;
 

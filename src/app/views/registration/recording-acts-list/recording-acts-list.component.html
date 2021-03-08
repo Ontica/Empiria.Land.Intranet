@@ -33,7 +33,7 @@
       <td mat-cell *matCellDef="let row" class="text-align-center padding-icon">
         <mat-icon
           (click)="removeRecordingActs(row)"
-          title="Eliminar registro">
+          title="Remover este acto">
           delete
         </mat-icon>
       </td>
@@ -44,7 +44,7 @@
   </table>
 
   <div *ngIf="dataSource?.data.length == 0" class="text-not-found">
-    <p>Todavía no se han agregado actos jurídicos al documento.</p>
+    <p>Todavía no se han registrado actos jurídicos en el documento.</p>
   </div>
 
 </div>
