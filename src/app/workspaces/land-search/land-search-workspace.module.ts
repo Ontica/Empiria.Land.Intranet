@@ -9,8 +9,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { SearchServicesRoutingModule } from './search-services-routing.module';
-import { SearchServicesMainPageComponent } from './main-page/search-services-main-page.component';
+import { LandSearchWorkspaceComponent } from './land-search-workspace.component';
+
+import { LandSearchWorkspaceRoutingModule } from './land-search-workspace-routing.module';
 
 
 @NgModule({
@@ -19,14 +20,16 @@ import { SearchServicesMainPageComponent } from './main-page/search-services-mai
     CommonModule,
     ReactiveFormsModule,
 
-    SearchServicesRoutingModule
+    LandSearchWorkspaceRoutingModule
   ],
 
   declarations: [
-    SearchServicesMainPageComponent
+    LandSearchWorkspaceComponent
   ],
 
-  exports: []
+  exports: [
+    LandSearchWorkspaceComponent
+  ]
 
 })
-export class SearchServicesModule { }
+export class LandSearchWorkspaceModule { }

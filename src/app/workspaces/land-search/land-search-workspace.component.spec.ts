@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { SearchServicesMainPageComponent } from './search-services-main-page.component';
+import { LandSearchWorkspaceComponent } from './land-search-workspace.component';
 
 
 describe('SearchServicesMainPageComponent', () => {
-  let component: SearchServicesMainPageComponent;
-  let fixture: ComponentFixture<SearchServicesMainPageComponent>;
+  let component: LandSearchWorkspaceComponent;
+  let fixture: ComponentFixture<LandSearchWorkspaceComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchServicesMainPageComponent ]
+      declarations: [ LandSearchWorkspaceComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SearchServicesMainPageComponent);
+    fixture = TestBed.createComponent(LandSearchWorkspaceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

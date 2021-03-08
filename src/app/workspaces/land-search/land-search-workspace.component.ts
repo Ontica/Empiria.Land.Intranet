@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 
 
 @Component({
-  selector: 'emp-land-search-services-main-page',
-  templateUrl: './search-services-main-page.component.html'
+  selector: 'emp-land-search-workspace',
+  templateUrl: './land-search-workspace.component.html'
 })
-export class SearchServicesMainPageComponent {}
+export class LandSearchWorkspaceComponent {}
