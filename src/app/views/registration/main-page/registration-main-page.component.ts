@@ -9,15 +9,17 @@ import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 
 import { isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
 import { InstrumentsStateSelector } from '@app/core/presentation/presentation-types';
+
 import { Instrument, EmptyInstrument, EmptyInstrumentActions } from '@app/models';
 
 
 @Component({
-  selector: 'emp-land-instrument-edition',
-  templateUrl: './instrument-edition.component.html',
+  selector: 'emp-land-registration-main-page',
+  templateUrl: './registration-main-page.component.html',
 })
-export class InstrumentEditionComponent implements OnChanges, OnDestroy {
+export class RegistrationMainPageComponent implements OnChanges, OnDestroy {
 
   @Input() transactionUID: string = 'Empty';
 

@@ -1,14 +1,11 @@
-<emp-land-instrument-header
+<emp-land-instrument-editor
   [transactionUID]="transactionUID"
   [instrument]="instrument">
 
-</emp-land-instrument-header>
-
+</emp-land-instrument-editor>
 
 <ng-container *ngIf="instrument.actions.show.physicalRecordings">
-
   <br>
-
   <emp-land-physical-recording-list
     [transactionUID]="transactionUID"
     [instrumentUID]="instrument.uid"
@@ -23,11 +20,11 @@
     [config]="{textButtonOpen: 'Agregar registro del documento en libros',
                textButtonClose: 'Cancelar agregar registro'}">
 
-    <emp-land-physical-recording-editor *ngIf="panelAddState"
+    <emp-land-physical-recording-creator *ngIf="panelAddState"
       [transactionUID]="transactionUID"
       [instrumentUID]="instrument.uid">
 
-    </emp-land-physical-recording-editor>
+    </emp-land-physical-recording-creator>
 
   </emp-ng-expansion-button>
 

@@ -6,22 +6,22 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InstrumentEditionComponent } from './instrument-edition.component';
+import { RegistrationMainPageComponent } from './registration-main-page.component';
 
 
-describe('InstrumentEditionComponent', () => {
-  let component: InstrumentEditionComponent;
-  let fixture: ComponentFixture<InstrumentEditionComponent>;
+describe('RegistrationMainPageComponent', () => {
+  let component: RegistrationMainPageComponent;
+  let fixture: ComponentFixture<RegistrationMainPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InstrumentEditionComponent ]
+      declarations: [ RegistrationMainPageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InstrumentEditionComponent);
+    fixture = TestBed.createComponent(RegistrationMainPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
