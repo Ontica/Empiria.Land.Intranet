@@ -22,14 +22,13 @@ import {
 
 import { EmptyFileData, FileData } from '@app/shared/form-controls/file-control/file-control';
 
-import { InstrumentFilesEditorEventType } from './instrument-files-editor/instrument-files-editor.component';
-
+import { InstrumentFilesEditorEventType } from '@app/views/transactions/transaction-files/transaction-files-uploader.component';
 
 @Component({
-  selector: 'emp-land-preprocessing',
-  templateUrl: './preprocessing.component.html',
+  selector: 'emp-land-pre-registration',
+  templateUrl: './land-pre-registration.component.html',
 })
-export class PreprocessingComponent implements OnChanges, OnDestroy {
+export class LandPreRegistationComponent implements OnChanges, OnDestroy {
 
   @Input() transactionUID = 'Empty';
 

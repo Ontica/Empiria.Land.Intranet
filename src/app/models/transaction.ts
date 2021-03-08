@@ -123,9 +123,6 @@ export interface TransactionActions {
     cancelPayment?: boolean;
     printSubmissionReceipt?: boolean;
     uploadDocuments?: boolean;
-    editInstrument?: boolean;
-    editRecordingActs?: boolean;
-    editCertificates?: boolean;
   };
   show: {
     serviceEditor?: boolean;
@@ -148,10 +145,7 @@ export const EmptyAction: TransactionActions = {
     editPayment: false,
     cancelPayment: false,
     printSubmissionReceipt: false,
-    uploadDocuments: false,
-    editInstrument: false,
-    editRecordingActs: false,
-    editCertificates: false,
+    uploadDocuments: false
   },
   show: {
     serviceEditor: false,

@@ -14,9 +14,9 @@ import { Transaction, EmptyTransaction } from '@app/models';
 
 @Component({
   selector: 'emp-land-transaction-tabbed-view',
-  templateUrl: './transaction-tabbed-view.component.html'
+  templateUrl: './land-transaction-tabbed-view.component.html'
 })
-export class TransactionTabbedViewComponent implements OnChanges {
+export class LandTransactionTabbedViewComponent implements OnChanges {
 
   @Input() transaction: Transaction = EmptyTransaction;
 

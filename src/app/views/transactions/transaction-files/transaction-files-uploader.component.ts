@@ -24,10 +24,10 @@ export enum InstrumentFilesEditorEventType {
 
 
 @Component({
-  selector: 'emp-land-instrument-files-editor',
-  templateUrl: './instrument-files-editor.component.html',
+  selector: 'emp-land-transaction-files-uploader',
+  templateUrl: './transaction-files-uploader.component.html',
 })
-export class InstrumentFilesEditorComponent implements OnInit, OnChanges {
+export class TransactionFilesUploaderComponent implements OnInit, OnChanges {
 
   @Input() instrumentMainFile: FileData;
 

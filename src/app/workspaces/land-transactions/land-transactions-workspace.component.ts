@@ -23,11 +23,14 @@ import {
   mapTransactionStageFromViewName, mapTransactionStatusFromViewName
 } from '@app/models/transaction';
 
+
+import {
+  TransactionListEventType
+} from '@app/views/transactions/transaction-list/transaction-list.component';
+
 import { FileData, EmptyFileData } from '@app/shared/form-controls/file-control/file-control';
 
-import { View } from '@app/views/main-layout';
-
-import { TransactionListEventType } from '../transaction-list/transaction-list.component';
+import { View } from '../main-layout';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
@@ -35,10 +38,10 @@ type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'E
 
 
 @Component({
-  selector: 'emp-land-transactions-main-page',
-  templateUrl: './transactions-main-page.component.html'
+  selector: 'emp-land-transactions-workspace',
+  templateUrl: './land-transactions-workspace.component.html'
 })
-export class TransactionsMainPageComponent implements OnInit, OnDestroy {
+export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   currentView: View;
 

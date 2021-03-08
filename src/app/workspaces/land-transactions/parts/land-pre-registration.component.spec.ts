@@ -7,21 +7,22 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PreprocessingComponent } from './preprocessing.component';
+import { LandPreRegistationComponent } from './land-pre-registration.component';
 
-describe('PreprocessingComponent', () => {
-  let component: PreprocessingComponent;
-  let fixture: ComponentFixture<PreprocessingComponent>;
+
+describe('LandPreRegistationComponent', () => {
+  let component: LandPreRegistationComponent;
+  let fixture: ComponentFixture<LandPreRegistationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PreprocessingComponent ]
+      declarations: [ LandPreRegistationComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PreprocessingComponent);
+    fixture = TestBed.createComponent(LandPreRegistationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

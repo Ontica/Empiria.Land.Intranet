@@ -57,7 +57,6 @@ export interface InstrumentActions {
     close?: boolean;
     delete?: boolean;
     uploadFiles?: boolean;
-    editRecordingActs?: boolean;
     createPhysicalRecordings?: boolean;
     deletePhysicalRecordings?: boolean;
     linkPhysicalRecordings?: boolean;
@@ -79,7 +78,6 @@ export const EmptyInstrumentActions: InstrumentActions = {
     close: false,
     delete: false,
     uploadFiles: false,
-    editRecordingActs: false,
     createPhysicalRecordings: false,
     deletePhysicalRecordings: false,
     linkPhysicalRecordings: false,

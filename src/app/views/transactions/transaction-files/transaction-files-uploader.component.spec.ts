@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InstrumentFilesEditorComponent } from './instrument-files-editor.component';
+import { TransactionFilesUploaderComponent } from './transaction-files-uploader.component';
 
 
-describe('InstrumentFilesEditorComponent', () => {
-  let component: InstrumentFilesEditorComponent;
-  let fixture: ComponentFixture<InstrumentFilesEditorComponent>;
+describe('TransactionFilesUploaderComponent', () => {
+  let component: TransactionFilesUploaderComponent;
+  let fixture: ComponentFixture<TransactionFilesUploaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InstrumentFilesEditorComponent ]
+      declarations: [ TransactionFilesUploaderComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InstrumentFilesEditorComponent);
+    fixture = TestBed.createComponent(TransactionFilesUploaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

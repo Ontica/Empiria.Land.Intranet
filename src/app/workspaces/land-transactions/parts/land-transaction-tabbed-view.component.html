@@ -10,17 +10,17 @@
   </mat-tab>
 
   <mat-tab label="Preprocesamiento" *ngIf="transaction.actions.show.preprocessingTab">
-    <emp-land-preprocessing
+    <emp-land-pre-registration
       [transactionUID]="transaction.uid">
 
-    </emp-land-preprocessing>
+    </emp-land-pre-registration>
   </mat-tab>
 
   <mat-tab label="Inscripción" *ngIf="transaction.actions.show.instrumentRecordingTab">
-    <emp-land-instrument-edition
+    <emp-land-registration-main-page
       [transactionUID]="transaction.uid">
 
-    </emp-land-instrument-edition>
+    </emp-land-registration-main-page>
   </mat-tab>
 
   <mat-tab label="Emisión de certificados" *ngIf="transaction.actions.show.certificatesEmissionTab" disabled>

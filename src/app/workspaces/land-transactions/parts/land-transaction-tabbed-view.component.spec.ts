@@ -6,22 +6,23 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { TransactionsMainPageComponent } from './transactions-main-page.component';
+
+import { LandTransactionTabbedViewComponent } from './land-transaction-tabbed-view.component';
 
 
-describe('TransactionsMainPageComponent', () => {
-  let component: TransactionsMainPageComponent;
-  let fixture: ComponentFixture<TransactionsMainPageComponent>;
+describe('LandTransactionTabbedViewComponent', () => {
+  let component: LandTransactionTabbedViewComponent;
+  let fixture: ComponentFixture<LandTransactionTabbedViewComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TransactionsMainPageComponent ]
+      declarations: [ LandTransactionTabbedViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TransactionsMainPageComponent);
+    fixture = TestBed.createComponent(LandTransactionTabbedViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

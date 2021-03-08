@@ -6,23 +6,22 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { LandTransactionsWorkspaceComponent } from './land-transactions-workspace.component';
 
-import { TransactionTabbedViewComponent } from './transaction-tabbed-view.component';
 
-
-describe('TransactionTabbedViewComponent', () => {
-  let component: TransactionTabbedViewComponent;
-  let fixture: ComponentFixture<TransactionTabbedViewComponent>;
+describe('LandTransactionsWorkspaceComponent', () => {
+  let component: LandTransactionsWorkspaceComponent;
+  let fixture: ComponentFixture<LandTransactionsWorkspaceComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TransactionTabbedViewComponent ]
+      declarations: [ LandTransactionsWorkspaceComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TransactionTabbedViewComponent);
+    fixture = TestBed.createComponent(LandTransactionsWorkspaceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
