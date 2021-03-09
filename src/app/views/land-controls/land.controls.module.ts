@@ -16,11 +16,6 @@ import { SharedContainersModule } from '@app/shared/containers/shared-containers
 import { SharedFormControlsModule } from '@app/shared/form-controls/shared-form-controls.module';
 import { SharedIndicatorsModule } from '@app/shared/indicators/shared-indicators.module';
 
-import { RecordingSeekFormComponent } from './recording-seek-form/recording-seek-form.component';
-
-import {
-  RealPropertyUIDPickerComponent
- } from './real-property-uid-picker/real-property-uid-picker.component';
 import { FileViewerComponent } from './file-viewer/file-viewer.component';
 import { SharedPipesModule } from '@app/shared/pipes/shared-pipes.module';
 import { SharedDirectivesModule } from '@app/shared/directives/shared-directives.module';
@@ -43,14 +38,10 @@ import { SharedDirectivesModule } from '@app/shared/directives/shared-directives
   ],
 
   declarations: [
-    RecordingSeekFormComponent,
-    RealPropertyUIDPickerComponent,
     FileViewerComponent,
   ],
 
   exports: [
-    RecordingSeekFormComponent,
-    RealPropertyUIDPickerComponent,
     FileViewerComponent,
   ]
 
