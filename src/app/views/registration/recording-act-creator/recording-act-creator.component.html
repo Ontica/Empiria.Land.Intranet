@@ -1,10 +1,10 @@
 <form [formGroup]="formHandler.form" autocomplete="off" class="form-section">
 
-  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+  <div fxLayout="column" fxLayoutGap="0.75rem">
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div fxLayout="row">
 
-      <div fxFlex="30">
+      <div fxFlex="270px">
         <label>Tipo de acto:</label>
         <emp-ng-select [formControlName]="controls.recordingActTypeGroup"
           [config]="{ clearable: false }"
@@ -34,8 +34,8 @@
 
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
-      <div fxFlex="30">
+    <div fxLayout="row">
+      <div fxFlex="270px">
         <label>Sobre:</label>
         <emp-ng-select [formControlName]="controls.subjectCommand"
           [config]="{ clearable: false }"
@@ -72,5 +72,89 @@
 
     </div>
 
+
+    <div fxLayout="row" *ngIf="showPartitionField">
+
+      <div fxFlex="270px">
+
+      </div>
+
+      <div fxFlex="35" >
+        <label>Tipo de la nueva fracción:</label>
+
+        <emp-ng-select [formControlName]="controls.partitionType"
+          [config]="{ clearable: false }"
+          [items]="[]">
+        </emp-ng-select>
+      </div>
+
+      <div  fxFlex="35">
+        <label>Número o identificador de la nueva fracción:</label>
+
+        <input type="text" class="text-box" [formControlName]="controls.partitionNo">
+      </div>
+
+    </div>
+
+    <div fxLayout="row" *ngIf="showPartitionField">
+
+      <div fxFlex="270px">
+
+      </div>
+
+      <div fxFlex>
+        <mat-checkbox [(ngModel)]="showSeeker" [ngModelOptions]="{standalone: true}">
+          Mostrar el buscador de inscripciones y volúmenes
+        </mat-checkbox>
+      </div>
+
+    </div>
+
+    <mat-divider *ngIf="showSeeker" class="divider-padding">
+
+    </mat-divider>
+
+    <div *ngIf="showSeeker" fxLayout="row">
+      <div fxFlex="20">
+        <label>Distrito:</label>
+        <emp-ng-select [config]="{ clearable: false }" [items]="[]" [formControlName]="controls.subjectCommand">
+        </emp-ng-select>
+      </div>
+
+      <div fxFlex="30">
+        <label>Sección:</label>
+        <emp-ng-select [config]="{ clearable: false }" [items]="[]" [formControlName]="controls.subjectCommand">
+        </emp-ng-select>
+      </div>
+
+      <div fxFlex="25">
+        <label>Volumen:</label>
+
+        <div fxLayout="row">
+          <emp-ng-select [config]="{ clearable: false }" [items]="[]" fxFlex [formControlName]="controls.subjectCommand">
+          </emp-ng-select>
+          <button type="button" class="btn" fxFlex="50px" [style.marginTop.px]="2">
+            Ver
+          </button>
+        </div>
+
+      </div>
+
+      <div fxFlex="25">
+        <label>Inscripción:</label>
+
+        <div fxLayout="row">
+          <emp-ng-select [config]="{ clearable: false }" [items]="[]" fxFlex [formControlName]="controls.subjectCommand">
+          </emp-ng-select>
+          <button type="button" class="btn" fxFlex="50px" [style.marginTop.px]="2">
+            Ver
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
+
 </form>

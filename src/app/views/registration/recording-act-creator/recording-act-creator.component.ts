@@ -13,6 +13,8 @@ enum RecordingActCreatorFormControls {
   recordingActType = 'recordingActType',
   subjectCommand = 'subjectCommand',
   realEstate = 'realEstate',
+  partitionType = 'partitionType',
+  partitionNo = 'partitionNo',
 }
 
 @Component({
@@ -34,12 +36,13 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   subjectCommandList: Identifiable[] = [];
 
   showRealEstateField = false;
+  showPartitionField = false;
+  showSeeker: boolean = false;
 
   realEstateList$: Observable<any[]>;
   realEstateInput$ = new Subject<string>();
   realEstateLoading = false;
   realEstateMinTermLength = 5;
-
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
@@ -76,6 +79,11 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   subjectCommandChange(){
     this.showRealEstateField = ['SelectRealEstate', 'SelectRealEstatePartition']
                                .includes(this.formHandler.getControl('subjectCommand').value);
+
+    this.showPartitionField = ['SelectRealEstatePartition']
+                               .includes(this.formHandler.getControl('subjectCommand').value);
+
+    this.showSeeker = false;
 
     if (this.showRealEstateField) {
       this.formHandler.setControlValidators('realEstate', Validators.required);
@@ -152,6 +160,8 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
         recordingActType: new FormControl('', Validators.required),
         subjectCommand: new FormControl('', Validators.required),
         realEstate: new FormControl(''),
+        partitionType: new FormControl(''),
+        partitionNo: new FormControl(''),
       })
     );
   }
@@ -168,6 +178,8 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
       recordingActType: formModel.recordingActType ?? '',
       subjectCommand: formModel.subjectCommand ?? '',
       realEstate: formModel.realEstate ?? '',
+      partitionType: formModel.partitionType ?? '',
+      partitionNo: formModel.partitionNo ?? '',
     };
 
     return data;
