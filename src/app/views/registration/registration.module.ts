@@ -18,8 +18,6 @@ import { RecordableSubjectsModule } from '../recordable-subjects/recordable-subj
 import { PhysicalRecordingModule } from './physical-recording/physical-recording.module';
 
 import { RecordingActCreatorComponent } from './recording-act-creator/recording-act-creator.component';
-import { RecordingActDataEditorComponent }
-  from './recording-act-data-editor/recording-act-data-editor.component';
 import { RecordingActsListComponent } from './recording-acts-list/recording-acts-list.component';
 import { RegistrationMainPageComponent } from './main-page/registration-main-page.component';
 import { RecordableSubjectTabbedViewComponent }
@@ -43,7 +41,6 @@ import { RecordableSubjectTabbedViewComponent }
   declarations: [
     RecordingActsListComponent,
     RecordingActCreatorComponent,
-    RecordingActDataEditorComponent,
     RegistrationMainPageComponent,
     RecordableSubjectTabbedViewComponent,
   ],
@@ -51,7 +48,6 @@ import { RecordableSubjectTabbedViewComponent }
   exports: [
     RecordingActsListComponent,
     RecordingActCreatorComponent,
-    RecordingActDataEditorComponent,
     RegistrationMainPageComponent,
     RecordableSubjectTabbedViewComponent,
   ]
