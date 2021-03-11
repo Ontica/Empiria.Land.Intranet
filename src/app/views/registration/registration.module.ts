@@ -18,9 +18,12 @@ import { RecordableSubjectsModule } from '../recordable-subjects/recordable-subj
 import { PhysicalRecordingModule } from './physical-recording/physical-recording.module';
 
 import { RecordingActCreatorComponent } from './recording-act-creator/recording-act-creator.component';
-import { RecordingActDataEditorComponent } from './recording-act-data-editor/recording-act-data-editor.component';
+import { RecordingActDataEditorComponent }
+  from './recording-act-data-editor/recording-act-data-editor.component';
 import { RecordingActsListComponent } from './recording-acts-list/recording-acts-list.component';
 import { RegistrationMainPageComponent } from './main-page/registration-main-page.component';
+import { RecordableSubjectTabbedViewComponent }
+  from './recordable-subject-tabbed-view/recordable-subject-tabbed-view.component';
 
 
 @NgModule({
@@ -41,14 +44,16 @@ import { RegistrationMainPageComponent } from './main-page/registration-main-pag
     RecordingActsListComponent,
     RecordingActCreatorComponent,
     RecordingActDataEditorComponent,
-    RegistrationMainPageComponent
+    RegistrationMainPageComponent,
+    RecordableSubjectTabbedViewComponent,
   ],
 
   exports: [
     RecordingActsListComponent,
     RecordingActCreatorComponent,
     RecordingActDataEditorComponent,
-    RegistrationMainPageComponent
+    RegistrationMainPageComponent,
+    RecordableSubjectTabbedViewComponent,
   ]
 })
 export class RegistrationModule { }

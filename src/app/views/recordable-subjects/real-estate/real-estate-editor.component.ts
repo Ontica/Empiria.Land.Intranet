@@ -6,26 +6,29 @@
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Assertion, Command } from '@app/core';
+import { Assertion, Command, Identifiable } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-
+import { EmptyRealEstate, RealEstate, RecorderOffice } from '@app/models';
 import { RealEstateFields } from '@app/models/recordable-subjects';
+import { InstrumentsStateSelector } from '@app/presentation/exported.presentation.types';
+
 import { FormHandler } from '@app/shared/utils';
 
 
 enum RealEstateEditorFormControls {
   electronicID = 'electronicID',
   cadastralID = 'cadastralID',
-  cadastralDate = 'cadastralDate',
-  districtUID = 'districtUID',
+  cadastreLinkingDate = 'cadastreLinkingDate',
+  recorderOfficeUID = 'recorderOfficeUID',
   municipalityUID = 'municipalityUID',
-  type = 'type',
+  resourceKindUID = 'resourceKindUID',
   lotSize = 'lotSize',
   lotSizeUnitUID = 'lotSizeUnitUID',
-  location = 'location',
+  description = 'description',
   metesAndBounds = 'metesAndBounds',
+  completedRealEstate = 'completedRealEstate',
 }
 
 
@@ -37,9 +40,11 @@ enum RealEstateEditorFormControls {
 })
 export class RealEstateEditorComponent implements OnInit, OnDestroy {
 
-  @Input() realEstate: RealEstateFields;
+  @Input() electronicID: string;
 
   @Input() readonly = false;
+
+  realEstate: RealEstate = EmptyRealEstate;
 
   helper: SubscriptionHelper;
 
@@ -49,20 +54,20 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
   submitted = false;
   isLoading = false;
 
-  districtList: any[] = [];
-  municipalityList: any[] = [];
+  recorderOfficeList: RecorderOffice[] = [];
+  municipalityList: Identifiable[] = [];
   realEstateTypeList: any[] = [];
-  lotSizeUnitList: any[] = [];
+  lotSizeUnitList: Identifiable[] = [];
 
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
-   }
+  }
 
 
   ngOnInit(): void {
     this.initForm();
-
+    this.loadDataLists();
     this.setFormData();
     this.disableForm(true);
   }
@@ -84,6 +89,40 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
   }
 
 
+  onRecorderOfficeChange(recorderOffice: RecorderOffice){
+    this.municipalityList = recorderOffice.municipalities;
+  }
+
+
+  onElectronicHistoryClicked(){
+    console.log('Historia del folio real: ', this.realEstate.electronicID);
+  }
+
+
+  onCadastralCertificateClicked(){
+    console.log('Cédula catastral: ', this.realEstate.cadastralID);
+  }
+
+
+  onCadastralClicked(){
+    if (!this.editorMode || this.submitted) {
+      return;
+    }
+
+    if (this.realEstate.cadastralID) {
+      this.unlinkCadastralId();
+    }else{
+      this.linkCadastralId();
+    }
+  }
+
+
+  onCompleteRealEstateChange(change){
+    this.setRequiredFormFields(change.checked);
+    this.formHandler.invalidateForm();
+  }
+
+
   submitRecordingAct() {
 
     if (this.submitted || !this.formHandler.validateReadyForSubmit()) {
@@ -101,25 +140,54 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
   }
 
 
+  private linkCadastralId(){
+    console.log('Vincular clave catastral: ', this.formHandler.getControl(this.controls.cadastralID).value);
+  }
+
+
+  private unlinkCadastralId(){
+    console.log('Desvincular clave catastral: ', this.realEstate.cadastralID);
+  }
+
+
   private initForm() {
     this.formHandler = new FormHandler(
       new FormGroup({
         electronicID: new FormControl(''),
         cadastralID: new FormControl(''),
-        cadastralDate: new FormControl(''),
-        districtUID: new FormControl(''),
+        cadastreLinkingDate: new FormControl(''),
+        recorderOfficeUID: new FormControl(''),
         municipalityUID: new FormControl(''),
-        type: new FormControl(''),
+        resourceKindUID: new FormControl(''),
         lotSize: new FormControl(''),
         lotSizeUnitUID: new FormControl(''),
-        location: new FormControl(''),
+        description: new FormControl(''),
         metesAndBounds: new FormControl(''),
+        completedRealEstate: new FormControl(false),
       })
     );
   }
 
 
-   private setFormData() {
+  private loadDataLists() {
+    this.helper.select<RecorderOffice[]>(InstrumentsStateSelector.RECORDER_OFFICE_LIST, {})
+      .subscribe(x => {
+        this.recorderOfficeList = x;
+      });
+
+    this.helper.select<string[]>(InstrumentsStateSelector.REAL_ESTATE_KIND_LIST, {})
+      .subscribe(x => {
+        this.realEstateTypeList = x.map(item => Object.create({ name: item }));
+      });
+
+    this.helper.select<Identifiable[]>(InstrumentsStateSelector.REAL_ESTATE_LOTE_SIZE_UNIT_LIST, {})
+      .subscribe(x => {
+        this.lotSizeUnitList = x;
+      });
+  }
+
+
+  private setFormData() {
     if (!this.realEstate) {
       this.formHandler.form.reset();
       return;
@@ -128,14 +196,15 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
     this.formHandler.form.reset({
       electronicID: this.realEstate.electronicID || '',
       cadastralID: this.realEstate.cadastralID || '',
-      cadastralDate: '', // this.realEstate.cadastralDate || '',
-      districtUID: this.realEstate.districtUID || '',
-      municipalityUID: this.realEstate.municipalityUID || '',
-      type: this.realEstate.type || '',
+      cadastreLinkingDate: this.realEstate.cadastreLinkingDate || '',
+      recorderOfficeUID: this.realEstate.recorderOffice.uid || '',
+      municipalityUID: this.realEstate.municipality.uid || '',
+      resourceKindUID: this.realEstate.resourceKind.uid || '',
       lotSize: this.realEstate.lotSize || '',
-      lotSizeUnitUID: this.realEstate.lotSizeUnitUID || '',
-      location: this.realEstate.location || '',
+      lotSizeUnitUID: this.realEstate.lotSizeUnit.uid || '',
+      description: this.realEstate.description || '',
       metesAndBounds: this.realEstate.metesAndBounds || '',
+      completedRealEstate: false, // this.realEstate.completedRealEstate,
     });
   }
 
@@ -143,7 +212,30 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
   private disableForm(disable) {
     this.formHandler.disableForm(disable);
     this.formHandler.disableControl(this.controls.electronicID);
-    this.formHandler.disableControl(this.controls.cadastralDate);
+    this.formHandler.disableControl(this.controls.cadastreLinkingDate);
+  }
+
+
+  private setRequiredFormFields(required: boolean){
+    if (required) {
+      this.formHandler.setControlValidators('cadastralID', Validators.required);
+      this.formHandler.setControlValidators('recorderOfficeUID', Validators.required);
+      this.formHandler.setControlValidators('municipalityUID', Validators.required);
+      this.formHandler.setControlValidators('resourceKindUID', Validators.required);
+      this.formHandler.setControlValidators('lotSize', Validators.required);
+      this.formHandler.setControlValidators('lotSizeUnitUID', Validators.required);
+      this.formHandler.setControlValidators('description', Validators.required);
+      this.formHandler.setControlValidators('metesAndBounds', Validators.required);
+    } else {
+      this.formHandler.clearControlValidators('cadastralID');
+      this.formHandler.clearControlValidators('recorderOfficeUID');
+      this.formHandler.clearControlValidators('municipalityUID');
+      this.formHandler.clearControlValidators('resourceKindUID');
+      this.formHandler.clearControlValidators('lotSize');
+      this.formHandler.clearControlValidators('lotSizeUnitUID');
+      this.formHandler.clearControlValidators('description');
+      this.formHandler.clearControlValidators('metesAndBounds');
+    }
   }
 
 
@@ -153,17 +245,21 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
 
     const formModel = this.formHandler.form.getRawValue();
 
-    const data: any = {
+    const data: RealEstateFields = {
+      uid: this.realEstate.uid,
+      name: this.realEstate.name,
+      type: '',
+
       electronicID: formModel.electronicID ?? '',
       cadastralID: formModel.cadastralID ?? '',
-      cadastralDate: formModel.cadastralDate ?? '',
-      districtUID: formModel.districtUID ?? '',
+      districtUID: formModel.recorderOfficeUID ?? '',
       municipalityUID: formModel.municipalityUID ?? '',
-      type: formModel.type ?? '',
-      lotSize: formModel.lotSize ?? '',
+      kind: formModel.resourceKindUID ?? '',
+      lotSize: formModel.lotSize ?? 0,
       lotSizeUnitUID: formModel.lotSizeUnitUID ?? '',
-      location: formModel.location ?? '',
+      description: formModel.description ?? '',
       metesAndBounds: formModel.metesAndBounds ?? '',
+      // completedRealEstate: formModel.completedRealEstate
     };
 
     return data;

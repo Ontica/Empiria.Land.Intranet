@@ -12,8 +12,17 @@ import { RecordingAct } from './recording-act';
 
 // tslint:disable-next-line: no-empty-interface
 export interface RecorderOffice extends Identifiable {
-
+  municipalities: Identifiable[];
+  recordingSections: Identifiable[];
 }
+
+
+export const EmptyRecorderOffice: RecorderOffice = {
+  uid: '',
+  name: '',
+  municipalities: [],
+  recordingSections: [],
+};
 
 
 // tslint:disable-next-line: no-empty-interface

@@ -5,42 +5,44 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Identifiable, PartitionedType, Quantity, EmptyQuantity, Empty } from '@app/core';
+import { Identifiable, Empty, DateString } from '@app/core';
 
 
-export interface Property extends Identifiable, PartitionedType {
-
+export interface Property extends Identifiable {
+  electronicID: string;
 }
 
 
 export interface RealEstate extends Property {
-  realEstateType: Identifiable;
-  cadastralKey: string;
-  metesAndBounds: string;
-  district: Identifiable;
+  cadastralID: string;
+  cadastreLinkingDate: DateString;
+  recorderOffice: Identifiable;
   municipality: Identifiable;
-  location: string;
-  lotSize: Quantity;
-  notes: string;
-  isPartition: boolean;
-  partitionOf: Identifiable;
+  resourceKind: Identifiable;
+  lotSize: number;
+  lotSizeUnit: Identifiable;
+  description: string;
+  metesAndBounds: string;
+  // partitionOf?: Identifiable;
+  // partitionType?: string;
+  // partitionNo?: string;
+  // mergedInto?: Identifiable;
 }
 
 
 export const EmptyRealEstate: RealEstate = {
   uid: '',
   name: '',
-  type: '',
-  realEstateType: Empty,
-  cadastralKey: '',
-  metesAndBounds: '',
-  district: Empty,
+  electronicID: '',
+  cadastralID: '',
+  cadastreLinkingDate: '',
+  recorderOffice: Empty,
   municipality: Empty,
-  location: '',
-  lotSize: EmptyQuantity,
-  notes: '',
-  isPartition: false,
-  partitionOf: Empty,
+  resourceKind: Empty,
+  lotSize: null,
+  lotSizeUnit: Empty,
+  description: '',
+  metesAndBounds: '',
 };
 
 

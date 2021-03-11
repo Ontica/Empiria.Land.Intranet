@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RealEstateTabbedViewComponent } from './real-estate-tabbed-view.component';
+import { RecordableSubjectTabbedViewComponent } from './recordable-subject-tabbed-view.component';
 
 
-describe('RealEstateTabbedViewComponent', () => {
-  let component: RealEstateTabbedViewComponent;
-  let fixture: ComponentFixture<RealEstateTabbedViewComponent>;
+describe('RecordableSubjectTabbedViewComponent', () => {
+  let component: RecordableSubjectTabbedViewComponent;
+  let fixture: ComponentFixture<RecordableSubjectTabbedViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RealEstateTabbedViewComponent ]
+      declarations: [ RecordableSubjectTabbedViewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RealEstateTabbedViewComponent);
+    fixture = TestBed.createComponent(RecordableSubjectTabbedViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

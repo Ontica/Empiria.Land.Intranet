@@ -7,7 +7,7 @@
 
 import { Assertion, DateString, Empty, Entity, Identifiable, MediaBase } from '@app/core';
 
-import { RecorderOffice } from './registration';
+import { EmptyRecorderOffice, RecorderOffice } from './registration';
 
 
 export enum TransactionStage  {
@@ -217,7 +217,7 @@ export const EmptyTransaction: Transaction = {
   presentationTime: '',
   internalControlNo: '',
   agency: Empty,
-  recorderOffice: Empty,
+  recorderOffice: EmptyRecorderOffice,
   instrumentDescriptor: '',
   requestedServices: [],
   payment: EmptyPayment,

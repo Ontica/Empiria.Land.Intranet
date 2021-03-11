@@ -11,25 +11,28 @@
 
         <div fxLayout="row">
           <input type="text" class="text-box" fxFlex [formControlName]="controls.electronicID">
-          <button type="button" class="btn" fxFlex="82px" [style.marginTop.px]="2">Historia</button>
+          <button type="button" class="btn" fxFlex="82px" [style.marginTop.px]="2"
+            (click)="onElectronicHistoryClicked()">Historia</button>
         </div>
       </div>
 
       <div fxFlex>
         <label>Clave catastral:</label>
-        <input type="text" class="text-box" [formControlName]="controls.cadastralID">
+        <input type="text" class="text-box" [formControlName]="controls.cadastralID"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.cadastralID)">
       </div>
 
       <div fxFlex="92px">
         <label>Vinculado el:</label>
-        <input type="text" class="text-box" [formControlName]="controls.cadastralDate">
+        <input type="text" class="text-box" [formControlName]="controls.cadastreLinkingDate">
       </div>
 
       <div fxFlex="119px">
         <label>
-          <a class="link">Cédula catastral</a>
+          <a class="link" (click)="onCadastralCertificateClicked()">Cédula catastral</a>
         </label>
-        <button type="button" class="btn" [style.marginTop.px]="2" [style.width.px]="111">
+        <button type="button" class="btn" [style.marginTop.px]="2" [style.width.px]="111" [disabled]=""
+          (click)="onCadastralClicked()">
           {{realEstate.cadastralID ? 'Desvincular' : 'Vincular'}}
         </button>
       </div>
@@ -40,9 +43,11 @@
 
       <div fxFlex="290px">
         <label>Distrito:</label>
-        <emp-ng-select #districtControl [formControlName]="controls.districtUID"
+        <emp-ng-select #districtControl [formControlName]="controls.recorderOfficeUID"
           [config]="{ clearable: false }"
-          [items]="districtList" >
+          [items]="recorderOfficeList"
+          [showError]="formHandler.showInvalidControl(controls.recorderOfficeUID)"
+          (changes)="onRecorderOfficeChange($event)">
         </emp-ng-select>
       </div>
 
@@ -50,7 +55,9 @@
         <label>Municipio:</label>
         <emp-ng-select [formControlName]="controls.municipalityUID"
           [config]="{ clearable: false }"
-          [items]="municipalityList">
+          [items]="municipalityList"
+          [placeholder]="municipalityList.length === 0 ? 'Seleccione el distrito' : 'Seleccione'"
+          [showError]="formHandler.showInvalidControl(controls.municipalityUID)">
         </emp-ng-select>
       </div>
 
@@ -60,21 +67,25 @@
 
       <div fxFlex="290px">
         <label>Tipo de predio:</label>
-        <emp-ng-select [formControlName]="controls.type"
+        <emp-ng-select [formControlName]="controls.resourceKindUID"
           [config]="{ clearable: false }"
-          [items]="realEstateTypeList">
+          [bindValue]="'name'"
+          [items]="realEstateTypeList"
+          [showError]="formHandler.showInvalidControl(controls.resourceKindUID)">
         </emp-ng-select>
       </div>
 
       <div fxFlex="175px">
         <label>Superficie total:</label>
-        <input type="number" class="text-box" [formControlName]="controls.lotSize">
+        <input type="number" class="text-box" [formControlName]="controls.lotSize"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.lotSize)">
       </div>
 
       <div fxFlex="175px" fxLayoutAlign="start end">
         <emp-ng-select [formControlName]="controls.lotSizeUnitUID"
           [config]="{ clearable: false }"
           [items]="lotSizeUnitList"
+          [showError]="formHandler.showInvalidControl(controls.lotSizeUnitUID)"
           [style.width.%]="100">
         </emp-ng-select>
       </div>
@@ -85,7 +96,9 @@
 
       <div fxFlex="100">
         <label>Descripción del predio (denominación y ubicación):</label>
-        <textarea class="text-area" empNgTextareaAutoresize rows="1" [formControlName]="controls.location">
+        <textarea class="text-area" empNgTextareaAutoresize rows="1"
+          [formControlName]="controls.description"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
 
         </textarea>
       </div>
@@ -96,7 +109,9 @@
 
       <div fxFlex="100">
         <label>Medidas y colindancias:</label>
-        <textarea class="text-area" empNgTextareaAutoresize rows="1" [formControlName]="controls.metesAndBounds">
+        <textarea class="text-area" empNgTextareaAutoresize rows="1"
+          [formControlName]="controls.metesAndBounds"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.metesAndBounds)">
 
         </textarea>
       </div>
@@ -105,7 +120,7 @@
 
     <div fxLayout="row">
 
-      <div fxFlex="50" fxLayoutAlign="start">
+      <div fxFlex fxLayoutAlign="start center">
 
         <button *ngIf="editorMode" (click)="enableEditor(false)" class="btn-warning">
           Cancelar edición
@@ -113,7 +128,17 @@
 
       </div>
 
-      <div fxFlex="50" fxLayoutAlign="end">
+      <div fxFlex fxLayoutAlign="center center">
+
+        <mat-checkbox *ngIf="editorMode"
+          [formControlName]="controls.completedRealEstate"
+          (change)="onCompleteRealEstateChange($event)">
+          Marcar el predio como completo
+        </mat-checkbox>
+
+      </div>
+
+      <div fxFlex fxLayoutAlign="end center">
 
         <button *ngIf="!readonly && !editorMode" (click)="enableEditor(true)"
           class="btn-action">

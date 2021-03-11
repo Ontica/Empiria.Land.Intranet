@@ -34,6 +34,7 @@ export interface RealEstateFields extends RecordableSubjectFields {
   location?: string;
   lotSize?: number;
   lotSizeUnitUID?: string;
+  description?: string;
   metesAndBounds?: string;
   partitionOfUID?: string;
   partitionType?: string;
@@ -71,6 +72,7 @@ export const EmptyRealEstateFields: RealEstateFields = {
   location: '',
   lotSize: -1,
   lotSizeUnitUID: '',
+  description: '',
   metesAndBounds: '',
   partitionOfUID: '',
   partitionType: '',

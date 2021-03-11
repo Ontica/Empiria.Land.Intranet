@@ -8,10 +8,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion, DateStringLibrary, HttpService } from '@app/core';
+import { Assertion, DateStringLibrary, HttpService, Identifiable } from '@app/core';
 
 import { Instrument, Issuer, IssuersFilter, InstrumentFields,
-         PhysicalRecordingFields, RecordingActTypeGroup } from '@app/models';
+         PhysicalRecordingFields, RecordingActTypeGroup, RecorderOffice } from '@app/models';
 
 
 @Injectable()
@@ -68,7 +68,10 @@ export class InstrumentDataService {
     return this.http.patch<Instrument>(path, instrument);
   }
 
-
+  //
+  // registration
+  //
+  // physical recording
   createNextPhysicalRecording(instrumentUID: string,
                               physicalRecording: PhysicalRecordingFields): Observable<Instrument> {
     Assertion.assertValue(instrumentUID, 'instrumentUID');
@@ -91,12 +94,50 @@ export class InstrumentDataService {
   }
 
 
+  //
+  // recordable subjects
+  //
   getRecordingActTypesForInstrument(instrumentUID: string): Observable<RecordingActTypeGroup[]> {
     Assertion.assertValue(instrumentUID, 'instrumentUID');
 
     const path = `v5/land/registration/${instrumentUID}/recording-act-types`;
 
     return this.http.get<RecordingActTypeGroup[]>(path);
+  }
+
+
+  getRecorderOffices(): Observable<RecorderOffice[]> {
+    const path = `v5/land/registration/recorder-offices`;
+
+    return this.http.get<RecorderOffice[]>(path);
+  }
+
+
+  getRealEstateKinds(): Observable<string[]> {
+    const path = `v5/land/registration/real-estate-kinds`;
+
+    return this.http.get<string[]>(path);
+  }
+
+
+  getAssociationKinds(): Observable<string[]> {
+    const path = `v5/land/registration/association-kinds`;
+
+    return this.http.get<string[]>(path);
+  }
+
+
+  getNoPropertyKinds(): Observable<string[]> {
+    const path = `v5/land/registration/no-property-kinds`;
+
+    return this.http.get<string[]>(path);
+  }
+
+
+  getRealEstateLoteSizeUnits(): Observable<Identifiable[]> {
+    const path = `v5/land/registration/real-estate-lot-size-units`;
+
+    return this.http.get<Identifiable[]>(path);
   }
 
 }

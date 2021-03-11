@@ -8,21 +8,20 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-
-import { RecordableSubjectFields } from '@app/models/recordable-subjects';
+import { RecordingAct } from '@app/models';
 
 
 @Component({
-  selector: 'emp-land-real-estate-tabbed-view',
-  templateUrl: './real-estate-tabbed-view.component.html',
+  selector: 'emp-land-recordable-subject-tabbed-view',
+  templateUrl: './recordable-subject-tabbed-view.component.html',
 })
-export class RealEstateTabbedViewComponent implements OnInit, OnDestroy {
+export class RecordableSubjectTabbedViewComponent implements OnInit, OnDestroy {
 
-  @Input() recording: RecordableSubjectFields;
+  @Input() recordingAct: RecordingAct;
 
   @Output() closeEvent = new EventEmitter<void>();
 
-  cardTitle: string = 'Visor y editor de predios';
+  cardTitle = 'Visor y editor de predios';
 
   cardHint: string;
 
@@ -55,10 +54,9 @@ export class RealEstateTabbedViewComponent implements OnInit, OnDestroy {
 
 
   private setCardHint() {
-    this.cardHint = `<strong>${this.recording.electronicID}</strong>
-      &nbsp; &nbsp; | &nbsp; &nbsp; <strong> ${this.recording.type} </strong> &nbsp; &nbsp;` +
-          ` | ${this.recording.kind}` +
-          ` | ${this.recording.notes}`;
+    this.cardHint = `<strong>${this.recordingAct.property.electronicID}</strong>`;
+      // &nbsp; &nbsp; | &nbsp; &nbsp; <strong> ${this.recordingAct.name} </strong> &nbsp; &nbsp;` +
+      //     ` | ${this.recordingAct.type.name}`;
   }
 
 }

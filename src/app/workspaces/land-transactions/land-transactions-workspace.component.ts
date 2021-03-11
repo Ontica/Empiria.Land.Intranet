@@ -16,7 +16,6 @@ import {
   DocumentsRecordingAction, DocumentsRecordingStateSelector,
   TransactionAction
 } from '@app/core/presentation/presentation-types';
-import { EmptyRecordableSubjectFields, RecordableSubjectFields } from '@app/models/recordable-subjects';
 
 import {
   TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
@@ -31,6 +30,8 @@ import {
 import { FileData, EmptyFileData } from '@app/shared/form-controls/file-control/file-control';
 
 import { View } from '../main-layout';
+
+import { EmptyRecordingAct, RecordingAct } from '@app/models';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
@@ -50,7 +51,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   selectedTransaction: Transaction = EmptyTransaction;
   selectedFile: FileData = EmptyFileData;
-  selectedRecordingAct: RecordableSubjectFields = EmptyRecordableSubjectFields;
+  selectedRecordingAct: RecordingAct = EmptyRecordingAct;
 
   displayOptionModalSelected: TransactionModalOptions = null;
   selectedTransactions: TransactionShortModel[] = [];
@@ -101,7 +102,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
       .subscribe(x => this.filter = x);
 
 
-    this.subscriptionHelper.select<RecordableSubjectFields>
+    this.subscriptionHelper.select<RecordingAct>
       (DocumentsRecordingStateSelector.SELECTED_RECORDING_ACT)
       .subscribe(x => {
         this.selectedRecordingAct = x;

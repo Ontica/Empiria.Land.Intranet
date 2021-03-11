@@ -38,7 +38,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
   agencyList: Identifiable[] = [];
 
-  recorderOfficeList: Identifiable[] = [];
+  recorderOfficeList: RecorderOffice[] = [];
 
   providedServiceTypeList: ProvidedServiceType[] = [];
 
