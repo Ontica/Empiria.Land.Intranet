@@ -14,7 +14,7 @@ import { Command } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { DocumentsRecordingAction, InstrumentsCommandType } from '@app/core/presentation/presentation-types';
-import { RecordableSubjectFields } from '@app/models/recordable-subjects';
+import { RecordingAct } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
@@ -27,7 +27,7 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
   @Input() instrumentUID: string;
 
-  @Input() recordingActs: RecordableSubjectFields[] = [];
+  @Input() recordingActs: RecordingAct[] = [];
 
   @Input() canDelete = false;
 
@@ -35,9 +35,9 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
   submitted = false;
 
-  dataSource: MatTableDataSource<RecordableSubjectFields>;
+  dataSource: MatTableDataSource<RecordingAct>;
 
-  private displayedColumnsDefault = ['number', 'electronicID', 'type', 'kind', 'notes'];
+  private displayedColumnsDefault = ['number', 'name', 'electronicID', 'type', 'notes'];
 
   displayedColumns = [...this.displayedColumnsDefault];
 
@@ -62,14 +62,14 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
   }
 
 
-  onOpenRecordingActEditor(recording: RecordableSubjectFields){
-    this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT, {recordingAct: recording});
+  onOpenRecordingActEditor(recordingAct: RecordingAct){
+    this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT, {recordingAct: recordingAct});
   }
 
 
-  removeRecordingActs(recording: RecordableSubjectFields) {
+  removeRecordingActs(recordingAct: RecordingAct) {
     if (!this.submitted) {
-      const message = this.getConfirmMessage(recording);
+      const message = this.getConfirmMessage(recordingAct);
 
       this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
         .toPromise()
@@ -79,7 +79,7 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
             const payload = {
               instrumentUID: this.instrumentUID,
-              physicalRecordingUID: recording.uid
+              recordingActUID: recordingAct.uid
             };
 
             console.log(payload);
@@ -103,7 +103,7 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
   }
 
 
-  private getConfirmMessage(recording: RecordableSubjectFields): string {
+  private getConfirmMessage(recordingAct: RecordingAct): string {
     return `¿Elimino el registro?`;
     // `
     //   <table style="margin: 0;">

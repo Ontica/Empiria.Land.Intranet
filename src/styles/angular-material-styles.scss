@@ -229,6 +229,17 @@ table.mat-table {
   }
 }
 
+.scrollable-container {
+  overflow-y: auto;
+  max-height: 25%;
+  margin: 0.5rem 0;
+  border-bottom: 1px solid $border-color;
+
+  table.mat-table {
+    margin: 0;
+  }
+}
+
 //
 // mat-divider
 //
@@ -254,7 +265,7 @@ table.mat-table {
   min-height: 36px;
   height: auto;
   padding: 4px 24px !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid $border-color;
 }
 
 .mat-expansion-panel-header-title {
