@@ -71,6 +71,7 @@ import { WorkflowCommandConfigComponent } from './workflow-commander/workflow-co
 
   exports: [
     TransactionCreatorComponent,
+    TransactionEditorComponent,
     TransactionFilesUploaderComponent,
     TransactionEditorComponent,
     TransactionListComponent,
