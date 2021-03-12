@@ -7,12 +7,12 @@
 
 import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 
-import { Command, EventInfo } from '@app/core';
+import { Command, EventInfo, Identifiable } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
-import { Agency, Transaction, EmptyTransaction, TransactionType, RecorderOffice } from '@app/models';
+import { Agency, Transaction, EmptyTransaction, TransactionType } from '@app/models';
 
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
 
@@ -31,7 +31,7 @@ export class TransactionCreatorComponent implements OnInit, OnDestroy {
 
   agencyList: Agency[] = [];
 
-  recorderOfficeList: RecorderOffice[] = [];
+  filingOfficeList: Identifiable[] = [];
 
   helper: SubscriptionHelper;
 
@@ -47,9 +47,9 @@ export class TransactionCreatorComponent implements OnInit, OnDestroy {
         this.transactionTypeList = x;
       });
 
-    this.helper.select<RecorderOffice[]>(TransactionStateSelector.RECORDER_OFFICE_LIST, {})
+    this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST, {})
       .subscribe(x => {
-        this.recorderOfficeList = x;
+        this.filingOfficeList = x;
       });
 
     this.helper.select<Agency[]>(TransactionStateSelector.AGENCY_LIST, {})

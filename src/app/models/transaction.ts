@@ -7,8 +7,6 @@
 
 import { Assertion, DateString, Empty, Entity, Identifiable, MediaBase } from '@app/core';
 
-import { EmptyRecorderOffice, RecorderOffice } from './registration';
-
 
 export enum TransactionStage  {
   MyInbox = 'MyInbox',
@@ -194,7 +192,7 @@ export interface Transaction extends Entity {
   presentationTime: DateString;
   internalControlNo: string;
   agency: Agency;
-  recorderOffice: RecorderOffice;
+  filingOffice: Identifiable;
   instrumentDescriptor: string;
   requestedServices: RequestedService[];
   paymentOrder?: PaymentOrder;
@@ -217,7 +215,7 @@ export const EmptyTransaction: Transaction = {
   presentationTime: '',
   internalControlNo: '',
   agency: Empty,
-  recorderOffice: EmptyRecorderOffice,
+  filingOffice: Empty,
   instrumentDescriptor: '',
   requestedServices: [],
   payment: EmptyPayment,
@@ -264,7 +262,7 @@ export const EmptyFeeConcept: FeeConcept = {
 export interface TransactionFields {
   typeUID?: string;
   subtypeUID?: string;
-  recorderOfficeUID?: string;
+  filingOfficeUID?: string;
   agencyUID?: string;
   requestedBy?: string;
   requestedByEmail?: string;

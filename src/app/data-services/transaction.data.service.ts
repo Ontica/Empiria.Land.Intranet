@@ -8,11 +8,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion, HttpService } from '@app/core';
+import { Assertion, HttpService, Identifiable } from '@app/core';
 
 import {
   Agency, Instrument, InstrumentMediaContent, PaymentFields, PreprocessingData,
-  ProvidedServiceType, RecorderOffice, RecordingSection, RequestedServiceFields,
+  ProvidedServiceType, RecordingSection, RequestedServiceFields,
   Transaction, TransactionFields, TransactionFilter, TransactionShortModel, TransactionType,
   WorkflowCommand, WorkflowTask, ApplicableCommand
 } from '@app/models';
@@ -55,10 +55,10 @@ export class TransactionDataService {
   }
 
 
-  getRecorderOffices(): Observable<RecorderOffice[]> {
-    const path = `v5/land/recorder-offices`;
+  getFilingOffices(): Observable<Identifiable[]> {
+    const path = `v5/land/filing-offices`;
 
-    return this.http.get<RecorderOffice[]>(path);
+    return this.http.get<Identifiable[]>(path);
   }
 
 

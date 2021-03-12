@@ -13,7 +13,7 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
-import { Agency, Transaction, EmptyTransaction, TransactionType, RecorderOffice, ProvidedServiceType } from '@app/models';
+import { Agency, Transaction, EmptyTransaction, TransactionType, ProvidedServiceType } from '@app/models';
 
 import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 import { ArrayLibrary } from '@app/shared/utils';
@@ -38,7 +38,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
   agencyList: Identifiable[] = [];
 
-  recorderOfficeList: RecorderOffice[] = [];
+  filingOfficeList: Identifiable[] = [];
 
   providedServiceTypeList: ProvidedServiceType[] = [];
 
@@ -79,10 +79,10 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
         this.transactionTypeList = x;
       });
 
-    this.helper.select<RecorderOffice[]>(TransactionStateSelector.RECORDER_OFFICE_LIST, {})
+    this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST, {})
       .subscribe(x => {
-        this.recorderOfficeList = isEmpty(this.transaction.recorderOffice) ? x :
-          ArrayLibrary.insertIfNotExist(x, this.transaction.recorderOffice, 'uid');
+        this.filingOfficeList = isEmpty(this.transaction.filingOffice) ? x :
+          ArrayLibrary.insertIfNotExist(x, this.transaction.filingOffice, 'uid');
       });
 
     this.helper.select<Agency[]>(TransactionStateSelector.AGENCY_LIST, {})

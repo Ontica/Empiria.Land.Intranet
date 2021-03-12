@@ -9,12 +9,12 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Assertion, Command } from '@app/core';
+import { Assertion, Command, Identifiable } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { InstrumentsCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
-import { Instrument, PhysicalRecordingFields, RecorderOffice, RecordingSection } from '@app/models';
+import { Instrument, PhysicalRecordingFields, RecordingSection } from '@app/models';
 
 import { FormHandler } from '@app/shared/utils';
 
@@ -35,7 +35,7 @@ export class PhysicalRecordingCreatorComponent implements OnInit, OnDestroy {
 
   @Input() instrumentUID: string;
 
-  recorderOfficeList: RecorderOffice[] = [];
+  recorderOfficeList: Identifiable[] = [];
 
   recordingSectionList: RecordingSection[] = [];
 
@@ -86,7 +86,7 @@ export class PhysicalRecordingCreatorComponent implements OnInit, OnDestroy {
 
 
   private loadData() {
-    this.helper.select<RecorderOffice[]>(TransactionStateSelector.RECORDER_OFFICE_LIST, {})
+    this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST, {})
       .subscribe(x => {
         this.recorderOfficeList = x;
       });

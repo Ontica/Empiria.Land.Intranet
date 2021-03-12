@@ -10,16 +10,16 @@ import { CurrencyPipe } from '@angular/common';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { Assertion, EventInfo, isEmpty } from '@app/core';
+import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 
-import { Agency, Transaction, EmptyTransaction, TransactionType, TransactionSubtype, RecorderOffice } from '@app/models';
+import { Agency, Transaction, EmptyTransaction, TransactionType, TransactionSubtype } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 import { ArrayLibrary } from '@app/shared/utils';
 
 
 type transactionFormControls = 'type' | 'subtype' | 'name' | 'email' |
-  'instrumentNo' | 'agency' | 'recorderOffice';
+  'instrumentNo' | 'agency' | 'filingOffice';
 
 
 export enum TransactionHeaderEventType {
@@ -45,7 +45,7 @@ export class TransactionHeaderComponent implements OnChanges {
 
   @Input() agencyList: Agency[] = [];
 
-  @Input() recorderOfficeList: RecorderOffice[] = [];
+  @Input() filingOfficeList: Identifiable[] = [];
 
   @Output() transactionHeadertEvent = new EventEmitter<EventInfo>();
 
@@ -62,7 +62,7 @@ export class TransactionHeaderComponent implements OnChanges {
     email: new FormControl('', Validators.email),
     instrumentNo: new FormControl(''),
     agency: new FormControl('', Validators.required),
-    recorderOffice: new FormControl('', Validators.required)
+    filingOffice: new FormControl('', Validators.required)
   });
 
   constructor(private messageBox: MessageBoxService,
@@ -241,7 +241,7 @@ export class TransactionHeaderComponent implements OnChanges {
       email: this.transaction.requestedBy.email,
       instrumentNo: this.transaction.instrumentDescriptor,
       agency: isEmpty(this.transaction.agency) ? null : this.transaction.agency.uid,
-      recorderOffice: isEmpty(this.transaction.recorderOffice) ? null : this.transaction.recorderOffice.uid,
+      filingOffice: isEmpty(this.transaction.filingOffice) ? null : this.transaction.filingOffice.uid,
     });
 
     this.readonly = true;
@@ -256,7 +256,7 @@ export class TransactionHeaderComponent implements OnChanges {
     const data = {
       typeUID: formModel.type,
       subtypeUID: formModel.subtype,
-      recorderOfficeUID: formModel.recorderOffice,
+      filingOfficeUID: formModel.filingOffice,
       agencyUID: formModel.agency,
       requestedBy: (formModel.name as string).toUpperCase(),
       requestedByEmail: formModel.email ? (formModel.email as string).toLowerCase() : '',
@@ -285,4 +285,5 @@ export class TransactionHeaderComponent implements OnChanges {
       control.markAsTouched({ onlySelf: true });
     });
   }
+
 }

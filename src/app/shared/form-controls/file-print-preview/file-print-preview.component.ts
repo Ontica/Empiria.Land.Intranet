@@ -37,11 +37,10 @@ export class FilePrintPreviewComponent {
     if (type === MediaType.html) {
 
       this.openWindowCenter(url);
-      // this.printerService.printFile(url);
+
 
       return;
     }
-
     this.url = url;
     this.display = true;
   }

@@ -84,7 +84,7 @@ export enum SelectorType {
   TRANSACTION_TYPE_LIST = 'Land.Transactions.Selectors.TransactionTypeList',
   AGENCY_LIST = 'Land.Transactions.Selectors.AgencyList',
   PROVIDED_SERVICE_LIST = 'Land.Transactions.Selectors.ProvidedServiceList',
-  RECORDER_OFFICE_LIST = 'Land.Transactions.Selectors.RecorderOfficeList',
+  FILING_OFFICE_LIST = 'Land.Transactions.Selectors.FilingOfficeList',
   RECORDING_SECTION_LIST = 'Land.Transactions.Selectors.RecordingSectionList',
   SELECTED_FILE = 'Land.Transactions.Selectors.SelectedFile',
   SELECTED_PREPROCESSING_DATA = 'Land.Transactions.Selectors.PreprocessingData',
@@ -102,7 +102,7 @@ const initialState: StateValues = [
   { key: SelectorType.TRANSACTION_TYPE_LIST, value: [] },
   { key: SelectorType.AGENCY_LIST, value: [] },
   { key: SelectorType.PROVIDED_SERVICE_LIST, value: [] },
-  { key: SelectorType.RECORDER_OFFICE_LIST, value: [] },
+  { key: SelectorType.FILING_OFFICE_LIST, value: [] },
   { key: SelectorType.RECORDING_SECTION_LIST, value: [] },
   { key: SelectorType.SELECTED_FILE, value: EmptyFileData },
   { key: SelectorType.SELECTED_PREPROCESSING_DATA, value: EmptyPreprocessingData },
@@ -151,8 +151,8 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         return super.selectFirst<U>(selectorType, provider);
 
-      case SelectorType.RECORDER_OFFICE_LIST:
-        provider = () => this.data.getRecorderOffices();
+      case SelectorType.FILING_OFFICE_LIST:
+        provider = () => this.data.getFilingOffices();
 
         return super.selectFirst<U>(selectorType, provider);
 
