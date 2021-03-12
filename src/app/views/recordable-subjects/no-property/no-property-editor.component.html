@@ -1,0 +1,76 @@
+<emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section" [empNgSpinnerHost]="spinner">
+
+  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div fxFlex="290px">
+        <label>Folio electrónico:</label>
+
+        <div fxLayout="row">
+          <input type="text" class="text-box" fxFlex [formControlName]="controls.electronicID">
+          <button type="button" class="btn" fxFlex="82px" [style.marginTop.px]="2"
+            (click)="onElectronicHistoryClicked()">Historia</button>
+        </div>
+      </div>
+    </div>
+
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div fxFlex="290px">
+        <label>Tipo:</label>
+        <emp-ng-select [formControlName]="controls.resourceKindUID" [config]="{ clearable: false }" [bindValue]="'name'"
+          [items]="typeList" [showError]="formHandler.showInvalidControl(controls.resourceKindUID)">
+        </emp-ng-select>
+      </div>
+
+      <div fxFlex="100">
+        <label>Nombre o denominación:</label>
+        <textarea class="text-area" empNgTextareaAutoresize rows="1" [formControlName]="controls.description"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
+
+        </textarea>
+      </div>
+
+    </div>
+
+
+    <div fxLayout="row">
+
+      <div fxFlex fxLayoutAlign="start center">
+
+        <button *ngIf="editorMode" (click)="enableEditor(false)" class="btn-warning">
+          Cancelar edición
+        </button>
+
+      </div>
+
+      <div fxFlex fxLayoutAlign="center center">
+
+        <mat-checkbox *ngIf="editorMode" [formControlName]="controls.completed" (change)="onCompletedChange($event)">
+          Marcar como completo
+        </mat-checkbox>
+
+      </div>
+
+      <div fxFlex fxLayoutAlign="end center">
+
+        <button *ngIf="!readonly && !editorMode" (click)="enableEditor(true)" class="btn-action">
+          Editar
+        </button>
+
+        <button *ngIf="editorMode" (click)="submitRecordingAct()" [class.btn]="!formHandler.isValid"
+          [class.btn-action]="formHandler.isValid">
+          Guardar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</form>

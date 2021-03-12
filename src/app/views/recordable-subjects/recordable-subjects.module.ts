@@ -19,6 +19,7 @@ import { PartyEditorComponent } from './parties/party-editor.component';
 import { PartyListComponent } from './parties/party-list.component';
 
 import { RealEstateEditorComponent } from './real-estate/real-estate-editor.component';
+import { NoPropertyEditorComponent } from './no-property/no-property-editor.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { RealEstateEditorComponent } from './real-estate/real-estate-editor.comp
     PartyEditorComponent,
     PartyListComponent,
     RealEstateEditorComponent,
+    NoPropertyEditorComponent,
   ],
 
   exports: [
@@ -43,6 +45,7 @@ import { RealEstateEditorComponent } from './real-estate/real-estate-editor.comp
     PartyEditorComponent,
     PartyListComponent,
     RealEstateEditorComponent,
+    NoPropertyEditorComponent,
   ]
 })
 export class RecordableSubjectsModule { }

@@ -6,17 +6,24 @@
 
   <mat-tab-group>
 
-    <mat-tab label="Datos del predio">
+    <mat-tab [label]="tabEditorLabel">
 
-      <emp-land-real-estate-editor
+      <emp-land-real-estate-editor *ngIf="isRealEstate"
         [electronicID]="recordingAct.property.electronicID"
         [readonly]="false">
 
       </emp-land-real-estate-editor>
 
+      <emp-land-no-property-editor *ngIf="isAssociation || isNoProperty"
+        [electronicID]="recordingAct.property.electronicID"
+        [isAssociation]="isAssociation"
+        [readonly]="false">
+
+      </emp-land-no-property-editor>
+
     </mat-tab>
 
-    <mat-tab label="Estructura" disabled>
+    <mat-tab label="Estructura" disabled *ngIf="isRealEstate">
 
     </mat-tab>
 
