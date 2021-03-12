@@ -28,7 +28,7 @@ enum RealEstateEditorFormControls {
   lotSizeUnitUID = 'lotSizeUnitUID',
   description = 'description',
   metesAndBounds = 'metesAndBounds',
-  completedRealEstate = 'completedRealEstate',
+  completed = 'completed',
 }
 
 
@@ -56,7 +56,7 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
 
   recorderOfficeList: RecorderOffice[] = [];
   municipalityList: Identifiable[] = [];
-  realEstateTypeList: any[] = [];
+  realEstateTypeList: string[] = [];
   lotSizeUnitList: Identifiable[] = [];
 
 
@@ -117,7 +117,7 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
   }
 
 
-  onCompleteRealEstateChange(change){
+  onCompletedChange(change){
     this.setRequiredFormFields(change.checked);
     this.formHandler.invalidateForm();
   }
@@ -163,24 +163,24 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
         lotSizeUnitUID: new FormControl(''),
         description: new FormControl(''),
         metesAndBounds: new FormControl(''),
-        completedRealEstate: new FormControl(false),
+        completed: new FormControl(false),
       })
     );
   }
 
 
   private loadDataLists() {
-    this.helper.select<RecorderOffice[]>(InstrumentsStateSelector.RECORDER_OFFICE_LIST, {})
+    this.helper.select<RecorderOffice[]>(InstrumentsStateSelector.RECORDER_OFFICE_LIST)
       .subscribe(x => {
         this.recorderOfficeList = x;
       });
 
-    this.helper.select<string[]>(InstrumentsStateSelector.REAL_ESTATE_KIND_LIST, {})
+    this.helper.select<string[]>(InstrumentsStateSelector.REAL_ESTATE_KIND_LIST)
       .subscribe(x => {
         this.realEstateTypeList = x.map(item => Object.create({ name: item }));
       });
 
-    this.helper.select<Identifiable[]>(InstrumentsStateSelector.REAL_ESTATE_LOTE_SIZE_UNIT_LIST, {})
+    this.helper.select<Identifiable[]>(InstrumentsStateSelector.REAL_ESTATE_LOTE_SIZE_UNIT_LIST)
       .subscribe(x => {
         this.lotSizeUnitList = x;
       });
@@ -204,7 +204,7 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
       lotSizeUnitUID: this.realEstate.lotSizeUnit.uid || '',
       description: this.realEstate.description || '',
       metesAndBounds: this.realEstate.metesAndBounds || '',
-      completedRealEstate: false, // this.realEstate.completedRealEstate,
+      completed: false, // this.realEstate.completed,
     });
   }
 
@@ -259,7 +259,7 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
       lotSizeUnitUID: formModel.lotSizeUnitUID ?? '',
       description: formModel.description ?? '',
       metesAndBounds: formModel.metesAndBounds ?? '',
-      // completedRealEstate: formModel.completedRealEstate
+      // completed: formModel.completed
     };
 
     return data;

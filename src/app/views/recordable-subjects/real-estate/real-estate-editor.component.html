@@ -131,8 +131,8 @@
       <div fxFlex fxLayoutAlign="center center">
 
         <mat-checkbox *ngIf="editorMode"
-          [formControlName]="controls.completedRealEstate"
-          (change)="onCompleteRealEstateChange($event)">
+          [formControlName]="controls.completed"
+          (change)="onCompletedChange($event)">
           Marcar el predio como completo
         </mat-checkbox>
 
