@@ -50,12 +50,8 @@ import { SelectorType as InstrumentsStateSelector } from './instruments.presenta
 export { SelectorType as InstrumentsStateSelector } from './instruments.presentation.handler';
 
 
-import { SelectorType as InstrumentTypesStateSelector } from './instrument-types.presentation.handler';
-export { SelectorType as InstrumentTypesStateSelector } from './instrument-types.presentation.handler';
-
-
-import { SelectorType as LandRepositoryStateSelector } from './repository.presentation.handler';
-export { SelectorType as LandRepositoryStateSelector } from './repository.presentation.handler';
+import { SelectorType as RecordableSubjectsStateSelector } from './recordable-subjects.presentation.handler';
+export { SelectorType as RecordableSubjectsStateSelector } from './recordable-subjects.presentation.handler';
 
 
 import { SelectorType as TransactionStateSelector } from './transaction.presentation.handler';
@@ -64,6 +60,5 @@ export { SelectorType as TransactionStateSelector } from './transaction.presenta
 
 export type LandSelectors = DocumentsRecordingStateSelector |
                             InstrumentsStateSelector |
-                            InstrumentTypesStateSelector |
-                            LandRepositoryStateSelector |
+                            RecordableSubjectsStateSelector |
                             TransactionStateSelector;

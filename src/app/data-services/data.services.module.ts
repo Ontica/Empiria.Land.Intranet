@@ -7,12 +7,13 @@
 
 import { NgModule } from '@angular/core';
 
-import { InstrumentDataService } from './instrument.data.service';
-import { InstrumentTypeDataService } from './instrument-type.data.service';
-import { RecordingDataService } from './recording.data.service';
-import { RepositoryDataService } from './repository.data.service';
-import { TransactionDataService } from './transaction.data.service';
 import { FileDownloadService } from './file-services/file-download.service';
+
+import { InstrumentDataService } from './instrument.data.service';
+import { RecordableSubjectsDataService } from './recordable-subjects.data.service';
+import { RecordingDataService } from './recording.data.service';
+import { TransactionDataService } from './transaction.data.service';
+
 import { getSaver, SAVER } from './file-services/saver.provider';
 
 
@@ -21,9 +22,8 @@ import { getSaver, SAVER } from './file-services/saver.provider';
   providers: [
     FileDownloadService,
     InstrumentDataService,
-    InstrumentTypeDataService,
+    RecordableSubjectsDataService,
     RecordingDataService,
-    RepositoryDataService,
     TransactionDataService,
 
     { provide: SAVER, useFactory: getSaver }

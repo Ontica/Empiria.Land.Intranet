@@ -12,7 +12,7 @@ import { Assertion, Command, Identifiable } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { EmptyRealEstate, RealEstate, RecorderOffice } from '@app/models';
 import { RealEstateFields } from '@app/models/recordable-subjects';
-import { InstrumentsStateSelector } from '@app/presentation/exported.presentation.types';
+import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
 import { FormHandler } from '@app/shared/utils';
 
@@ -170,17 +170,17 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
 
 
   private loadDataLists() {
-    this.helper.select<RecorderOffice[]>(InstrumentsStateSelector.RECORDER_OFFICE_LIST)
+    this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
       .subscribe(x => {
         this.recorderOfficeList = x;
       });
 
-    this.helper.select<string[]>(InstrumentsStateSelector.REAL_ESTATE_KIND_LIST)
+    this.helper.select<string[]>(RecordableSubjectsStateSelector.REAL_ESTATE_KIND_LIST)
       .subscribe(x => {
         this.realEstateTypeList = x.map(item => Object.create({ name: item }));
       });
 
-    this.helper.select<Identifiable[]>(InstrumentsStateSelector.REAL_ESTATE_LOTE_SIZE_UNIT_LIST)
+    this.helper.select<Identifiable[]>(RecordableSubjectsStateSelector.REAL_ESTATE_LOT_SIZE_UNIT_LIST)
       .subscribe(x => {
         this.lotSizeUnitList = x;
       });

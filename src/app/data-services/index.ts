@@ -20,10 +20,8 @@
 
 export * from './instrument.data.service';
 
-export * from './instrument-type.data.service';
+export * from './recordable-subjects.data.service';
 
 export * from './recording.data.service';
-
-export * from './repository.data.service';
 
 export * from './transaction.data.service';

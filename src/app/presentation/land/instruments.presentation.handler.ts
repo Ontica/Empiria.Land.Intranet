@@ -12,20 +12,14 @@ import { Assertion, Cache, Command, toObservable, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { Instrument, IssuersFilter } from '@app/models';
+import { Instrument } from '@app/models';
 
 import { InstrumentDataService } from '@app/data-services';
 
 
 export enum SelectorType {
-  TRANSACTION_INSTRUMENT = 'Land.Instruments.CurrentTransactionInstrument',
-  ISSUER_LIST = 'Land.Instruments.InstrumentIssuers.List',
-  RECORDING_ACT_TYPE_FOR_INSTRUMENT_LIST = 'Land.Instruments.RecordingActTypeForInstrument.List',
-  RECORDER_OFFICE_LIST = 'Land.Instruments.RecorderOffice.List',
-  REAL_ESTATE_KIND_LIST = 'Land.Instruments.RealEstateKind.List',
-  ASSOCIATION_KIND_LIST = 'Land.Instruments.AssociationKind.List',
-  NO_PROPERTY_KIND_LIST = 'Land.Instruments.NoPropertyKind.List',
-  REAL_ESTATE_LOTE_SIZE_UNIT_LIST = 'Land.Instruments.RealEstateLoteSizeUnit.List',
+  TRANSACTION_INSTRUMENT = 'Land.Instruments.CurrentTransactionInstrumentRegistration',
+  RECORDING_ACT_TYPES_FOR_INSTRUMENT_LIST = 'Land.Instruments.RecordingActTypesForInstrument.List',
 }
 
 
@@ -47,12 +41,6 @@ export enum EffectType {
 
 const initialState: StateValues = [
   { key: SelectorType.TRANSACTION_INSTRUMENT, value: new Cache<Instrument[]>() },
-  { key: SelectorType.ISSUER_LIST, value: [] },
-  { key: SelectorType.RECORDER_OFFICE_LIST, value: [] },
-  { key: SelectorType.REAL_ESTATE_KIND_LIST, value: [] },
-  { key: SelectorType.ASSOCIATION_KIND_LIST, value: [] },
-  { key: SelectorType.NO_PROPERTY_KIND_LIST, value: [] },
-  { key: SelectorType.REAL_ESTATE_LOTE_SIZE_UNIT_LIST, value: [] },
 ];
 
 
@@ -83,42 +71,14 @@ export class InstrumentsPresentationHandler extends AbstractPresentationHandler 
 
         return super.selectMemoized<U>(selectorType, provider, transactionUID, {});
 
-      case SelectorType.ISSUER_LIST:
-        Assertion.assertValue(params.instrumentType, 'params.instrumentType');
 
-        return toObservable<U>(this.data.findIssuers(params as IssuersFilter));
-
-      case SelectorType.RECORDING_ACT_TYPE_FOR_INSTRUMENT_LIST:
+      case SelectorType.RECORDING_ACT_TYPES_FOR_INSTRUMENT_LIST:
         Assertion.assertValue(params.instrumentUID, 'params.instrumentUID');
 
         return toObservable<U>(this.data.getRecordingActTypesForInstrument(params.instrumentUID));
 
-      case SelectorType.RECORDER_OFFICE_LIST:
-        provider = () => this.data.getRecorderOffices();
 
-        return super.selectFirst<U>(selectorType, provider);
-
-      case SelectorType.REAL_ESTATE_KIND_LIST:
-        provider = () => this.data.getRealEstateKinds();
-
-        return super.selectFirst<U>(selectorType, provider);
-
-      case SelectorType.ASSOCIATION_KIND_LIST:
-        provider = () => this.data.getAssociationKinds();
-
-        return super.selectFirst<U>(selectorType, provider);
-
-      case SelectorType.NO_PROPERTY_KIND_LIST:
-        provider = () => this.data.getNoPropertyKinds();
-
-        return super.selectFirst<U>(selectorType, provider);
-
-      case SelectorType.REAL_ESTATE_LOTE_SIZE_UNIT_LIST:
-        provider = () => this.data.getRealEstateLoteSizeUnits();
-
-        return super.selectFirst<U>(selectorType, provider);
-
-      default:
+        default:
         return super.select<U>(selectorType, params);
 
     }

@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, Command } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { InstrumentsStateSelector } from '@app/presentation/exported.presentation.types';
+import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 import { FormHandler } from '@app/shared/utils';
 
 
@@ -110,10 +110,10 @@ export class NoPropertyEditorComponent implements OnInit, OnDestroy {
   private loadDataLists() {
     this.isLoading = true;
 
-    let selector = InstrumentsStateSelector.ASSOCIATION_KIND_LIST;
+    let selector = RecordableSubjectsStateSelector.ASSOCIATION_KIND_LIST;
 
     if (!this.isAssociation) {
-      selector = InstrumentsStateSelector.NO_PROPERTY_KIND_LIST;
+      selector = RecordableSubjectsStateSelector.NO_PROPERTY_KIND_LIST;
     }
 
     this.helper.select<string[]>(selector)

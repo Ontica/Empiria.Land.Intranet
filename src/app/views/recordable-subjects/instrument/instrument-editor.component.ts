@@ -15,8 +15,7 @@ import { catchError, debounceTime, distinctUntilChanged, filter,
 import { isEmpty, Validate } from '@app/core';
 import { Command, PresentationLayer } from '@app/core/presentation';
 
-import { InstrumentsStateSelector,
-         InstrumentTypesStateSelector,
+import { RecordableSubjectsStateSelector,
          InstrumentsCommandType } from '@app/core/presentation/presentation-types';
 
 import { Instrument, InstrumentTypeEnum, InstrumentTypesList,
@@ -211,7 +210,7 @@ export class InstrumentEditorComponent implements OnChanges {
       return;
     }
 
-    this.uiLayer.select<string[]>(InstrumentTypesStateSelector.INSTRUMENT_KIND_LIST, instrumentType)
+    this.uiLayer.select<string[]>(RecordableSubjectsStateSelector.INSTRUMENT_KIND_LIST, instrumentType)
                 .pipe(take(1))
                 .subscribe(x => {
                   this.instrumentKindsList = x.map(item => Object.create({ name: item }));
@@ -228,7 +227,7 @@ export class InstrumentEditorComponent implements OnChanges {
           debounceTime(800),
           tap(() => this.issuerLoading = true),
           switchMap(term =>
-            this.uiLayer.select<Issuer[]>(InstrumentsStateSelector.ISSUER_LIST,
+            this.uiLayer.select<Issuer[]>(RecordableSubjectsStateSelector.INSTRUMENT_TYPE_ISSUERS_LIST,
                                           this.buildIssuerFilter(term))
           .pipe(
               catchError(() => of([])),

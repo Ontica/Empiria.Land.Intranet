@@ -12,3 +12,8 @@ import { Identifiable } from './core-types';
 export interface Contact extends Identifiable {
 
 }
+
+export const EmptyContact: Contact = {
+  uid: 'Empty',
+  name: ''
+};
