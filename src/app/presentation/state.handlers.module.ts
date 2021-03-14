@@ -11,10 +11,10 @@ import { STATE_HANDLERS } from '@app/core/presentation/presentation.state';
 
 import { MainLayoutPresentationHandler } from './main-layout/main-layout.presentation.handler';
 
-import { InstrumentsPresentationHandler } from './land/instruments.presentation.handler';
+import { InstrumentsRecordingPresentationHandler } from './land/instruments-recording.presentation.handler';
 
 import { RecordableSubjectsPresentationHandler } from './land/recordable-subjects.presentation.handler';
-import { RecordingsPresentationHandler } from './land/recordings.presentation.handler';
+import { RecordingActsPresentationHandler } from './land/recordings.presentation.handler';
 
 import { TransactionPresentationHandler } from './land/transaction.presentation.handler';
 
@@ -23,15 +23,15 @@ import { TransactionPresentationHandler } from './land/transaction.presentation.
 
   providers: [
     MainLayoutPresentationHandler,
-    InstrumentsPresentationHandler,
+    InstrumentsRecordingPresentationHandler,
     RecordableSubjectsPresentationHandler,
-    RecordingsPresentationHandler,
+    RecordingActsPresentationHandler,
     TransactionPresentationHandler,
 
     { provide: STATE_HANDLERS, useExisting: MainLayoutPresentationHandler, multi: true },
     { provide: STATE_HANDLERS, useExisting: RecordableSubjectsPresentationHandler, multi: true },
-    { provide: STATE_HANDLERS, useExisting: RecordingsPresentationHandler, multi: true },
-    { provide: STATE_HANDLERS, useExisting: InstrumentsPresentationHandler, multi: true },
+    { provide: STATE_HANDLERS, useExisting: RecordingActsPresentationHandler, multi: true },
+    { provide: STATE_HANDLERS, useExisting: InstrumentsRecordingPresentationHandler, multi: true },
     { provide: STATE_HANDLERS, useExisting: TransactionPresentationHandler, multi: true },
   ]
 

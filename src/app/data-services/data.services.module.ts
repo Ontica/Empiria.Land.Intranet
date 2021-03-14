@@ -9,7 +9,7 @@ import { NgModule } from '@angular/core';
 
 import { FileDownloadService } from './file-services/file-download.service';
 
-import { InstrumentDataService } from './instrument.data.service';
+import { InstrumentRecordingDataService } from './instrument-recording.data.service';
 import { RecordableSubjectsDataService } from './recordable-subjects.data.service';
 import { RecordingDataService } from './recording.data.service';
 import { RecordingBooksDataService } from './recording-books.data.service';
@@ -23,7 +23,7 @@ import { getSaver, SAVER } from './file-services/saver.provider';
 
   providers: [
     FileDownloadService,
-    InstrumentDataService,
+    InstrumentRecordingDataService,
     RecordableSubjectsDataService,
     RecordingDataService,
     RecordingBooksDataService,

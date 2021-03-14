@@ -10,7 +10,8 @@ import { Observable } from 'rxjs';
 
 import { Assertion, DateStringLibrary, HttpService, Identifiable } from '@app/core';
 
-import { InstrumentType, Issuer, IssuersFilter, RecorderOffice } from '@app/models';
+import { InstrumentType, Issuer, IssuersFilter,
+         RecorderOffice, RecordingActTypeGroup } from '@app/models';
 
 
 @Injectable()
@@ -81,5 +82,12 @@ export class RecordableSubjectsDataService {
   }
 
 
+  getRecordingActTypesForInstrument(instrumentUID: string): Observable<RecordingActTypeGroup[]> {
+    Assertion.assertValue(instrumentUID, 'instrumentUID');
+
+    const path = `v5/land/registration/${instrumentUID}/recording-act-types`;
+
+    return this.http.get<RecordingActTypeGroup[]>(path);
+  }
 
 }

@@ -18,7 +18,7 @@
 // needed for external services interaction.
 //
 
-export * from './instrument.data.service';
+export * from './instrument-recording.data.service';
 
 export * from './recordable-subjects.data.service';
 

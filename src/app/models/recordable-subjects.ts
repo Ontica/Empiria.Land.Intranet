@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Identifiable, PartitionedType } from '@app/core';
+import { DateString, Identifiable, MediaBase, PartitionedType } from '@app/core';
 
 
 export interface RecordableSubjectFields extends Identifiable, PartitionedType {
@@ -24,6 +24,25 @@ export interface AssociationFields extends RecordableSubjectFields {
 // tslint:disable-next-line: no-empty-interface
 export interface NoPropertyFields extends RecordableSubjectFields {
 
+}
+
+
+export interface RecordableSubject extends Identifiable, PartitionedType {
+  electronicID: string;
+  kind: Identifiable;
+}
+
+
+export interface RealEstate extends RecordableSubject {
+  cadastralID: string;
+  cadastreLinkingDate?: DateString;
+  cadastralCardMedia?: MediaBase;
+  recorderOffice: Identifiable;
+  municipality: Identifiable;
+  lotSize: number;
+  lotSizeUnit: Identifiable;
+  description: string;
+  metesAndBounds: string;
 }
 
 

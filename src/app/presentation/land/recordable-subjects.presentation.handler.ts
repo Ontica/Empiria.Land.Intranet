@@ -25,6 +25,7 @@ export enum SelectorType {
   RECORDER_OFFICE_LIST           = 'Land.RecordableSubjects.RecorderOffice.List',
   REAL_ESTATE_KIND_LIST          = 'Land.RecordableSubjects.RealEstateKind.List',
   REAL_ESTATE_LOT_SIZE_UNIT_LIST = 'Land.RecordableSubjects.RealEstateLoteSizeUnit.List',
+  RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT = 'Land.Instruments.RecordingActTypesForInstrument.List'
 }
 
 
@@ -99,6 +100,12 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
         provider = () => this.data.getRecorderOffices();
 
         return super.selectFirst<U>(selectorType, provider);
+
+
+      case SelectorType.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT:
+        Assertion.assertValue(params.instrumentUID, 'params.instrumentUID');
+
+        return toObservable<U>(this.data.getRecordingActTypesForInstrument(params.instrumentUID));
 
 
       default:

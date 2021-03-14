@@ -33,7 +33,7 @@ const initialState: StateValues = [
 
 
 @Injectable()
-export class RecordingsPresentationHandler extends AbstractPresentationHandler {
+export class RecordingActsPresentationHandler extends AbstractPresentationHandler {
 
   constructor(private data: TransactionDataService) { // Temp: RecordingDataService
     super({

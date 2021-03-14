@@ -7,8 +7,6 @@
 
 import { DateString } from '@app/core';
 
-import { EmptyInstrumentRecording, InstrumentRecording } from './registration';
-
 
 export interface Period {
   fromDate: DateString;
@@ -50,48 +48,6 @@ export interface IssuersFilter {
 }
 
 
-export interface InstrumentActions {
-  can: {
-    edit?: boolean;
-    open?: boolean;
-    close?: boolean;
-    delete?: boolean;
-    uploadFiles?: boolean;
-    createPhysicalRecordings?: boolean;
-    deletePhysicalRecordings?: boolean;
-    linkPhysicalRecordings?: boolean;
-    editPhysicalRecordingActs?: boolean;
-  };
-  show: {
-    files?: boolean;
-    recordingActs?: boolean;
-    physicalRecordings?: boolean;
-    registrationStamps?: boolean;
-  };
-}
-
-
-export const EmptyInstrumentActions: InstrumentActions = {
-  can: {
-    edit: false,
-    open: false,
-    close: false,
-    delete: false,
-    uploadFiles: false,
-    createPhysicalRecordings: false,
-    deletePhysicalRecordings: false,
-    linkPhysicalRecordings: false,
-    editPhysicalRecordingActs: false,
-  },
-  show: {
-    files: false,
-    recordingActs: false,
-    physicalRecordings: false,
-    registrationStamps: false,
-  }
-};
-
-
 export interface Instrument {
   uid: string;
   type: InstrumentType;
@@ -108,9 +64,6 @@ export interface Instrument {
   endFolio: string;
   sheetsCount: number;
   media: InstrumentMedia[];
-  status: InstrumentStatus;
-  registration: InstrumentRecording;
-  actions: InstrumentActions;
 }
 
 
@@ -129,10 +82,7 @@ export const EmptyInstrument: Instrument = {
   folio: '',
   endFolio: '',
   sheetsCount: null,
-  media: [],
-  status: 'Opened',
-  registration: EmptyInstrumentRecording,
-  actions: EmptyInstrumentActions,
+  media: []
 };
 
 

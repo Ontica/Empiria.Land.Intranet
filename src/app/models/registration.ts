@@ -6,6 +6,7 @@
  */
 
 import { DateString, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
+import { EmptyInstrument, Instrument } from './instrument';
 
 import { RealEstate } from './recordable-subjects';
 
@@ -54,10 +55,54 @@ export interface BookEntryFields  {
 
 export type RecordingStatus = 'Opened' | 'Closed' | 'Secured';
 
+
+export interface InstrumentRecordingActions {
+  can: {
+    editInstrument: boolean;
+    openInstrument: boolean;
+    closeInstrument: boolean;
+    deleteInstrument: boolean;
+    uploadInstrumentFiles: boolean;
+
+    editRecordingActs: boolean;
+
+    createNextRecordingBookEntries: boolean;
+    deleteRecordingBookEntries: boolean;
+  };
+  show: {
+    files?: boolean;
+    recordingActs?: boolean;
+    recordingBookEntries?: boolean;
+    registrationStamps?: boolean;
+  };
+}
+
+
+export const EmptyInstrumentRecordingActions: InstrumentRecordingActions = {
+  can: {
+    editInstrument: false,
+    openInstrument: false,
+    closeInstrument: false,
+    deleteInstrument: false,
+    uploadInstrumentFiles: false,
+
+    editRecordingActs: false,
+
+    createNextRecordingBookEntries: false,
+    deleteRecordingBookEntries: false
+  },
+  show: {
+    files: false,
+    recordingActs: false,
+    recordingBookEntries: false,
+    registrationStamps: false,
+  }
+};
+
 export interface InstrumentRecording {
   uid: string;
   instrumentRecordingID: string;
-  instrumentUID: string;
+  instrument: Instrument;
   // presentationTime: DateString;
   // recordingTime: DateString;
   // recordedBy: Contact;
@@ -65,15 +110,16 @@ export interface InstrumentRecording {
   // signedBy: Contact;
   bookEntries?: BookEntry[];
   stampMedia: MediaBase;
+  // status: RecordingStatus;
   transactionUID?: string;
-  status: RecordingStatus;
+  actions: InstrumentRecordingActions;
 }
 
 
 export const EmptyInstrumentRecording: InstrumentRecording = {
   uid: 'Empty',
   instrumentRecordingID: 'No determinado',
-  instrumentUID: '',
+  instrument: EmptyInstrument,
   // presentationTime: '',
   // recordingTime: '',
   // recordedBy: EmptyContact,
@@ -81,9 +127,11 @@ export const EmptyInstrumentRecording: InstrumentRecording = {
   // signedBy: EmptyContact,
   bookEntries: [],
   stampMedia: EmptyMediaBase,
+  // status: 'Secured',
   transactionUID: 'Empty',
-  status: 'Secured',
+  actions: EmptyInstrumentRecordingActions
 };
+
 
 export interface RegistrationEntry {
   recordingAct: RecordingAct;
