@@ -187,7 +187,7 @@
 
       <div fxFlex="50" fxLayoutAlign="start">
 
-        <button *ngIf="instrument.actions.can.edit"
+        <button *ngIf="actions.can.editInstrument"
           (click)="enableEditor(readonly)"
           [ngClass]="readonly ? 'btn-action' : 'btn-warning'">
           {{readonly ? 'Editar Documento' : 'Descartar Cambios'}}
@@ -197,16 +197,14 @@
 
       <div fxFlex="50" fxLayoutAlign="end">
 
-        <button *ngIf="!readonly && instrument.actions.can.edit"
+        <button *ngIf="!readonly && actions.can.editInstrument"
           (click)="submit()"
           [class.btn]="form?.invalid"
           [class.btn-action]="form?.valid">
           Guardar los Cambios
         </button>
 
-        <button *ngIf="readonly &&
-                       instrument.actions.show.registrationStamps &&
-                       instrument.registration.stampMedia.url !== ''"
+        <button *ngIf="readonly && actions.show.registrationStamps"
           (click)="submitPrintRegistrationStampMedia()"
           class="btn-action">
           Imprimir sello interesado
@@ -217,9 +215,3 @@
     </div>
   </div>
 </form>
-
-
-<emp-ng-file-print-preview #filePrintPreview
-  title="Impresión de sello interesado"
-  [hint]="instrument.typeName">
-</emp-ng-file-print-preview>

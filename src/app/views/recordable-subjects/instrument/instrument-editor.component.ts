@@ -5,29 +5,33 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { concat, of, Subject, Observable } from 'rxjs';
+
 import { catchError, debounceTime, distinctUntilChanged, filter,
          switchMap, take, tap } from 'rxjs/operators';
 
-import { isEmpty, Validate } from '@app/core';
-import { Command, PresentationLayer } from '@app/core/presentation';
+import { EventInfo, isEmpty, Validate } from '@app/core';
 
-import { RecordableSubjectsStateSelector,
-         InstrumentsCommandType } from '@app/core/presentation/presentation-types';
+import { PresentationLayer } from '@app/core/presentation';
 
-import { Instrument, InstrumentTypeEnum, InstrumentTypesList,
-         Issuer, IssuersFilter, EmptyInstrument} from '@app/models';
+import { RecordableSubjectsStateSelector } from '@app/core/presentation/presentation-types';
 
-import {
-  FilePrintPreviewComponent
-} from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
+import { Instrument, InstrumentFields, InstrumentTypeEnum, InstrumentTypesList,
+         Issuer, IssuersFilter, EmptyInstrument, InstrumentRecordingActions,
+         EmptyInstrumentRecordingActions } from '@app/models';
+
+
+export enum InstrumentEditorEventType {
+  PRINT_REGISTRATION_STAMP_MEDIA = 'InstrumentEditorEventType.Event.PrintRegistrationStampMedia',
+  UPDATE_INSTRUMENT = 'InstrumentEditorEventType.Event.UpdateInstrument'
+}
 
 
 type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'issuer' |
-                              'instrumentNo' | 'binderNo' | 'folio' | 'endFolio' | 'summary';
+  'instrumentNo' | 'binderNo' | 'folio' | 'endFolio' | 'summary';
 
 
 @Component({
@@ -36,11 +40,11 @@ type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'i
 })
 export class InstrumentEditorComponent implements OnChanges {
 
-  @ViewChild('filePrintPreview', {static: true}) filePrintPreview: FilePrintPreviewComponent;
-
-  @Input() transactionUID: string = 'Empty';
-
   @Input() instrument: Instrument = EmptyInstrument;
+
+  @Input() actions: InstrumentRecordingActions = EmptyInstrumentRecordingActions;
+
+  @Output() instrumentEditorEvent = new EventEmitter<EventInfo>();
 
   InstrumentType = InstrumentTypeEnum;
 
@@ -72,10 +76,11 @@ export class InstrumentEditorComponent implements OnChanges {
 
   constructor(private uiLayer: PresentationLayer) { }
 
-  ngOnChanges(): void {
+  ngOnChanges() {
     this.enableEditor(false);
     this.loadInstrumentKindList(this.instrument.type);
   }
+
 
   enableEditor(enable: boolean) {
     this.readonly = !enable;
@@ -87,9 +92,11 @@ export class InstrumentEditorComponent implements OnChanges {
     }
   }
 
+
   getFormControl(name: instrumentFormControls) {
     return this.form.get(name);
   }
+
 
   setFormModel() {
     this.form.reset({
@@ -107,6 +114,7 @@ export class InstrumentEditorComponent implements OnChanges {
     this.submitted = false;
     this.subscribeIssuerList();
   }
+
 
   resetForm(resetModel) {
     if (resetModel) {
@@ -129,10 +137,12 @@ export class InstrumentEditorComponent implements OnChanges {
     }
   }
 
+
   instrumentTypeChange(change) {
     this.loadInstrumentKindList(change.type);
     this.resetForm(change.type === this.instrument.type);
   }
+
 
   validateTypeSelected(instrumentTypesArray: InstrumentTypeEnum[]) {
     return instrumentTypesArray.includes(this.getFormControl('type').value);
@@ -145,26 +155,15 @@ export class InstrumentEditorComponent implements OnChanges {
 
     this.submitted = true;
 
-    let commandType = InstrumentsCommandType.UPDATE_INSTRUMENT;
-    if (isEmpty(this.instrument)) {
-      commandType = InstrumentsCommandType.CREATE_INSTRUMENT;
-    }
+    this.sendEvent(InstrumentEditorEventType.UPDATE_INSTRUMENT,
+                   { instrumentFields: this.getFormData() });
 
-    const command: Command = {
-      type: commandType,
-      payload: {
-        transactionUID: this.transactionUID,
-        instrument: this.getFormData()
-      }
-    };
-
-    this.uiLayer.execute(command);
   }
 
-  submitPrintRegistrationStampMedia(){
-    this.filePrintPreview.open(this.instrument.registration.stampMedia.url,
-                               this.instrument.registration.stampMedia.mediaType);
+  submitPrintRegistrationStampMedia() {
+    this.sendEvent(InstrumentEditorEventType.PRINT_REGISTRATION_STAMP_MEDIA);
   }
+
 
   // private members
 
@@ -180,10 +179,10 @@ export class InstrumentEditorComponent implements OnChanges {
   }
 
 
-  private getFormData() {
+  private getFormData(): InstrumentFields {
     const formModel = this.form.getRawValue();
 
-    const data = {
+    const data: InstrumentFields = {
       uid: this.instrument.uid,
       type: formModel.type,
       kind: formModel.kind ?? '',
@@ -200,6 +199,7 @@ export class InstrumentEditorComponent implements OnChanges {
     return data;
   }
 
+
   private loadInstrumentKindList(instrumentType) {
     this.isLoading = true;
 
@@ -211,30 +211,41 @@ export class InstrumentEditorComponent implements OnChanges {
     }
 
     this.uiLayer.select<string[]>(RecordableSubjectsStateSelector.INSTRUMENT_KIND_LIST, instrumentType)
-                .pipe(take(1))
-                .subscribe(x => {
-                  this.instrumentKindsList = x.map(item => Object.create({ name: item }));
-                  this.isLoading = false;
-                });
+      .pipe(take(1))
+      .subscribe(x => {
+        this.instrumentKindsList = x.map(item => Object.create({ name: item }));
+        this.isLoading = false;
+      });
   }
+
 
   private subscribeIssuerList() {
     this.issuerList$ = concat(
       of(isEmpty(this.instrument.issuer) ? [] : [this.instrument.issuer]),
       this.issuerInput$.pipe(
-          filter(e => e !== null && e.length >= this.issuerMinTermLength),
-          distinctUntilChanged(),
-          debounceTime(800),
-          tap(() => this.issuerLoading = true),
-          switchMap(term =>
-            this.uiLayer.select<Issuer[]>(RecordableSubjectsStateSelector.INSTRUMENT_TYPE_ISSUERS_LIST,
-                                          this.buildIssuerFilter(term))
-          .pipe(
+        filter(e => e !== null && e.length >= this.issuerMinTermLength),
+        distinctUntilChanged(),
+        debounceTime(800),
+        tap(() => this.issuerLoading = true),
+        switchMap(term =>
+          this.uiLayer.select<Issuer[]>(RecordableSubjectsStateSelector.INSTRUMENT_TYPE_ISSUERS_LIST,
+            this.buildIssuerFilter(term))
+            .pipe(
               catchError(() => of([])),
               tap(() => this.issuerLoading = false)
-          ))
+            ))
       )
     );
+  }
+
+
+  private sendEvent(eventType: InstrumentEditorEventType, payload?: any) {
+    const event: EventInfo = {
+      type: eventType,
+      payload
+    };
+
+    this.instrumentEditorEvent.emit(event);
   }
 
 }
