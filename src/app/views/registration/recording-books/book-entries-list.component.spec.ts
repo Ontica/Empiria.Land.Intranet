@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PhysicalRecordingListComponent } from './physical-recording-list.component';
+import { BookEntriesListComponent } from './book-entries-list.component';
 
 
-describe('PhysicalRecordingListComponent', () => {
-  let component: PhysicalRecordingListComponent;
-  let fixture: ComponentFixture<PhysicalRecordingListComponent>;
+describe('BookEntriesListComponent', () => {
+  let component: BookEntriesListComponent;
+  let fixture: ComponentFixture<BookEntriesListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PhysicalRecordingListComponent ]
+      declarations: [ BookEntriesListComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PhysicalRecordingListComponent);
+    fixture = TestBed.createComponent(BookEntriesListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -5,7 +5,9 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Contact, DateString, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
+import { DateString, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
+
+import { RealEstate } from './recordable-subjects';
 
 import { RecordingAct } from './recording-act';
 
@@ -31,7 +33,7 @@ export interface RecordingSection extends Identifiable {
 }
 
 
-export interface PhysicalRecording {
+export interface BookEntry {
   uid: string;
   recordingTime: DateString;
   recorderOfficeName: string;
@@ -44,60 +46,58 @@ export interface PhysicalRecording {
 }
 
 
-export interface PhysicalRecordingFields  {
+export interface BookEntryFields  {
   recorderOfficeUID: string;
   sectionUID: string;
 }
 
 
-export interface Registration {
-  uid: string;
-  registrationID: string;
-  instrumentID: string;
-  transactionUID?: string;
-  physicalRecordings: PhysicalRecording[];
-  stampMedia: MediaBase;
-}
-
-
-export const EmptyRegistration: Registration = {
-  uid: 'Empty',
-  registrationID: '',
-  instrumentID: '',
-  transactionUID: 'Empty',
-  physicalRecordings: [],
-  stampMedia: EmptyMediaBase,
-};
-
-
-export interface Recording {
-  uid: string;
-  recordingID: string;
-  instrumentUID: string;
-  transactionUID: string;
-  recordedBy: Contact;
-  recordingTime: DateString;
-  reviewedBy: Contact;
-  presentationTime: DateString;
-  recordingSign: ElectronicSignData;
-  recordingStatus: RecordingStatus;
-}
-
-
 export type RecordingStatus = 'Opened' | 'Closed' | 'Secured';
 
-
-export interface ElectronicSignData {
+export interface InstrumentRecording {
   uid: string;
-  documentUID: string;
-  inputData: string;
-  digitalSeal: string;
-  securityCode: string;
-  securityLabels: string[];
-  esignature: string;
-  signPurpose: string;
-  mediaUID: string;
-  signTime: DateString;
-  signedBy: Contact;
-  signedByPosition: string;
+  instrumentRecordingID: string;
+  instrumentUID: string;
+  // presentationTime: DateString;
+  // recordingTime: DateString;
+  // recordedBy: Contact;
+  // reviewedBy: Contact;
+  // signedBy: Contact;
+  bookEntries?: BookEntry[];
+  stampMedia: MediaBase;
+  transactionUID?: string;
+  status: RecordingStatus;
+}
+
+
+export const EmptyInstrumentRecording: InstrumentRecording = {
+  uid: 'Empty',
+  instrumentRecordingID: 'No determinado',
+  instrumentUID: '',
+  // presentationTime: '',
+  // recordingTime: '',
+  // recordedBy: EmptyContact,
+  // reviewedBy: EmptyContact,
+  // signedBy: EmptyContact,
+  bookEntries: [],
+  stampMedia: EmptyMediaBase,
+  transactionUID: 'Empty',
+  status: 'Secured',
+};
+
+export interface RegistrationEntry {
+  recordingAct: RecordingAct;
+  registration: Identifiable;
+  registrationMode: string;
+}
+
+
+export interface RealEstateStructure {
+  realEstate: RealEstate;
+  partitionOf?: RealEstate;
+  partitionType?: string;
+  partitionName?: string;
+  mergedInto?: RealEstate;
+  children: RealEstateStructure[];
+  structureActs: RegistrationEntry[];
 }

@@ -7,7 +7,7 @@
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let row" class="text-align-center padding-icon">
         <mat-icon *ngIf="row.stampMedia.url"
-          (click)="printStampMedia(row)"
+          (click)="printBookEntryStampMedia(row)"
           title="Sello partida">
           approval
         </mat-icon>
@@ -43,7 +43,7 @@
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let row" class="text-align-center padding-icon">
         <mat-icon
-          (click)="removePhysicalRecording(row)"
+          (click)="removeBookEntry(row)"
           title="Eliminar registro">
           delete
         </mat-icon>

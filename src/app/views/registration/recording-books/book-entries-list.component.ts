@@ -15,7 +15,7 @@ import { Command } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { InstrumentsCommandType } from '@app/core/presentation/presentation-types';
 
-import { PhysicalRecording } from '@app/models';
+import { BookEntry } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 import {
@@ -24,10 +24,10 @@ import {
 
 
 @Component({
-  selector: 'emp-land-physical-recording-list',
-  templateUrl: './physical-recording-list.component.html',
+  selector: 'emp-land-book-entries-list',
+  templateUrl: './book-entries-list.component.html',
 })
-export class PhysicalRecordingListComponent implements OnChanges, OnDestroy {
+export class BookEntriesListComponent implements OnChanges, OnDestroy {
 
   @ViewChild('filePrintPreview', { static: true }) filePrintPreview: FilePrintPreviewComponent;
 
@@ -35,7 +35,7 @@ export class PhysicalRecordingListComponent implements OnChanges, OnDestroy {
 
   @Input() instrumentUID: string;
 
-  @Input() physicalRecordings: PhysicalRecording[] = [];
+  @Input() bookEntries: BookEntry[] = [];
 
   @Input() showRegistrationStamps = false;
 
@@ -45,7 +45,7 @@ export class PhysicalRecordingListComponent implements OnChanges, OnDestroy {
 
   submitted = false;
 
-  dataSource: MatTableDataSource<PhysicalRecording>;
+  dataSource: MatTableDataSource<BookEntry>;
 
   private displayedColumnsDefault = ['recordingTime', 'recorderOfficeName', 'recordingSectionName',
                                      'volumeNo', 'recordingNo', 'recordedBy'];
@@ -60,8 +60,8 @@ export class PhysicalRecordingListComponent implements OnChanges, OnDestroy {
 
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.physicalRecordings) {
-      this.dataSource = new MatTableDataSource(this.physicalRecordings);
+    if (changes.bookEntries) {
+      this.dataSource = new MatTableDataSource(this.bookEntries);
     }
 
     this.resetColumns();
@@ -88,7 +88,7 @@ export class PhysicalRecordingListComponent implements OnChanges, OnDestroy {
   }
 
 
-  removePhysicalRecording(recording: PhysicalRecording) {
+  removeBookEntry(recording: BookEntry) {
     if (!this.submitted) {
       const message = this.getConfirmMessage(recording);
 
@@ -112,21 +112,21 @@ export class PhysicalRecordingListComponent implements OnChanges, OnDestroy {
   }
 
 
-  printStampMedia(recording: PhysicalRecording) {
-    this.filePrintPreview.open(recording.stampMedia.url, recording.stampMedia.mediaType);
+  printBookEntryStampMedia(bookEntry: BookEntry) {
+    this.filePrintPreview.open(bookEntry.stampMedia.url, bookEntry.stampMedia.mediaType);
   }
 
 
-  private getConfirmMessage(recording: PhysicalRecording): string {
+  private getConfirmMessage(bookEntry: BookEntry): string {
     return `
       <table style="margin: 0;">
-        <tr><td>Distrito: </td><td><strong> ${recording.recorderOfficeName} </strong></td></tr>
+        <tr><td>Distrito: </td><td><strong> ${bookEntry.recorderOfficeName} </strong></td></tr>
 
-        <tr><td>Sección: </td><td><strong> ${recording.recordingSectionName} </strong></td></tr>
+        <tr><td>Sección: </td><td><strong> ${bookEntry.recordingSectionName} </strong></td></tr>
 
-        <tr><td>Volumen: </td><td><strong> ${recording.volumeNo} </strong></td></tr>
+        <tr><td>Volumen: </td><td><strong> ${bookEntry.volumeNo} </strong></td></tr>
 
-        <tr><td>Inscripción: </td><td><strong> ${recording.recordingNo} </strong></td></tr>
+        <tr><td>Inscripción: </td><td><strong> ${bookEntry.recordingNo} </strong></td></tr>
 
       </table>
 

@@ -14,22 +14,22 @@ import { Assertion, Command, Identifiable } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { InstrumentsCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
-import { Instrument, PhysicalRecordingFields, RecordingSection } from '@app/models';
+import { Instrument, BookEntryFields, RecordingSection } from '@app/models';
 
 import { FormHandler } from '@app/shared/utils';
 
 
-enum PhysicalRecordingEditorFormControls {
+enum BookEntryCreatorFormControls {
   recorderOffice = 'recorderOffice',
   recordingSection = 'recordingSection',
 }
 
 
 @Component({
-  selector: 'emp-land-physical-recording-creator',
-  templateUrl: './physical-recording-creator.component.html',
+  selector: 'emp-land-book-entry-creator',
+  templateUrl: './book-entry-creator.component.html',
 })
-export class PhysicalRecordingCreatorComponent implements OnInit, OnDestroy {
+export class BookEntryCreatorComponent implements OnInit, OnDestroy {
 
   @Input() transactionUID: string;
 
@@ -43,7 +43,7 @@ export class PhysicalRecordingCreatorComponent implements OnInit, OnDestroy {
 
   formHandler: FormHandler;
 
-  controls = PhysicalRecordingEditorFormControls;
+  controls = BookEntryCreatorFormControls;
 
   submitted = false;
 
@@ -60,7 +60,7 @@ export class PhysicalRecordingCreatorComponent implements OnInit, OnDestroy {
     this.helper.destroy();
   }
 
-  submitPhysicalRecording() {
+  createBookEntry() {
     if (this.submitted || !this.formHandler.validateReadyForSubmit()) {
       return;
     }
@@ -104,7 +104,7 @@ export class PhysicalRecordingCreatorComponent implements OnInit, OnDestroy {
 
     const formModel = this.formHandler.form.getRawValue();
 
-    const data: PhysicalRecordingFields = {
+    const data: BookEntryFields = {
       recorderOfficeUID: formModel.recorderOffice ?? '',
       sectionUID: formModel.recordingSection ?? '',
     };

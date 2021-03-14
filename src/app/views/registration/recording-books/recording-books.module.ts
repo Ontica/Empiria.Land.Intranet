@@ -13,8 +13,8 @@ import { AngularMaterialModule } from '@app/shared/angular-material.module';
 import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
 import { SharedModule } from '@app/shared/shared.module';
 
-import { PhysicalRecordingCreatorComponent } from './physical-recording-creator.component';
-import { PhysicalRecordingListComponent } from './physical-recording-list.component';
+import { BookEntryCreatorComponent } from './book-entry-creator.component';
+import { BookEntriesListComponent } from './book-entries-list.component';
 
 
 @NgModule({
@@ -28,13 +28,13 @@ import { PhysicalRecordingListComponent } from './physical-recording-list.compon
   ],
 
   declarations: [
-    PhysicalRecordingCreatorComponent,
-    PhysicalRecordingListComponent,
+    BookEntryCreatorComponent,
+    BookEntriesListComponent,
   ],
 
   exports: [
-    PhysicalRecordingCreatorComponent,
-    PhysicalRecordingListComponent,
+    BookEntryCreatorComponent,
+    BookEntriesListComponent,
   ]
 })
-export class PhysicalRecordingModule { }
+export class RecordingBooksModule { }

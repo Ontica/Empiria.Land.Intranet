@@ -63,7 +63,7 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
 
   onOpenRecordingActEditor(recordingAct: RecordingAct){
-    this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT, {recordingAct: recordingAct});
+    this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT, { recordingAct });
   }
 
 

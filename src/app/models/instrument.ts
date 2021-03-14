@@ -7,7 +7,7 @@
 
 import { DateString } from '@app/core';
 
-import { EmptyRegistration, Registration } from './registration';
+import { EmptyInstrumentRecording, InstrumentRecording } from './registration';
 
 
 export interface Period {
@@ -109,7 +109,7 @@ export interface Instrument {
   sheetsCount: number;
   media: InstrumentMedia[];
   status: InstrumentStatus;
-  registration: Registration;
+  registration: InstrumentRecording;
   actions: InstrumentActions;
 }
 
@@ -131,7 +131,7 @@ export const EmptyInstrument: Instrument = {
   sheetsCount: null,
   media: [],
   status: 'Opened',
-  registration: EmptyRegistration,
+  registration: EmptyInstrumentRecording,
   actions: EmptyInstrumentActions,
 };
 

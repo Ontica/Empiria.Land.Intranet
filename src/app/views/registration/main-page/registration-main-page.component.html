@@ -6,25 +6,25 @@
 
 <ng-container *ngIf="instrument.actions.show.physicalRecordings">
   <br>
-  <emp-land-physical-recording-list
+  <emp-land-book-entries-list
     [transactionUID]="transactionUID"
     [instrumentUID]="instrument.uid"
-    [physicalRecordings]="instrument.registration.physicalRecordings"
+    [bookEntries]="instrument.registration.bookEntries"
     [showRegistrationStamps]="instrument.actions.show.registrationStamps"
     [canDelete]="instrument.actions.can.deletePhysicalRecordings">
 
-  </emp-land-physical-recording-list>
+  </emp-land-book-entries-list>
 
   <emp-ng-expansion-button *ngIf="instrument.actions.can.createPhysicalRecordings"
     [(panelState)]="panelAddState"
     [config]="{textButtonOpen: 'Agregar registro del documento en libros',
                textButtonClose: 'Cancelar agregar registro'}">
 
-    <emp-land-physical-recording-creator *ngIf="panelAddState"
+    <emp-land-book-entry-creator *ngIf="panelAddState"
       [transactionUID]="transactionUID"
       [instrumentUID]="instrument.uid">
 
-    </emp-land-physical-recording-creator>
+    </emp-land-book-entry-creator>
 
   </emp-ng-expansion-button>
 

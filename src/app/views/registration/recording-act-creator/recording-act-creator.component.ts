@@ -37,7 +37,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   showRealEstateField = false;
   showPartitionField = false;
-  showSeeker: boolean = false;
+  showSeeker = false;
 
   realEstateList$: Observable<any[]>;
   realEstateInput$ = new Subject<string>();
