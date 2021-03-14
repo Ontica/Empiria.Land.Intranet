@@ -12,9 +12,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, Command, Identifiable } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { InstrumentsCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
-import { Instrument, BookEntryFields, RecordingSection } from '@app/models';
+import { InstrumentsRecordingCommandType,
+         TransactionStateSelector } from '@app/core/presentation/presentation-types';
+
+import { BookEntryFields, RecordingSection } from '@app/models';
 
 import { FormHandler } from '@app/shared/utils';
 
@@ -31,9 +33,7 @@ enum BookEntryCreatorFormControls {
 })
 export class BookEntryCreatorComponent implements OnInit, OnDestroy {
 
-  @Input() transactionUID: string;
-
-  @Input() instrumentUID: string;
+  @Input() instrumentRecordingUID: string = 'Empty';
 
   recorderOfficeList: Identifiable[] = [];
 
@@ -66,12 +66,11 @@ export class BookEntryCreatorComponent implements OnInit, OnDestroy {
     }
 
     const payload = {
-      transactionUID: this.transactionUID,
-      instrumentUID: this.instrumentUID,
-      physicalRecording: this.getFormData()
+      instrumentRecordingUID: this.instrumentRecordingUID,
+      bookEntryFields: this.getFormData()
     };
 
-    this.executeCommand<Instrument>(InstrumentsCommandType.CREATE_PHYSICAL_RECORDING, payload);
+    this.executeCommand(InstrumentsRecordingCommandType.CREATE_RECORDING_BOOK_ENTRY, payload);
   }
 
 
@@ -86,19 +85,19 @@ export class BookEntryCreatorComponent implements OnInit, OnDestroy {
 
 
   private loadData() {
-    this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST, {})
+    this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST)
       .subscribe(x => {
         this.recorderOfficeList = x;
       });
 
-    this.helper.select<RecordingSection[]>(TransactionStateSelector.RECORDING_SECTION_LIST, {})
+    this.helper.select<RecordingSection[]>(TransactionStateSelector.RECORDING_SECTION_LIST)
       .subscribe(x => {
         this.recordingSectionList = x;
       });
   }
 
 
-  private getFormData(): any {
+  private getFormData(): BookEntryFields {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
 
@@ -113,7 +112,7 @@ export class BookEntryCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private executeCommand<T>(commandType: InstrumentsCommandType, payload?: any): Promise<T> {
+  private executeCommand<T>(commandType: InstrumentsRecordingCommandType, payload?: any): Promise<T> {
     this.submitted = true;
 
     const command: Command = {

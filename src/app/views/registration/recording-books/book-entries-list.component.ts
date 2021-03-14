@@ -6,16 +6,16 @@
  */
 
 
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 
 import { Command } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { InstrumentsCommandType } from '@app/core/presentation/presentation-types';
+import { InstrumentsRecordingCommandType } from '@app/core/presentation/presentation-types';
 
-import { BookEntry } from '@app/models';
+import { BookEntry, EmptyInstrumentRecording, InstrumentRecording } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 import {
@@ -31,15 +31,7 @@ export class BookEntriesListComponent implements OnChanges, OnDestroy {
 
   @ViewChild('filePrintPreview', { static: true }) filePrintPreview: FilePrintPreviewComponent;
 
-  @Input() transactionUID: string;
-
-  @Input() instrumentUID: string;
-
-  @Input() bookEntries: BookEntry[] = [];
-
-  @Input() showRegistrationStamps = false;
-
-  @Input() canDelete = false;
+  @Input() instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
 
   helper: SubscriptionHelper;
 
@@ -59,10 +51,8 @@ export class BookEntriesListComponent implements OnChanges, OnDestroy {
   }
 
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.bookEntries) {
-      this.dataSource = new MatTableDataSource(this.bookEntries);
-    }
+  ngOnChanges() {
+    this.dataSource = new MatTableDataSource(this.instrumentRecording.bookEntries);
 
     this.resetColumns();
   }
@@ -76,21 +66,21 @@ export class BookEntriesListComponent implements OnChanges, OnDestroy {
   resetColumns() {
     this.displayedColumns = [];
 
-    if (this.showRegistrationStamps) {
+    if (this.instrumentRecording.actions.show.registrationStamps) {
       this.displayedColumns.push('stampMedia');
     }
 
     this.displayedColumns = [...this.displayedColumns, ...this.displayedColumnsDefault];
 
-    if (this.canDelete) {
+    if (this.instrumentRecording.actions.can.deleteRecordingBookEntries) {
       this.displayedColumns.push('action');
     }
   }
 
 
-  removeBookEntry(recording: BookEntry) {
+  removeBookEntry(bookEntry: BookEntry) {
     if (!this.submitted) {
-      const message = this.getConfirmMessage(recording);
+      const message = this.getConfirmMessage(bookEntry);
 
       this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
         .toPromise()
@@ -99,12 +89,11 @@ export class BookEntriesListComponent implements OnChanges, OnDestroy {
             this.submitted = true;
 
             const payload = {
-              transactionUID: this.transactionUID,
-              instrumentUID: this.instrumentUID,
-              physicalRecordingUID: recording.uid
+              instrumentRecordingUID: this.instrumentRecording.uid,
+              bookEntryUID: bookEntry.uid
             };
 
-            this.executeCommand(InstrumentsCommandType.DELETE_PHYSICAL_RECORDING, payload)
+            this.executeCommand(InstrumentsRecordingCommandType.DELETE_RECORDING_BOOK_ENTRY, payload)
               .then(() => this.submitted = false);
           }
         });
@@ -134,7 +123,7 @@ export class BookEntriesListComponent implements OnChanges, OnDestroy {
   }
 
 
-  private executeCommand<T>(commandType: InstrumentsCommandType, payload?: any): Promise<T> {
+  private executeCommand<T>(commandType: InstrumentsRecordingCommandType, payload?: any): Promise<T> {
     const command: Command = {
       type: commandType,
       payload
