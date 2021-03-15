@@ -221,6 +221,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         return;
 
+
       case EffectType.SET_LIST_FILTER:
       case EffectType.EXECUTE_WORKFLOW_COMMAND:
 
@@ -240,6 +241,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         return;
 
+
       case EffectType.UPLOAD_INSTRUMENT_FILE:
 
         if (params.result.data) {
@@ -249,6 +251,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         }
 
         return;
+
 
       case EffectType.REMOVE_INSTRUMENT_FILE:
 

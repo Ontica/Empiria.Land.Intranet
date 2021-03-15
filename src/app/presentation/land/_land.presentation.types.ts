@@ -20,30 +20,30 @@ export type LandActions = RecordingActsAction |
 
 /* Commands */
 
-import { CommandType as InstrumentsRecordingCommandType } from './instruments-recording.presentation.handler';
-export { CommandType as InstrumentsRecordingCommandType } from './instruments-recording.presentation.handler';
+import { CommandType as RegistrationCommandType } from './registration.presentation.handler';
+export { CommandType as RegistrationCommandType } from './registration.presentation.handler';
 
 import { CommandType as TransactionCommandType } from './transaction.presentation.handler';
 export { CommandType as TransactionCommandType } from './transaction.presentation.handler';
 
-export type LandCommands = InstrumentsRecordingCommandType |
+export type LandCommands = RegistrationCommandType |
                            TransactionCommandType;
 
 
 /* Effects */
 
-import { EffectType as InstrumentsRecordingEffectType } from './instruments-recording.presentation.handler';
+import { EffectType as RegistrationEffectType } from './registration.presentation.handler';
 
 import { EffectType as TransactionEffectType } from './transaction.presentation.handler';
 
-export type LandEffects = InstrumentsRecordingEffectType |
+export type LandEffects = RegistrationEffectType |
                           TransactionEffectType;
 
 
 /* Selectors */
 
-import { SelectorType as InstrumentsRecordingStateSelector } from './instruments-recording.presentation.handler';
-export { SelectorType as InstrumentsRecordingStateSelector } from './instruments-recording.presentation.handler';
+import { SelectorType as RegistrationStateSelector } from './registration.presentation.handler';
+export { SelectorType as RegistrationStateSelector } from './registration.presentation.handler';
 
 
 import { SelectorType as RecordableSubjectsStateSelector } from './recordable-subjects.presentation.handler';
@@ -59,6 +59,6 @@ export { SelectorType as TransactionStateSelector } from './transaction.presenta
 
 
 export type LandSelectors = RecordingActsStateSelector |
-                            InstrumentsRecordingStateSelector |
+                            RegistrationStateSelector |
                             RecordableSubjectsStateSelector |
                             TransactionStateSelector;

@@ -14,7 +14,7 @@ import { AbstractPresentationHandler, StateValues } from '@app/core/presentation
 
 import { EmptyInstrumentRecording } from '@app/models';
 
-import { InstrumentRecordingDataService, RecordingBooksDataService } from '@app/data-services';
+import { RecordingDataService } from '@app/data-services';
 
 
 export enum SelectorType {
@@ -23,16 +23,24 @@ export enum SelectorType {
 
 
 export enum CommandType {
-  CREATE_INSTRUMENT_RECORDING = 'Land.InstrumentRecording.Create',
-  UPDATE_RECORDED_INSTRUMENT  = 'Land.InstrumentRecording.Update',
-  CREATE_RECORDING_BOOK_ENTRY = 'Land.InstrumentRecording.CreateRecordingBookEntry',
-  DELETE_RECORDING_BOOK_ENTRY = 'Land.InstrumentRecording.DeleteRecordingBookEntry',
+  CREATE_INSTRUMENT_RECORDING = 'Land.Registration.Create.Instrument',
+  UPDATE_RECORDED_INSTRUMENT  = 'Land.Registration.Update.Instrument',
+
+  CREATE_RECORDING_ACT        = 'Land.Registration.Create.RecordingAct',
+  DELETE_RECORDING_ACT        = 'Land.Registration.Delete.RecordingAct',
+
+  CREATE_RECORDING_BOOK_ENTRY = 'Land.Registration.Create.RecordingBookEntry',
+  DELETE_RECORDING_BOOK_ENTRY = 'Land.Registration.Delete.RecordingBookEntry',
 }
 
 
 export enum EffectType {
   CREATE_INSTRUMENT_RECORDING = CommandType.CREATE_INSTRUMENT_RECORDING,
   UPDATE_RECORDED_INSTRUMENT  = CommandType.UPDATE_RECORDED_INSTRUMENT,
+
+  CREATE_RECORDING_ACT        = CommandType.CREATE_RECORDING_ACT,
+  DELETE_RECORDING_ACT        = CommandType.DELETE_RECORDING_ACT,
+
   CREATE_RECORDING_BOOK_ENTRY = CommandType.CREATE_RECORDING_BOOK_ENTRY,
   DELETE_RECORDING_BOOK_ENTRY = CommandType.DELETE_RECORDING_BOOK_ENTRY,
 }
@@ -44,10 +52,9 @@ const initialState: StateValues = [
 
 
 @Injectable()
-export class InstrumentsRecordingPresentationHandler extends AbstractPresentationHandler {
+export class RegistrationPresentationHandler extends AbstractPresentationHandler {
 
-  constructor(private data: InstrumentRecordingDataService,
-              private recordingBooksData: RecordingBooksDataService) {
+  constructor(private data: RecordingDataService) {
     super({
       initialState,
       selectors: SelectorType,
@@ -83,6 +90,8 @@ export class InstrumentsRecordingPresentationHandler extends AbstractPresentatio
 
       case EffectType.CREATE_INSTRUMENT_RECORDING:
       case EffectType.UPDATE_RECORDED_INSTRUMENT:
+      case EffectType.CREATE_RECORDING_ACT:
+      case EffectType.DELETE_RECORDING_ACT:
       case EffectType.CREATE_RECORDING_BOOK_ENTRY:
       case EffectType.DELETE_RECORDING_BOOK_ENTRY:
         super.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, params.result);
@@ -110,16 +119,28 @@ export class InstrumentsRecordingPresentationHandler extends AbstractPresentatio
                                                          command.payload.instrument)
         );
 
+      case CommandType.CREATE_RECORDING_ACT:
+        return toPromise<U>(
+          this.data.createRecordingAct(command.payload.instrumentRecordingUID,
+                                       command.payload.registrationCommand)
+        );
+
+      case CommandType.DELETE_RECORDING_ACT:
+        return toPromise<U>(
+          this.data.deleteRecordingAct(command.payload.instrumentRecordingUID,
+                                       command.payload.recordingActUID)
+        );
+
       case CommandType.CREATE_RECORDING_BOOK_ENTRY:
         return toPromise<U>(
-          this.recordingBooksData.createNextBookEntry(command.payload.instrumentRecordingUID,
-                                                      command.payload.bookEntryFields)
+          this.data.createNextRecordingBookEntry(command.payload.instrumentRecordingUID,
+                                                 command.payload.bookEntryFields)
         );
 
       case CommandType.DELETE_RECORDING_BOOK_ENTRY:
         return toPromise<U>(
-          this.recordingBooksData.deleteBookEntry(command.payload.instrumentRecordingUID,
-                                                  command.payload.bookEntryUID)
+          this.data.deleteRecordingBookEntry(command.payload.instrumentRecordingUID,
+                                             command.payload.bookEntryUID)
         );
 
       default:
