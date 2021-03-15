@@ -1,12 +1,20 @@
+/**
+ * @license
+ * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
+ *
+ * See LICENSE.txt in the project root for complete license information.
+ */
+
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, Command, Identifiable } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { RecordingActType, RecordingActTypeGroup } from '@app/models';
-import { InstrumentsStateSelector } from '@app/presentation/exported.presentation.types';
+import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 import { FormHandler } from '@app/shared/utils';
 import { concat, Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+
 
 enum RecordingActCreatorFormControls {
   recordingActTypeGroup = 'recordingActTypeGroup',
@@ -16,6 +24,7 @@ enum RecordingActCreatorFormControls {
   partitionType = 'partitionType',
   partitionNo = 'partitionNo',
 }
+
 
 @Component({
   selector: 'emp-land-recording-act-creator',
@@ -113,7 +122,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   private initLoad() {
     this.helper.select<RecordingActTypeGroup[]>(
-      InstrumentsStateSelector.RECORDING_ACT_TYPE_FOR_INSTRUMENT_LIST,
+      RecordableSubjectsStateSelector.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT,
       { instrumentUID: this.instrumentUID })
       .subscribe(x => {
         this.recordingActTypeGroupList = x;

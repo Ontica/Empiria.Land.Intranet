@@ -13,7 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Command } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { DocumentsRecordingAction, InstrumentsCommandType } from '@app/core/presentation/presentation-types';
+import { RecordingActsAction } from '@app/core/presentation/presentation-types';
 import { RecordingAct } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
@@ -63,7 +63,7 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
 
   onOpenRecordingActEditor(recordingAct: RecordingAct){
-    this.uiLayer.dispatch(DocumentsRecordingAction.SELECT_RECORDING_ACT, { recordingAct });
+    this.uiLayer.dispatch(RecordingActsAction.SELECT_RECORDING_ACT, { recordingAct });
   }
 
 
@@ -121,13 +121,13 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
   }
 
 
-  private executeCommand<T>(commandType: InstrumentsCommandType, payload?: any): Promise<T> {
-    const command: Command = {
-      type: commandType,
-      payload
-    };
+  // private executeCommand<T>(commandType: InstrumentsCommandType, payload?: any): Promise<T> {
+  //   const command: Command = {
+  //     type: commandType,
+  //     payload
+  //   };
 
-    return this.uiLayer.execute<T>(command);
-  }
+  //   return this.uiLayer.execute<T>(command);
+  // }
 
 }
