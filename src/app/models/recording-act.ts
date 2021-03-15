@@ -7,7 +7,7 @@
 
 import { Identifiable, Money, PartitionedType } from '@app/core';
 
-import { Property } from './property';
+import { EmptyRecordableSubject, RecordableSubject } from './recordable-subjects';
 import { RoledParty } from './party';
 
 
@@ -27,15 +27,14 @@ export interface RecordingDocument extends Identifiable, PartitionedType {
 
 
 export interface BaseRecordingAct extends Identifiable {
-  type: RecordingActType;
+  antecedent: string;
 }
 
 
 export interface RecordingAct extends BaseRecordingAct {
-   property: Property;
-   parties: RoledParty[];
-   operationAmount?: Money;
-   notes: string;
+  recordableSubject: RecordableSubject;
+  parties: RoledParty[];
+  operationAmount?: Money;
 }
 
 
@@ -56,9 +55,8 @@ export interface ModificationAct extends BaseRecordingAct {
 export const EmptyRecordingAct: RecordingAct = {
   uid: 'Empty',
   name: '',
-  type: null,
-  property: null,
+  recordableSubject: EmptyRecordableSubject,
   parties: [],
   operationAmount: null,
-  notes: '',
+  antecedent: ''
 };

@@ -29,8 +29,17 @@ export interface NoPropertyFields extends RecordableSubjectFields {
 
 export interface RecordableSubject extends Identifiable, PartitionedType {
   electronicID: string;
-  kind: Identifiable;
+  kind: string;
+
 }
+
+export const EmptyRecordableSubject: RecordableSubject = {
+  uid: '',
+  type: '',
+  name: '',
+  electronicID: '',
+  kind: ''
+};
 
 
 export interface RealEstate extends RecordableSubject {

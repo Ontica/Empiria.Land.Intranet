@@ -108,6 +108,7 @@ export interface InstrumentRecording {
   // recordedBy: Contact;
   // reviewedBy: Contact;
   // signedBy: Contact;
+  recordingActs: RecordingAct[];
   bookEntries?: BookEntry[];
   stampMedia: MediaBase;
   // status: RecordingStatus;
@@ -125,6 +126,7 @@ export const EmptyInstrumentRecording: InstrumentRecording = {
   // recordedBy: EmptyContact,
   // reviewedBy: EmptyContact,
   // signedBy: EmptyContact,
+  recordingActs: [],
   bookEntries: [],
   stampMedia: EmptyMediaBase,
   // status: 'Secured',
@@ -132,6 +134,23 @@ export const EmptyInstrumentRecording: InstrumentRecording = {
   actions: EmptyInstrumentRecordingActions
 };
 
+
+export interface RegistrationCommand {
+  type: string;
+  payload: RegistrationCommandPayload;
+}
+
+
+export interface RegistrationCommandPayload {
+  recordingActTypeUID: string;
+  recordableSubjectUID?: string;
+  partitionType?: string;
+  partitionNo?: string;
+}
+
+
+
+// ToDo: review these types
 
 export interface RegistrationEntry {
   recordingAct: RecordingAct;
