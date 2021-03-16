@@ -13,7 +13,7 @@ import { Assertion, Command, Identifiable } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { InstrumentsRecordingCommandType,
+import { RegistrationCommandType,
          TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
 import { BookEntryFields, RecordingSection } from '@app/models';
@@ -70,7 +70,7 @@ export class BookEntryCreatorComponent implements OnInit, OnDestroy {
       bookEntryFields: this.getFormData()
     };
 
-    this.executeCommand(InstrumentsRecordingCommandType.CREATE_RECORDING_BOOK_ENTRY, payload);
+    this.executeCommand(RegistrationCommandType.CREATE_RECORDING_BOOK_ENTRY, payload);
   }
 
 
@@ -112,7 +112,7 @@ export class BookEntryCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private executeCommand<T>(commandType: InstrumentsRecordingCommandType, payload?: any): Promise<T> {
+  private executeCommand<T>(commandType: RegistrationCommandType, payload?: any): Promise<T> {
     this.submitted = true;
 
     const command: Command = {

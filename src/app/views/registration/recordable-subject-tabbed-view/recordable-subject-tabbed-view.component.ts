@@ -41,17 +41,17 @@ export class RecordableSubjectTabbedViewComponent implements OnInit {
 
 
   get isRealEstate() {
-    return true;
+    return this.recordingAct.recordableSubject.type === 'RealEstate';
   }
 
 
   get isAssociation() {
-    return false;
+    return this.recordingAct.recordableSubject.type === 'Association';
   }
 
 
   get isNoProperty() {
-    return false;
+    return this.recordingAct.recordableSubject.type === 'NoProperty';
   }
 
 
@@ -79,7 +79,7 @@ export class RecordableSubjectTabbedViewComponent implements OnInit {
 
 
   private setCardHint() {
-    this.cardHint = `<strong>${this.recordingAct.property.electronicID}</strong>`;
+    this.cardHint = `<strong>${this.recordingAct.recordableSubject.electronicID}</strong>`;
       // &nbsp; &nbsp; | &nbsp; &nbsp; <strong> ${this.recordingAct.name} </strong> &nbsp; &nbsp;` +
       //     ` | ${this.recordingAct.type.name}`;
   }

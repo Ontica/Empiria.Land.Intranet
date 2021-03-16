@@ -13,7 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Command } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { InstrumentsRecordingCommandType } from '@app/core/presentation/presentation-types';
+import { RegistrationCommandType } from '@app/core/presentation/presentation-types';
 
 import { BookEntry, EmptyInstrumentRecording, InstrumentRecording } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
@@ -93,8 +93,8 @@ export class BookEntriesListComponent implements OnChanges, OnDestroy {
               bookEntryUID: bookEntry.uid
             };
 
-            this.executeCommand(InstrumentsRecordingCommandType.DELETE_RECORDING_BOOK_ENTRY, payload)
-              .then(() => this.submitted = false);
+            this.executeCommand(RegistrationCommandType.DELETE_RECORDING_BOOK_ENTRY, payload)
+                .then(() => this.submitted = false);
           }
         });
     }
@@ -123,7 +123,7 @@ export class BookEntriesListComponent implements OnChanges, OnDestroy {
   }
 
 
-  private executeCommand<T>(commandType: InstrumentsRecordingCommandType, payload?: any): Promise<T> {
+  private executeCommand<T>(commandType: RegistrationCommandType, payload?: any): Promise<T> {
     const command: Command = {
       type: commandType,
       payload
