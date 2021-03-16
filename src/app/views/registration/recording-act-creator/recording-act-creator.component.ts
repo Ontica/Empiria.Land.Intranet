@@ -6,14 +6,22 @@
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Assertion, Command, Identifiable } from '@app/core';
-import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { RecordingActType, RecordingActTypeGroup } from '@app/models';
-import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
-import { FormHandler } from '@app/shared/utils';
+
 import { concat, Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { Assertion, Command, Identifiable } from '@app/core';
+import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
+import { EmptyInstrumentRecording, InstrumentRecording,
+         RecordingActType, RecordingActTypeGroup, RegistrationCommand } from '@app/models';
+
+import { RegistrationCommandType,
+         RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
+
+import { FormHandler } from '@app/shared/utils';
 
 
 enum RecordingActCreatorFormControls {
@@ -32,7 +40,7 @@ enum RecordingActCreatorFormControls {
 })
 export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
-  @Input() instrumentUID: string;
+  @Input() instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
 
   helper: SubscriptionHelper;
 
@@ -103,27 +111,36 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   submitRecordingAct() {
-
     if (this.submitted || !this.formHandler.validateReadyForSubmit()) {
       this.formHandler.invalidateForm();
       return;
     }
 
-    const payload = {
-      instrumentUID: this.instrumentUID,
-      recordingAct: this.getFormData()
+    const data = this.getFormData();
+
+    const registrationCommand: RegistrationCommand = {
+      type: data.subjectCommand,
+      payload: {
+        recordingActTypeUID: data.recordingActType,
+        recordableSubjectUID: data.realEstate,
+        partitionType: data.partitionType,
+        partitionNo: data.partitionNo,
+      }
     };
 
-    console.log(payload);
+    const payload = {
+      instrumentRecordingUID: this.instrumentRecording.uid,
+      registrationCommand
+    };
 
-    // this.executeCommand<Instrument>(InstrumentsCommandType.CREATE_PHYSICAL_RECORDING, payload);
+    this.executeCommand(RegistrationCommandType.CREATE_RECORDING_ACT, payload);
   }
 
 
   private initLoad() {
     this.helper.select<RecordingActTypeGroup[]>(
       RecordableSubjectsStateSelector.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT,
-      { instrumentUID: this.instrumentUID })
+      { instrumentUID: this.instrumentRecording.instrument.uid })
       .subscribe(x => {
         this.recordingActTypeGroupList = x;
       });

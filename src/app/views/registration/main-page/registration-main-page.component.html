@@ -25,23 +25,19 @@
 </ng-container>
 
 
-<ng-container *ngIf="false">
+<ng-container *ngIf="actions.show.recordingActs">
 
   <emp-land-recording-acts-list
-    [instrumentUID]="instrumentRecording.instrument.uid"
-    [recordingActs]="[]"
-    [canDelete]="true">
-
+    [instrumentRecording]="instrumentRecording">
   </emp-land-recording-acts-list>
 
-  <emp-ng-expansion-button *ngIf="false"
+  <emp-ng-expansion-button *ngIf="actions.can.editRecordingActs"
     [(panelState)]="panelAddState"
     [config]="{textButtonOpen: 'Agregar un acto jurídico al instrumento',
                textButtonClose: 'Cancelar agregar registro'}">
 
     <emp-land-recording-act-creator *ngIf="panelAddState"
-      [instrumentUID]="instrumentRecording.instrument.uid">
-
+      [instrumentRecording]="instrumentRecording">
     </emp-land-recording-act-creator>
 
   </emp-ng-expansion-button>

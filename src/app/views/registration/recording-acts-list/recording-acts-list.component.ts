@@ -6,15 +6,14 @@
  */
 
 
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Command } from '@app/core';
+import { Command, PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+import { RecordingActsAction, RegistrationCommandType } from '@app/core/presentation/presentation-types';
 
-import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { RecordingActsAction } from '@app/core/presentation/presentation-types';
-import { RecordingAct } from '@app/models';
+import { EmptyInstrumentRecording, InstrumentRecording, RecordingAct } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
@@ -25,11 +24,7 @@ import { MessageBoxService } from '@app/shared/containers/message-box';
 })
 export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
-  @Input() instrumentUID: string;
-
-  @Input() recordingActs: RecordingAct[] = [];
-
-  @Input() canDelete = false;
+  @Input() instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
 
   helper: SubscriptionHelper;
 
@@ -48,10 +43,8 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
   }
 
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.recordingActs) {
-      this.dataSource = new MatTableDataSource(this.recordingActs);
-    }
+  ngOnChanges() {
+    this.dataSource = new MatTableDataSource(this.instrumentRecording.recordingActs);
 
     this.resetColumns();
   }
@@ -62,12 +55,12 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
   }
 
 
-  onOpenRecordingActEditor(recordingAct: RecordingAct){
+  onOpenRecordingActEditor(recordingAct: RecordingAct) {
     this.uiLayer.dispatch(RecordingActsAction.SELECT_RECORDING_ACT, { recordingAct });
   }
 
 
-  removeRecordingActs(recordingAct: RecordingAct) {
+  removeRecordingAct(recordingAct: RecordingAct) {
     if (!this.submitted) {
       const message = this.getConfirmMessage(recordingAct);
 
@@ -78,14 +71,12 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
             this.submitted = true;
 
             const payload = {
-              instrumentUID: this.instrumentUID,
+              instrumentRecordingUID: this.instrumentRecording.uid,
               recordingActUID: recordingAct.uid
             };
 
-            console.log(payload);
-
-            // this.executeCommand(InstrumentsCommandType.DELETE_PHYSICAL_RECORDING, payload)
-            //   .then(() => this.submitted = false);
+            this.executeCommand(RegistrationCommandType.DELETE_RECORDING_ACT, payload)
+                .then(() => this.submitted = false);
           }
         });
     }
@@ -97,7 +88,7 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
     this.displayedColumns = [...this.displayedColumns, ...this.displayedColumnsDefault];
 
-    if (this.canDelete) {
+    if (this.instrumentRecording.actions.can.editRecordingActs) {
       this.displayedColumns.push('action');
     }
   }
@@ -121,13 +112,13 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
   }
 
 
-  // private executeCommand<T>(commandType: InstrumentsCommandType, payload?: any): Promise<T> {
-  //   const command: Command = {
-  //     type: commandType,
-  //     payload
-  //   };
+  private executeCommand<T>(commandType: RegistrationCommandType, payload?: any): Promise<T> {
+    const command: Command = {
+      type: commandType,
+      payload
+    };
 
-  //   return this.uiLayer.execute<T>(command);
-  // }
+    return this.uiLayer.execute<T>(command);
+  }
 
 }

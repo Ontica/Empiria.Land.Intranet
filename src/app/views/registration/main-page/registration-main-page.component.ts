@@ -11,7 +11,8 @@ import { Assertion, Command, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { InstrumentsRecordingCommandType, InstrumentsRecordingStateSelector } from '@app/core/presentation/presentation-types';
+import { RegistrationCommandType,
+         RegistrationStateSelector } from '@app/core/presentation/presentation-types';
 
 import { InstrumentRecording, InstrumentRecordingActions, InstrumentFields,
          EmptyInstrumentRecording, EmptyInstrumentRecordingActions } from '@app/models';
@@ -47,9 +48,8 @@ export class RegistrationMainPageComponent implements OnChanges, OnDestroy {
 
 
   ngOnChanges() {
-    this.helper.select<InstrumentRecording>(
-                                        InstrumentsRecordingStateSelector.TRANSACTION_INSTRUMENT_RECORDING,
-                                        this.transactionUID)
+    this.helper.select<InstrumentRecording>(RegistrationStateSelector.TRANSACTION_INSTRUMENT_RECORDING,
+                                            this.transactionUID)
       .subscribe(x => {
 
         console.log('ngOnChanges', x);
@@ -95,9 +95,9 @@ export class RegistrationMainPageComponent implements OnChanges, OnDestroy {
   // private methods
 
   private updateInstrument(instrumentFields: InstrumentFields) {
-    let commandType = InstrumentsRecordingCommandType.UPDATE_RECORDED_INSTRUMENT;
+    let commandType = RegistrationCommandType.UPDATE_RECORDED_INSTRUMENT;
     if (isEmpty(this.instrumentRecording)) {
-      commandType = InstrumentsRecordingCommandType.CREATE_INSTRUMENT_RECORDING;
+      commandType = RegistrationCommandType.CREATE_INSTRUMENT_RECORDING;
     }
 
     const command: Command = {
