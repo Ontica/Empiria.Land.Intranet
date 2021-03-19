@@ -19,6 +19,7 @@ import { SharedIndicatorsModule } from '@app/shared/indicators/shared-indicators
 import { FileViewerComponent } from './file-viewer/file-viewer.component';
 import { SharedPipesModule } from '@app/shared/pipes/shared-pipes.module';
 import { SharedDirectivesModule } from '@app/shared/directives/shared-directives.module';
+import { FileViewerNavigatorComponent } from './file-viewer/file-viewer-navigator.component';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { SharedDirectivesModule } from '@app/shared/directives/shared-directives
 
   declarations: [
     FileViewerComponent,
+    FileViewerNavigatorComponent,
   ],
 
   exports: [

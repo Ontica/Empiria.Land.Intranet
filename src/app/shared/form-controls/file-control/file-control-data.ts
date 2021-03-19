@@ -81,3 +81,14 @@ export const EmptyFileData: FileData = {
   fileIcon: '',
   file: null,
 };
+
+
+export interface FileViewerData {
+  fileList: FileData[];
+  selectedFile?: FileData;
+}
+
+
+export const EmptyFileViewerData: FileViewerData = {
+  fileList: []
+};

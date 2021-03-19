@@ -11,7 +11,8 @@ import { EventInfo } from '@app/core';
 
 import { InstrumentMediaContent } from '@app/models';
 
-import { FileData, FileControlActions } from '@app/shared/form-controls/file-control/file-control';
+import { FileData, FileControlActions } from '@app/shared/form-controls/file-control/file-control-data';
+
 import { FormatLibrary } from '@app/shared/utils';
 
 

@@ -27,7 +27,8 @@ import {
   TransactionListEventType
 } from '@app/views/transactions/transaction-list/transaction-list.component';
 
-import { FileData, EmptyFileData } from '@app/shared/form-controls/file-control/file-control';
+import { EmptyFileViewerData,
+         FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 import { View } from '../main-layout';
 
@@ -50,7 +51,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   filter: TransactionFilter = EmptyTransactionFilter;
 
   selectedTransaction: Transaction = EmptyTransaction;
-  selectedFile: FileData = EmptyFileData;
+  selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedRecordingAct: RecordingAct = EmptyRecordingAct;
 
   displayOptionModalSelected: TransactionModalOptions = null;
@@ -109,10 +110,10 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
         this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct);
       });
 
-    this.subscriptionHelper.select<FileData>(TransactionStateSelector.SELECTED_FILE)
+    this.subscriptionHelper.select<FileViewerData>(TransactionStateSelector.SELECTED_FILE_LIST)
       .subscribe(x => {
-        this.selectedFile = x;
-        this.displayFileViewer = this.selectedFile && this.selectedFile.url !== '';
+        this.selectedFileViewerData = x;
+        this.displayFileViewer = this.selectedFileViewerData.fileList.length > 0;
       });
   }
 
@@ -212,7 +213,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
 
   private unselectCurrentFile() {
-    this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE);
+    this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE_LIST);
   }
 
   private unselectCurrentRecordingAct() {

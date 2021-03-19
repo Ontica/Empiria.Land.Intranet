@@ -4,10 +4,9 @@
 
     <div class="card-title">
       Visor de Archivos
-      <div class="card-hint" empNgProgressText
-           loadingText="Cargando archivo"
-           [finalText]="selectedFile.name + ' - ' + selectedFile.sizeString"
-           [isLoading]="isLoading">
+
+      <div class="card-hint">
+        {{ selectedFile?.name }}
       </div>
     </div>
 
@@ -21,10 +20,55 @@
 
     <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
-    <object class="object" [data]="selectedFile.url | safeUrl"
-      (load)="onLoad($event)">
+    <ng-container *ngIf="showFileContainer">
 
-    </object>
+      <emp-land-file-viewer-navigator *ngIf="showNavigatorTool"
+        [selectedIndex]="selectedFileIndex"
+        [pagesTotal]="fileViewerData.fileList.length"
+        [showFileTool]="multiple"
+        [showZoom]="showZoom"
+        [zoom]="imageZoom"
+        (zoomChange)="onZoomChanged($event)"
+        (selectedIndexChange)="onSelectedIndexChanged($event)">
+
+      </emp-land-file-viewer-navigator>
+
+
+      <div class="file-container"
+        [class.height-container-single]="!showNavigatorTool"
+        [class.height-container-with-navigator]="showNavigatorTool">
+
+        <ng-container *ngFor="let file of fileViewerData.fileList">
+
+          <ng-container *ngIf="!file.type.includes('image') && file === selectedFile">
+
+            <object [data]="file.url | safeUrl" type="{{file.type}}" class="object-file"
+              [style.width.%]="100"
+              [style.height.%]="100"
+              (load)="onLoad()">
+
+            </object>
+
+          </ng-container>
+
+
+          <ng-container *ngIf="file.type.includes('image') && file === this.selectedFile">
+
+            <div #imageContainer class="image-container">
+
+                <img #imageFile class="image-file"
+                  [style.width.%]="imageZoom"
+                  [src]="file.url | safeUrl"
+                  (load)="onLoad()">
+            </div>
+
+          </ng-container>
+
+        </ng-container>
+
+      </div>
+
+    </ng-container>
 
   </div>
 

@@ -5,17 +5,17 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Directive, ElementRef, OnInit, Input } from '@angular/core';
+import { Directive, ElementRef, Input } from '@angular/core';
 
 @Directive({
   selector: '[empNgResizable]'
 })
 
-export class ResizableDirective implements OnInit {
+export class ResizableDirective {
 
   @Input() empNgResizableGrabWidth = 8;
 
-  @Input() empNgResizableMinWidth = 10;
+  @Input() empNgResizableMinWidth = 400;
 
   dragging = false;
 
@@ -31,6 +31,9 @@ export class ResizableDirective implements OnInit {
       document.body.style['pointer-events'] = 'auto';
     }
 
+    function disableGlobalSelectEvents(event) {
+      event.preventDefault();
+    }
 
     const newWidth = (wid) => {
       const newWidthSize = Math.max(this.empNgResizableMinWidth, wid);
@@ -47,17 +50,6 @@ export class ResizableDirective implements OnInit {
     };
 
 
-    // const dragMoveG = (evt) => {
-    //   if (!this.dragging) {
-    //     return;
-    //   }
-    //   const newWidthSize = Math.max(this.empNgResizableMinWidth,
-    //                                (evt.clientX - el.nativeElement.offsetLeft)) + 'px';
-    //   el.nativeElement.style.width = (evt.clientX - el.nativeElement.offsetLeft) + 'px';
-    //   evt.stopPropagation();
-    // };
-
-
     const mouseUpG = (evt) => {
       if (!this.dragging) {
         return;
@@ -65,6 +57,7 @@ export class ResizableDirective implements OnInit {
       restoreGlobalMouseEvents();
       this.dragging = false;
       evt.stopPropagation();
+      document.removeEventListener('selectstart', disableGlobalSelectEvents);
     };
 
 
@@ -73,6 +66,7 @@ export class ResizableDirective implements OnInit {
         this.dragging = true;
         preventGlobalMouseEvents();
         evt.stopPropagation();
+        document.addEventListener('selectstart', disableGlobalSelectEvents);
       }
     };
 
@@ -89,11 +83,6 @@ export class ResizableDirective implements OnInit {
     document.addEventListener('mouseup', mouseUpG, true);
     el.nativeElement.addEventListener('mousedown', mouseDown, true);
     el.nativeElement.addEventListener('mousemove', mouseMove, true);
-  }
-
-
-  ngOnInit(): void {
-    this.el.nativeElement.style['border-right'] = this.empNgResizableGrabWidth + 'px solid darkgrey';
   }
 
 

@@ -26,16 +26,15 @@ import {
   EmptyPreprocessingData, EmptyTransaction, EmptyTransactionFilter,
   mapTransactionShortModelFromTransaction
 } from '@app/models';
-
-import { EmptyFileData } from '@app/shared/form-controls/file-control/file-control';
+import { EmptyFileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 
 export enum ActionType {
   SELECT_TRANSACTION = 'Land.Transactions.Action.SelectTransaction',
   SET_LIST_FILTER = 'Land.Transactions.Action.SetListFilter',
   UNSELECT_TRANSACTION = 'Land.Transactions.Action.UnselectTransaction',
-  SELECT_FILE = 'Land.Transactions.Action.SelectFile',
-  UNSELECT_FILE = 'Land.Transactions.Action.UnselectFile',
+  SELECT_FILE_LIST = 'Land.Transactions.Action.SelectFileList',
+  UNSELECT_FILE_LIST = 'Land.Transactions.Action.UnselectFileList',
 }
 
 
@@ -86,7 +85,7 @@ export enum SelectorType {
   PROVIDED_SERVICE_LIST = 'Land.Transactions.Selectors.ProvidedServiceList',
   FILING_OFFICE_LIST = 'Land.Transactions.Selectors.FilingOfficeList',
   RECORDING_SECTION_LIST = 'Land.Transactions.Selectors.RecordingSectionList',
-  SELECTED_FILE = 'Land.Transactions.Selectors.SelectedFile',
+  SELECTED_FILE_LIST = 'Land.Transactions.Selectors.SelectedFileList',
   SELECTED_PREPROCESSING_DATA = 'Land.Transactions.Selectors.PreprocessingData',
   SELECTED_WORKFLOW_HISTORY = 'Land.Transactions.Selectors.WorkflowHistory',
   APPLICABLE_COMMANDS = 'Land.Transactions.Selectors.ApplicableCommands',
@@ -104,7 +103,7 @@ const initialState: StateValues = [
   { key: SelectorType.PROVIDED_SERVICE_LIST, value: [] },
   { key: SelectorType.FILING_OFFICE_LIST, value: [] },
   { key: SelectorType.RECORDING_SECTION_LIST, value: [] },
-  { key: SelectorType.SELECTED_FILE, value: EmptyFileData },
+  { key: SelectorType.SELECTED_FILE_LIST, value: EmptyFileViewerData },
   { key: SelectorType.SELECTED_PREPROCESSING_DATA, value: EmptyPreprocessingData },
   { key: SelectorType.SELECTED_WORKFLOW_HISTORY, value: [] },
 ];
@@ -247,7 +246,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         if (params.result.data) {
           this.setPreprocessingDataInstrument(params.result.data);
 
-          this.setValue(SelectorType.SELECTED_FILE, EmptyFileData);
+          this.setValue(SelectorType.SELECTED_FILE_LIST, EmptyFileViewerData);
         }
 
         return;
@@ -257,7 +256,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         this.setPreprocessingDataInstrument(params.result);
 
-        this.setValue(SelectorType.SELECTED_FILE, EmptyFileData);
+        this.setValue(SelectorType.SELECTED_FILE_LIST, EmptyFileViewerData);
 
         return;
 
@@ -379,7 +378,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case ActionType.UNSELECT_TRANSACTION:
         this.setValue(SelectorType.SELECTED_TRANSACTION, EmptyTransaction);
 
-        this.setValue(SelectorType.SELECTED_FILE, EmptyFileData);
+        this.setValue(SelectorType.SELECTED_FILE_LIST, EmptyFileViewerData);
 
         this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, EmptyPreprocessingData);
 
@@ -396,15 +395,16 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         return;
 
-      case ActionType.SELECT_FILE:
-        Assertion.assertValue(params.file, 'payload.file');
+      case ActionType.SELECT_FILE_LIST:
+        Assertion.assertValue(params.fileViewerData, 'payload.fileViewerData');
+        Assertion.assertValue(params.fileViewerData.fileList, 'payload.fileViewerData.fileList');
 
-        this.setValue(SelectorType.SELECTED_FILE, params.file);
+        this.setValue(SelectorType.SELECTED_FILE_LIST, params.fileViewerData);
 
         return;
 
-      case ActionType.UNSELECT_FILE:
-        this.setValue(SelectorType.SELECTED_FILE, EmptyFileData);
+      case ActionType.UNSELECT_FILE_LIST:
+        this.setValue(SelectorType.SELECTED_FILE_LIST, EmptyFileViewerData);
 
         return;
 

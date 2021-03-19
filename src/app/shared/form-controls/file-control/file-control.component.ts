@@ -11,7 +11,7 @@ import { FormatLibrary } from '@app/shared/utils';
 import {
   DefaultFileControlConfig, FileData, FileControlActions, FileControlConfig,
   FileControlMenuOptions, FileTypeAccepted
-} from './file-control';
+} from './file-control-data';
 
 
 @Component({

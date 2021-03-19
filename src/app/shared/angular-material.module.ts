@@ -27,6 +27,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSliderModule } from '@angular/material/slider';
 
 import {
   MomentDateAdapter,
@@ -100,7 +101,8 @@ export const DATE_FORMATS = {
     MatTooltipModule,
     MatTableModule,
     MatCheckboxModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatSliderModule,
   ],
 
   exports: [
@@ -124,7 +126,8 @@ export const DATE_FORMATS = {
     MatTooltipModule,
     MatTableModule,
     MatCheckboxModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatSliderModule,
   ],
 
   providers: [

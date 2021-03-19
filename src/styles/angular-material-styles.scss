@@ -325,3 +325,29 @@ table.mat-table {
 .mat-progress-bar-fill::after {
   background-color: $primary-color-light !important;
 }
+
+//
+// slider
+//
+
+.mat-slider-horizontal {
+  height: 30px !important;
+
+  .mat-slider-wrapper {
+    top: 16px !important;
+  }
+
+  .mat-slider-thumb-label {
+    top: -22px !important;
+    right: -9px !important;
+  }
+
+  .mat-slider-thumb-label {
+    width: 18px;
+    height: 18px;
+  }
+
+  .mat-slider-thumb-label-text {
+    font-size: 8pt;
+  }
+}

@@ -20,7 +20,7 @@ import {
   PreprocessingData
 } from '@app/models';
 
-import { EmptyFileData, FileData } from '@app/shared/form-controls/file-control/file-control';
+import { EmptyFileData, FileData, FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 import { InstrumentFilesEditorEventType } from '@app/views/transactions/transaction-files/transaction-files-uploader.component';
 
@@ -87,7 +87,7 @@ export class LandPreRegistationComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE);
+    this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE_LIST);
 
     this.helper.destroy();
   }
@@ -123,7 +123,11 @@ export class LandPreRegistationComponent implements OnChanges, OnDestroy {
 
       case InstrumentFilesEditorEventType.SHOW_FILE_CLICKED:
 
-        this.uiLayer.dispatch(TransactionAction.SELECT_FILE, { file: event.payload });
+        const fileViewerData: FileViewerData = {
+          fileList: [event.payload]
+        };
+
+        this.uiLayer.dispatch(TransactionAction.SELECT_FILE_LIST, { fileViewerData });
 
         return;
 

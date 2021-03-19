@@ -27,12 +27,40 @@
   }
 
   .primary-resizable {
+    position: relative;
+    min-width: 600px;
+    max-width: calc(100% - 600px);
+    width: 960px;
+  }
+
+  .primary-resizable:after {
+    position: absolute;
+    background: $border-color-dark;
+    border: 1px solid $border-color-dark;
+    border-radius: 5px;
+    content: ". . .";
+    writing-mode: vertical-lr;
+    color: $border-color-light;
+    width: 10px;
+    padding: 10px 0;
+    top: 50%;
+    right: 0;
+    left: 100%;
+    margin: auto;
+  }
+
+  .primary-resizable-disable {
+    flex: 1 1 600px;
     min-width: 400px;
-    flex-grow: 1;
+    max-width: 960px;
+  }
+
+  .primary-resizable-disable:after {
+    display: none;
   }
 
   .secondary {
-    flex: 3 1 720px;
+    flex: 3 1 600px;
     min-width: 400px;
     max-width: 960px;
   }

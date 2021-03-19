@@ -21,10 +21,11 @@
   <div *ngIf="displayFileViewer"
     class="primary-resizable"
     [fxHide.lt-lg]="displayRecordingActEditor"
+    [ngClass.lt-lg]="'primary-resizable-disable'"
     empNgResizable>
 
     <emp-land-file-viewer
-      [selectedFile]="selectedFile"
+      [fileViewerData]="selectedFileViewerData"
       (closeEvent)="onCloseFileViewer()">
 
     </emp-land-file-viewer>
