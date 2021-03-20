@@ -19,74 +19,71 @@ export class ResizableDirective {
 
   dragging = false;
 
+  private newWidth = (wid) => {
+    const newWidthSize = Math.max(this.empNgResizableMinWidth, wid);
+    this.el.nativeElement.style.width = (newWidthSize) + 'px';
+  };
+
+  private mouseMoveG = (evt) => {
+    if (!this.dragging) {
+      return;
+    }
+    this.newWidth(evt.clientX - this.el.nativeElement.offsetLeft);
+    evt.stopPropagation();
+  };
+
+  private mouseUpG = (evt) => {
+    if (!this.dragging) {
+      return;
+    }
+    this.restoreGlobalMouseEvents();
+    this.dragging = false;
+    evt.stopPropagation();
+    document.removeEventListener('selectstart', this.disableGlobalSelectEvents);
+  };
+
+  private mouseDown = (evt) => {
+    if (this.inDragRegion(evt)) {
+      this.dragging = true;
+      this.preventGlobalMouseEvents();
+      evt.stopPropagation();
+      document.addEventListener('selectstart', this.disableGlobalSelectEvents);
+    }
+  };
+
+  private mouseMove = (evt) => {
+    if (this.inDragRegion(evt) || this.dragging) {
+      this.el.nativeElement.style.cursor = 'ew-resize';
+    } else {
+      this.el.nativeElement.style.cursor = 'default';
+    }
+  };
+
 
   constructor(private el: ElementRef) {
-
-    function preventGlobalMouseEvents() {
-      document.body.style['pointer-events'] = 'none';
-    }
-
-
-    function restoreGlobalMouseEvents() {
-      document.body.style['pointer-events'] = 'auto';
-    }
-
-    function disableGlobalSelectEvents(event) {
-      event.preventDefault();
-    }
-
-    const newWidth = (wid) => {
-      const newWidthSize = Math.max(this.empNgResizableMinWidth, wid);
-      el.nativeElement.style.width = (newWidthSize) + 'px';
-    };
-
-
-    const mouseMoveG = (evt) => {
-      if (!this.dragging) {
-        return;
-      }
-      newWidth(evt.clientX - el.nativeElement.offsetLeft);
-      evt.stopPropagation();
-    };
-
-
-    const mouseUpG = (evt) => {
-      if (!this.dragging) {
-        return;
-      }
-      restoreGlobalMouseEvents();
-      this.dragging = false;
-      evt.stopPropagation();
-      document.removeEventListener('selectstart', disableGlobalSelectEvents);
-    };
-
-
-    const mouseDown = (evt) => {
-      if (this.inDragRegion(evt)) {
-        this.dragging = true;
-        preventGlobalMouseEvents();
-        evt.stopPropagation();
-        document.addEventListener('selectstart', disableGlobalSelectEvents);
-      }
-    };
-
-
-    const mouseMove = (evt) => {
-      if (this.inDragRegion(evt) || this.dragging) {
-        el.nativeElement.style.cursor = 'ew-resize';
-      } else {
-        el.nativeElement.style.cursor = 'default';
-      }
-    };
-
-    document.addEventListener('mousemove', mouseMoveG, true);
-    document.addEventListener('mouseup', mouseUpG, true);
-    el.nativeElement.addEventListener('mousedown', mouseDown, true);
-    el.nativeElement.addEventListener('mousemove', mouseMove, true);
+    document.addEventListener('mousemove', this.mouseMoveG, true);
+    document.addEventListener('mouseup', this.mouseUpG, true);
+    el.nativeElement.addEventListener('mousedown', this.mouseDown, true);
+    el.nativeElement.addEventListener('mousemove', this.mouseMove, true);
   }
 
 
-  inDragRegion(evt) {
+  private preventGlobalMouseEvents() {
+    document.body.style['pointer-events'] = 'none';
+  }
+
+
+  private restoreGlobalMouseEvents() {
+    document.body.style['pointer-events'] = 'auto';
+  }
+
+
+  private disableGlobalSelectEvents(event) {
+    event.preventDefault();
+  }
+
+
+  private inDragRegion(evt) {
     return this.el.nativeElement.clientWidth - evt.clientX + this.el.nativeElement.offsetLeft
       < this.empNgResizableGrabWidth;
   }
