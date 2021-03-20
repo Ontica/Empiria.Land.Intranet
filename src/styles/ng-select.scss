@@ -12,6 +12,14 @@
   min-width: 75px;
 }
 
+.ng-dropdown-panel-items,
+.ng-select-container {
+  .item-text-sm {
+    font-size: 0.75rem;
+    text-overflow: ellipsis;
+  }
+}
+
 .ng-select .ng-select-container {
   min-height: $control-height !important;
   margin: 2px 8px 2px 0;
@@ -84,16 +92,4 @@
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
   color: #333;
   background-color: #fafafa;
-}
-
-.ng-dropdown-panel-items,
-.ng-select-container {
-  .item-template {
-    padding: 0.25rem 0;
-  }
-
-  .item-text-sm {
-    font-size: 0.75rem;
-    text-overflow: ellipsis;
-  }
 }

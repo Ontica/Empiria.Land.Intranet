@@ -13,14 +13,14 @@
   font-family: "Material Icons" !important;
 }
 
-a > .mat-icon:hover {
-  color: $icon-color-dark;
-}
-
 button .mat-icon {
   color: $icon-color-light;
   cursor: pointer;
   font-family: "Material Icons" !important;
+}
+
+a > .mat-icon:hover {
+  color: $icon-color-dark;
 }
 
 .material-icons-outlined,
@@ -340,9 +340,6 @@ table.mat-table {
   .mat-slider-thumb-label {
     top: -22px !important;
     right: -9px !important;
-  }
-
-  .mat-slider-thumb-label {
     width: 18px;
     height: 18px;
   }

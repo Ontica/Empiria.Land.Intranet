@@ -33,7 +33,7 @@
     width: 960px;
   }
 
-  .primary-resizable:after {
+  .primary-resizable::after {
     position: absolute;
     background: $border-color-dark;
     border: 1px solid $border-color-dark;
@@ -55,7 +55,7 @@
     max-width: 960px;
   }
 
-  .primary-resizable-disable:after {
+  .primary-resizable-disable::after {
     display: none;
   }
 
