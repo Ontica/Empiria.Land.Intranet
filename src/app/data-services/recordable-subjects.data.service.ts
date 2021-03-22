@@ -82,6 +82,27 @@ export class RecordableSubjectsDataService {
   }
 
 
+  getRecordingBooks(recorderOfficeUID: string,
+                    recordingSectionUID: string,
+                    keywords?: string): Observable<Identifiable[]> {
+    let path = `v5/land/registration/recorder-offices/${recorderOfficeUID}/` +
+               `recording-sections/${recordingSectionUID}/recording-books`;
+
+    if (keywords) {
+      path += `/?keywords=${keywords}`;
+    }
+
+    return this.http.get<Identifiable[]>(path);
+  }
+
+
+  getRecordingBookEntries(recordingBookUID: string): Observable<Identifiable[]> {
+    const path = `v5/land/registration/recording-books/${recordingBookUID}/book-entries`;
+
+    return this.http.get<Identifiable[]>(path);
+  }
+
+
   getRecordingActTypesForInstrument(instrumentUID: string): Observable<RecordingActTypeGroup[]> {
     Assertion.assertValue(instrumentUID, 'instrumentUID');
 
