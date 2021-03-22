@@ -68,6 +68,13 @@ export class RecordableSubjectsDataService {
   }
 
 
+  getRealEstatePartitionKinds(): Observable<string[]> {
+    const path = `v5/land/registration/real-estate-partition-kinds`;
+
+    return this.http.get<string[]>(path);
+  }
+
+
   getRealEstateLotSizeUnits(): Observable<Identifiable[]> {
     const path = `v5/land/registration/real-estate-lot-size-units`;
 

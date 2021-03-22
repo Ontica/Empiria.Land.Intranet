@@ -8,7 +8,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Assertion, HttpService } from '@app/core';
+import { Assertion, HttpService, Identifiable } from '@app/core';
 
 import { BookEntryFields, InstrumentFields, InstrumentRecording, RegistrationCommand } from '@app/models';
 
@@ -17,6 +17,15 @@ import { BookEntryFields, InstrumentFields, InstrumentRecording, RegistrationCom
 export class RecordingDataService {
 
   constructor(private http: HttpService) { }
+
+
+  getRecordingActsList(listUID: string): Observable<Identifiable[]> {
+    Assertion.assertValue(listUID, 'listUID');
+
+    const path = `v5/land/registration/recording-acts/${listUID}`;
+
+    return this.http.get<Identifiable[]>(path);
+  }
 
 
   getTransactionInstrumentRecording(transactionUID: string): Observable<InstrumentRecording> {
