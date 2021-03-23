@@ -6,6 +6,7 @@
  */
 
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
 
 import { Assertion, Command, toPromise } from '@app/core';
@@ -16,9 +17,18 @@ import { EmptyInstrumentRecording } from '@app/models';
 
 import { RecordingDataService } from '@app/data-services';
 
+import { EmptyRecordableSubjectFields } from '@app/models/recordable-subjects';
+
+
+export enum ActionType {
+  SELECT_RECORDING_ACT = 'Land.Registration.Action.SelectRecordingAct',
+  UNSELECT_RECORDING_ACT = 'Land.Registration.Action.UnselectRecordingAct',
+}
+
 
 export enum SelectorType {
-  TRANSACTION_INSTRUMENT_RECORDING = 'Land.Instruments.TransactionInstrumentRecording'
+  TRANSACTION_INSTRUMENT_RECORDING = 'Land.Registration.TransactionInstrumentRecording',
+  SELECTED_RECORDING_ACT = 'Land.Registration.Selector.SelectedRecordingAct',
 }
 
 
@@ -48,6 +58,7 @@ export enum EffectType {
 
 const initialState: StateValues = [
   { key: SelectorType.TRANSACTION_INSTRUMENT_RECORDING, value: EmptyInstrumentRecording },
+  { key: SelectorType.SELECTED_RECORDING_ACT, value: EmptyRecordableSubjectFields },
 ];
 
 
@@ -59,7 +70,8 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
       initialState,
       selectors: SelectorType,
       commands: CommandType,
-      effects: EffectType
+      effects: EffectType,
+      actions: ActionType
     });
   }
 
@@ -145,6 +157,24 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
 
       default:
         throw this.unhandledCommand(command);
+    }
+  }
+
+
+  dispatch(actionType: ActionType, params?: any): void {
+    switch (actionType) {
+
+      case ActionType.SELECT_RECORDING_ACT:
+        Assertion.assertValue(params.recordingAct, 'payload.recordingAct');
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, params.recordingAct);
+        return;
+
+      case ActionType.UNSELECT_RECORDING_ACT:
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptyRecordableSubjectFields);
+        return;
+
+      default:
+        throw this.unhandledCommandOrActionType(actionType);
     }
   }
 

@@ -12,9 +12,8 @@ import { EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import {
-  TransactionStateSelector, MainUIStateSelector,
-  RecordingActsAction, RecordingActsStateSelector,
-  TransactionAction
+  MainUIStateSelector, RegistrationAction, RegistrationStateSelector,
+  TransactionAction, TransactionStateSelector,
 } from '@app/core/presentation/presentation-types';
 
 import {
@@ -104,7 +103,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
 
     this.subscriptionHelper.select<RecordingAct>
-      (RecordingActsStateSelector.SELECTED_RECORDING_ACT)
+      (RegistrationStateSelector.SELECTED_RECORDING_ACT)
       .subscribe(x => {
         this.selectedRecordingAct = x;
         this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct);
@@ -217,7 +216,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
   private unselectCurrentRecordingAct() {
-    this.uiLayer.dispatch(RecordingActsAction.UNSELECT_RECORDING_ACT);
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
   }
 
 }

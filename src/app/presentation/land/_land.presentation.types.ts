@@ -8,13 +8,13 @@
 
 /* Actions */
 
-import { ActionType as RecordingActsAction } from './recordings.presentation.handler';
-export { ActionType as RecordingActsAction } from './recordings.presentation.handler';
+import { ActionType as RegistrationAction } from './registration.presentation.handler';
+export { ActionType as RegistrationAction } from './registration.presentation.handler';
 
 import { ActionType as TransactionAction } from './transaction.presentation.handler';
 export { ActionType as TransactionAction } from './transaction.presentation.handler';
 
-export type LandActions = RecordingActsAction |
+export type LandActions = RegistrationAction |
                           TransactionAction;
 
 
@@ -50,15 +50,10 @@ import { SelectorType as RecordableSubjectsStateSelector } from './recordable-su
 export { SelectorType as RecordableSubjectsStateSelector } from './recordable-subjects.presentation.handler';
 
 
-import { SelectorType as RecordingActsStateSelector } from './recordings.presentation.handler';
-export { SelectorType as RecordingActsStateSelector } from './recordings.presentation.handler';
-
-
 import { SelectorType as TransactionStateSelector } from './transaction.presentation.handler';
 export { SelectorType as TransactionStateSelector } from './transaction.presentation.handler';
 
 
-export type LandSelectors = RecordingActsStateSelector |
-                            RegistrationStateSelector |
+export type LandSelectors = RegistrationStateSelector |
                             RecordableSubjectsStateSelector |
                             TransactionStateSelector;

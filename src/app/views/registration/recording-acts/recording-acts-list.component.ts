@@ -11,7 +11,7 @@ import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { Command, PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { RecordingActsAction, RegistrationCommandType } from '@app/core/presentation/presentation-types';
+import { RegistrationAction, RegistrationCommandType } from '@app/core/presentation/presentation-types';
 
 import { EmptyInstrumentRecording, InstrumentRecording, RecordingAct } from '@app/models';
 
@@ -56,7 +56,7 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
 
   onOpenRecordingActEditor(recordingAct: RecordingAct) {
-    this.uiLayer.dispatch(RecordingActsAction.SELECT_RECORDING_ACT, { recordingAct });
+    this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_ACT, { recordingAct });
   }
 
 
