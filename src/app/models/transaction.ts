@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Assertion, DateString, Empty, Entity, Identifiable, MediaBase } from '@app/core';
+import { Assertion, DateString, Empty, EmptyMediaBase, Entity, Identifiable, MediaBase } from '@app/core';
 
 
 export enum TransactionStage  {
@@ -119,6 +119,7 @@ export interface TransactionActions {
     cancelPaymentOrder?: boolean;
     editPayment?: boolean;
     cancelPayment?: boolean;
+    printControlVoucher?: boolean;
     printSubmissionReceipt?: boolean;
     uploadDocuments?: boolean;
   };
@@ -142,6 +143,7 @@ export const EmptyAction: TransactionActions = {
     cancelPaymentOrder: false,
     editPayment: false,
     cancelPayment: false,
+    printControlVoucher: false,
     printSubmissionReceipt: false,
     uploadDocuments: false
   },
@@ -195,6 +197,7 @@ export interface Transaction extends Entity {
   filingOffice: Identifiable;
   instrumentDescriptor: string;
   requestedServices: RequestedService[];
+  controlVoucher: MediaBase;
   paymentOrder?: PaymentOrder;
   payment: PaymentFields;
   submissionReceipt?: MediaBase;
@@ -218,6 +221,7 @@ export const EmptyTransaction: Transaction = {
   filingOffice: Empty,
   instrumentDescriptor: '',
   requestedServices: [],
+  controlVoucher: EmptyMediaBase,
   payment: EmptyPayment,
   statusName: '',
   assignedTo: Empty,

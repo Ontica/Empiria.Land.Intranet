@@ -28,6 +28,7 @@ export enum TransactionHeaderEventType {
   DELETE_TRANSACTION_CLICKED = 'TransactionHeaderComponent.Event.DeleteTransactionClicked',
   GENERATE_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.GeneratePaymentOrderClicked',
   CANCEL_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.CancelPaymentOrderClicked',
+  PRINT_CONTROL_VOUCHER = 'TransactionHeaderComponent.Event.PrintControlVoucherClicked',
   PRINT_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.PrintPaymentOrderClicked',
   PRINT_SUBMISSION_RECEIPT = 'TransactionHeaderComponent.Event.PrintSubmissionReceiptClicked',
 }
@@ -103,6 +104,10 @@ export class TransactionHeaderComponent implements OnChanges {
 
   get canPrintSubmissionReceipt() {
     return this.transaction.actions.can.printSubmissionReceipt;
+  }
+
+  get canPrintControlVoucher() {
+    return this.transaction.actions.can.printControlVoucher;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -198,6 +203,10 @@ export class TransactionHeaderComponent implements OnChanges {
 
   submitGeneratePaymentOrder() {
     this.sendEvent(TransactionHeaderEventType.GENERATE_PAYMENT_ORDER);
+  }
+
+  submitPrintControlVoucher() {
+    this.sendEvent(TransactionHeaderEventType.PRINT_CONTROL_VOUCHER);
   }
 
   submitPrintPaymentOrder() {

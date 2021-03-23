@@ -141,6 +141,12 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
         return;
 
+      case TransactionHeaderEventType.PRINT_CONTROL_VOUCHER:
+
+        this.printControlVoucher();
+
+        return;
+
       case TransactionHeaderEventType.PRINT_PAYMENT_ORDER:
 
         this.printPaymentOrder();
@@ -264,14 +270,19 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
       .finally(() => this.submitted = false);
   }
 
+  printControlVoucher() {
+    this.openPrintViewer(this.transaction.controlVoucher.url,
+                         this.transaction.controlVoucher.mediaType);
+  }
+
   printPaymentOrder() {
     this.openPrintViewer(this.transaction.paymentOrder.media.url,
-      this.transaction.paymentOrder.media.mediaType);
+                         this.transaction.paymentOrder.media.mediaType);
   }
 
   printSubmissionReceipt() {
     this.openPrintViewer(this.transaction.submissionReceipt.url,
-      this.transaction.submissionReceipt.mediaType);
+                        this.transaction.submissionReceipt.mediaType);
   }
 
   openPrintViewer(url: string, mediaType: string) {
