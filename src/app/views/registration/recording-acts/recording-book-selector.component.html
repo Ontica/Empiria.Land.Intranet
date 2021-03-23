@@ -1,0 +1,77 @@
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section" [empNgSpinnerHost]="spinner">
+
+  <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+
+  <div fxLayout="column" fxLayoutGap="0.75rem">
+
+    <mat-divider class="divider-padding">
+
+    </mat-divider>
+
+    <div fxLayout="row">
+      <div fxFlex="20">
+        <label>Distrito:</label>
+        <emp-ng-select [formControlName]="controls.recorderOfficeUID"
+          [config]="{ clearable: false }"
+          [items]="recorderOfficeList"
+          (changes)="onRecorderOfficeChange($event)">
+        </emp-ng-select>
+      </div>
+
+      <div fxFlex="30">
+        <label>Sección:</label>
+        <emp-ng-select [formControlName]="controls.recordingSectionUID"
+          [config]="{ clearable: false }"
+          [items]="recordingSectionList"
+          (changes)="onRecordingSectionChange($event)">
+        </emp-ng-select>
+      </div>
+
+      <div fxFlex="25">
+        <label>Volumen:</label>
+
+        <div fxLayout="row">
+
+          <emp-ng-select fxFlex
+            [formControlName]="controls.recordingBookUID"
+            [config]="{ hideSelected: true,
+                        minTermLength: recordingBookMinTermLength,
+                        dropdownPosition: 'top' }"
+            [items]="recordingBookList$ | async"
+            [typeahead]="recordingBookInput$"
+            [loading]="recordingBookLoading"
+            [placeholder]="isReadyToFilterRecordingBook ? 'Buscar' : 'Seleccione'"
+            (changes)="onRecordingBookChange($event)">
+
+          </emp-ng-select>
+
+          <button type="button" class="btn" fxFlex="67px" [style.marginTop.px]="2"
+            (click)="onRecordingBookClicked()">
+            Editar
+          </button>
+        </div>
+
+      </div>
+
+      <div fxFlex="25" *ngIf="showRecordingBookEntryField">
+        <label>Inscripción:</label>
+
+        <div fxLayout="row">
+          <emp-ng-select [formControlName]="controls.recordingBookEntryUID" fxFlex
+            [items]="recordingBookEntryList"
+            [placeholder]="recordingBookEntryList.length === 0 ? 'Seleccione' : 'Seleccionar'"
+            (changes)="onRecordingBookEntryChange($event)">
+          </emp-ng-select>
+          <button type="button" class="btn" fxFlex="67px" [style.marginTop.px]="2"
+            (click)="onRecordingBookEntryClicked()">
+            Ver
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</form>

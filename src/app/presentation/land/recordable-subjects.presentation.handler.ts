@@ -25,6 +25,8 @@ export enum SelectorType {
   RECORDER_OFFICE_LIST           = 'Land.RecordableSubjects.RecorderOffice.List',
   REAL_ESTATE_KIND_LIST          = 'Land.RecordableSubjects.RealEstateKind.List',
   REAL_ESTATE_LOT_SIZE_UNIT_LIST = 'Land.RecordableSubjects.RealEstateLoteSizeUnit.List',
+  RECORDING_BOOKS_LIST           = 'Land.RecordableSubjects.RecordingBooks.List',
+  RECORDING_BOOK_ENTRIES_LIST   = 'Land.RecordableSubjects.RecordingBookEntries.List',
   RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT = 'Land.Instruments.RecordingActTypesForInstrument.List'
 }
 
@@ -32,7 +34,6 @@ export enum SelectorType {
 const initialState: StateValues = [
   { key: SelectorType.ASSOCIATION_KIND_LIST, value: [] },
   { key: SelectorType.INSTRUMENT_KIND_LIST, value: new Cache<string[]>() },
-  { key: SelectorType.INSTRUMENT_TYPE_ISSUERS_LIST, value: [] },
   { key: SelectorType.NO_PROPERTY_KIND_LIST, value: [] },
   { key: SelectorType.REAL_ESTATE_KIND_LIST, value: [] },
   { key: SelectorType.REAL_ESTATE_LOT_SIZE_UNIT_LIST, value: [] },
@@ -101,6 +102,19 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
 
         return super.selectFirst<U>(selectorType, provider);
 
+      case SelectorType.RECORDING_BOOKS_LIST:
+        Assertion.assertValue(params.recorderOfficeUID, 'params.recorderOfficeUID');
+        Assertion.assertValue(params.recordingSectionUID, 'params.recordingSectionUID');
+        Assertion.assertValue(params.keywords, 'params.keywords');
+
+        return toObservable<U>(this.data.getRecordingBooks(params.recorderOfficeUID,
+                                                           params.recordingSectionUID,
+                                                           params.keywords));
+
+      case SelectorType.RECORDING_BOOK_ENTRIES_LIST:
+        Assertion.assertValue(params.recordingBookUID, 'params.recordingBookUID');
+
+        return toObservable<U>(this.data.getRecordingBookEntries(params.recordingBookUID));
 
       case SelectorType.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT:
         Assertion.assertValue(params.instrumentUID, 'params.instrumentUID');
