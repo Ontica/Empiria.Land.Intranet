@@ -24,6 +24,7 @@ export enum SelectorType {
   NO_PROPERTY_KIND_LIST          = 'Land.RecordableSubjects.NoPropertyKind.List',
   RECORDER_OFFICE_LIST           = 'Land.RecordableSubjects.RecorderOffice.List',
   REAL_ESTATE_KIND_LIST          = 'Land.RecordableSubjects.RealEstateKind.List',
+  REAL_ESTATE_PARTITION_KIND_LIST = 'Land.RecordableSubjects.RealEstatePartitionKind.List',
   REAL_ESTATE_LOT_SIZE_UNIT_LIST = 'Land.RecordableSubjects.RealEstateLoteSizeUnit.List',
   RECORDING_BOOKS_LIST           = 'Land.RecordableSubjects.RecordingBooks.List',
   RECORDING_BOOK_ENTRIES_LIST   = 'Land.RecordableSubjects.RecordingBookEntries.List',
@@ -36,6 +37,7 @@ const initialState: StateValues = [
   { key: SelectorType.INSTRUMENT_KIND_LIST, value: new Cache<string[]>() },
   { key: SelectorType.NO_PROPERTY_KIND_LIST, value: [] },
   { key: SelectorType.REAL_ESTATE_KIND_LIST, value: [] },
+  { key: SelectorType.REAL_ESTATE_PARTITION_KIND_LIST, value: [] },
   { key: SelectorType.REAL_ESTATE_LOT_SIZE_UNIT_LIST, value: [] },
   { key: SelectorType.RECORDER_OFFICE_LIST, value: [] }
 ];
@@ -87,6 +89,12 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
 
       case SelectorType.REAL_ESTATE_KIND_LIST:
         provider = () => this.data.getRealEstateKinds();
+
+        return super.selectFirst<U>(selectorType, provider);
+
+
+      case SelectorType.REAL_ESTATE_PARTITION_KIND_LIST:
+        provider = () => this.data.getRealEstatePartitionKinds();
 
         return super.selectFirst<U>(selectorType, provider);
 

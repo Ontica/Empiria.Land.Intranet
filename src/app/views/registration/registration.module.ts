@@ -17,8 +17,8 @@ import { LandControlsModule } from '../land-controls/land.controls.module';
 import { RecordableSubjectsModule } from '../recordable-subjects/recordable-subjects.module';
 import { RecordingBooksModule } from './recording-books/recording-books.module';
 
-import { RecordingActCreatorComponent } from './recording-act-creator/recording-act-creator.component';
-import { RecordingActsListComponent } from './recording-acts-list/recording-acts-list.component';
+import { RecordingActsListComponent } from './recording-acts/recording-acts-list.component';
+import { RecordingActCreatorComponent } from './recording-acts/recording-act-creator.component';
 import { RecordingBookSelectorComponent } from './recording-acts/recording-book-selector.component';
 import { RegistrationMainPageComponent } from './main-page/registration-main-page.component';
 import {

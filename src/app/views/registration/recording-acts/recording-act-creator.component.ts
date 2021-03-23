@@ -19,10 +19,9 @@ import { EmptyInstrumentRecording, InstrumentRecording,
          RecordingActType, RecordingActTypeGroup, RegistrationCommand } from '@app/models';
 
 import { RegistrationCommandType,
-         RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
+         RecordableSubjectsStateSelector} from '@app/presentation/exported.presentation.types';
 
 import { FormHandler } from '@app/shared/utils';
-
 
 enum RecordingActCreatorFormControls {
   recordingActTypeGroup = 'recordingActTypeGroup',
@@ -32,7 +31,6 @@ enum RecordingActCreatorFormControls {
   partitionType = 'partitionType',
   partitionNo = 'partitionNo',
 }
-
 
 @Component({
   selector: 'emp-land-recording-act-creator',
@@ -54,12 +52,15 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   showRealEstateField = false;
   showPartitionField = false;
-  showSeeker = false;
 
   realEstateList$: Observable<any[]>;
   realEstateInput$ = new Subject<string>();
   realEstateLoading = false;
   realEstateMinTermLength = 5;
+
+  realEstatePartitionKindList: any[] = [];
+
+  showSeeker = false;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
@@ -82,31 +83,21 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     this.recordingActTypeList = recordingActTypeGroup.recordingActTypes ?? [];
     this.subjectCommandList = [];
 
-    this.formHandler.getControl('recordingActType').reset();
-    this.formHandler.getControl('subjectCommand').reset();
+    this.formHandler.getControl(this.controls.recordingActType).reset();
+    this.formHandler.getControl(this.controls.subjectCommand).reset();
   }
 
 
   onRecordingActTypeChange(recordingActType: RecordingActType) {
     this.subjectCommandList = recordingActType.subjectCommands ?? [];
-    this.formHandler.getControl('subjectCommand').reset();
+    this.formHandler.getControl(this.controls.subjectCommand).reset();
   }
 
 
-  subjectCommandChange(){
-    this.showRealEstateField = ['SelectRealEstate', 'SelectRealEstatePartition']
-                               .includes(this.formHandler.getControl('subjectCommand').value);
-
-    this.showPartitionField = ['SelectRealEstatePartition']
-                               .includes(this.formHandler.getControl('subjectCommand').value);
-
+  onSubjectCommandChange(){
+    this.validateRealEstateField();
+    this.validatePartitionField();
     this.showSeeker = false;
-
-    if (this.showRealEstateField) {
-      this.formHandler.setControlValidators('realEstate', Validators.required);
-    } else {
-      this.formHandler.clearControlValidators('realEstate');
-    }
   }
 
 
@@ -137,48 +128,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private initLoad() {
-    this.helper.select<RecordingActTypeGroup[]>(
-      RecordableSubjectsStateSelector.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT,
-      { instrumentUID: this.instrumentRecording.instrument.uid })
-      .subscribe(x => {
-        this.recordingActTypeGroupList = x;
-      });
-  }
-
-
-  private subscribeRealEstateList() {
-    // this.realEstateList$ = concat(
-    //   of([]),
-    //   this.realEstateInput$.pipe(
-    //       filter(e => e !== null && e.length >= this.realEstateMinTermLength),
-    //       distinctUntilChanged(),
-    //       debounceTime(800),
-    //       tap(() => this.realEstateLoading = true),
-    //       switchMap(term =>
-    //         this.uiLayer.select<any[]>(InstrumentsStateSelector.ISSUER_LIST,
-    //                                       this.buildRealEstateFilter(term))
-    //           .pipe(
-    //               catchError(() => of([])),
-    //               tap(() => this.realEstateLoading = false)
-    //       ))
-    //   )
-    // );
-  }
-
-
-  // private buildRealEstateFilter(keywords: string): any {
-  //   const realEstateFilter = {
-  //     instrumentType: 'DocumentoTerceros',
-  //     instrumentKind: '',
-  //     onDate: '',
-  //     keywords
-  //   };
-
-  //   return realEstateFilter;
-  // }
-
-
   private initForm() {
     this.formHandler = new FormHandler(
       new FormGroup({
@@ -190,6 +139,78 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
         partitionNo: new FormControl(''),
       })
     );
+  }
+
+
+  private initLoad() {
+    this.helper.select<RecordingActTypeGroup[]>(
+      RecordableSubjectsStateSelector.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT,
+      { instrumentUID: this.instrumentRecording.instrument.uid })
+      .subscribe(x => {
+        this.recordingActTypeGroupList = x;
+      });
+
+    this.helper.select<string[]>(RecordableSubjectsStateSelector.REAL_ESTATE_PARTITION_KIND_LIST)
+      .subscribe(x => {
+        this.realEstatePartitionKindList = x.map(item => Object.create({ name: item }));
+      });
+  }
+
+
+  private subscribeRealEstateList() {
+    this.realEstateList$ = concat(
+      of([]),
+      this.realEstateInput$.pipe(
+          filter(keyword => keyword !== null && keyword.length >= this.realEstateMinTermLength),
+          distinctUntilChanged(),
+          debounceTime(800),
+          tap(() => this.realEstateLoading = true),
+          switchMap(keyword => of([])
+                          //  this.helper.select<any[]>(RecordableSubjectsStateSelector.RECORDING_BOOKS_LIST,
+                          //  this.buildRealEstateFilter(keyword))
+            .pipe(
+              catchError(() => of([])),
+              tap(() => this.realEstateLoading = false)
+          ))
+      )
+    );
+  }
+
+
+  private buildRealEstateFilter(keywords: string): any {
+    const realEstateFilter = {
+      recordingActType: '',
+      subjectCommand: '',
+      keywords
+    };
+
+    return realEstateFilter;
+  }
+
+
+  private validateRealEstateField(){
+    this.showRealEstateField = ['SelectRealEstate', 'SelectRealEstatePartition']
+                               .includes(this.formHandler.getControl(this.controls.subjectCommand).value);
+
+    if (this.showRealEstateField) {
+      this.formHandler.setControlValidators(this.controls.realEstate, Validators.required);
+    } else {
+      this.formHandler.clearControlValidators(this.controls.realEstate);
+    }
+  }
+
+
+  private validatePartitionField(){
+    this.showPartitionField = ['SelectRealEstatePartition']
+                               .includes(this.formHandler.getControl(this.controls.subjectCommand).value);
+
+    if (this.showPartitionField) {
+      this.formHandler.setControlValidators(this.controls.partitionType, Validators.required);
+      this.formHandler.setControlValidators(this.controls.partitionNo, Validators.required);
+    } else {
+      this.formHandler.clearControlValidators(this.controls.partitionType);
+      this.formHandler.clearControlValidators(this.controls.partitionNo);
+    }
   }
 
 
