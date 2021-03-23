@@ -14,7 +14,7 @@ import { Subject } from 'rxjs';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { DropdownPosition, NgSelectComponent } from '@ng-select/ng-select';
 
 
 export interface SelectBoxConfig {
@@ -24,6 +24,7 @@ export interface SelectBoxConfig {
   autoSelect?: boolean;
   clearable?: boolean;
   closeOnSelect?: boolean;
+  dropdownPosition?: DropdownPosition;
   groupBy?: string;
   hideSelected?: boolean;
   minTermLength?: number;
@@ -42,6 +43,7 @@ const DefaultSelectBoxConfig: SelectBoxConfig = {
   autoSelect: false,
   clearable: true,
   closeOnSelect: true,
+  dropdownPosition: 'auto',
   groupBy: null,
   hideSelected: false,
   minTermLength: 5,
@@ -72,9 +74,9 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
   @ContentChild('optionTemplate', { read: TemplateRef }) optionTemplate: TemplateRef<any>;
 
   @Input() items: any[];
-  @Input() bindLabel: string = 'name';
-  @Input() bindValue: string = 'uid';
-  @Input() placeholder: string = 'Seleccionar';
+  @Input() bindLabel = 'name';
+  @Input() bindValue = 'uid';
+  @Input() placeholder = 'Seleccionar';
 
   @Input() loading = false;
   @Input() typeahead: Subject<string>;

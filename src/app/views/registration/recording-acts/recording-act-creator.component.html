@@ -42,7 +42,7 @@
           [items]="subjectCommandList"
           [placeholder]="subjectCommandList.length === 0 ? 'Seleccione el acto jurídico a registrar' : 'Seleccione'"
           [showError]="formHandler.showInvalidControl(controls.subjectCommand)"
-          (changes)="subjectCommandChange()">
+          (changes)="onSubjectCommandChange()">
         </emp-ng-select>
       </div>
 
@@ -50,8 +50,12 @@
         <div fxFlex>
           <label>Buscar y seleccionar el folio real:</label>
 
-          <emp-ng-select [formControlName]="controls.realEstate" [config]="{ hideSelected: true, minTermLength: realEstateMinTermLength }"
-            [items]="realEstateList$ | async" [typeahead]="realEstateInput$" [loading]="realEstateLoading" [style.width.%]="100"
+          <emp-ng-select [formControlName]="controls.realEstate"
+            [config]="{ hideSelected: true, minTermLength: realEstateMinTermLength }"
+            [items]="realEstateList$ | async"
+            [typeahead]="realEstateInput$"
+            [loading]="realEstateLoading"
+            [style.width.%]="100"
             [showError]="formHandler.showInvalidControl(controls.realEstate)">
 
           </emp-ng-select>
@@ -83,15 +87,18 @@
         <label>Tipo de la nueva fracción:</label>
 
         <emp-ng-select [formControlName]="controls.partitionType"
+          bindValue="name"
           [config]="{ clearable: false }"
-          [items]="[]">
+          [items]="realEstatePartitionKindList"
+          [showError]="formHandler.showInvalidControl(controls.partitionType)">
         </emp-ng-select>
       </div>
 
       <div  fxFlex="35">
         <label>Número o identificador de la nueva fracción:</label>
 
-        <input type="text" class="text-box" [formControlName]="controls.partitionNo">
+        <input type="text" class="text-box" [formControlName]="controls.partitionNo"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.partitionNo)">
       </div>
 
     </div>
@@ -110,50 +117,9 @@
 
     </div>
 
-    <mat-divider *ngIf="showSeeker" class="divider-padding">
+    <emp-land-recording-book-selector *ngIf="showSeeker" [showRecordingBookEntryField]="true">
 
-    </mat-divider>
-
-    <div *ngIf="showSeeker" fxLayout="row">
-      <div fxFlex="20">
-        <label>Distrito:</label>
-        <emp-ng-select [config]="{ clearable: false }" [items]="[]" [formControlName]="controls.subjectCommand">
-        </emp-ng-select>
-      </div>
-
-      <div fxFlex="30">
-        <label>Sección:</label>
-        <emp-ng-select [config]="{ clearable: false }" [items]="[]" [formControlName]="controls.subjectCommand">
-        </emp-ng-select>
-      </div>
-
-      <div fxFlex="25">
-        <label>Volumen:</label>
-
-        <div fxLayout="row">
-          <emp-ng-select [config]="{ clearable: false }" [items]="[]" fxFlex [formControlName]="controls.subjectCommand">
-          </emp-ng-select>
-          <button type="button" class="btn" fxFlex="70px" [style.marginTop.px]="2">
-            Editar
-          </button>
-        </div>
-
-      </div>
-
-      <div fxFlex="25">
-        <label>Inscripción:</label>
-
-        <div fxLayout="row">
-          <emp-ng-select [config]="{ clearable: false }" [items]="[]" fxFlex [formControlName]="controls.subjectCommand">
-          </emp-ng-select>
-          <button type="button" class="btn" fxFlex="70px" [style.marginTop.px]="2">
-            Editar
-          </button>
-        </div>
-
-      </div>
-
-    </div>
+    </emp-land-recording-book-selector>
 
   </div>
 
