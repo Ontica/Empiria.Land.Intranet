@@ -27,18 +27,32 @@ export interface NoPropertyFields extends RecordableSubjectFields {
 }
 
 
+export interface RecordingContext {
+  instrumentUID: string;
+  recordingActUID: string;
+}
+
+
+export const EmptyRecordingContext: RecordingContext = {
+  instrumentUID: '',
+  recordingActUID: ''
+};
+
+
 export interface RecordableSubject extends Identifiable, PartitionedType {
   electronicID: string;
   kind: string;
-
+  recordingContext: RecordingContext;
 }
+
 
 export const EmptyRecordableSubject: RecordableSubject = {
   uid: '',
   type: '',
   name: '',
   electronicID: '',
-  kind: ''
+  kind: '',
+  recordingContext: EmptyRecordingContext
 };
 
 
