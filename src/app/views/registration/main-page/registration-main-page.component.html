@@ -6,19 +6,19 @@
 
 <ng-container *ngIf="actions.show.recordingBookEntries">
   <br>
-  <emp-land-book-entries-list
+  <emp-land-instrument-book-entry-list
     [instrumentRecording]="instrumentRecording">
-  </emp-land-book-entries-list>
+  </emp-land-instrument-book-entry-list>
 
   <emp-ng-expansion-button *ngIf="actions.can.createNextRecordingBookEntries"
     [(panelState)]="panelAddState"
     [config]="{textButtonOpen: 'Agregar registro del documento en libros',
                textButtonClose: 'Cancelar agregar registro'}">
 
-    <emp-land-book-entry-creator *ngIf="panelAddState"
+    <emp-instrument-land-book-entry-creator *ngIf="panelAddState"
       [instrumentRecordingUID]="instrumentRecording.uid">
 
-    </emp-land-book-entry-creator>
+    </emp-instrument-land-book-entry-creator>
 
   </emp-ng-expansion-button>
 

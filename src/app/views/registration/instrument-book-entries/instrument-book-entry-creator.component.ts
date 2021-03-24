@@ -21,17 +21,17 @@ import { BookEntryFields, RecordingSection } from '@app/models';
 import { FormHandler } from '@app/shared/utils';
 
 
-enum BookEntryCreatorFormControls {
+enum InstrumentBookEntryCreatorFormControls {
   recorderOffice = 'recorderOffice',
   recordingSection = 'recordingSection',
 }
 
 
 @Component({
-  selector: 'emp-land-book-entry-creator',
-  templateUrl: './book-entry-creator.component.html',
+  selector: 'emp-instrument-land-book-entry-creator',
+  templateUrl: './instrument-book-entry-creator.component.html',
 })
-export class BookEntryCreatorComponent implements OnInit, OnDestroy {
+export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
 
   @Input() instrumentRecordingUID: string = 'Empty';
 
@@ -43,7 +43,7 @@ export class BookEntryCreatorComponent implements OnInit, OnDestroy {
 
   formHandler: FormHandler;
 
-  controls = BookEntryCreatorFormControls;
+  controls = InstrumentBookEntryCreatorFormControls;
 
   submitted = false;
 

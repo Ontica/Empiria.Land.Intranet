@@ -15,7 +15,7 @@ import { SharedModule } from '@app/shared/shared.module';
 
 import { LandControlsModule } from '../land-controls/land.controls.module';
 import { RecordableSubjectsModule } from '../recordable-subjects/recordable-subjects.module';
-import { RecordingBooksModule } from './recording-books/recording-books.module';
+import { InstrumentBookEntriesModule } from './instrument-book-entries/instrument-book-entries.module';
 
 import { RecordingActsListComponent } from './recording-acts/recording-acts-list.component';
 import { RecordingActCreatorComponent } from './recording-acts/recording-act-creator.component';
@@ -36,7 +36,7 @@ import {
     SharedModule,
 
     LandControlsModule,
-    RecordingBooksModule,
+    InstrumentBookEntriesModule,
     RecordableSubjectsModule,
   ],
 

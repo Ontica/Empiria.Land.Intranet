@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BookEntriesListComponent } from './book-entries-list.component';
+import { InstrumentBookEntryCreatorComponent } from './instrument-book-entry-creator.component';
 
 
-describe('BookEntriesListComponent', () => {
-  let component: BookEntriesListComponent;
-  let fixture: ComponentFixture<BookEntriesListComponent>;
+describe('InstrumentBookEntryCreatorComponent', () => {
+  let component: InstrumentBookEntryCreatorComponent;
+  let fixture: ComponentFixture<InstrumentBookEntryCreatorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BookEntriesListComponent ]
+      declarations: [ InstrumentBookEntryCreatorComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BookEntriesListComponent);
+    fixture = TestBed.createComponent(InstrumentBookEntryCreatorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

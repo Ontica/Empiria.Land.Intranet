@@ -24,10 +24,10 @@ import {
 
 
 @Component({
-  selector: 'emp-land-book-entries-list',
-  templateUrl: './book-entries-list.component.html',
+  selector: 'emp-land-instrument-book-entry-list',
+  templateUrl: './instrument-book-entry-list.component.html',
 })
-export class BookEntriesListComponent implements OnChanges, OnDestroy {
+export class InstrumentBookEntryListComponent implements OnChanges, OnDestroy {
 
   @ViewChild('filePrintPreview', { static: true }) filePrintPreview: FilePrintPreviewComponent;
 

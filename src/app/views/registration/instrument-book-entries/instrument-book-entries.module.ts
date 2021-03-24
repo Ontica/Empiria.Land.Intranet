@@ -13,8 +13,8 @@ import { AngularMaterialModule } from '@app/shared/angular-material.module';
 import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
 import { SharedModule } from '@app/shared/shared.module';
 
-import { BookEntryCreatorComponent } from './book-entry-creator.component';
-import { BookEntriesListComponent } from './book-entries-list.component';
+import { InstrumentBookEntryCreatorComponent } from './instrument-book-entry-creator.component';
+import { InstrumentBookEntryListComponent } from './instrument-book-entry-list.component';
 
 
 @NgModule({
@@ -28,13 +28,13 @@ import { BookEntriesListComponent } from './book-entries-list.component';
   ],
 
   declarations: [
-    BookEntryCreatorComponent,
-    BookEntriesListComponent,
+    InstrumentBookEntryCreatorComponent,
+    InstrumentBookEntryListComponent,
   ],
 
   exports: [
-    BookEntryCreatorComponent,
-    BookEntriesListComponent,
+    InstrumentBookEntryCreatorComponent,
+    InstrumentBookEntryListComponent,
   ]
 })
-export class RecordingBooksModule { }
+export class InstrumentBookEntriesModule { }
