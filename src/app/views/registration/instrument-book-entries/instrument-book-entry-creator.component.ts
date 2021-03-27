@@ -28,12 +28,12 @@ enum InstrumentBookEntryCreatorFormControls {
 
 
 @Component({
-  selector: 'emp-instrument-land-book-entry-creator',
+  selector: 'emp-land-instrument-land-book-entry-creator',
   templateUrl: './instrument-book-entry-creator.component.html',
 })
 export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
 
-  @Input() instrumentRecordingUID: string = 'Empty';
+  @Input() instrumentRecordingUID = 'Empty';
 
   recorderOfficeList: Identifiable[] = [];
 
