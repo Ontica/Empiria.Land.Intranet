@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { DateString, Identifiable, MediaBase, PartitionedType } from '@app/core';
+import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase, PartitionedType } from '@app/core';
 
 
 export interface RecordableSubjectFields extends Identifiable, PartitionedType {
@@ -67,6 +67,24 @@ export interface RealEstate extends RecordableSubject {
   description: string;
   metesAndBounds: string;
 }
+
+export const EmptyRealEstate: RealEstate = {
+  uid: '',
+  type: '',
+  name: '',
+  electronicID: '',
+  kind: '',
+  recordingContext: EmptyRecordingContext,
+  cadastralID: '',
+  cadastreLinkingDate: '',
+  cadastralCardMedia: EmptyMediaBase,
+  recorderOffice: Empty,
+  municipality: Empty,
+  lotSize: null,
+  lotSizeUnit: Empty,
+  description: '',
+  metesAndBounds: '',
+};
 
 
 export interface RealEstateFields extends RecordableSubjectFields {

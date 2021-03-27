@@ -24,7 +24,7 @@ export * from './party';
 
 export * from './preprocessing-data';
 
-export * from './property';
+export * from './recordable-subjects';
 
 export * from './recording-act';
 
