@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 
 import { RecordingAct } from '@app/models';
 
@@ -14,7 +14,7 @@ import { RecordingAct } from '@app/models';
   selector: 'emp-land-recordable-subject-tabbed-view',
   templateUrl: './recordable-subject-tabbed-view.component.html',
 })
-export class RecordableSubjectTabbedViewComponent implements OnInit {
+export class RecordableSubjectTabbedViewComponent implements OnInit, OnChanges {
 
   @Input() recordingAct: RecordingAct;
 
@@ -24,13 +24,17 @@ export class RecordableSubjectTabbedViewComponent implements OnInit {
 
   cardHint: string;
 
-  tabEditorLabel: string = 'Datos del predio';
+  tabEditorLabel = 'Datos del predio';
 
   constructor() {
   }
 
 
   ngOnInit(): void {
+  }
+
+
+  ngOnChanges() {
     this.initTexts();
   }
 

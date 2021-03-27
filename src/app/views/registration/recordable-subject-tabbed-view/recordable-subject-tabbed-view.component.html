@@ -9,13 +9,13 @@
     <mat-tab [label]="tabEditorLabel">
 
       <emp-land-real-estate-editor *ngIf="isRealEstate"
-        [electronicID]="recordingAct.recordableSubject.electronicID"
+        [recordableSubject]="recordingAct.recordableSubject"
         [readonly]="false">
 
       </emp-land-real-estate-editor>
 
       <emp-land-no-property-editor *ngIf="isAssociation || isNoProperty"
-        [electronicID]="recordingAct.recordableSubject.electronicID"
+        [recordableSubject]="recordingAct.recordableSubject"
         [isAssociation]="isAssociation"
         [readonly]="false">
 

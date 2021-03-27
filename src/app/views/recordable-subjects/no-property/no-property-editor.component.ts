@@ -1,7 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, Command } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+import { RecordableSubject } from '@app/models/recordable-subjects';
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 import { FormHandler } from '@app/shared/utils';
 
@@ -17,9 +18,9 @@ enum NoPropertyEditorFormControls {
   selector: 'emp-land-no-property-editor',
   templateUrl: './no-property-editor.component.html',
 })
-export class NoPropertyEditorComponent implements OnInit, OnDestroy {
+export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() electronicID: string;
+  @Input() recordableSubject: RecordableSubject;
 
   @Input() readonly = false;
 
@@ -48,6 +49,13 @@ export class NoPropertyEditorComponent implements OnInit, OnDestroy {
     this.loadDataLists();
     this.setFormData();
     this.disableForm(true);
+  }
+
+
+  ngOnChanges() {
+    if (this.recordableSubject) {
+      Object.assign(this.noProperty, this.recordableSubject);
+    }
   }
 
 

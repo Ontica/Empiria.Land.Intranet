@@ -5,16 +5,16 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Assertion, Command, Identifiable } from '@app/core';
+import { Assertion, Command, Identifiable, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { EmptyRealEstate, RealEstate, RecorderOffice } from '@app/models';
-import { RealEstateFields } from '@app/models/recordable-subjects';
+import { RealEstateFields, RecordableSubject } from '@app/models/recordable-subjects';
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
-import { FormHandler } from '@app/shared/utils';
+import { ArrayLibrary, FormHandler } from '@app/shared/utils';
 
 
 enum RealEstateEditorFormControls {
@@ -38,9 +38,9 @@ enum RealEstateEditorFormControls {
   styles: [
   ]
 })
-export class RealEstateEditorComponent implements OnInit, OnDestroy {
+export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() electronicID: string;
+  @Input() recordableSubject: RecordableSubject;
 
   @Input() readonly = false;
 
@@ -67,9 +67,16 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
-    this.loadDataLists();
     this.setFormData();
+    this.loadDataLists();
     this.disableForm(true);
+  }
+
+
+  ngOnChanges() {
+    if (this.recordableSubject) {
+      Object.assign(this.realEstate, this.recordableSubject);
+    }
   }
 
 
@@ -85,12 +92,14 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
       this.setFormData();
     }
 
+    this.setRecorderOfficeAndMunicipalityDataList();
     this.disableForm(!this.editorMode);
   }
 
 
   onRecorderOfficeChange(recorderOffice: RecorderOffice){
-    this.municipalityList = recorderOffice.municipalities;
+    this.municipalityList = recorderOffice?.municipalities ?? [];
+    this.formHandler.getControl(this.controls.municipalityUID).reset();
   }
 
 
@@ -169,10 +178,33 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
   }
 
 
+  private setFormData() {
+    if (!this.realEstate) {
+      this.formHandler.form.reset();
+      return;
+    }
+
+    this.formHandler.form.reset({
+      electronicID: this.realEstate.electronicID || '',
+      cadastralID: this.realEstate.cadastralID || '',
+      cadastreLinkingDate: this.realEstate.cadastreLinkingDate || '',
+      recorderOfficeUID: this.realEstate.recorderOffice.uid || '',
+      municipalityUID: this.realEstate.municipality.uid || '',
+      resourceKindUID: this.realEstate.kind || '',
+      lotSize: this.realEstate.lotSize || '',
+      lotSizeUnitUID: this.realEstate.lotSizeUnit.uid || '',
+      description: this.realEstate.description || '',
+      metesAndBounds: this.realEstate.metesAndBounds || '',
+      completed: false, // this.realEstate.completed,
+    });
+  }
+
+
   private loadDataLists() {
     this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
       .subscribe(x => {
         this.recorderOfficeList = x;
+        this.setRecorderOfficeAndMunicipalityDataList();
       });
 
     this.helper.select<string[]>(RecordableSubjectsStateSelector.REAL_ESTATE_KIND_LIST)
@@ -187,25 +219,26 @@ export class RealEstateEditorComponent implements OnInit, OnDestroy {
   }
 
 
-  private setFormData() {
-    if (!this.realEstate) {
-      this.formHandler.form.reset();
-      return;
+  private setRecorderOfficeAndMunicipalityDataList(){
+    this.municipalityList = [];
+
+    if (!isEmpty(this.realEstate.recorderOffice)) {
+      const recorderOffice =
+        this.recorderOfficeList.filter(x => x.uid === this.realEstate.recorderOffice.uid).length > 0 ?
+        this.recorderOfficeList.filter(x => x.uid === this.realEstate.recorderOffice.uid)[0] : null;
+
+      if (recorderOffice && recorderOffice.municipalities?.length > 0) {
+        this.municipalityList = recorderOffice.municipalities;
+      }
+
+      this.recorderOfficeList = ArrayLibrary.insertIfNotExist(this.recorderOfficeList,
+        this.realEstate.recorderOffice as RecorderOffice, 'uid');
     }
 
-    this.formHandler.form.reset({
-      electronicID: this.realEstate.electronicID || '',
-      cadastralID: this.realEstate.cadastralID || '',
-      cadastreLinkingDate: this.realEstate.cadastreLinkingDate || '',
-      recorderOfficeUID: this.realEstate.recorderOffice.uid || '',
-      municipalityUID: this.realEstate.municipality.uid || '',
-      resourceKindUID: this.realEstate.resourceKind.uid || '',
-      lotSize: this.realEstate.lotSize || '',
-      lotSizeUnitUID: this.realEstate.lotSizeUnit.uid || '',
-      description: this.realEstate.description || '',
-      metesAndBounds: this.realEstate.metesAndBounds || '',
-      completed: false, // this.realEstate.completed,
-    });
+    if (!isEmpty(this.realEstate.municipality)) {
+      this.municipalityList = ArrayLibrary.insertIfNotExist(this.municipalityList,
+        this.realEstate.municipality, 'uid');
+    }
   }
 
 
