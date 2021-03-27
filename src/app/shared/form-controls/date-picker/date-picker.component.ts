@@ -34,11 +34,13 @@ export class DatePickerComponent implements ControlValueAccessor {
     this.writeValue(value);
   }
 
+  @Input() showError = false;
+
   disabled = false;
   date: Date;
 
   propagateChange = (_: any) => { };
-  propagateTouch = (_: any) => { };
+  propagateTouch = () => { };
 
 
   onChange(value: any) {
@@ -60,6 +62,11 @@ export class DatePickerComponent implements ControlValueAccessor {
     } else {
       this.setDateAndPropagateChanges(null);
     }
+  }
+
+
+  onBlur() {
+    this.propagateTouch();
   }
 
 
