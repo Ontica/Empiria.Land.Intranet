@@ -70,7 +70,7 @@ export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
       bookEntryFields: this.getFormData()
     };
 
-    this.executeCommand(RegistrationCommandType.CREATE_RECORDING_BOOK_ENTRY, payload);
+    this.executeCommand(RegistrationCommandType.CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY, payload);
   }
 
 

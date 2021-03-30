@@ -93,7 +93,7 @@ export class InstrumentBookEntryListComponent implements OnChanges, OnDestroy {
               bookEntryUID: bookEntry.uid
             };
 
-            this.executeCommand(RegistrationCommandType.DELETE_RECORDING_BOOK_ENTRY, payload)
+            this.executeCommand(RegistrationCommandType.DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY, payload)
                 .then(() => this.submitted = false);
           }
         });

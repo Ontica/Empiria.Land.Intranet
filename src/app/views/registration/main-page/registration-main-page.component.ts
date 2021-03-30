@@ -31,7 +31,7 @@ import {
 })
 export class RegistrationMainPageComponent implements OnChanges, OnDestroy {
 
-  @Input() transactionUID: string = 'Empty';
+  @Input() transactionUID = 'Empty';
 
   @ViewChild('filePrintPreview', { static: true }) filePrintPreview: FilePrintPreviewComponent;
 
@@ -51,9 +51,6 @@ export class RegistrationMainPageComponent implements OnChanges, OnDestroy {
     this.helper.select<InstrumentRecording>(RegistrationStateSelector.TRANSACTION_INSTRUMENT_RECORDING,
                                             this.transactionUID)
       .subscribe(x => {
-
-        console.log('ngOnChanges', x);
-
         this.instrumentRecording = x;
         this.actions = x.actions;
 

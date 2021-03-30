@@ -18,17 +18,18 @@ import { RecordableSubjectsDataService } from '@app/data-services';
 
 
 export enum SelectorType {
-  ASSOCIATION_KIND_LIST          = 'Land.RecordableSubjects.AssociationKind.List',
-  INSTRUMENT_KIND_LIST           = 'Land.RecordableSubjects.InstrumentKind.List',
-  INSTRUMENT_TYPE_ISSUERS_LIST   = 'Land.RecordableSubjects.InstrumentTypeIssuers.List',
-  NO_PROPERTY_KIND_LIST          = 'Land.RecordableSubjects.NoPropertyKind.List',
-  RECORDER_OFFICE_LIST           = 'Land.RecordableSubjects.RecorderOffice.List',
-  REAL_ESTATE_KIND_LIST          = 'Land.RecordableSubjects.RealEstateKind.List',
-  REAL_ESTATE_PARTITION_KIND_LIST = 'Land.RecordableSubjects.RealEstatePartitionKind.List',
-  REAL_ESTATE_LOT_SIZE_UNIT_LIST = 'Land.RecordableSubjects.RealEstateLoteSizeUnit.List',
-  RECORDING_BOOKS_LIST           = 'Land.RecordableSubjects.RecordingBooks.List',
-  RECORDING_BOOK_ENTRIES_LIST   = 'Land.RecordableSubjects.RecordingBookEntries.List',
-  RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT = 'Land.Instruments.RecordingActTypesForInstrument.List'
+  ASSOCIATION_KIND_LIST           = 'Land.RecordableSubjects.Selector.AssociationKind.List',
+  INSTRUMENT_KIND_LIST            = 'Land.RecordableSubjects.Selector.InstrumentKind.List',
+  INSTRUMENT_TYPE_ISSUERS_LIST    = 'Land.RecordableSubjects.Selector.InstrumentTypeIssuers.List',
+  NO_PROPERTY_KIND_LIST           = 'Land.RecordableSubjects.Selector.NoPropertyKind.List',
+  RECORDER_OFFICE_LIST            = 'Land.RecordableSubjects.Selector.RecorderOffice.List',
+  REAL_ESTATE_KIND_LIST           = 'Land.RecordableSubjects.Selector.RealEstateKind.List',
+  REAL_ESTATE_PARTITION_KIND_LIST = 'Land.RecordableSubjects.Selector.RealEstatePartitionKind.List',
+  REAL_ESTATE_LOT_SIZE_UNIT_LIST  = 'Land.RecordableSubjects.Selector.RealEstateLoteSizeUnit.List',
+  RECORDING_BOOKS_LIST            = 'Land.RecordableSubjects.Selector.RecordingBooks.List',
+  RECORDING_BOOK_ENTRIES_LIST     = 'Land.RecordableSubjects.Selector.RecordingBookEntries.List',
+  RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT =
+    'Land.RecordableSubjects.Selector.RecordingActTypesForInstrument.List'
 }
 
 

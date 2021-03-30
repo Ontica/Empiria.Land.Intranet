@@ -19,32 +19,30 @@ import { RecordingDataService } from '@app/data-services';
 
 
 export enum ActionType {
-  SELECT_RECORDING_ACT = 'Land.Registration.Action.SelectRecordingAct',
-  UNSELECT_RECORDING_ACT = 'Land.Registration.Action.UnselectRecordingAct',
-  SELECT_RECORDING_BOOK = 'Land.Registration.Action.SelectRecordingBook',
+  SELECT_RECORDING_ACT =    'Land.Registration.Action.SelectRecordingAct',
+  UNSELECT_RECORDING_ACT =  'Land.Registration.Action.UnselectRecordingAct',
+  SELECT_RECORDING_BOOK =   'Land.Registration.Action.SelectRecordingBook',
   UNSELECT_RECORDING_BOOK = 'Land.Registration.Action.UnselectRecordingBook',
-  SELECT_BOOK_ENTRY = 'Land.Registration.Action.SelectBookEntry',
-  UNSELECT_BOOK_ENTRY = 'Land.Registration.Action.UnselectBookEntry',
+  SELECT_BOOK_ENTRY =       'Land.Registration.Action.SelectBookEntry',
+  UNSELECT_BOOK_ENTRY =     'Land.Registration.Action.UnselectBookEntry',
 }
 
 
 export enum SelectorType {
-  TRANSACTION_INSTRUMENT_RECORDING = 'Land.Registration.TransactionInstrumentRecording',
-  SELECTED_RECORDING_ACT = 'Land.Registration.Selector.SelectedRecordingAct',
-  SELECTED_RECORDING_BOOK = 'Land.Registration.Selector.SelectedRecordingBook',
-  SELECTED_BOOK_ENTRY = 'Land.Registration.Selector.SelectedBookEntry',
+  TRANSACTION_INSTRUMENT_RECORDING = 'Land.Registration.Selector.TransactionInstrumentRecording',
+  SELECTED_RECORDING_ACT           = 'Land.Registration.Selector.SelectedRecordingAct',
+  SELECTED_RECORDING_BOOK          = 'Land.Registration.Selector.SelectedRecordingBook',
+  SELECTED_BOOK_ENTRY              = 'Land.Registration.Selector.SelectedBookEntry',
 }
 
 
 export enum CommandType {
   CREATE_INSTRUMENT_RECORDING = 'Land.Registration.Create.Instrument',
   UPDATE_RECORDED_INSTRUMENT  = 'Land.Registration.Update.Instrument',
-
   CREATE_RECORDING_ACT        = 'Land.Registration.Create.RecordingAct',
   DELETE_RECORDING_ACT        = 'Land.Registration.Delete.RecordingAct',
-
-  CREATE_RECORDING_BOOK_ENTRY = 'Land.Registration.Create.RecordingBookEntry',
-  DELETE_RECORDING_BOOK_ENTRY = 'Land.Registration.Delete.RecordingBookEntry',
+  CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY = 'Land.Registration.Create.InstrumentRecordingBookEntry',
+  DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY = 'Land.Registration.Delete.InstrumentRecordingBookEntry',
 }
 
 
@@ -55,8 +53,8 @@ export enum EffectType {
   CREATE_RECORDING_ACT        = CommandType.CREATE_RECORDING_ACT,
   DELETE_RECORDING_ACT        = CommandType.DELETE_RECORDING_ACT,
 
-  CREATE_RECORDING_BOOK_ENTRY = CommandType.CREATE_RECORDING_BOOK_ENTRY,
-  DELETE_RECORDING_BOOK_ENTRY = CommandType.DELETE_RECORDING_BOOK_ENTRY,
+  CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY = CommandType.CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY,
+  DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY = CommandType.DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY,
 }
 
 
@@ -110,8 +108,8 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
       case EffectType.UPDATE_RECORDED_INSTRUMENT:
       case EffectType.CREATE_RECORDING_ACT:
       case EffectType.DELETE_RECORDING_ACT:
-      case EffectType.CREATE_RECORDING_BOOK_ENTRY:
-      case EffectType.DELETE_RECORDING_BOOK_ENTRY:
+      case EffectType.CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY:
+      case EffectType.DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY:
         super.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, params.result);
         return;
 
@@ -149,13 +147,13 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
                                        command.payload.recordingActUID)
         );
 
-      case CommandType.CREATE_RECORDING_BOOK_ENTRY:
+      case CommandType.CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY:
         return toPromise<U>(
           this.data.createNextRecordingBookEntry(command.payload.instrumentRecordingUID,
                                                  command.payload.bookEntryFields)
         );
 
-      case CommandType.DELETE_RECORDING_BOOK_ENTRY:
+      case CommandType.DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY:
         return toPromise<U>(
           this.data.deleteRecordingBookEntry(command.payload.instrumentRecordingUID,
                                              command.payload.bookEntryUID)
