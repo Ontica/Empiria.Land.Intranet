@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { DateString, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
+import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
 import { EmptyInstrument, Instrument } from './instrument';
 
 import { RealEstate } from './recordable-subjects';
@@ -168,3 +168,47 @@ export interface RealEstateStructure {
   children: RealEstateStructure[];
   structureActs: RegistrationEntry[];
 }
+
+
+// TODO: define the corrects interfaces
+export interface RecordingBook extends Identifiable {
+  recorderOffice: Identifiable;
+  recordingSection: Identifiable;
+  BookEntryList: RecordingBookEntry[];
+}
+
+
+export interface RecordingBookEntry extends Identifiable {
+  instrument?: string;
+  recordingTime?: DateString;
+  status?: string;
+  canEdit?: boolean;
+}
+
+
+export const EmptyRecordingBook: RecordingBook = {
+  uid: 'Empty',
+  name: '',
+  recorderOffice: Empty,
+  recordingSection: Empty,
+  BookEntryList: [],
+};
+
+
+export interface RecordingBookFields extends Identifiable {
+  type: string;
+  recordingBookDate: DateString;
+  recordingBook: string;
+  notes: string;
+  status?: string;
+}
+
+
+export const EmptyRecordingBookFields: RecordingBookFields = {
+  uid: '',
+  name: '',
+  type: '',
+  recordingBookDate: '',
+  recordingBook: '',
+  notes: '',
+};

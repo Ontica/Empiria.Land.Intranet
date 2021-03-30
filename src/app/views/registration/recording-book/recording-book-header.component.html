@@ -1,0 +1,114 @@
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section" [empNgSpinnerHost]="spinner">
+
+  <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+
+  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex>
+        <label>Tipo de instrumento:</label>
+        <emp-ng-select [formControlName]="controls.type"
+          [config]="{ clearable: false }"
+          [bindLabel]="'typeName'"
+          [bindValue]="'type'"
+          [items]="instrumentTypesList"
+          [showError]="formHandler.showInvalidControl(controls.type)">
+        </emp-ng-select>
+
+      </div>
+      <div fxFlex>
+        <label>Fecha de registro:</label>
+        <emp-ng-datepicker [formControlName]="controls.recordingBookDate"
+          [showError]="formHandler.showInvalidControl(controls.recordingBookDate)">
+        </emp-ng-datepicker>
+      </div>
+      <div fxFlex fxLayoutAlign="end">
+        <div fxFlex="140px">
+          <label>Número de la inscripción:</label>
+          <input [formControlName]="controls.recordingBook" type="text" class="text-box"
+            [class.invalid-control]="formHandler.showInvalidControl(controls.recordingBook)">
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex>
+
+        <textarea [formControlName]="controls.notes" empNgTextareaAutoresize
+          rows="1" class="text-area"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.notes)">
+        </textarea>
+
+      </div>
+    </div>
+
+    <mat-divider class="divider-padding"></mat-divider>
+
+    <div fxLayout="row">
+
+      <div fxFlex fxLayoutAlign="start center">
+
+        <ng-container *ngIf="editorMode && !readonly">
+
+          <button (click)="enableEditor(false)"
+            class="btn-warning">
+            Cancelar edición
+          </button>
+
+        </ng-container>
+
+      </div>
+
+      <div fxFlex fxLayoutAlign="center center">
+
+      <ng-container *ngIf="editorMode && !readonly">
+
+        <span style="padding-right: 0.5rem;">Marcar la inscripción como:</span>
+
+        <emp-ng-select
+          [formControlName]="controls.status"
+          [config]="{ clearable: false }"
+          [items]="statusList"
+          [showError]="formHandler.showInvalidControl(controls.status)">
+        </emp-ng-select>
+
+      </ng-container>
+
+
+      </div>
+
+      <div fxFlex fxLayoutAlign="end center">
+        <ng-container *ngIf="!editorMode">
+
+          <button type="submit"
+            [class.btn]="!formHandler.isValid"
+            [class.btn-action]="formHandler.isValid"
+            (click)="onSubmitClicked()">
+            Agregar la inscripción a este volumen
+          </button>
+
+        </ng-container>
+
+        <ng-container *ngIf="editorMode">
+          <button *ngIf="readonly"
+            (click)="enableEditor(true)"
+            class="btn-action">
+            Editar
+          </button>
+
+          <button *ngIf="!readonly"
+            type="submit"
+            [class.btn]="!formHandler.isValid"
+            [class.btn-action]="formHandler.isValid"
+            (click)="onSubmitClicked()">
+            Guardar los cambios
+          </button>
+
+        </ng-container>
+
+      </div>
+
+    </div>
+
+  </div>
+</form>

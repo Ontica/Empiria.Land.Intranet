@@ -1,0 +1,24 @@
+<emp-ng-card [title]="cardTitle" [hint]="cardHint" (cardClose)="onClose()">
+
+  <div class="card-body-padding" [style.height.%]="100">
+
+    <emp-land-book-entry-list
+      [recordingBook]="recordingBook"
+      (bookEntryListEvent)="onBookEntryListEvent($event)">
+
+    </emp-land-book-entry-list>
+
+    <emp-ng-expansion-button [(panelState)]="panelAddState"
+      [config]="{textButtonOpen: 'Agregar una inscripción a este volumen',
+                 textButtonClose: 'Cancelar agregar registro'}">
+
+      <emp-land-recording-book-header *ngIf="panelAddState"
+        (recordingBookHeaderEvent)="onRecordingBookHeaderEvent($event)">
+
+      </emp-land-recording-book-header>
+
+    </emp-ng-expansion-button>
+
+  </div>
+
+</emp-ng-card>

@@ -6,27 +6,17 @@
  */
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { EventInfo, Identifiable } from '@app/core';
+import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { RecorderOffice } from '@app/models';
+import { RecorderOffice, RecordingBook } from '@app/models';
 import { RecordableSubjectsStateSelector,
          TransactionStateSelector } from '@app/presentation/exported.presentation.types';
-import { FormHandler } from '@app/shared/utils';
 import { concat, Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
-enum RecordingBookSelectorFormControls {
-  recorderOfficeUID = 'recorderOfficeUID',
-  recordingSectionUID = 'recordingSectionUID',
-  recordingBookUID = 'recordingBookUID',
-  recordingBookEntryUID = 'recordingBookEntryUID',
-}
-
 export enum RecordingBookSelectorEventType {
-  RECORDING_BOOK_SELECTED = 'RecordingBookSelectorComponent.Event.RecordingBookSelected',
   RECORDING_BOOK_CLICKED = 'RecordingBookSelectorComponent.Event.RecordingBookClicked',
-  RECORDING_BOOK_ENTRY_SELECTED = 'RecordingBookSelectorComponent.Event.RecordingBookEntryClicked',
+  RECORDING_BOOK_ENTRY_CLICKED = 'RecordingBookSelectorComponent.Event.RecordingBookEntryClicked',
 }
 
 @Component({
@@ -41,9 +31,6 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
 
   helper: SubscriptionHelper;
 
-  formHandler: FormHandler;
-  controls = RecordingBookSelectorFormControls;
-
   isLoading = false;
 
   recorderOfficeList: Identifiable[] = [];
@@ -56,6 +43,11 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
 
   recordingBookEntryList: Identifiable[] = [];
 
+  recorderOfficeSelected: Identifiable;
+  recordingSectionSelected: Identifiable;
+  recordingBookSelected: Identifiable;
+  recordingBookEntrySelected: Identifiable;
+
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
@@ -63,7 +55,9 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.initLoad();
-    this.validateEnableRecordingBookField();
+    this.resetRecordingBookField();
+    this.recorderOfficeSelected = null;
+    this.recordingSectionSelected = null;
   }
 
   ngOnDestroy() {
@@ -71,63 +65,48 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
   }
 
   get isReadyToFilterRecordingBook(){
-    return this.formHandler.getControl(this.controls.recorderOfficeUID).value &&
-      this.formHandler.getControl(this.controls.recordingSectionUID).value;
+    return this.recorderOfficeSelected && this.recordingSectionSelected;
   }
 
 
   onRecorderOfficeChange(recorderOffice: RecorderOffice){
-    this.validateEnableRecordingBookField();
+    this.recordingSectionSelected = null;
+    this.resetRecordingBookField();
   }
 
 
   onRecordingSectionChange(recordingSection: Identifiable) {
-    this.validateEnableRecordingBookField();
+    this.resetRecordingBookField();
   }
 
 
   onRecordingBookChange(recordingBook: Identifiable) {
-    this.resetAndDisableRecordingBookEntries();
-    this.loadRecordingBookEntryList(recordingBook?.uid);
-
-    if (!this.showRecordingBookEntryField && recordingBook) {
-      this.sendEvent(RecordingBookSelectorEventType.RECORDING_BOOK_SELECTED, this.getFormData());
-    }
-  }
-
-
-  onRecordingBookEntryChange(recordingBookEntry: Identifiable) {
-    if (recordingBookEntry) {
-      this.sendEvent(RecordingBookSelectorEventType.RECORDING_BOOK_SELECTED, this.getFormData());
-    }
+    this.resetRecordingBookEntries();
+    this.loadRecordingBookEntryList();
   }
 
 
   onRecordingBookClicked(){
-    if (this.formHandler.getControl(this.controls.recordingBookUID).value) {
+    if (this.recordingBookSelected) {
       this.sendEvent(RecordingBookSelectorEventType.RECORDING_BOOK_CLICKED,
-        {recordingBookUID : this.formHandler.getControl(this.controls.recordingBookUID).value});
+                    { recordingBook: this.getRecordingBookData() });
     }
   }
 
 
   onRecordingBookEntryClicked(){
-    if (this.formHandler.getControl(this.controls.recordingBookEntryUID).value) {
-      this.sendEvent(RecordingBookSelectorEventType.RECORDING_BOOK_ENTRY_SELECTED,
-        {recordingBookEntryUID : this.formHandler.getControl(this.controls.recordingBookEntryUID).value});
+    if (this.recordingBookEntrySelected) {
+      this.sendEvent(RecordingBookSelectorEventType.RECORDING_BOOK_ENTRY_CLICKED,
+                    { bookEntry: this.getBookEntryData() });
     }
   }
 
 
   private initForm() {
-    this.formHandler = new FormHandler(
-      new FormGroup({
-        recorderOfficeUID: new FormControl(''),
-        recordingSectionUID: new FormControl(''),
-        recordingBookUID: new FormControl(''),
-        recordingBookEntryUID: new FormControl(''),
-      })
-    );
+    this.recorderOfficeSelected = null;
+    this.recordingSectionSelected = null;
+    this.recordingBookSelected = null;
+    this.recordingBookEntrySelected = null;
   }
 
 
@@ -147,18 +126,15 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
   }
 
 
-  private validateEnableRecordingBookField(){
-    this.formHandler.getControl(this.controls.recordingBookUID).reset();
-    this.formHandler.disableControl(this.controls.recordingBookUID, !this.isReadyToFilterRecordingBook);
+  private resetRecordingBookField(){
+    this.recordingBookSelected = null;
     this.subscribeRecordingBookList();
-
-    this.resetAndDisableRecordingBookEntries();
+    this.resetRecordingBookEntries();
   }
 
 
-  private resetAndDisableRecordingBookEntries(){
-    this.formHandler.getControl(this.controls.recordingBookEntryUID).reset();
-    this.formHandler.disableControl(this.controls.recordingBookEntryUID, !this.isReadyToFilterRecordingBook);
+  private resetRecordingBookEntries(){
+    this.recordingBookEntrySelected = null;
     this.recordingBookEntryList = [];
   }
 
@@ -184,8 +160,8 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
 
   private buildRecordingBookFilter(keywords: string): any {
     const recordingBookFilter = {
-      recorderOfficeUID: this.formHandler.getControl(this.controls.recorderOfficeUID).value,
-      recordingSectionUID: this.formHandler.getControl(this.controls.recordingSectionUID).value,
+      recorderOfficeUID: this.recorderOfficeSelected?.uid,
+      recordingSectionUID: this.recordingSectionSelected?.uid,
       keywords
     };
 
@@ -193,13 +169,13 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
   }
 
 
-  private loadRecordingBookEntryList(recordingBookUID: string) {
+  private loadRecordingBookEntryList() {
 
     if (!this.showRecordingBookEntryField) {
       return;
     }
 
-    if (!recordingBookUID) {
+    if (!this.recordingBookSelected?.uid) {
       this.recordingBookEntryList = [];
       return;
     }
@@ -207,7 +183,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     this.helper.select<Identifiable[]>(RecordableSubjectsStateSelector.RECORDING_BOOK_ENTRIES_LIST,
-                                        { recordingBookUID })
+                                       { recordingBookUID: this.recordingBookSelected?.uid })
       .toPromise()
       .then(x => {
         this.recordingBookEntryList = x;
@@ -216,14 +192,30 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
   }
 
 
-  private getFormData(){
-    const formModel = this.formHandler.form.getRawValue();
+  private getRecordingBookData(): RecordingBook{
+    Assertion.assert(!isEmpty(this.recordingBookSelected),
+      'Programming error: form must be validated before command execution.');
 
+    // TODO: define the correct interface
+    const data: RecordingBook = {
+      uid: this.recordingBookSelected?.uid,
+      name: this.recordingBookSelected?.name,
+      recorderOffice: this.recorderOfficeSelected,
+      recordingSection: this.recordingSectionSelected,
+      BookEntryList: this.recordingBookEntryList,
+    };
+
+    return data;
+  }
+
+  private getBookEntryData(): any{
+    Assertion.assert(!isEmpty(this.recordingBookEntrySelected),
+      'Programming error: form must be validated before command execution.');
+
+    // TODO: define the correct interface
     const data: any = {
-      recorderOfficeUID: formModel.recorderOfficeUID ?? '',
-      recordingSectionUID: formModel.recordingSectionUID ?? '',
-      recordingBookUID: formModel.recordingBookUID ?? '',
-      recordingBookEntryUID: formModel.recordingBookEntryUID ?? '',
+      uid: this.recordingBookEntrySelected?.uid,
+      name: this.recordingBookEntrySelected?.name,
     };
 
     return data;
@@ -237,8 +229,6 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
     };
 
     this.recordingBookSelectorEvent.emit(event);
-
-    console.log(event);
   }
 
 }
