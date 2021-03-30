@@ -22,6 +22,7 @@ export interface SelectBoxConfig {
   addTagText?: string;
   appendTo?: string;
   autoSelect?: boolean;
+  bindByValue?: boolean;
   clearable?: boolean;
   closeOnSelect?: boolean;
   dropdownPosition?: DropdownPosition;
@@ -41,6 +42,7 @@ const DefaultSelectBoxConfig: SelectBoxConfig = {
   addTagText: 'Agregar Item',
   appendTo: 'body',
   autoSelect: false,
+  bindByValue: true,
   clearable: true,
   closeOnSelect: true,
   dropdownPosition: 'auto',
@@ -135,20 +137,19 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
     this.disabled = isDisabled;
   }
 
-
   onChangedEvent(event) {
     let value = event;
 
     if (Array.isArray(event)) {
-      value = event.map(item => item[this.bindValue]);
+      value = event.map(item => this.selectBoxConfig.bindByValue && this.bindValue ?
+                                item[this.bindValue] : item);
     } else if (event) {
-      value = event[this.bindValue];
+      value = this.selectBoxConfig.bindByValue && this.bindValue ? event[this.bindValue] : event;
     }
 
     this.onChange(value);
     this.changes.emit(event);
   }
-
 
   onClear() {
     this.clear.emit(true);
@@ -173,9 +174,9 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
 
     setTimeout(() => {
       this.onChangedEvent(this.items[0]);
-      this.writeValue(this.items[0][this.bindValue]);
+      this.writeValue(this.selectBoxConfig.bindByValue && this.bindValue ?
+                      this.items[0][this.bindValue] : this.items[0]);
     }, 100);
-
   }
 
 

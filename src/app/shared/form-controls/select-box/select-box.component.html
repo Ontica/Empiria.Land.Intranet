@@ -9,7 +9,7 @@
   [addTagText]="selectBoxConfig.addTagText"
   [appendTo]="selectBoxConfig.appendTo"
   [bindLabel]="bindLabel"
-  [bindValue]="bindValue"
+  [bindValue]="selectBoxConfig.bindByValue ? bindValue : null"
   [clearable]="selectBoxConfig.clearable"
   [closeOnSelect]="selectBoxConfig.closeOnSelect"
   [dropdownPosition]="selectBoxConfig.dropdownPosition"
