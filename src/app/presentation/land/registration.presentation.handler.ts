@@ -9,26 +9,30 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { Assertion, Command, toPromise } from '@app/core';
+import { Assertion, Command, Empty, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { EmptyInstrumentRecording } from '@app/models';
+import { EmptyInstrumentRecording, EmptyRecordingAct, EmptyRecordingBook } from '@app/models';
 
 import { RecordingDataService } from '@app/data-services';
-
-import { EmptyRecordableSubjectFields } from '@app/models/recordable-subjects';
 
 
 export enum ActionType {
   SELECT_RECORDING_ACT = 'Land.Registration.Action.SelectRecordingAct',
   UNSELECT_RECORDING_ACT = 'Land.Registration.Action.UnselectRecordingAct',
+  SELECT_RECORDING_BOOK = 'Land.Registration.Action.SelectRecordingBook',
+  UNSELECT_RECORDING_BOOK = 'Land.Registration.Action.UnselectRecordingBook',
+  SELECT_BOOK_ENTRY = 'Land.Registration.Action.SelectBookEntry',
+  UNSELECT_BOOK_ENTRY = 'Land.Registration.Action.UnselectBookEntry',
 }
 
 
 export enum SelectorType {
   TRANSACTION_INSTRUMENT_RECORDING = 'Land.Registration.TransactionInstrumentRecording',
   SELECTED_RECORDING_ACT = 'Land.Registration.Selector.SelectedRecordingAct',
+  SELECTED_RECORDING_BOOK = 'Land.Registration.Selector.SelectedRecordingBook',
+  SELECTED_BOOK_ENTRY = 'Land.Registration.Selector.SelectedBookEntry',
 }
 
 
@@ -58,7 +62,9 @@ export enum EffectType {
 
 const initialState: StateValues = [
   { key: SelectorType.TRANSACTION_INSTRUMENT_RECORDING, value: EmptyInstrumentRecording },
-  { key: SelectorType.SELECTED_RECORDING_ACT, value: EmptyRecordableSubjectFields },
+  { key: SelectorType.SELECTED_RECORDING_ACT, value: EmptyRecordingAct },
+  { key: SelectorType.SELECTED_RECORDING_BOOK, value: EmptyRecordingBook },
+  { key: SelectorType.SELECTED_BOOK_ENTRY, value: Empty },
 ];
 
 
@@ -170,7 +176,25 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         return;
 
       case ActionType.UNSELECT_RECORDING_ACT:
-        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptyRecordableSubjectFields);
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptyRecordingAct);
+        return;
+
+      case ActionType.SELECT_RECORDING_BOOK:
+        Assertion.assertValue(params.recordingBook, 'payload.recordingBook');
+        this.setValue(SelectorType.SELECTED_RECORDING_BOOK, params.recordingBook);
+        return;
+
+      case ActionType.UNSELECT_RECORDING_BOOK:
+        this.setValue(SelectorType.SELECTED_RECORDING_BOOK, EmptyRecordingBook);
+        return;
+
+      case ActionType.SELECT_BOOK_ENTRY:
+        Assertion.assertValue(params.bookEntry, 'payload.bookEntry');
+        this.setValue(SelectorType.SELECTED_BOOK_ENTRY, params.bookEntry);
+        return;
+
+      case ActionType.UNSELECT_BOOK_ENTRY:
+        this.setValue(SelectorType.SELECTED_BOOK_ENTRY, Empty);
         return;
 
       default:

@@ -117,7 +117,9 @@
 
     </div>
 
-    <emp-land-recording-book-selector *ngIf="showSeeker" [showRecordingBookEntryField]="true">
+    <emp-land-recording-book-selector *ngIf="showSeeker"
+      [showRecordingBookEntryField]="true"
+      (recordingBookSelectorEvent)="onRecordingBookSelectorEvent($event)">
 
     </emp-land-recording-book-selector>
 

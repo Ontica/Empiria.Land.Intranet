@@ -7,7 +7,7 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { EventInfo, isEmpty } from '@app/core';
+import { Empty, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
@@ -31,7 +31,7 @@ import { EmptyFileViewerData,
 
 import { View } from '../main-layout';
 
-import { EmptyRecordingAct, RecordingAct } from '@app/models';
+import { EmptyRecordingAct, EmptyRecordingBook, RecordingAct, RecordingBook } from '@app/models';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
@@ -49,16 +49,20 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   transactionList: TransactionShortModel[] = [];
   filter: TransactionFilter = EmptyTransactionFilter;
 
-  selectedTransaction: Transaction = EmptyTransaction;
+  selectedBookEntry: any = Empty;
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedRecordingAct: RecordingAct = EmptyRecordingAct;
+  selectedRecordingBook: RecordingBook = EmptyRecordingBook;
+  selectedTransaction: Transaction = EmptyTransaction;
 
   displayOptionModalSelected: TransactionModalOptions = null;
   selectedTransactions: TransactionShortModel[] = [];
 
-  displayRecordingActEditor = false;
-  displayTransactionTabbedView = false;
   displayFileViewer = false;
+  displayBookEntryEditor = false;
+  displayRecordingActEditor = false;
+  displayRecordingBookEditor = false;
+  displayTransactionTabbedView = false;
 
   isLoading = false;
   isLoadingTransaction = false;
@@ -76,15 +80,13 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
         this.transactionList = x;
         this.isLoading = false;
 
-        this.unselectCurrentRecordingAct();
+        this.unselectCurrentSelections();
       }, error => {
         this.isLoading = false;
       });
 
-
     this.subscriptionHelper.select<View>(MainUIStateSelector.CURRENT_VIEW)
       .subscribe(x => this.onCurrentViewChanged(x));
-
 
     this.subscriptionHelper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .subscribe(x => {
@@ -92,21 +94,30 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
         this.isLoadingTransaction = false;
         this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
 
-        this.unselectCurrentRecordingAct();
+        this.unselectCurrentSelections();
       }, error => {
         this.isLoadingTransaction = false;
       });
 
-
     this.subscriptionHelper.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
       .subscribe(x => this.filter = x);
 
-
-    this.subscriptionHelper.select<RecordingAct>
-      (RegistrationStateSelector.SELECTED_RECORDING_ACT)
+    this.subscriptionHelper.select<RecordingAct>(RegistrationStateSelector.SELECTED_RECORDING_ACT)
       .subscribe(x => {
         this.selectedRecordingAct = x;
         this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct);
+      });
+
+    this.subscriptionHelper.select<RecordingBook>(RegistrationStateSelector.SELECTED_RECORDING_BOOK)
+      .subscribe(x => {
+        this.selectedRecordingBook = x;
+        this.displayRecordingBookEditor = !isEmpty(this.selectedRecordingBook);
+      });
+
+    this.subscriptionHelper.select<any>(RegistrationStateSelector.SELECTED_BOOK_ENTRY)
+      .subscribe(x => {
+        this.selectedBookEntry = x;
+        this.displayBookEntryEditor = !isEmpty(this.selectedBookEntry);
       });
 
     this.subscriptionHelper.select<FileViewerData>(TransactionStateSelector.SELECTED_FILE_LIST)
@@ -119,6 +130,11 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptionHelper.destroy();
+  }
+
+
+  get secondaryEditorDisplayed(){
+    return this.displayRecordingActEditor || this.displayRecordingBookEditor || this.displayBookEntryEditor;
   }
 
 
@@ -176,11 +192,17 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
-  onCloseRecordingActEditor() {
-    this.unselectCurrentFile();
-    this.unselectCurrentRecordingAct();
+  onCloseSecondaryEditor() {
+    this.unselectCurrentSelections();
   }
 
+
+  unselectCurrentSelections(){
+    this.unselectCurrentFile();
+    this.unselectCurrentRecordingAct();
+    this.unselectCurrentRecordingBook();
+    this.unselectCurrentBookEntry();
+  }
 
   // private methods
 
@@ -199,17 +221,14 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
     this.uiLayer.dispatch(TransactionAction.SET_LIST_FILTER, { filter });
   }
 
-
   private onCurrentViewChanged(newView: View) {
     this.currentView = newView;
     this.applyTransactionsFilter();
   }
 
-
   private unselectCurrentTransaction() {
     this.uiLayer.dispatch(TransactionAction.UNSELECT_TRANSACTION);
   }
-
 
   private unselectCurrentFile() {
     this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE_LIST);
@@ -217,6 +236,14 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   private unselectCurrentRecordingAct() {
     this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
+  }
+
+  private unselectCurrentRecordingBook() {
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_BOOK);
+  }
+
+  private unselectCurrentBookEntry(){
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_BOOK_ENTRY);
   }
 
 }

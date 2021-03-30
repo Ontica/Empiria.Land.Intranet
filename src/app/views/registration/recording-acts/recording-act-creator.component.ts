@@ -12,16 +12,19 @@ import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap 
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Assertion, Command, Identifiable } from '@app/core';
+import { Assertion, Command, EventInfo, Identifiable } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { EmptyInstrumentRecording, InstrumentRecording,
          RecordingActType, RecordingActTypeGroup, RegistrationCommand } from '@app/models';
 
 import { RegistrationCommandType,
-         RecordableSubjectsStateSelector} from '@app/presentation/exported.presentation.types';
+         RecordableSubjectsStateSelector,
+         RegistrationAction} from '@app/presentation/exported.presentation.types';
 
 import { FormHandler } from '@app/shared/utils';
+
+import { RecordingBookSelectorEventType } from '../recording-book/recording-book-selector.component';
 
 enum RecordingActCreatorFormControls {
   recordingActTypeGroup = 'recordingActTypeGroup',
@@ -98,6 +101,26 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     this.validateRealEstateField();
     this.validatePartitionField();
     this.showSeeker = false;
+  }
+
+  onRecordingBookSelectorEvent(event: EventInfo) {
+    switch (event.type as RecordingBookSelectorEventType) {
+
+      case RecordingBookSelectorEventType.RECORDING_BOOK_CLICKED:
+        this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_BOOK, event.payload);
+
+        return;
+
+      case RecordingBookSelectorEventType.RECORDING_BOOK_ENTRY_CLICKED:
+        // this.uiLayer.dispatch(RegistrationAction.SELECT_BOOK_ENTRY, event.payload);
+        console.log('SELECT_BOOK_ENTRY', event.payload);
+
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
   }
 
 
