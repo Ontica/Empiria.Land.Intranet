@@ -11,7 +11,7 @@ import { PresentationLayer } from '@app/core/presentation';
 import { RecordingBook } from '@app/models';
 import { RegistrationAction, RegistrationCommandType } from '@app/presentation/exported.presentation.types';
 import { BookEntryListEventType } from './book-entry-list.component';
-import { RecordingBookHeaderEventType } from './recording-book-header.component';
+import { BookEntryHeaderEventType } from './book-entry-header.component';
 
 
 @Component({
@@ -76,14 +76,14 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  onRecordingBookHeaderEvent(event) {
+  onBookEntryHeaderEvent(event) {
     if (this.submitted) {
       return;
     }
 
-    switch (event.type as RecordingBookHeaderEventType) {
+    switch (event.type as BookEntryHeaderEventType) {
 
-      case RecordingBookHeaderEventType.ADD_RECORDING_BOOK:
+      case BookEntryHeaderEventType.ADD_BOOK_ENTRY:
 
         // this.executeCommand<any>(RegistrationCommandType.ADD_RECORDING_BOOK, event.payload)
         //   .then(x => this.resetPanelState());
@@ -101,8 +101,8 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
   }
 
   private initTexts(){
-    this.cardTitle = `Volumen ${this.recordingBook.name},
-     ${this.recordingBook.recordingSection.name}, ${this.recordingBook.recorderOffice.name}`;
+    this.cardTitle = `Volumen ${this.recordingBook.volumeNo},
+     ${this.recordingBook.recordingSectionName}, ${this.recordingBook.recorderOfficeName}`;
   }
 
   private resetPanelState() {

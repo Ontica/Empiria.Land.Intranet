@@ -7,21 +7,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RecordingBookHeaderComponent } from './recording-book-header.component';
+import { BookEntryHeaderComponent } from './book-entry-header.component';
 
-describe('RecordingBookHeaderComponent', () => {
-  let component: RecordingBookHeaderComponent;
-  let fixture: ComponentFixture<RecordingBookHeaderComponent>;
+describe('BookEntryHeaderComponent', () => {
+  let component: BookEntryHeaderComponent;
+  let fixture: ComponentFixture<BookEntryHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RecordingBookHeaderComponent ]
+      declarations: [ BookEntryHeaderComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RecordingBookHeaderComponent);
+    fixture = TestBed.createComponent(BookEntryHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

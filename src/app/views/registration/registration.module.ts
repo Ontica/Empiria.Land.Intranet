@@ -17,6 +17,7 @@ import { LandControlsModule } from '../land-controls/land.controls.module';
 import { RecordableSubjectsModule } from '../recordable-subjects/recordable-subjects.module';
 import { InstrumentBookEntriesModule } from './instrument-book-entries/instrument-book-entries.module';
 
+import { BookEntryHeaderComponent } from './recording-book/book-entry-header.component';
 import { BookEntryListComponent } from './recording-book/book-entry-list.component';
 import {
   RecordableSubjectTabbedViewComponent
@@ -24,9 +25,9 @@ import {
 import { RecordingActCreatorComponent } from './recording-acts/recording-act-creator.component';
 import { RecordingActsListComponent } from './recording-acts/recording-acts-list.component';
 import { RecordingBookEditorComponent } from './recording-book/recording-book-editor.component';
-import { RecordingBookHeaderComponent } from './recording-book/recording-book-header.component';
 import { RecordingBookSelectorComponent } from './recording-book/recording-book-selector.component';
 import { RegistrationMainPageComponent } from './main-page/registration-main-page.component';
+
 
 
 @NgModule({
@@ -44,12 +45,12 @@ import { RegistrationMainPageComponent } from './main-page/registration-main-pag
   ],
 
   declarations: [
+    BookEntryHeaderComponent,
     BookEntryListComponent,
     RecordableSubjectTabbedViewComponent,
     RecordingActCreatorComponent,
     RecordingActsListComponent,
     RecordingBookEditorComponent,
-    RecordingBookHeaderComponent,
     RecordingBookSelectorComponent,
     RegistrationMainPageComponent,
   ],

@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
+import { DateString, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
 import { EmptyInstrument, Instrument } from './instrument';
 
 import { RealEstate } from './recordable-subjects';
@@ -34,7 +34,7 @@ export interface RecordingSection extends Identifiable {
 }
 
 
-export interface BookEntry {
+export interface InstrumentBookEntry {
   uid: string;
   recordingTime: DateString;
   recorderOfficeName: string;
@@ -47,7 +47,7 @@ export interface BookEntry {
 }
 
 
-export interface BookEntryFields  {
+export interface InstrumentBookEntryFields  {
   recorderOfficeUID: string;
   sectionUID: string;
 }
@@ -109,7 +109,7 @@ export interface InstrumentRecording {
   // reviewedBy: Contact;
   // signedBy: Contact;
   recordingActs: RecordingAct[];
-  bookEntries?: BookEntry[];
+  bookEntries?: InstrumentBookEntry[];
   stampMedia: MediaBase;
   // status: RecordingStatus;
   transactionUID?: string;
@@ -171,44 +171,66 @@ export interface RealEstateStructure {
 
 
 // TODO: define the corrects interfaces
-export interface RecordingBook extends Identifiable {
-  recorderOffice: Identifiable;
-  recordingSection: Identifiable;
-  BookEntryList: RecordingBookEntry[];
-}
-
-
-export interface RecordingBookEntry extends Identifiable {
-  instrument?: string;
-  recordingTime?: DateString;
-  status?: string;
-  canEdit?: boolean;
+export interface RecordingBook {
+  uid: string;
+  volumeNo: string;
+  recorderOfficeName: string;
+  recordingSectionName: string;
+  BookEntryList: BookEntry[];
 }
 
 
 export const EmptyRecordingBook: RecordingBook = {
   uid: 'Empty',
-  name: '',
-  recorderOffice: Empty,
-  recordingSection: Empty,
+  volumeNo: '',
+  recorderOfficeName: '',
+  recordingSectionName: '',
   BookEntryList: [],
 };
 
 
-export interface RecordingBookFields extends Identifiable {
+export interface BookEntry extends Identifiable {
+  volumeNo?: string; // Numero Inscripción
+  recorderOfficeName?: string;
+  recordingSectionName?: string;
+  recordingNo?: string;
+  type?: string;
+  recordingTime?: DateString;
+  notes?: string;
+  status?: string;
+  canEdit?: boolean;
+  recordingActs?: RecordingAct[];
+}
+
+
+export const EmptyBookEntry: BookEntry = {
+  uid: '',
+  name: '',
+  volumeNo: '',
+  recorderOfficeName: '',
+  recordingSectionName: '',
+  recordingNo: '',
+  type: '',
+  recordingTime: '',
+  notes: '',
+  status: '',
+  canEdit: false,
+  recordingActs: []
+};
+
+
+export interface BookEntryFields {
   type: string;
-  recordingBookDate: DateString;
-  recordingBook: string;
+  recordingTime: DateString;
+  volumeNo: string;
   notes: string;
   status?: string;
 }
 
 
-export const EmptyRecordingBookFields: RecordingBookFields = {
-  uid: '',
-  name: '',
+export const EmptyBookEntryFields: BookEntryFields = {
   type: '',
-  recordingBookDate: '',
-  recordingBook: '',
+  recordingTime: '',
+  volumeNo: '',
   notes: '',
 };

@@ -8,7 +8,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { RecorderOffice, RecordingBook } from '@app/models';
+import { BookEntry, RecorderOffice, RecordingBook } from '@app/models';
 import { RecordableSubjectsStateSelector,
          TransactionStateSelector } from '@app/presentation/exported.presentation.types';
 import { concat, Observable, of, Subject } from 'rxjs';
@@ -199,21 +199,21 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
     // TODO: define the correct interface
     const data: RecordingBook = {
       uid: this.recordingBookSelected?.uid,
-      name: this.recordingBookSelected?.name,
-      recorderOffice: this.recorderOfficeSelected,
-      recordingSection: this.recordingSectionSelected,
+      volumeNo: this.recordingBookSelected?.name,
+      recorderOfficeName: this.recorderOfficeSelected.name,
+      recordingSectionName: this.recordingSectionSelected.name,
       BookEntryList: this.recordingBookEntryList,
     };
 
     return data;
   }
 
-  private getBookEntryData(): any{
+  private getBookEntryData(): BookEntry{
     Assertion.assert(!isEmpty(this.recordingBookEntrySelected),
       'Programming error: form must be validated before command execution.');
 
     // TODO: define the correct interface
-    const data: any = {
+    const data: BookEntry = {
       uid: this.recordingBookEntrySelected?.uid,
       name: this.recordingBookEntrySelected?.name,
     };

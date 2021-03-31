@@ -18,15 +18,15 @@
       </div>
       <div fxFlex>
         <label>Fecha de registro:</label>
-        <emp-ng-datepicker [formControlName]="controls.recordingBookDate"
-          [showError]="formHandler.showInvalidControl(controls.recordingBookDate)">
+        <emp-ng-datepicker [formControlName]="controls.recordingTime"
+          [showError]="formHandler.showInvalidControl(controls.recordingTime)">
         </emp-ng-datepicker>
       </div>
       <div fxFlex fxLayoutAlign="end">
         <div fxFlex="140px">
           <label>Número de la inscripción:</label>
-          <input [formControlName]="controls.recordingBook" type="text" class="text-box"
-            [class.invalid-control]="formHandler.showInvalidControl(controls.recordingBook)">
+          <input [formControlName]="controls.volumeNo" type="text" class="text-box"
+            [class.invalid-control]="formHandler.showInvalidControl(controls.volumeNo)">
         </div>
       </div>
     </div>

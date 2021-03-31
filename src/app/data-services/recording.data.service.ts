@@ -10,7 +10,8 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService, Identifiable } from '@app/core';
 
-import { BookEntryFields, InstrumentFields, InstrumentRecording, RegistrationCommand } from '@app/models';
+import { InstrumentBookEntryFields, InstrumentFields,
+         InstrumentRecording, RegistrationCommand } from '@app/models';
 
 
 @Injectable()
@@ -82,7 +83,7 @@ export class RecordingDataService {
 
 
   createNextRecordingBookEntry(instrumentRecordingUID: string,
-                               bookEntryFields: BookEntryFields): Observable<InstrumentRecording> {
+                               bookEntryFields: InstrumentBookEntryFields): Observable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(bookEntryFields, 'bookEntryFields');
 

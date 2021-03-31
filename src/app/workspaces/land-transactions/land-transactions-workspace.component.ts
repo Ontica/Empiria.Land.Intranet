@@ -31,7 +31,8 @@ import { EmptyFileViewerData,
 
 import { View } from '../main-layout';
 
-import { EmptyRecordingAct, EmptyRecordingBook, RecordingAct, RecordingBook } from '@app/models';
+import { BookEntry, EmptyBookEntry, EmptyRecordingAct, EmptyRecordingBook,
+         RecordingAct, RecordingBook } from '@app/models';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
@@ -49,7 +50,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   transactionList: TransactionShortModel[] = [];
   filter: TransactionFilter = EmptyTransactionFilter;
 
-  selectedBookEntry: any = Empty;
+  selectedBookEntry: BookEntry = EmptyBookEntry;
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedRecordingAct: RecordingAct = EmptyRecordingAct;
   selectedRecordingBook: RecordingBook = EmptyRecordingBook;
@@ -114,7 +115,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
         this.displayRecordingBookEditor = !isEmpty(this.selectedRecordingBook);
       });
 
-    this.subscriptionHelper.select<any>(RegistrationStateSelector.SELECTED_BOOK_ENTRY)
+    this.subscriptionHelper.select<BookEntry>(RegistrationStateSelector.SELECTED_BOOK_ENTRY)
       .subscribe(x => {
         this.selectedBookEntry = x;
         this.displayBookEntryEditor = !isEmpty(this.selectedBookEntry);
@@ -204,6 +205,10 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
     this.unselectCurrentBookEntry();
   }
 
+  unselectCurrentBookEntry(){
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_BOOK_ENTRY);
+  }
+
   // private methods
 
   private applyTransactionsFilter(data?: { keywords: string }) {
@@ -240,10 +245,6 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   private unselectCurrentRecordingBook() {
     this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_BOOK);
-  }
-
-  private unselectCurrentBookEntry(){
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_BOOK_ENTRY);
   }
 
 }

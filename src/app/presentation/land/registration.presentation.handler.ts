@@ -9,11 +9,11 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { Assertion, Command, Empty, toPromise } from '@app/core';
+import { Assertion, Command, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { EmptyInstrumentRecording, EmptyRecordingAct, EmptyRecordingBook } from '@app/models';
+import { EmptyBookEntry, EmptyInstrumentRecording, EmptyRecordingAct, EmptyRecordingBook } from '@app/models';
 
 import { RecordingDataService } from '@app/data-services';
 
@@ -62,7 +62,7 @@ const initialState: StateValues = [
   { key: SelectorType.TRANSACTION_INSTRUMENT_RECORDING, value: EmptyInstrumentRecording },
   { key: SelectorType.SELECTED_RECORDING_ACT, value: EmptyRecordingAct },
   { key: SelectorType.SELECTED_RECORDING_BOOK, value: EmptyRecordingBook },
-  { key: SelectorType.SELECTED_BOOK_ENTRY, value: Empty },
+  { key: SelectorType.SELECTED_BOOK_ENTRY, value: EmptyBookEntry },
 ];
 
 
@@ -186,13 +186,14 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         this.setValue(SelectorType.SELECTED_RECORDING_BOOK, EmptyRecordingBook);
         return;
 
+      // TODO: move to select and define the WS to call
       case ActionType.SELECT_BOOK_ENTRY:
         Assertion.assertValue(params.bookEntry, 'payload.bookEntry');
         this.setValue(SelectorType.SELECTED_BOOK_ENTRY, params.bookEntry);
         return;
 
       case ActionType.UNSELECT_BOOK_ENTRY:
-        this.setValue(SelectorType.SELECTED_BOOK_ENTRY, Empty);
+        this.setValue(SelectorType.SELECTED_BOOK_ENTRY, EmptyBookEntry);
         return;
 
       default:

@@ -9,7 +9,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { MatTableDataSource } from '@angular/material/table';
 import { DateStringLibrary, EventInfo } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { EmptyRecordingBook, RecordingBook, RecordingBookEntry } from '@app/models';
+import { BookEntry, EmptyRecordingBook, RecordingBook } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 export enum BookEntryListEventType {
@@ -31,7 +31,7 @@ export class BookEntryListComponent implements OnChanges {
 
   helper: SubscriptionHelper;
 
-  dataSource: MatTableDataSource<RecordingBookEntry>;
+  dataSource: MatTableDataSource<BookEntry>;
 
   displayedColumns = ['bookEntry', 'instrument', 'recordingTime', 'status', 'action'];
 
@@ -45,7 +45,7 @@ export class BookEntryListComponent implements OnChanges {
   }
 
 
-  onBookEntryClicked(bookEntry: RecordingBookEntry){
+  onBookEntryClicked(bookEntry: BookEntry){
     if (bookEntry) {
       this.sendEvent(BookEntryListEventType.BOOK_ENTRY_CLICKED,
                     { bookEntry });
@@ -53,7 +53,7 @@ export class BookEntryListComponent implements OnChanges {
   }
 
 
-  removeBookEntry(bookEntry: RecordingBookEntry) {
+  removeBookEntry(bookEntry: BookEntry) {
     // if (bookEntry.canEdit) {
     const message = this.getConfirmMessage(bookEntry);
 
@@ -75,12 +75,12 @@ export class BookEntryListComponent implements OnChanges {
   }
 
 
-  private getConfirmMessage(bookEntry: RecordingBookEntry): string {
+  private getConfirmMessage(bookEntry: BookEntry): string {
     return `
       <table style="margin: 0;">
-        <tr><td>Inscripción: </td><td><strong> ${bookEntry.name ?? '-'} </strong></td></tr>
+        <tr><td>Inscripción: </td><td><strong> ${bookEntry.recordingNo ?? '-'} </strong></td></tr>
 
-        <tr><td>Instrumento: </td><td><strong> ${bookEntry.instrument ?? '-'} </strong></td></tr>
+        <tr><td>Instrumento: </td><td><strong> ${bookEntry.volumeNo ?? '-'} </strong></td></tr>
 
         <tr><td class="nowrap">Fecha de registro: </td><td>
           <strong> ${DateStringLibrary.format(bookEntry.recordingTime) ?? '-'} </strong>

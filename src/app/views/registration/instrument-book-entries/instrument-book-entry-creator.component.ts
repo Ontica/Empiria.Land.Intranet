@@ -16,7 +16,7 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { RegistrationCommandType,
          TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
-import { BookEntryFields, RecordingSection } from '@app/models';
+import { InstrumentBookEntryFields, RecordingSection } from '@app/models';
 
 import { FormHandler } from '@app/shared/utils';
 
@@ -97,13 +97,13 @@ export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private getFormData(): BookEntryFields {
+  private getFormData(): InstrumentBookEntryFields {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
 
     const formModel = this.formHandler.form.getRawValue();
 
-    const data: BookEntryFields = {
+    const data: InstrumentBookEntryFields = {
       recorderOfficeUID: formModel.recorderOffice ?? '',
       sectionUID: formModel.recordingSection ?? '',
     };

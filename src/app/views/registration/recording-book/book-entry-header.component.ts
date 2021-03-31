@@ -9,36 +9,36 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { EmptyRecordingBookFields, InstrumentTypesList, RecordingBookFields } from '@app/models';
+import { BookEntry, BookEntryFields, EmptyBookEntry, InstrumentTypesList } from '@app/models';
 import { FormHandler } from '@app/shared/utils';
 
-enum RecordingBookHeaderControls {
+enum BookEntryHeaderControls {
   type = 'type',
-  recordingBookDate = 'recordingBookDate',
-  recordingBook = 'recordingBook',
+  recordingTime = 'recordingTime',
+  volumeNo = 'volumeNo',
   notes = 'notes',
   status = 'status',
 }
 
-export enum RecordingBookHeaderEventType {
-  ADD_RECORDING_BOOK = 'InstrumentEditorEventType.Event.AddRecordingBook',
-  UPDATE_RECORDING_BOOK = 'InstrumentEditorEventType.Event.UpdateRecordingBook'
+export enum BookEntryHeaderEventType {
+  ADD_BOOK_ENTRY = 'BookEntryHeaderEventType.Event.AddBookEntry',
+  UPDATE_BOOK_ENTRY = 'BookEntryHeaderEventType.Event.UpdateBookEntry'
 }
 
 @Component({
-  selector: 'emp-land-recording-book-header',
-  templateUrl: './recording-book-header.component.html',
+  selector: 'emp-land-book-entry-header',
+  templateUrl: './book-entry-header.component.html',
 })
-export class RecordingBookHeaderComponent implements OnInit, OnChanges, OnDestroy {
+export class BookEntryHeaderComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() recordingBook: RecordingBookFields = EmptyRecordingBookFields;
+  @Input() bookEntry: BookEntry = EmptyBookEntry;
 
-  @Output() recordingBookHeaderEvent = new EventEmitter<EventInfo>();
+  @Output() bookEntryHeaderEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;
 
   formHandler: FormHandler;
-  controls = RecordingBookHeaderControls;
+  controls = BookEntryHeaderControls;
   editorMode = false;
   readonly = false;
   isLoading = false;
@@ -51,7 +51,7 @@ export class RecordingBookHeaderComponent implements OnInit, OnChanges, OnDestro
   }
 
   ngOnChanges(): void {
-    this.editorMode = !isEmpty(this.recordingBook);
+    this.editorMode = !isEmpty(this.bookEntry);
     this.readonly = this.editorMode;
   }
 
@@ -82,13 +82,13 @@ export class RecordingBookHeaderComponent implements OnInit, OnChanges, OnDestro
     }
 
     const payload = {
-      recordignBookUID: this.recordingBook.uid,
-      recordingBook: this.getFormData()
+      recordignBookUID: this.bookEntry.uid,
+      bookEntry: this.getFormData()
     };
 
     this.sendEvent(this.editorMode ?
-                   RecordingBookHeaderEventType.UPDATE_RECORDING_BOOK :
-                   RecordingBookHeaderEventType.ADD_RECORDING_BOOK,
+                   BookEntryHeaderEventType.UPDATE_BOOK_ENTRY :
+                   BookEntryHeaderEventType.ADD_BOOK_ENTRY,
                    payload);
   }
 
@@ -97,8 +97,8 @@ export class RecordingBookHeaderComponent implements OnInit, OnChanges, OnDestro
     this.formHandler = new FormHandler(
       new FormGroup({
         type: new FormControl('', Validators.required),
-        recordingBookDate: new FormControl('', Validators.required),
-        recordingBook: new FormControl('', Validators.required),
+        recordingTime: new FormControl('', Validators.required),
+        volumeNo: new FormControl('', Validators.required),
         notes: new FormControl('', Validators.required),
         status: new FormControl(''),
       })
@@ -113,17 +113,17 @@ export class RecordingBookHeaderComponent implements OnInit, OnChanges, OnDestro
 
 
   private setFormData() {
-    if (!this.recordingBook) {
+    if (!this.bookEntry) {
       this.formHandler.form.reset();
       return;
     }
 
     this.formHandler.form.reset({
-      type: this.recordingBook.type || '',
-      recordingBookDate: this.recordingBook.recordingBookDate || '',
-      recordingBook: this.recordingBook.recordingBook || '',
-      notes: this.recordingBook.notes || '',
-      status: this.recordingBook.status || '',
+      type: this.bookEntry.type || '',
+      recordingTime: this.bookEntry.recordingTime || '',
+      volumeNo: this.bookEntry.volumeNo || '',
+      notes: this.bookEntry.notes || '',
+      status: this.bookEntry.status || '',
     });
   }
 
@@ -133,16 +133,16 @@ export class RecordingBookHeaderComponent implements OnInit, OnChanges, OnDestro
   }
 
 
-  private getFormData(): any {
+  private getFormData(): BookEntryFields {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
 
     const formModel = this.formHandler.form.getRawValue();
 
-    const data: any = {
+    const data: BookEntryFields = {
       type: formModel.type ?? '',
-      recordingBookDate: formModel.recordingBookDate ?? '',
-      recordingBook: formModel.recordingBook ?? '',
+      recordingTime: formModel.recordingTime ?? '',
+      volumeNo: formModel.volumeNo ?? '',
       notes: formModel.notes ?? '',
       status: formModel.status ?? '',
     };
@@ -151,13 +151,13 @@ export class RecordingBookHeaderComponent implements OnInit, OnChanges, OnDestro
   }
 
 
-  private sendEvent(eventType: RecordingBookHeaderEventType, payload?: any) {
+  private sendEvent(eventType: BookEntryHeaderEventType, payload?: any) {
     const event: EventInfo = {
       type: eventType,
       payload
     };
 
-    this.recordingBookHeaderEvent.emit(event);
+    this.bookEntryHeaderEvent.emit(event);
   }
 
 }

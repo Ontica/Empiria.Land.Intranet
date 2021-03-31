@@ -15,7 +15,7 @@ import { Command } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { RegistrationCommandType } from '@app/core/presentation/presentation-types';
 
-import { BookEntry, EmptyInstrumentRecording, InstrumentRecording } from '@app/models';
+import { InstrumentBookEntry, EmptyInstrumentRecording, InstrumentRecording } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 import {
@@ -37,7 +37,7 @@ export class InstrumentBookEntryListComponent implements OnChanges, OnDestroy {
 
   submitted = false;
 
-  dataSource: MatTableDataSource<BookEntry>;
+  dataSource: MatTableDataSource<InstrumentBookEntry>;
 
   private displayedColumnsDefault = ['recordingTime', 'recorderOfficeName', 'recordingSectionName',
                                      'volumeNo', 'recordingNo', 'recordedBy'];
@@ -78,7 +78,7 @@ export class InstrumentBookEntryListComponent implements OnChanges, OnDestroy {
   }
 
 
-  removeBookEntry(bookEntry: BookEntry) {
+  removeBookEntry(bookEntry: InstrumentBookEntry) {
     if (!this.submitted) {
       const message = this.getConfirmMessage(bookEntry);
 
@@ -101,12 +101,12 @@ export class InstrumentBookEntryListComponent implements OnChanges, OnDestroy {
   }
 
 
-  printBookEntryStampMedia(bookEntry: BookEntry) {
+  printBookEntryStampMedia(bookEntry: InstrumentBookEntry) {
     this.filePrintPreview.open(bookEntry.stampMedia.url, bookEntry.stampMedia.mediaType);
   }
 
 
-  private getConfirmMessage(bookEntry: BookEntry): string {
+  private getConfirmMessage(bookEntry: InstrumentBookEntry): string {
     return `
       <table style="margin: 0;">
         <tr><td>Distrito: </td><td><strong> ${bookEntry.recorderOfficeName} </strong></td></tr>
