@@ -10,9 +10,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Assertion, Command, Identifiable, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { EmptyRealEstate, RealEstate, RecorderOffice } from '@app/models';
-import { RealEstateFields, RecordableSubject } from '@app/models/recordable-subjects';
-import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
+import { EmptyRealEstate, InstrumentRecording, RealEstate, RecorderOffice, RecordingAct } from '@app/models';
+import { RealEstateFields } from '@app/models/recordable-subjects';
+import { RecordableSubjectsStateSelector, RegistrationCommandType } from '@app/presentation/exported.presentation.types';
 
 import { ArrayLibrary, FormHandler } from '@app/shared/utils';
 
@@ -40,11 +40,11 @@ enum RealEstateEditorFormControls {
 })
 export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() recordableSubject: RecordableSubject;
+  @Input() instrumentRecording: InstrumentRecording;
+  @Input() recordingAct: RecordingAct;
+  @Input() realEstate: RealEstate = EmptyRealEstate;
 
   @Input() readonly = false;
-
-  realEstate: RealEstate = EmptyRealEstate;
 
   helper: SubscriptionHelper;
 
@@ -74,9 +74,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   ngOnChanges() {
-    if (this.recordableSubject) {
-      Object.assign(this.realEstate, this.recordableSubject);
-    }
+
   }
 
 
@@ -97,64 +95,63 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  onRecorderOfficeChange(recorderOffice: RecorderOffice){
+  onRecorderOfficeChange(recorderOffice: RecorderOffice) {
     this.municipalityList = recorderOffice?.municipalities ?? [];
     this.formHandler.getControl(this.controls.municipalityUID).reset();
   }
 
 
-  onElectronicHistoryClicked(){
+  onElectronicHistoryClicked() {
     console.log('Historia del folio real: ', this.realEstate.electronicID);
   }
 
 
-  onCadastralCertificateClicked(){
+  onCadastralCertificateClicked() {
     console.log('Cédula catastral: ', this.realEstate.cadastralID);
   }
 
 
-  onCadastralClicked(){
+  onCadastralClicked() {
     if (!this.editorMode || this.submitted) {
       return;
     }
 
     if (this.realEstate.cadastralID) {
       this.unlinkCadastralId();
-    }else{
+    } else {
       this.linkCadastralId();
     }
   }
 
 
-  onCompletedChange(change){
+  onCompletedChange(change) {
     this.setRequiredFormFields(change.checked);
     this.formHandler.invalidateForm();
   }
 
 
-  submitRecordingAct() {
-
+  submitForm() {
     if (this.submitted || !this.formHandler.validateReadyForSubmit()) {
       this.formHandler.invalidateForm();
       return;
     }
 
     const payload = {
-      realEstate: this.getFormData()
+      instrumentRecordingUID: this.instrumentRecording,
+      recordingActUID: this.recordingAct.uid,
+      recordableSubjectFields: this.getFormData()
     };
 
-    console.log(payload);
-
-    // this.executeCommand<Instrument>(InstrumentsCommandType.CREATE_PHYSICAL_RECORDING, payload);
+    this.executeCommand(RegistrationCommandType.UPDATE_RECORDABLE_SUBJECT, payload);
   }
 
 
-  private linkCadastralId(){
+  private linkCadastralId() {
     console.log('Vincular clave catastral: ', this.formHandler.getControl(this.controls.cadastralID).value);
   }
 
 
-  private unlinkCadastralId(){
+  private unlinkCadastralId() {
     console.log('Desvincular clave catastral: ', this.realEstate.cadastralID);
   }
 
@@ -219,13 +216,13 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  private setRecorderOfficeAndMunicipalityDataList(){
+  private setRecorderOfficeAndMunicipalityDataList() {
     this.municipalityList = [];
 
     if (!isEmpty(this.realEstate.recorderOffice)) {
       const recorderOffice =
         this.recorderOfficeList.filter(x => x.uid === this.realEstate.recorderOffice.uid).length > 0 ?
-        this.recorderOfficeList.filter(x => x.uid === this.realEstate.recorderOffice.uid)[0] : null;
+          this.recorderOfficeList.filter(x => x.uid === this.realEstate.recorderOffice.uid)[0] : null;
 
       if (recorderOffice && recorderOffice.municipalities?.length > 0) {
         this.municipalityList = recorderOffice.municipalities;
@@ -249,7 +246,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  private setRequiredFormFields(required: boolean){
+  private setRequiredFormFields(required: boolean) {
     if (required) {
       this.formHandler.setControlValidators('cadastralID', Validators.required);
       this.formHandler.setControlValidators('recorderOfficeUID', Validators.required);
@@ -272,7 +269,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  private getFormData(): any {
+  private getFormData(): RealEstateFields {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
 

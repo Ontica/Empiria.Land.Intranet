@@ -11,14 +11,14 @@ import { Observable } from 'rxjs';
 import { Assertion, HttpService, Identifiable } from '@app/core';
 
 import { InstrumentBookEntryFields, InstrumentFields,
-         InstrumentRecording, RegistrationCommand } from '@app/models';
+         InstrumentRecording, RecordableSubjectFields, RegistrationCommand } from '@app/models';
 
 
 @Injectable()
 export class RecordingDataService {
 
-  constructor(private http: HttpService) { }
 
+  constructor(private http: HttpService) { }
 
   getRecordingActTypesList(listUID: string): Observable<Identifiable[]> {
     Assertion.assertValue(listUID, 'listUID');
@@ -101,6 +101,19 @@ export class RecordingDataService {
     const path = `v5/land/registration/${instrumentRecordingUID}/book-entries/${bookEntryUID}`;
 
     return this.http.delete<InstrumentRecording>(path);
+  }
+
+
+  updateRecordableSubject(instrumentRecordingUID: string,
+                          recordingActUID: string,
+                          recordableSubjectFields: RecordableSubjectFields): Observable<InstrumentRecording> {
+    Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
+    Assertion.assertValue(recordingActUID, 'recordingActUID');
+    Assertion.assertValue(recordableSubjectFields, 'recordableSubjectFields');
+
+    const path = `v5/land/registration/${instrumentRecordingUID}/recording-acts/${recordingActUID}/update-recordable-subject`;
+
+    return this.http.put<InstrumentRecording>(path, recordableSubjectFields);
   }
 
 }

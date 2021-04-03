@@ -145,7 +145,7 @@
           Editar
         </button>
 
-        <button *ngIf="editorMode" (click)="submitRecordingAct()" [class.btn]="!formHandler.isValid"
+        <button *ngIf="editorMode" (click)="submitForm()" [class.btn]="!formHandler.isValid"
           [class.btn-action]="formHandler.isValid">
           Guardar
         </button>

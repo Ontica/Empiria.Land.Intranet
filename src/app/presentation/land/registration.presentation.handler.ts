@@ -41,8 +41,9 @@ export enum CommandType {
   UPDATE_RECORDED_INSTRUMENT  = 'Land.Registration.Update.Instrument',
   CREATE_RECORDING_ACT        = 'Land.Registration.Create.RecordingAct',
   DELETE_RECORDING_ACT        = 'Land.Registration.Delete.RecordingAct',
+  UPDATE_RECORDABLE_SUBJECT   = 'Land.Registration.Update.RecordableSubject',
   CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY = 'Land.Registration.Create.InstrumentRecordingBookEntry',
-  DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY = 'Land.Registration.Delete.InstrumentRecordingBookEntry',
+  DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY = 'Land.Registration.Delete.InstrumentRecordingBookEntry'
 }
 
 
@@ -157,6 +158,13 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         return toPromise<U>(
           this.data.deleteRecordingBookEntry(command.payload.instrumentRecordingUID,
                                              command.payload.bookEntryUID)
+        );
+
+      case CommandType.UPDATE_RECORDABLE_SUBJECT:
+        return toPromise<U>(
+          this.data.updateRecordableSubject(command.payload.instrumentRecordingUID,
+                                            command.payload.recordingActUID,
+                                            command.payload.recordableSubjectFields)
         );
 
       default:

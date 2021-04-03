@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 
-import { RecordingAct } from '@app/models';
+import { InstrumentRecording, RecordingAct } from '@app/models';
 
 
 @Component({
@@ -16,6 +16,7 @@ import { RecordingAct } from '@app/models';
 })
 export class RecordableSubjectTabbedViewComponent implements OnInit, OnChanges {
 
+  @Input() instrumentRecording: InstrumentRecording;
   @Input() recordingAct: RecordingAct;
 
   @Output() closeEvent = new EventEmitter<void>();
