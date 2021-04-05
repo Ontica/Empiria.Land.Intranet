@@ -8,6 +8,8 @@
 import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase, PartitionedType } from '@app/core';
 
 
+export type RecordableSubjectType = 'None' | 'RealEstate' | 'Association' | 'NoProperty';
+
 export interface RecordableSubjectFields extends Identifiable, PartitionedType {
   electronicID?: string;
   kind?: string;

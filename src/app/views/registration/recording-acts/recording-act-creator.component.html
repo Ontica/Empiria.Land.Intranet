@@ -39,8 +39,8 @@
         <label>Sobre:</label>
         <emp-ng-select [formControlName]="controls.subjectCommand"
           [config]="{ clearable: false }"
-          [items]="subjectCommandList"
-          [placeholder]="subjectCommandList.length === 0 ? 'Seleccione el acto jurídico a registrar' : 'Seleccione'"
+          [items]="registrationCommands"
+          [placeholder]="registrationCommands.length === 0 ? 'Seleccione el acto jurídico a registrar' : 'Seleccione'"
           [showError]="formHandler.showInvalidControl(controls.subjectCommand)"
           (changes)="onSubjectCommandChange()">
         </emp-ng-select>

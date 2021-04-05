@@ -8,7 +8,7 @@
 import { DateString, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
 import { EmptyInstrument, Instrument } from './instrument';
 
-import { RealEstate } from './recordable-subjects';
+import { RealEstate, RecordableSubjectType } from './recordable-subjects';
 
 import { RecordingAct } from './recording-act';
 
@@ -148,6 +148,18 @@ export interface RegistrationCommandPayload {
   partitionNo?: string;
 }
 
+
+export interface RegistrationCommandRule {
+  subjectType: RecordableSubjectType;
+  selectSubject: boolean;
+  selectTargetAct: boolean;
+  newPartition: boolean;
+}
+
+
+export interface RegistrationCommandConfig extends Identifiable {
+  rule: RegistrationCommandRule;
+}
 
 
 // ToDo: review these types

@@ -12,11 +12,11 @@ import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap 
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Assertion, Command, EventInfo, Identifiable } from '@app/core';
+import { Assertion, Command, EventInfo } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { EmptyInstrumentRecording, InstrumentRecording,
-         RecordingActType, RecordingActTypeGroup, RegistrationCommand } from '@app/models';
+         RecordingActType, RecordingActTypeGroup, RegistrationCommand, RegistrationCommandConfig } from '@app/models';
 
 import { RegistrationCommandType,
          RecordableSubjectsStateSelector,
@@ -51,7 +51,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   recordingActTypeGroupList: RecordingActTypeGroup[] = [];
   recordingActTypeList: RecordingActType[] = [];
-  subjectCommandList: Identifiable[] = [];
+  registrationCommands: RegistrationCommandConfig[] = [];
 
   showRealEstateField = false;
   showPartitionField = false;
@@ -84,7 +84,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   onRecordingActTypeGroupChange(recordingActTypeGroup: RecordingActTypeGroup) {
     this.recordingActTypeList = recordingActTypeGroup.recordingActTypes ?? [];
-    this.subjectCommandList = [];
+    this.registrationCommands = [];
 
     this.formHandler.getControl(this.controls.recordingActType).reset();
     this.formHandler.getControl(this.controls.subjectCommand).reset();
@@ -92,7 +92,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   onRecordingActTypeChange(recordingActType: RecordingActType) {
-    this.subjectCommandList = recordingActType.subjectCommands ?? [];
+    this.registrationCommands = recordingActType.registrationCommands ?? [];
     this.formHandler.getControl(this.controls.subjectCommand).reset();
   }
 

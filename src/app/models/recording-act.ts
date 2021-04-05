@@ -8,6 +8,8 @@
 import { Identifiable, Money, PartitionedType } from '@app/core';
 
 import { EmptyRecordableSubject, RecordableSubject } from './recordable-subjects';
+import { RegistrationCommandConfig } from './registration';
+
 import { RoledParty } from './party';
 
 
@@ -17,7 +19,7 @@ export interface RecordingActTypeGroup extends Identifiable {
 
 
 export interface RecordingActType extends Identifiable {
-  subjectCommands?: Identifiable[];
+  registrationCommands?: RegistrationCommandConfig[];
 }
 
 
