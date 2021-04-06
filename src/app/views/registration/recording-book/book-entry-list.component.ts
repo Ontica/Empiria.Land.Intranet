@@ -33,7 +33,7 @@ export class BookEntryListComponent implements OnChanges {
 
   dataSource: MatTableDataSource<BookEntry>;
 
-  displayedColumns = ['bookEntry', 'instrument', 'recordingTime', 'status', 'action'];
+  displayedColumns = ['recordingNo', 'instrumentName', 'recordingTime', 'status', 'action'];
 
   constructor(private uiLayer: PresentationLayer,
               private messageBox: MessageBoxService) {
@@ -80,7 +80,7 @@ export class BookEntryListComponent implements OnChanges {
       <table style="margin: 0;">
         <tr><td>Inscripción: </td><td><strong> ${bookEntry.recordingNo ?? '-'} </strong></td></tr>
 
-        <tr><td>Instrumento: </td><td><strong> ${bookEntry.volumeNo ?? '-'} </strong></td></tr>
+        <tr><td>Instrumento: </td><td><strong> ${bookEntry.instrumentName ?? '-'} </strong></td></tr>
 
         <tr><td class="nowrap">Fecha de registro: </td><td>
           <strong> ${DateStringLibrary.format(bookEntry.recordingTime) ?? '-'} </strong>

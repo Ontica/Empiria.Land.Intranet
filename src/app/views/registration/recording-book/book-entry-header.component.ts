@@ -15,7 +15,7 @@ import { FormHandler } from '@app/shared/utils';
 enum BookEntryHeaderControls {
   type = 'type',
   recordingTime = 'recordingTime',
-  volumeNo = 'volumeNo',
+  recordingNo = 'recordingNo',
   notes = 'notes',
   status = 'status',
 }
@@ -98,7 +98,7 @@ export class BookEntryHeaderComponent implements OnInit, OnChanges, OnDestroy {
       new FormGroup({
         type: new FormControl('', Validators.required),
         recordingTime: new FormControl('', Validators.required),
-        volumeNo: new FormControl('', Validators.required),
+        recordingNo: new FormControl('', Validators.required),
         notes: new FormControl('', Validators.required),
         status: new FormControl(''),
       })
@@ -121,9 +121,8 @@ export class BookEntryHeaderComponent implements OnInit, OnChanges, OnDestroy {
     this.formHandler.form.reset({
       type: this.bookEntry.type || '',
       recordingTime: this.bookEntry.recordingTime || '',
-      volumeNo: this.bookEntry.volumeNo || '',
+      recordingNo: this.bookEntry.recordingNo || '',
       notes: this.bookEntry.notes || '',
-      status: this.bookEntry.status || '',
     });
   }
 
@@ -142,7 +141,7 @@ export class BookEntryHeaderComponent implements OnInit, OnChanges, OnDestroy {
     const data: BookEntryFields = {
       type: formModel.type ?? '',
       recordingTime: formModel.recordingTime ?? '',
-      volumeNo: formModel.volumeNo ?? '',
+      recordingNo: formModel.recordingNo ?? '',
       notes: formModel.notes ?? '',
       status: formModel.status ?? '',
     };
