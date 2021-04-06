@@ -10,22 +10,24 @@ import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase, Partitioned
 
 export type RecordableSubjectType = 'None' | 'RealEstate' | 'Association' | 'NoProperty';
 
-export interface RecordableSubjectFields extends Identifiable, PartitionedType {
-  electronicID?: string;
-  kind?: string;
-  notes?: string;
+export interface RecordableSubjectFields {
+  uid: string;
+  type: RecordableSubjectType;
+  electronicID: string;
+  recorderOfficeUID: string;
+  kind: string;
 }
 
 
 // tslint:disable-next-line: no-empty-interface
 export interface AssociationFields extends RecordableSubjectFields {
-
+  name: string;
 }
 
 
 // tslint:disable-next-line: no-empty-interface
 export interface NoPropertyFields extends RecordableSubjectFields {
-
+  description: string;
 }
 
 
@@ -44,6 +46,7 @@ export const EmptyRecordingContext: RecordingContext = {
 export interface RecordableSubject extends Identifiable, PartitionedType {
   electronicID: string;
   kind: string;
+  recorderOffice: Identifiable;
   recordingContext: RecordingContext;
 }
 
@@ -51,8 +54,9 @@ export interface RecordableSubject extends Identifiable, PartitionedType {
 export const EmptyRecordableSubject: RecordableSubject = {
   uid: '',
   type: '',
-  name: '',
   electronicID: '',
+  name: '',
+  recorderOffice: Empty,
   kind: '',
   recordingContext: EmptyRecordingContext
 };
@@ -62,7 +66,6 @@ export interface RealEstate extends RecordableSubject {
   cadastralID: string;
   cadastreLinkingDate?: DateString;
   cadastralCardMedia?: MediaBase;
-  recorderOffice: Identifiable;
   municipality: Identifiable;
   lotSize: number;
   lotSizeUnit: Identifiable;
@@ -82,7 +85,7 @@ export const EmptyRealEstate: RealEstate = {
   cadastralCardMedia: EmptyMediaBase,
   recorderOffice: Empty,
   municipality: Empty,
-  lotSize: null,
+  lotSize: -1,
   lotSizeUnit: Empty,
   description: '',
   metesAndBounds: '',
@@ -90,54 +93,54 @@ export const EmptyRealEstate: RealEstate = {
 
 
 export interface RealEstateFields extends RecordableSubjectFields {
-  districtUID?: string;
-  municipalityUID?: string;
-  cadastralID?: string;
-  location?: string;
-  lotSize?: number;
-  lotSizeUnitUID?: string;
-  description?: string;
-  metesAndBounds?: string;
-  partitionOfUID?: string;
-  partitionType?: string;
-  partitionNo?: string;
-  mergedIntoUID?: string;
+  municipalityUID: string;
+  cadastralID: string;
+  description: string;
+  metesAndBounds: string;
+  lotSize: number;
+  lotSizeUnitUID: string;
 }
 
 
 export const EmptyRecordableSubjectFields: RecordableSubjectFields = {
   uid: '',
+  type: 'None',
   electronicID: '',
-  name: '',
-  type: '',
-  kind: '',
-  notes: ''
+  recorderOfficeUID: '',
+  kind: ''
 };
 
 
-export const EmptyAssociationFields: AssociationFields = EmptyRecordableSubjectFields;
+export const EmptyAssociationFields: AssociationFields = {
+  uid: '',
+  type: 'None',
+  electronicID: '',
+  recorderOfficeUID: '',
+  kind: '',
+  name: ''
+};
 
 
-export const EmptyNoPropertyFields: NoPropertyFields = EmptyRecordableSubjectFields;
+export const EmptyNoPropertyFields: NoPropertyFields = {
+  uid: '',
+  type: 'None',
+  electronicID: '',
+  recorderOfficeUID: '',
+  kind: '',
+  description: ''
+};
 
 
 export const EmptyRealEstateFields: RealEstateFields = {
   uid: '',
+  type: 'RealEstate',
   electronicID: '',
-  name: '',
-  type: '',
+  recorderOfficeUID: '',
   kind: '',
-  notes: '',
-  districtUID: '',
   municipalityUID: '',
   cadastralID: '',
-  location: '',
   lotSize: -1,
   lotSizeUnitUID: '',
   description: '',
-  metesAndBounds: '',
-  partitionOfUID: '',
-  partitionType: '',
-  partitionNo: '',
-  mergedIntoUID: '',
+  metesAndBounds: ''
 };

@@ -277,12 +277,10 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
     const data: RealEstateFields = {
       uid: this.realEstate.uid,
-      name: this.realEstate.name,
-      type: '',
-
+      type: 'RealEstate',
       electronicID: formModel.electronicID ?? '',
       cadastralID: formModel.cadastralID ?? '',
-      districtUID: formModel.recorderOfficeUID ?? '',
+      recorderOfficeUID: formModel.recorderOfficeUID ?? '',
       municipalityUID: formModel.municipalityUID ?? '',
       kind: formModel.resourceKindUID ?? '',
       lotSize: formModel.lotSize ?? 0,
