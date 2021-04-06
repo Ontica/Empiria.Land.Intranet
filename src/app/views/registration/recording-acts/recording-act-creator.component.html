@@ -37,47 +37,60 @@
     <div fxLayout="row">
       <div fxFlex="270px">
         <label>Sobre:</label>
-        <emp-ng-select [formControlName]="controls.subjectCommand"
+        <emp-ng-select [formControlName]="controls.registrationCommand"
           [config]="{ clearable: false }"
           [items]="registrationCommands"
           [placeholder]="registrationCommands.length === 0 ? 'Seleccione el acto jurídico a registrar' : 'Seleccione'"
-          [showError]="formHandler.showInvalidControl(controls.subjectCommand)"
-          (changes)="onSubjectCommandChange()">
+          [showError]="formHandler.showInvalidControl(controls.registrationCommand)"
+          (changes)="onRegistrationCommandChange($event)">
         </emp-ng-select>
       </div>
 
-      <ng-container *ngIf="showRealEstateField">
+      <ng-container *ngIf="registrationCommandRules.selectSubject">
         <div fxFlex>
-          <label>Buscar y seleccionar el folio real:</label>
+          <label> Buscar y seleccionar
+            <span *ngIf="isRealEstate"> el folio real del predio</span>
+            <span *ngIf="isAssociation"> la asociación o sociedad</span>
+            <span *ngIf="isNoProperty"> el documento</span>
+            <span *ngIf="registrationCommandRules.newPartition">
+              del cual se va a desprender la fracción</span>:
+          </label>
 
-          <emp-ng-select [formControlName]="controls.realEstate"
-            [config]="{ hideSelected: true, minTermLength: realEstateMinTermLength }"
-            [items]="realEstateList$ | async"
-            [typeahead]="realEstateInput$"
-            [loading]="realEstateLoading"
-            [style.width.%]="100"
-            [showError]="formHandler.showInvalidControl(controls.realEstate)">
+          <div fxLayout="row">
+            <div fxFlex>
+              <emp-ng-select [formControlName]="controls.subject"
+                [config]="{ hideSelected: true, minTermLength: subjectMinTermLength }"
+                [items]="subjectList$ | async"
+                [typeahead]="subjectInput$"
+                [loading]="subjectLoading"
+                [style.width.%]="100"
+                [showError]="formHandler.showInvalidControl(controls.subject)">
 
-          </emp-ng-select>
+              </emp-ng-select>
+            </div>
+
+            <div fxFlex="75px" fxLayoutAlign="end end" style="padding-bottom: 2px;">
+              <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
+                Ver
+              </button>
+            </div>
+
+            <div fxFlex="75px" fxLayoutAlign="end end" style="padding-bottom: 2px;">
+              <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
+                Sello
+              </button>
+            </div>
+
+          </div>
+
         </div>
 
-        <div fxFlex="75px" fxLayoutAlign="end end" style="padding-bottom: 2px;">
-          <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
-            Ver
-          </button>
-        </div>
-
-        <div fxFlex="75px" fxLayoutAlign="end end" style="padding-bottom: 2px;">
-          <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
-            Sello
-          </button>
-        </div>
       </ng-container>
 
     </div>
 
 
-    <div fxLayout="row" *ngIf="showPartitionField">
+    <div fxLayout="row" *ngIf="registrationCommandRules.newPartition">
 
       <div fxFlex="270px">
 
@@ -89,7 +102,7 @@
         <emp-ng-select [formControlName]="controls.partitionType"
           bindValue="name"
           [config]="{ clearable: false }"
-          [items]="realEstatePartitionKindList"
+          [items]="partitionKindList"
           [showError]="formHandler.showInvalidControl(controls.partitionType)">
         </emp-ng-select>
       </div>
@@ -103,7 +116,7 @@
 
     </div>
 
-    <div fxLayout="row" *ngIf="showRealEstateField">
+    <div fxLayout="row" *ngIf="registrationCommandRules.selectSubject">
 
       <div fxFlex="270px">
 

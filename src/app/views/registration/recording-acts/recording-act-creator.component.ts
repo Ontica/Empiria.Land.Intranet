@@ -15,8 +15,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, Command, EventInfo } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { EmptyInstrumentRecording, InstrumentRecording,
-         RecordingActType, RecordingActTypeGroup, RegistrationCommand, RegistrationCommandConfig } from '@app/models';
+import { EmptyInstrumentRecording, EmptyRegistrationCommandRule, InstrumentRecording,
+         RecordingActType, RecordingActTypeGroup, RegistrationCommand, RegistrationCommandConfig,
+         RegistrationCommandRule } from '@app/models';
 
 import { RegistrationCommandType,
          RecordableSubjectsStateSelector,
@@ -29,8 +30,8 @@ import { RecordingBookSelectorEventType } from '../recording-book/recording-book
 enum RecordingActCreatorFormControls {
   recordingActTypeGroup = 'recordingActTypeGroup',
   recordingActType = 'recordingActType',
-  subjectCommand = 'subjectCommand',
-  realEstate = 'realEstate',
+  registrationCommand = 'registrationCommand',
+  subject = 'subject',
   partitionType = 'partitionType',
   partitionNo = 'partitionNo',
 }
@@ -53,15 +54,14 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   recordingActTypeList: RecordingActType[] = [];
   registrationCommands: RegistrationCommandConfig[] = [];
 
-  showRealEstateField = false;
-  showPartitionField = false;
+  registrationCommandRules: RegistrationCommandRule = EmptyRegistrationCommandRule;
 
-  realEstateList$: Observable<any[]>;
-  realEstateInput$ = new Subject<string>();
-  realEstateLoading = false;
-  realEstateMinTermLength = 5;
+  subjectList$: Observable<any[]>;
+  subjectInput$ = new Subject<string>();
+  subjectLoading = false;
+  subjectMinTermLength = 5;
 
-  realEstatePartitionKindList: any[] = [];
+  partitionKindList: any[] = [];
 
   showSeeker = false;
 
@@ -73,7 +73,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.initLoad();
-    this.subscribeRealEstateList();
+    this.subscribeSubjectList();
   }
 
 
@@ -82,26 +82,46 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
+
+  get isRealEstate() {
+    return this.registrationCommandRules.subjectType === 'RealEstate';
+  }
+
+
+  get isAssociation() {
+    return this.registrationCommandRules.subjectType === 'Association';
+  }
+
+
+  get isNoProperty() {
+    return this.registrationCommandRules.subjectType === 'NoProperty';
+  }
+
+
   onRecordingActTypeGroupChange(recordingActTypeGroup: RecordingActTypeGroup) {
     this.recordingActTypeList = recordingActTypeGroup.recordingActTypes ?? [];
     this.registrationCommands = [];
 
     this.formHandler.getControl(this.controls.recordingActType).reset();
-    this.formHandler.getControl(this.controls.subjectCommand).reset();
+    this.formHandler.getControl(this.controls.registrationCommand).reset();
+
+    this.resetRegistrationCommandRules();
   }
 
 
   onRecordingActTypeChange(recordingActType: RecordingActType) {
     this.registrationCommands = recordingActType.registrationCommands ?? [];
-    this.formHandler.getControl(this.controls.subjectCommand).reset();
+    this.formHandler.getControl(this.controls.registrationCommand).reset();
+    this.resetRegistrationCommandRules();
   }
 
 
-  onSubjectCommandChange(){
-    this.validateRealEstateField();
+  onRegistrationCommandChange(registrationCommand: RegistrationCommandConfig){
+    this.setRegistrationCommandRules(registrationCommand.rules);
+    this.validateSubjectField();
     this.validatePartitionField();
-    this.showSeeker = false;
   }
+
 
   onRecordingBookSelectorEvent(event: EventInfo) {
     switch (event.type as RecordingBookSelectorEventType) {
@@ -133,10 +153,10 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     const data = this.getFormData();
 
     const registrationCommand: RegistrationCommand = {
-      type: data.subjectCommand,
+      type: data.registrationCommand,
       payload: {
         recordingActTypeUID: data.recordingActType,
-        recordableSubjectUID: data.realEstate,
+        recordableSubjectUID: data.subject,
         partitionType: data.partitionType,
         partitionNo: data.partitionNo,
       }
@@ -156,8 +176,8 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
       new FormGroup({
         recordingActTypeGroup: new FormControl('', Validators.required),
         recordingActType: new FormControl('', Validators.required),
-        subjectCommand: new FormControl('', Validators.required),
-        realEstate: new FormControl(''),
+        registrationCommand: new FormControl('', Validators.required),
+        subject: new FormControl(''),
         partitionType: new FormControl(''),
         partitionNo: new FormControl(''),
       })
@@ -175,59 +195,72 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
     this.helper.select<string[]>(RecordableSubjectsStateSelector.REAL_ESTATE_PARTITION_KIND_LIST)
       .subscribe(x => {
-        this.realEstatePartitionKindList = x.map(item => Object.create({ name: item }));
+        this.partitionKindList = x.map(item => Object.create({ name: item }));
       });
   }
 
 
-  private subscribeRealEstateList() {
-    this.realEstateList$ = concat(
+  private subscribeSubjectList() {
+    this.subjectList$ = concat(
       of([]),
-      this.realEstateInput$.pipe(
-          filter(keyword => keyword !== null && keyword.length >= this.realEstateMinTermLength),
+      this.subjectInput$.pipe(
+          filter(keyword => keyword !== null && keyword.length >= this.subjectMinTermLength),
           distinctUntilChanged(),
           debounceTime(800),
-          tap(() => this.realEstateLoading = true),
+          tap(() => this.subjectLoading = true),
           switchMap(keyword => of([])
                           //  this.helper.select<any[]>(RecordableSubjectsStateSelector.RECORDING_BOOKS_LIST,
-                          //  this.buildRealEstateFilter(keyword))
+                          //  this.buildSubjectFilter(keyword))
             .pipe(
               catchError(() => of([])),
-              tap(() => this.realEstateLoading = false)
+              tap(() => this.subjectLoading = false)
           ))
       )
     );
   }
 
 
-  private buildRealEstateFilter(keywords: string): any {
-    const realEstateFilter = {
+  private buildSubjectFilter(keywords: string): any {
+    const subjectFilter = {
       recordingActType: '',
-      subjectCommand: '',
+      registrationCommand: '',
       keywords
     };
 
-    return realEstateFilter;
+    return subjectFilter;
   }
 
 
-  private validateRealEstateField(){
-    this.showRealEstateField = ['SelectRealEstate', 'SelectRealEstatePartition']
-                               .includes(this.formHandler.getControl(this.controls.subjectCommand).value);
+  private resetRegistrationCommandRules(){
+    this.setRegistrationCommandRules(EmptyRegistrationCommandRule);
+    this.validateSubjectField();
+    this.validatePartitionField();
+  }
 
-    if (this.showRealEstateField) {
-      this.formHandler.setControlValidators(this.controls.realEstate, Validators.required);
+
+  private setRegistrationCommandRules(rules: RegistrationCommandRule){
+    this.registrationCommandRules = rules;
+  }
+
+
+  private validateSubjectField(){
+    this.showSeeker = false;
+
+    this.formHandler.getControl(this.controls.subject).reset();
+
+    if (this.registrationCommandRules.selectSubject) {
+      this.formHandler.setControlValidators(this.controls.subject, Validators.required);
     } else {
-      this.formHandler.clearControlValidators(this.controls.realEstate);
+      this.formHandler.clearControlValidators(this.controls.subject);
     }
   }
 
 
   private validatePartitionField(){
-    this.showPartitionField = ['SelectRealEstatePartition']
-                               .includes(this.formHandler.getControl(this.controls.subjectCommand).value);
+    this.formHandler.getControl(this.controls.partitionNo).reset();
+    this.formHandler.getControl(this.controls.partitionType).reset();
 
-    if (this.showPartitionField) {
+    if (this.registrationCommandRules.newPartition) {
       this.formHandler.setControlValidators(this.controls.partitionType, Validators.required);
       this.formHandler.setControlValidators(this.controls.partitionNo, Validators.required);
     } else {
@@ -246,8 +279,8 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     const data: any = {
       recordingActTypeGroup: formModel.recordingActTypeGroup ?? '',
       recordingActType: formModel.recordingActType ?? '',
-      subjectCommand: formModel.subjectCommand ?? '',
-      realEstate: formModel.realEstate ?? '',
+      registrationCommand: formModel.registrationCommand ?? '',
+      subject: formModel.subject ?? '',
       partitionType: formModel.partitionType ?? '',
       partitionNo: formModel.partitionNo ?? '',
     };
