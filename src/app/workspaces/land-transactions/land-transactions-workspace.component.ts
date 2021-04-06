@@ -31,8 +31,8 @@ import { EmptyFileViewerData,
 
 import { View } from '../main-layout';
 
-import { BookEntry, EmptyBookEntry, EmptyRecordingAct, EmptyRecordingBook,
-         RecordingAct, RecordingBook } from '@app/models';
+import { BookEntry, EmptyBookEntry, EmptySelectionAct, EmptyRecordingBook,
+         RecordingAct, SelectionAct, RecordingBook } from '@app/models';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
@@ -52,7 +52,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   selectedBookEntry: BookEntry = EmptyBookEntry;
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
-  selectedRecordingAct: RecordingAct = EmptyRecordingAct;
+  selectedRecordingAct: SelectionAct = EmptySelectionAct;
   selectedRecordingBook: RecordingBook = EmptyRecordingBook;
   selectedTransaction: Transaction = EmptyTransaction;
 
@@ -103,10 +103,10 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
     this.subscriptionHelper.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
       .subscribe(x => this.filter = x);
 
-    this.subscriptionHelper.select<RecordingAct>(RegistrationStateSelector.SELECTED_RECORDING_ACT)
+    this.subscriptionHelper.select<SelectionAct>(RegistrationStateSelector.SELECTED_RECORDING_ACT)
       .subscribe(x => {
         this.selectedRecordingAct = x;
-        this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct);
+        this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct?.recordingAct);
       });
 
     this.subscriptionHelper.select<RecordingBook>(RegistrationStateSelector.SELECTED_RECORDING_BOOK)

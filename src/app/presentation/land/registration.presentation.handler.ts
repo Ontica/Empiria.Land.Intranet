@@ -13,7 +13,8 @@ import { Assertion, Command, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { EmptyBookEntry, EmptyInstrumentRecording, EmptyRecordingAct, EmptyRecordingBook } from '@app/models';
+import { EmptyBookEntry, EmptyInstrumentRecording, EmptySelectionAct,
+         EmptyRecordingBook } from '@app/models';
 
 import { RecordingDataService } from '@app/data-services';
 
@@ -61,7 +62,7 @@ export enum EffectType {
 
 const initialState: StateValues = [
   { key: SelectorType.TRANSACTION_INSTRUMENT_RECORDING, value: EmptyInstrumentRecording },
-  { key: SelectorType.SELECTED_RECORDING_ACT, value: EmptyRecordingAct },
+  { key: SelectorType.SELECTED_RECORDING_ACT, value: EmptySelectionAct },
   { key: SelectorType.SELECTED_RECORDING_BOOK, value: EmptyRecordingBook },
   { key: SelectorType.SELECTED_BOOK_ENTRY, value: EmptyBookEntry },
 ];
@@ -177,12 +178,13 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
     switch (actionType) {
 
       case ActionType.SELECT_RECORDING_ACT:
+        Assertion.assertValue(params.instrumentRecording, 'payload.instrumentRecording');
         Assertion.assertValue(params.recordingAct, 'payload.recordingAct');
-        this.setValue(SelectorType.SELECTED_RECORDING_ACT, params.recordingAct);
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, params);
         return;
 
       case ActionType.UNSELECT_RECORDING_ACT:
-        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptyRecordingAct);
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptySelectionAct);
         return;
 
       case ActionType.SELECT_RECORDING_BOOK:

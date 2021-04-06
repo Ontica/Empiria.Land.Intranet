@@ -51,7 +51,8 @@
     [fxHide]="displayBookEntryEditor">
 
     <emp-land-recordable-subject-tabbed-view
-      [recordingAct]="selectedRecordingAct"
+      [instrumentRecording]="selectedRecordingAct.instrumentRecording"
+      [recordingAct]="selectedRecordingAct.recordingAct"
       (closeEvent)="onCloseSecondaryEditor()">
 
     </emp-land-recordable-subject-tabbed-view>

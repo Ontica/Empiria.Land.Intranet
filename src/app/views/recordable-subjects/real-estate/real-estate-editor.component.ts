@@ -137,7 +137,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     const payload = {
-      instrumentRecordingUID: this.instrumentRecording,
+      instrumentRecordingUID: this.instrumentRecording.uid,
       recordingActUID: this.recordingAct.uid,
       recordableSubjectFields: this.getFormData()
     };
@@ -185,11 +185,11 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       electronicID: this.realEstate.electronicID || '',
       cadastralID: this.realEstate.cadastralID || '',
       cadastreLinkingDate: this.realEstate.cadastreLinkingDate || '',
-      recorderOfficeUID: this.realEstate.recorderOffice.uid || '',
-      municipalityUID: this.realEstate.municipality.uid || '',
+      recorderOfficeUID: isEmpty(this.realEstate.recorderOffice) ? '' : this.realEstate.recorderOffice.uid,
+      municipalityUID: isEmpty(this.realEstate.municipality) ? '' : this.realEstate.municipality.uid,
       resourceKindUID: this.realEstate.kind || '',
       lotSize: this.realEstate.lotSize || '',
-      lotSizeUnitUID: this.realEstate.lotSizeUnit.uid || '',
+      lotSizeUnitUID: isEmpty(this.realEstate.lotSizeUnit) ? '' : this.realEstate.lotSizeUnit.uid,
       description: this.realEstate.description || '',
       metesAndBounds: this.realEstate.metesAndBounds || '',
       completed: false, // this.realEstate.completed,

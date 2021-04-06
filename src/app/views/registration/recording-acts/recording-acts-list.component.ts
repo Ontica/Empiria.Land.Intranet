@@ -56,7 +56,8 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
 
   onOpenRecordingActEditor(recordingAct: RecordingAct) {
-    this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_ACT, { recordingAct });
+      this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_ACT,
+                            { instrumentRecording: this.instrumentRecording, recordingAct });
   }
 
 
@@ -95,20 +96,21 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
 
   private getConfirmMessage(recordingAct: RecordingAct): string {
-    return `¿Elimino el registro?`;
-    // `
-    //   <table style="margin: 0;">
-    //     <tr><td>Distrito: </td><td><strong> ${recording.recorderOfficeName} </strong></td></tr>
+    return `
+      <table style="margin: 0;">
+        <tr><td>Acto jurídico: </td><td><strong> ${recordingAct.name} </strong></td></tr>
 
-    //     <tr><td>Sección: </td><td><strong> ${recording.recordingSectionName} </strong></td></tr>
+        <tr><td class="nowrap">Folio electrónico: </td><td><strong>
+          ${recordingAct.recordableSubject.electronicID}
+        </strong></td></tr>
 
-    //     <tr><td>Volumen: </td><td><strong> ${recording.volumeNo} </strong></td></tr>
+        <tr><td>Tipo: </td><td><strong>
+          ${recordingAct.recordableSubject.kind ? recordingAct.recordableSubject.kind : '-'}
+        </strong></td></tr>
 
-    //     <tr><td>Inscripción: </td><td><strong> ${recording.recordingNo} </strong></td></tr>
+      </table>
 
-    //   </table>
-
-    //  <br>¿Elimino el registro?`;
+     <br>¿Elimino el registro?`;
   }
 
 

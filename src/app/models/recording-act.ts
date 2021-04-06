@@ -8,7 +8,7 @@
 import { Identifiable, Money, PartitionedType } from '@app/core';
 
 import { EmptyRecordableSubject, RecordableSubject } from './recordable-subjects';
-import { RegistrationCommandConfig } from './registration';
+import { EmptyInstrumentRecording, InstrumentRecording, RegistrationCommandConfig } from './registration';
 
 import { RoledParty } from './party';
 
@@ -54,6 +54,12 @@ export interface ModificationAct extends BaseRecordingAct {
 }
 
 
+export interface SelectionAct {
+  instrumentRecording: InstrumentRecording;
+  recordingAct: RecordingAct;
+}
+
+
 export const EmptyRecordingAct: RecordingAct = {
   uid: 'Empty',
   name: '',
@@ -61,4 +67,10 @@ export const EmptyRecordingAct: RecordingAct = {
   parties: [],
   operationAmount: null,
   antecedent: ''
+};
+
+
+export const EmptySelectionAct: SelectionAct = {
+  instrumentRecording: EmptyInstrumentRecording,
+  recordingAct: EmptyRecordingAct
 };

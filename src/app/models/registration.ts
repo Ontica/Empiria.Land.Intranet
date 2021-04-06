@@ -99,6 +99,7 @@ export const EmptyInstrumentRecordingActions: InstrumentRecordingActions = {
   }
 };
 
+
 export interface InstrumentRecording {
   uid: string;
   instrumentRecordingID: string;
@@ -157,8 +158,16 @@ export interface RegistrationCommandRule {
 }
 
 
+export const EmptyRegistrationCommandRule: RegistrationCommandRule = {
+  subjectType: 'None',
+  selectSubject: false,
+  selectTargetAct: false,
+  newPartition: false,
+};
+
+
 export interface RegistrationCommandConfig extends Identifiable {
-  rule: RegistrationCommandRule;
+  rules: RegistrationCommandRule;
 }
 
 
@@ -202,16 +211,17 @@ export const EmptyRecordingBook: RecordingBook = {
 
 
 export interface BookEntry extends Identifiable {
-  volumeNo?: string; // Numero Inscripción
+  volumeNo?: string;
   recorderOfficeName?: string;
   recordingSectionName?: string;
-  recordingNo?: string;
+  recordingNo?: string; // Numero Inscripción
   type?: string;
   recordingTime?: DateString;
   notes?: string;
   status?: string;
   canEdit?: boolean;
   recordingActs?: RecordingAct[];
+  instrumentName?: string;
 }
 
 
@@ -227,14 +237,15 @@ export const EmptyBookEntry: BookEntry = {
   notes: '',
   status: '',
   canEdit: false,
-  recordingActs: []
+  recordingActs: [],
+  instrumentName: '',
 };
 
 
 export interface BookEntryFields {
   type: string;
   recordingTime: DateString;
-  volumeNo: string;
+  recordingNo: string;
   notes: string;
   status?: string;
 }
@@ -243,6 +254,6 @@ export interface BookEntryFields {
 export const EmptyBookEntryFields: BookEntryFields = {
   type: '',
   recordingTime: '',
-  volumeNo: '',
+  recordingNo: '',
   notes: '',
 };
