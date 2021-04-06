@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 
-import { InstrumentRecording, RecordingAct } from '@app/models';
+import { InstrumentRecording, RealEstate, RecordingAct } from '@app/models';
 
 
 @Component({
@@ -57,6 +57,11 @@ export class RecordableSubjectTabbedViewComponent implements OnInit, OnChanges {
 
   get isNoProperty() {
     return this.recordingAct.recordableSubject.type === 'NoProperty';
+  }
+
+
+  getRealEstate(): RealEstate {
+    return this.recordingAct.recordableSubject as RealEstate;
   }
 
 

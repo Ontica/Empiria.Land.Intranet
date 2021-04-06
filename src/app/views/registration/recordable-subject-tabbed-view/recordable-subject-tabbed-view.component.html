@@ -11,7 +11,7 @@
       <emp-land-real-estate-editor *ngIf="isRealEstate"
         [instrumentRecording]="instrumentRecording"
         [recordingAct]="recordingAct"
-        [realEstate]="recordingAct.recordableSubject"
+        [realEstate]="getRealEstate()"
         [readonly]="false">
       </emp-land-real-estate-editor>
 
