@@ -55,6 +55,8 @@ export enum EffectType {
   CREATE_RECORDING_ACT        = CommandType.CREATE_RECORDING_ACT,
   DELETE_RECORDING_ACT        = CommandType.DELETE_RECORDING_ACT,
 
+  UPDATE_RECORDABLE_SUBJECT   = CommandType.UPDATE_RECORDABLE_SUBJECT,
+
   CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY = CommandType.CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY,
   DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY = CommandType.DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY,
 }
@@ -112,7 +114,17 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
       case EffectType.DELETE_RECORDING_ACT:
       case EffectType.CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY:
       case EffectType.DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY:
-        super.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, params.result);
+        this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, params.result);
+        return;
+
+      case EffectType.UPDATE_RECORDABLE_SUBJECT:
+        const instrumentRecording = params.result;
+        const recordingAct = instrumentRecording.recordingActs
+          .filter(x => x.uid === params.payload.recordingActUID)[0];
+
+        this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, instrumentRecording);
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, { instrumentRecording, recordingAct });
+
         return;
 
       default:
