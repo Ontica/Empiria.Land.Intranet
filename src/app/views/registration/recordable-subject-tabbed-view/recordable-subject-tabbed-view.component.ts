@@ -17,6 +17,7 @@ import { InstrumentRecording, RealEstate, RecordingAct } from '@app/models';
 export class RecordableSubjectTabbedViewComponent implements OnInit, OnChanges {
 
   @Input() instrumentRecording: InstrumentRecording;
+
   @Input() recordingAct: RecordingAct;
 
   @Output() closeEvent = new EventEmitter<void>();
@@ -60,7 +61,7 @@ export class RecordableSubjectTabbedViewComponent implements OnInit, OnChanges {
   }
 
 
-  getRealEstate(): RealEstate {
+  get realEstate(): RealEstate {
     return this.recordingAct.recordableSubject as RealEstate;
   }
 

@@ -5,14 +5,15 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Assertion, Command, Identifiable, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { EmptyRealEstate, InstrumentRecording, RealEstate, RecorderOffice, RecordingAct } from '@app/models';
-import { RealEstateFields } from '@app/models/recordable-subjects';
-import { RecordableSubjectsStateSelector, RegistrationCommandType } from '@app/presentation/exported.presentation.types';
+import { RealEstateFields, RecordableSubjectStatusList } from '@app/models/recordable-subjects';
+import { RecordableSubjectsStateSelector,
+         RegistrationCommandType } from '@app/presentation/exported.presentation.types';
 
 import { ArrayLibrary, FormHandler } from '@app/shared/utils';
 
@@ -28,7 +29,7 @@ enum RealEstateEditorFormControls {
   lotSizeUnitUID = 'lotSizeUnitUID',
   description = 'description',
   metesAndBounds = 'metesAndBounds',
-  completed = 'completed',
+  status = 'status',
 }
 
 
@@ -50,7 +51,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   formHandler: FormHandler;
   controls = RealEstateEditorFormControls;
-  editorMode = false;
+  editionMode = false;
   submitted = false;
   isLoading = false;
 
@@ -58,6 +59,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   municipalityList: Identifiable[] = [];
   realEstateTypeList: string[] = [];
   lotSizeUnitList: Identifiable[] = [];
+  statusList: any[] = RecordableSubjectStatusList;
 
 
   constructor(private uiLayer: PresentationLayer) {
@@ -66,15 +68,15 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   ngOnInit(): void {
-    this.initForm();
-    this.setFormData();
     this.loadDataLists();
-    this.disableForm(true);
   }
 
 
-  ngOnChanges() {
-
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.realEstate) {
+      this.initForm();
+      this.enableEditor(false);
+    }
   }
 
 
@@ -84,14 +86,14 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   enableEditor(enable) {
-    this.editorMode = enable;
+    this.editionMode = enable;
 
-    if (!this.editorMode) {
+    if (!this.editionMode) {
       this.setFormData();
     }
 
     this.setRecorderOfficeAndMunicipalityDataList();
-    this.disableForm(!this.editorMode);
+    this.disableForm(!this.editionMode);
   }
 
 
@@ -112,7 +114,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   onCadastralClicked() {
-    if (!this.editorMode || this.submitted) {
+    if (!this.editionMode || this.submitted) {
       return;
     }
 
@@ -124,8 +126,8 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  onCompletedChange(change) {
-    this.setRequiredFormFields(change.checked);
+  onStatusChange(change) {
+    this.setRequiredFormFields(change.status === 'Completed');
     this.formHandler.invalidateForm();
   }
 
@@ -157,6 +159,10 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   private initForm() {
+    if (this.formHandler) {
+      return;
+    }
+
     this.formHandler = new FormHandler(
       new FormGroup({
         electronicID: new FormControl(''),
@@ -169,7 +175,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
         lotSizeUnitUID: new FormControl(''),
         description: new FormControl(''),
         metesAndBounds: new FormControl(''),
-        completed: new FormControl(false),
+        status: new FormControl(''),
       })
     );
   }
@@ -192,7 +198,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       lotSizeUnitUID: isEmpty(this.realEstate.lotSizeUnit) ? '' : this.realEstate.lotSizeUnit.uid,
       description: this.realEstate.description || '',
       metesAndBounds: this.realEstate.metesAndBounds || '',
-      completed: false, // this.realEstate.completed,
+      status: this.realEstate.status,
     });
   }
 
@@ -283,11 +289,11 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       recorderOfficeUID: formModel.recorderOfficeUID ?? '',
       municipalityUID: formModel.municipalityUID ?? '',
       kind: formModel.resourceKindUID ?? '',
-      lotSize: formModel.lotSize ?? 0,
+      lotSize: +formModel.lotSize ? formModel.lotSize : 0,
       lotSizeUnitUID: formModel.lotSizeUnitUID ?? '',
       description: formModel.description ?? '',
       metesAndBounds: formModel.metesAndBounds ?? '',
-      // completed: formModel.completed
+      // status: formModel.status ?? '',
     };
 
     return data;

@@ -122,7 +122,7 @@
 
       <div fxFlex fxLayoutAlign="start center">
 
-        <button *ngIf="editorMode" (click)="enableEditor(false)" class="btn-warning">
+        <button *ngIf="editionMode" (click)="enableEditor(false)" class="btn-warning">
           Cancelar edición
         </button>
 
@@ -130,22 +130,33 @@
 
       <div fxFlex fxLayoutAlign="center center">
 
-        <mat-checkbox *ngIf="editorMode"
-          [formControlName]="controls.completed"
-          (change)="onCompletedChange($event)">
-          Marcar el predio como completo
-        </mat-checkbox>
+        <ng-container *ngIf="editionMode && !readonly">
+
+          <span style="padding-right: 0.5rem;">Marcar el predio como:</span>
+
+          <emp-ng-select
+            [formControlName]="controls.status"
+            bindLabel="statusName"
+            bindValue="status"
+            [config]="{ clearable: false }"
+            [items]="statusList"
+            [showError]="formHandler.showInvalidControl(controls.status)"
+            (changes)="onStatusChange($event)"
+            [style.width.px]="125">
+          </emp-ng-select>
+
+        </ng-container>
 
       </div>
 
       <div fxFlex fxLayoutAlign="end center">
 
-        <button *ngIf="!readonly && !editorMode" (click)="enableEditor(true)"
+        <button *ngIf="!readonly && !editionMode" (click)="enableEditor(true)"
           class="btn-action">
           Editar
         </button>
 
-        <button *ngIf="editorMode" (click)="submitForm()" [class.btn]="!formHandler.isValid"
+        <button *ngIf="editionMode" (click)="submitForm()" [class.btn]="!formHandler.isValid"
           [class.btn-action]="formHandler.isValid">
           Guardar
         </button>

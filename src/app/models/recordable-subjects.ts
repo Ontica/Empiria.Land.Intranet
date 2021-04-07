@@ -10,22 +10,32 @@ import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase, Partitioned
 
 export type RecordableSubjectType = 'None' | 'RealEstate' | 'Association' | 'NoProperty';
 
+
+export type RecordableSubjectStatus = 'Completed' | 'Incompleted' | 'NotLegible';
+
+
+export const RecordableSubjectStatusList: any[] = [
+  { status: 'Completed',   statusName: 'Completado' },
+  { status: 'Incompleted', statusName: 'Incompleto' },
+  { status: 'NotLegible',  statusName: 'No legible' },
+];
+
+
 export interface RecordableSubjectFields {
   uid: string;
   type: RecordableSubjectType;
   electronicID: string;
   recorderOfficeUID: string;
   kind: string;
+  status?: RecordableSubjectStatus;
 }
 
 
-// tslint:disable-next-line: no-empty-interface
 export interface AssociationFields extends RecordableSubjectFields {
   name: string;
 }
 
 
-// tslint:disable-next-line: no-empty-interface
 export interface NoPropertyFields extends RecordableSubjectFields {
   description: string;
 }
@@ -48,6 +58,7 @@ export interface RecordableSubject extends Identifiable, PartitionedType {
   kind: string;
   recorderOffice: Identifiable;
   recordingContext: RecordingContext;
+  status: RecordableSubjectStatus;
 }
 
 
@@ -58,7 +69,8 @@ export const EmptyRecordableSubject: RecordableSubject = {
   name: '',
   recorderOffice: Empty,
   kind: '',
-  recordingContext: EmptyRecordingContext
+  recordingContext: EmptyRecordingContext,
+  status: 'Incompleted',
 };
 
 
@@ -89,6 +101,7 @@ export const EmptyRealEstate: RealEstate = {
   lotSizeUnit: Empty,
   description: '',
   metesAndBounds: '',
+  status: 'Incompleted',
 };
 
 
@@ -107,7 +120,8 @@ export const EmptyRecordableSubjectFields: RecordableSubjectFields = {
   type: 'None',
   electronicID: '',
   recorderOfficeUID: '',
-  kind: ''
+  kind: '',
+  status: 'Incompleted',
 };
 
 
@@ -117,7 +131,8 @@ export const EmptyAssociationFields: AssociationFields = {
   electronicID: '',
   recorderOfficeUID: '',
   kind: '',
-  name: ''
+  name: '',
+  status: 'Incompleted',
 };
 
 
@@ -127,7 +142,8 @@ export const EmptyNoPropertyFields: NoPropertyFields = {
   electronicID: '',
   recorderOfficeUID: '',
   kind: '',
-  description: ''
+  description: '',
+  status: 'Incompleted',
 };
 
 
@@ -142,5 +158,6 @@ export const EmptyRealEstateFields: RealEstateFields = {
   lotSize: -1,
   lotSizeUnitUID: '',
   description: '',
-  metesAndBounds: ''
+  metesAndBounds: '',
+  status: 'Incompleted',
 };
