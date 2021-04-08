@@ -5,8 +5,9 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { DateString, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
-import { EmptyInstrument, Instrument } from './instrument';
+import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
+
+import { EmptyInstrument, Instrument, InstrumentFields } from './instrument';
 
 import { RealEstate, RecordableSubjectType } from './recordable-subjects';
 
@@ -192,68 +193,60 @@ export interface RealEstateStructure {
 
 
 // TODO: define the corrects interfaces
+
+export type RecordingBookStatus = 'Opened' | 'Closed' | 'Secured';
+
 export interface RecordingBook {
   uid: string;
+  recorderOffice: Identifiable;
+  recordingSection: Identifiable;
   volumeNo: string;
-  recorderOfficeName: string;
-  recordingSectionName: string;
-  BookEntryList: BookEntry[];
+  status: RecordingBookStatus;
+  BookEntries: BookEntry[];
 }
 
 
 export const EmptyRecordingBook: RecordingBook = {
   uid: 'Empty',
+  recorderOffice: Empty,
+  recordingSection: Empty,
   volumeNo: '',
-  recorderOfficeName: '',
-  recordingSectionName: '',
-  BookEntryList: [],
+  status: 'Closed',
+  BookEntries: [],
 };
 
 
-export interface BookEntry extends Identifiable {
-  volumeNo?: string;
-  recorderOfficeName?: string;
-  recordingSectionName?: string;
-  recordingNo?: string; // Numero Inscripción
-  type?: string;
-  recordingTime?: DateString;
-  notes?: string;
-  status?: string;
-  canEdit?: boolean;
-  recordingActs?: RecordingAct[];
-  instrumentName?: string;
+export interface BookEntry {
+  uid: string;
+  recordingTime: DateString;
+  recorderOfficeName: string;
+  recordingSectionName: string;
+  volumeNo: string;
+  recordingNo: string;
+  recordedBy: string;
+  instrumentRecording: InstrumentRecording;
+  status: RecordingStatus;
+  stampMedia: MediaBase;
 }
 
 
 export const EmptyBookEntry: BookEntry = {
   uid: '',
-  name: '',
-  volumeNo: '',
+  recordingTime: '',
   recorderOfficeName: '',
   recordingSectionName: '',
+  volumeNo: '',
   recordingNo: '',
-  type: '',
-  recordingTime: '',
-  notes: '',
-  status: '',
-  canEdit: false,
-  recordingActs: [],
-  instrumentName: '',
+  recordedBy: '',
+  instrumentRecording: EmptyInstrumentRecording,
+  status: 'Closed',
+  stampMedia: EmptyMediaBase,
 };
 
 
 export interface BookEntryFields {
-  type: string;
+  instrument: InstrumentFields;
+  recordingBookUID: string;
   recordingTime: DateString;
   recordingNo: string;
-  notes: string;
-  status?: string;
 }
-
-
-export const EmptyBookEntryFields: BookEntryFields = {
-  type: '',
-  recordingTime: '',
-  recordingNo: '',
-  notes: '',
-};

@@ -11,11 +11,11 @@ import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase, Partitioned
 export type RecordableSubjectType = 'None' | 'RealEstate' | 'Association' | 'NoProperty';
 
 
-export type RecordableSubjectStatus = 'Completed' | 'Incompleted' | 'NotLegible';
+export type RecordableSubjectStatus = 'Closed' | 'Incompleted' | 'NotLegible';
 
 
 export const RecordableSubjectStatusList: any[] = [
-  { status: 'Completed',   statusName: 'Completado' },
+  { status: 'Closed',   statusName: 'Completado' },
   { status: 'Incompleted', statusName: 'Incompleto' },
   { status: 'NotLegible',  statusName: 'No legible' },
 ];

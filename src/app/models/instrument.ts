@@ -105,7 +105,7 @@ export enum InstrumentTypeEnum {
 
 
 export type InstrumentType = 'EscrituraPublica' | 'OficioNotaria' | 'TituloPropiedad' |
-                             'DocumentoJuzgado' | 'DocumentoTerceros';
+                             'DocumentoJuzgado' | 'DocumentoTerceros' | 'Resumen';
 
 
 export interface InstrumentFields  {
