@@ -21,6 +21,12 @@ export const RecordableSubjectStatusList: any[] = [
 ];
 
 
+export interface RecordableSubjectFilter {
+  type: RecordableSubjectType;
+  keywords: string;
+}
+
+
 export interface RecordableSubjectFields {
   uid: string;
   type: RecordableSubjectType;
@@ -72,6 +78,12 @@ export const EmptyRecordableSubject: RecordableSubject = {
   recordingContext: EmptyRecordingContext,
   status: 'Incompleted',
 };
+
+
+export interface RecordableSubjectShortModel extends Identifiable, PartitionedType {
+  electronicID: string;
+  kind: string;
+}
 
 
 export interface RealEstate extends RecordableSubject {

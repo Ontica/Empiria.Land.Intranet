@@ -16,8 +16,8 @@ import { Assertion, Command, EventInfo } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { EmptyInstrumentRecording, EmptyRegistrationCommandRule, InstrumentRecording,
-         RecordingActType, RecordingActTypeGroup, RegistrationCommand, RegistrationCommandConfig,
-         RegistrationCommandRule } from '@app/models';
+         RecordableSubjectFilter, RecordableSubjectShortModel, RecordingActType, RecordingActTypeGroup,
+         RegistrationCommand, RegistrationCommandConfig, RegistrationCommandRule } from '@app/models';
 
 import { RegistrationCommandType,
          RecordableSubjectsStateSelector,
@@ -56,7 +56,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   registrationCommandRules: RegistrationCommandRule = EmptyRegistrationCommandRule;
 
-  subjectList$: Observable<any[]>;
+  subjectList$: Observable<RecordableSubjectShortModel[]>;
   subjectInput$ = new Subject<string>();
   subjectLoading = false;
   subjectMinTermLength = 5;
@@ -80,7 +80,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.helper.destroy();
   }
-
 
 
   get isRealEstate() {
@@ -208,9 +207,9 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
           distinctUntilChanged(),
           debounceTime(800),
           tap(() => this.subjectLoading = true),
-          switchMap(keyword => of([])
-                          //  this.helper.select<any[]>(RecordableSubjectsStateSelector.RECORDING_BOOKS_LIST,
-                          //  this.buildSubjectFilter(keyword))
+          switchMap(keyword => this.helper.select<RecordableSubjectShortModel[]>(
+            RecordableSubjectsStateSelector.RECORDABLE_SUBJECTS_LIST,
+            this.buildRecordableSubjectFilter(keyword))
             .pipe(
               catchError(() => of([])),
               tap(() => this.subjectLoading = false)
@@ -220,10 +219,9 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private buildSubjectFilter(keywords: string): any {
-    const subjectFilter = {
-      recordingActType: '',
-      registrationCommand: '',
+  private buildRecordableSubjectFilter(keywords: string): RecordableSubjectFilter {
+    const subjectFilter: RecordableSubjectFilter = {
+      type: this.registrationCommandRules.subjectType,
       keywords
     };
 

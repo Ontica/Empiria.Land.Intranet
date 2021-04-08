@@ -12,7 +12,7 @@ import { Assertion, Cache, toObservable } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { IssuersFilter } from '@app/models';
+import { IssuersFilter, RecordableSubjectFilter } from '@app/models';
 
 import { RecordableSubjectsDataService } from '@app/data-services';
 
@@ -29,7 +29,8 @@ export enum SelectorType {
   RECORDING_BOOKS_LIST            = 'Land.RecordableSubjects.Selector.RecordingBooks.List',
   RECORDING_BOOK_ENTRIES_LIST     = 'Land.RecordableSubjects.Selector.RecordingBookEntries.List',
   RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT =
-    'Land.RecordableSubjects.Selector.RecordingActTypesForInstrument.List'
+    'Land.RecordableSubjects.Selector.RecordingActTypesForInstrument.List',
+  RECORDABLE_SUBJECTS_LIST        = 'Land.RecordableSubjects.Selector.RecordableSubjects.List',
 }
 
 
@@ -130,6 +131,10 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
 
         return toObservable<U>(this.data.getRecordingActTypesForInstrument(params.instrumentUID));
 
+      case SelectorType.RECORDABLE_SUBJECTS_LIST:
+        Assertion.assertValue(params.type, 'params.type');
+
+        return toObservable<U>(this.data.searchRecordableSubject(params as RecordableSubjectFilter));
 
       default:
         return super.select<U>(selectorType, params);

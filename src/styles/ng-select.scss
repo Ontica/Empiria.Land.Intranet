@@ -92,4 +92,8 @@
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
   color: #333;
   background-color: #fafafa;
+
+  .item-template {
+    background-color: inherit;
+  }
 }

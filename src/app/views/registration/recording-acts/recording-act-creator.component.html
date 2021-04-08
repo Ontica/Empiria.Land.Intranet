@@ -59,12 +59,23 @@
           <div fxLayout="row">
             <div fxFlex>
               <emp-ng-select [formControlName]="controls.subject"
-                [config]="{ hideSelected: true, minTermLength: subjectMinTermLength }"
+                [config]="{ hideSelected: true,
+                            minTermLength: subjectMinTermLength,
+                            dropdownPosition: 'top'  }"
                 [items]="subjectList$ | async"
                 [typeahead]="subjectInput$"
                 [loading]="subjectLoading"
-                [style.width.%]="100"
-                [showError]="formHandler.showInvalidControl(controls.subject)">
+                placeholder="Buscar"
+                [showError]="formHandler.showInvalidControl(controls.subject)"
+                [style.width.%]="100">
+
+                <ng-template #labelTemplate let-item="item">
+                  {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
+                </ng-template>
+
+                <ng-template #optionTemplate let-item="item">
+                  {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
+                </ng-template>
 
               </emp-ng-select>
             </div>

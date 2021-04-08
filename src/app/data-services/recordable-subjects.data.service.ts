@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, DateStringLibrary, HttpService, Identifiable } from '@app/core';
 
-import { InstrumentType, Issuer, IssuersFilter,
+import { InstrumentType, Issuer, IssuersFilter, RecordableSubjectFilter, RecordableSubjectShortModel,
          RecorderOffice, RecordingActTypeGroup } from '@app/models';
 
 
@@ -116,6 +116,21 @@ export class RecordableSubjectsDataService {
     const path = `v5/land/registration/${instrumentUID}/recording-act-types`;
 
     return this.http.get<RecordingActTypeGroup[]>(path);
+  }
+
+
+  searchRecordableSubject(filter: RecordableSubjectFilter): Observable<RecordableSubjectShortModel[]> {
+    let path = `v5/land/registration/recordable-subjects`;
+
+    if (filter.type) {
+      path += `/?type=${filter.type}`;
+    }
+
+    if (filter.keywords) {
+      path += `&keywords=${filter.keywords}`;
+    }
+
+    return this.http.get<RecordableSubjectShortModel[]>(path);
   }
 
 }
