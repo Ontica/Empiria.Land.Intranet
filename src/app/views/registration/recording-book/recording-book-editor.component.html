@@ -12,10 +12,11 @@
       [config]="{textButtonOpen: 'Agregar una inscripción a este volumen',
                  textButtonClose: 'Cancelar agregar registro'}">
 
-      <emp-land-book-entry-header *ngIf="panelAddState"
-        (bookEntryHeaderEvent)="onBookEntryHeaderEvent($event)">
+      <emp-land-instrument-editor
+        [title]="null"
+        (instrumentEditorEvent)="onInstrumentEditorEvent($event)">
 
-      </emp-land-book-entry-header>
+      </emp-land-instrument-editor>
 
     </emp-ng-expansion-button>
 

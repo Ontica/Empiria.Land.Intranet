@@ -9,7 +9,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { MatTableDataSource } from '@angular/material/table';
 import { DateStringLibrary, EventInfo } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { BookEntry, EmptyRecordingBook, RecordingBook } from '@app/models';
+import { BookEntry, EmptyRecordingBook, RecordingBook, RecordingStatus } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 export enum BookEntryListEventType {
@@ -41,7 +41,7 @@ export class BookEntryListComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    this.dataSource = new MatTableDataSource(this.recordingBook.BookEntryList);
+    this.dataSource = new MatTableDataSource(this.recordingBook.bookEntries);
   }
 
 
@@ -54,7 +54,6 @@ export class BookEntryListComponent implements OnChanges {
 
 
   removeBookEntry(bookEntry: BookEntry) {
-    // if (bookEntry.canEdit) {
     const message = this.getConfirmMessage(bookEntry);
 
     this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
@@ -71,7 +70,6 @@ export class BookEntryListComponent implements OnChanges {
                         { bookEntry: payload });
         }
       });
-    // }
   }
 
 
@@ -80,7 +78,7 @@ export class BookEntryListComponent implements OnChanges {
       <table style="margin: 0;">
         <tr><td>Inscripción: </td><td><strong> ${bookEntry.recordingNo ?? '-'} </strong></td></tr>
 
-        <tr><td>Instrumento: </td><td><strong> ${bookEntry.instrumentName ?? '-'} </strong></td></tr>
+        <tr><td>Instrumento: </td><td><strong> ${bookEntry.instrumentRecording.asText ?? '-'} </strong></td></tr>
 
         <tr><td class="nowrap">Fecha de registro: </td><td>
           <strong> ${DateStringLibrary.format(bookEntry.recordingTime) ?? '-'} </strong>

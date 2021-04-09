@@ -10,8 +10,8 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService, Identifiable } from '@app/core';
 
-import { InstrumentBookEntryFields, InstrumentFields,
-         InstrumentRecording, RecordableSubjectFields, RecordingBook, RegistrationCommand } from '@app/models';
+import { InstrumentBookEntryFields, InstrumentFields, InstrumentRecording, RecordableSubjectFields,
+         RecordingBook, RegistrationCommand } from '@app/models';
 
 
 @Injectable()

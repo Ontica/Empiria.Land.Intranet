@@ -11,7 +11,7 @@ import { PresentationLayer } from '@app/core/presentation';
 import { RecordingBook } from '@app/models';
 import { RegistrationAction, RegistrationCommandType } from '@app/presentation/exported.presentation.types';
 import { BookEntryListEventType } from './book-entry-list.component';
-import { BookEntryHeaderEventType } from './book-entry-header.component';
+import { InstrumentEditorEventType } from '@app/views/recordable-subjects/instrument/instrument-editor.component';
 
 
 @Component({
@@ -56,9 +56,9 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
 
       case BookEntryListEventType.BOOK_ENTRY_CLICKED:
 
-        // this.uiLayer.dispatch(RegistrationAction.SELECT_BOOK_ENTRY, event.payload);
-
         console.log('SELECT_BOOK_ENTRY', event);
+
+        this.uiLayer.dispatch(RegistrationAction.SELECT_BOOK_ENTRY, event.payload );
 
         return;
 
@@ -76,19 +76,19 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  onBookEntryHeaderEvent(event) {
+  onInstrumentEditorEvent(event) {
     if (this.submitted) {
       return;
     }
 
-    switch (event.type as BookEntryHeaderEventType) {
+    switch (event.type as InstrumentEditorEventType) {
 
-      case BookEntryHeaderEventType.ADD_BOOK_ENTRY:
+      case InstrumentEditorEventType.UPDATE_INSTRUMENT:
 
         // this.executeCommand<any>(RegistrationCommandType.ADD_RECORDING_BOOK, event.payload)
         //   .then(x => this.resetPanelState());
 
-        console.log('ADD_RECORDING_BOOK', event);
+        console.log('UPDATE_INSTRUMENT', event);
 
         this.resetPanelState();
 
@@ -102,7 +102,7 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
 
   private initTexts(){
     this.cardTitle = `Volumen ${this.recordingBook.volumeNo},
-     ${this.recordingBook.recordingSectionName}, ${this.recordingBook.recorderOfficeName}`;
+     ${this.recordingBook.recordingSection.name}, ${this.recordingBook.recorderOffice.name}`;
   }
 
   private resetPanelState() {
