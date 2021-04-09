@@ -192,9 +192,8 @@ export interface RealEstateStructure {
 }
 
 
-// TODO: define the corrects interfaces
-
 export type RecordingBookStatus = 'Opened' | 'Closed' | 'Secured';
+
 
 export interface RecordingBook {
   uid: string;
@@ -202,7 +201,7 @@ export interface RecordingBook {
   recordingSection: Identifiable;
   volumeNo: string;
   status: RecordingBookStatus;
-  BookEntries: BookEntry[];
+  bookEntries: BookEntry[];
 }
 
 
@@ -212,7 +211,7 @@ export const EmptyRecordingBook: RecordingBook = {
   recordingSection: Empty,
   volumeNo: '',
   status: 'Closed',
-  BookEntries: [],
+  bookEntries: [],
 };
 
 
@@ -224,7 +223,11 @@ export interface BookEntry {
   volumeNo: string;
   recordingNo: string;
   recordedBy: string;
-  instrumentRecording: InstrumentRecording;
+  instrumentRecording: {
+    uid: string;
+    controlID: string;
+    asText: string;
+  };
   status: RecordingStatus;
   stampMedia: MediaBase;
 }
@@ -238,7 +241,11 @@ export const EmptyBookEntry: BookEntry = {
   volumeNo: '',
   recordingNo: '',
   recordedBy: '',
-  instrumentRecording: EmptyInstrumentRecording,
+  instrumentRecording: {
+    uid: '',
+    controlID: '',
+    asText: '',
+  },
   status: 'Closed',
   stampMedia: EmptyMediaBase,
 };

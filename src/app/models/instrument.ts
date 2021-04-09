@@ -91,7 +91,8 @@ export const InstrumentTypesList: any[] = [
   { type: 'OficioNotaria', typeName: 'Oficio de notaría' },
   { type: 'DocumentoJuzgado', typeName: 'Documento de juzgado' },
   { type: 'TituloPropiedad', typeName: 'Título de propiedad' },
-  { type: 'DocumentoTerceros', typeName: 'Documento de terceros' }
+  { type: 'DocumentoTerceros', typeName: 'Documento de terceros' },
+  { type: 'Resumen', typeName: 'Resumen' },
 ];
 
 
@@ -100,12 +101,13 @@ export enum InstrumentTypeEnum {
   OficioNotaria = 'OficioNotaria',
   TituloPropiedad = 'TituloPropiedad',
   DocumentoJuzgado = 'DocumentoJuzgado',
-  DocumentoTerceros = 'DocumentoTerceros'
+  DocumentoTerceros = 'DocumentoTerceros',
+  Resumen = 'Resumen',
 }
 
 
 export type InstrumentType = 'EscrituraPublica' | 'OficioNotaria' | 'TituloPropiedad' |
-                             'DocumentoJuzgado' | 'DocumentoTerceros' | 'Resumen';
+                             'DocumentoJuzgado' | 'DocumentoTerceros' | 'Resumen' | 'Empty';
 
 
 export interface InstrumentFields  {
