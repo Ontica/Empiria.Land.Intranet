@@ -6,6 +6,7 @@
  */
 
 import { NgModule } from '@angular/core';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -28,6 +29,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import {
   MomentDateAdapter,
@@ -81,6 +83,7 @@ export const DATE_FORMATS = {
 @NgModule({
 
   imports: [
+    ClipboardModule,
     MatButtonModule,
     MatDatepickerModule,
     MatDialogModule,
@@ -103,9 +106,11 @@ export const DATE_FORMATS = {
     MatCheckboxModule,
     MatProgressBarModule,
     MatSliderModule,
+    MatSnackBarModule,
   ],
 
   exports: [
+    ClipboardModule,
     MatButtonModule,
     MatDatepickerModule,
     MatDialogModule,
@@ -128,6 +133,7 @@ export const DATE_FORMATS = {
     MatCheckboxModule,
     MatProgressBarModule,
     MatSliderModule,
+    MatSnackBarModule,
   ],
 
   providers: [

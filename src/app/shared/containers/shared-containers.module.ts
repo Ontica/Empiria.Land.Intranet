@@ -19,6 +19,7 @@ import { MessageBoxService } from './message-box/message.box.service';
 
 import { ModalWindowComponent } from './modal-window/modal-window';
 import { ExpansionButtonComponent } from './expansion-button/expansion-button.component';
+import { AlertService } from './alert/alert.service';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { ExpansionButtonComponent } from './expansion-button/expansion-button.co
   ],
 
   providers: [
-    MessageBoxService
+    AlertService,
+    MessageBoxService,
   ],
 
   entryComponents: [
