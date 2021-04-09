@@ -6,18 +6,15 @@
  */
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
+import { EventInfo, Identifiable } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { BookEntry, RecorderOffice, RecordingBook } from '@app/models';
+import { RecorderOffice } from '@app/models';
 import { RecordableSubjectsStateSelector,
+  RegistrationAction,
          TransactionStateSelector } from '@app/presentation/exported.presentation.types';
 import { concat, Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
-export enum RecordingBookSelectorEventType {
-  RECORDING_BOOK_CLICKED = 'RecordingBookSelectorComponent.Event.RecordingBookClicked',
-  RECORDING_BOOK_ENTRY_CLICKED = 'RecordingBookSelectorComponent.Event.RecordingBookEntryClicked',
-}
 
 @Component({
   selector: 'emp-land-recording-book-selector',
@@ -26,8 +23,6 @@ export enum RecordingBookSelectorEventType {
 export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
 
   @Input() showRecordingBookEntryField: boolean;
-
-  @Output() recordingBookSelectorEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;
 
@@ -88,16 +83,18 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
 
   onRecordingBookClicked(){
     if (this.recordingBookSelected) {
-      this.sendEvent(RecordingBookSelectorEventType.RECORDING_BOOK_CLICKED,
-                    { recordingBook: this.getRecordingBookData() });
+        console.log('SELECT_RECORDING_BOOK', this.recordingBookSelected );
+
+        this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_BOOK,
+                             { recordingBookUID: this.recordingBookSelected.uid });
     }
   }
 
 
   onRecordingBookEntryClicked(){
     if (this.recordingBookEntrySelected) {
-      this.sendEvent(RecordingBookSelectorEventType.RECORDING_BOOK_ENTRY_CLICKED,
-                    { bookEntry: this.getBookEntryData() });
+        this.uiLayer.dispatch(RegistrationAction.SELECT_BOOK_ENTRY,
+                              { bookEntry: this.recordingBookEntrySelected });
     }
   }
 
@@ -189,46 +186,6 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
         this.recordingBookEntryList = x;
         this.isLoading = false;
       });
-  }
-
-
-  private getRecordingBookData(): RecordingBook{
-    Assertion.assert(!isEmpty(this.recordingBookSelected),
-      'Programming error: form must be validated before command execution.');
-
-    // TODO: define the correct interface
-    const data: RecordingBook = {
-      uid: this.recordingBookSelected?.uid,
-      volumeNo: this.recordingBookSelected?.name,
-      recorderOfficeName: this.recorderOfficeSelected.name,
-      recordingSectionName: this.recordingSectionSelected.name,
-      BookEntryList: this.recordingBookEntryList,
-    };
-
-    return data;
-  }
-
-  private getBookEntryData(): BookEntry{
-    Assertion.assert(!isEmpty(this.recordingBookEntrySelected),
-      'Programming error: form must be validated before command execution.');
-
-    // TODO: define the correct interface
-    const data: BookEntry = {
-      uid: this.recordingBookEntrySelected?.uid,
-      name: this.recordingBookEntrySelected?.name,
-    };
-
-    return data;
-  }
-
-
-  private sendEvent(eventType: RecordingBookSelectorEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.recordingBookSelectorEvent.emit(event);
   }
 
 }

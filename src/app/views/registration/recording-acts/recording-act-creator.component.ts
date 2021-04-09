@@ -25,8 +25,6 @@ import { RegistrationCommandType,
 
 import { FormHandler } from '@app/shared/utils';
 
-import { RecordingBookSelectorEventType } from '../recording-book/recording-book-selector.component';
-
 enum RecordingActCreatorFormControls {
   recordingActTypeGroup = 'recordingActTypeGroup',
   recordingActType = 'recordingActType',
@@ -119,27 +117,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     this.setRegistrationCommandRules(registrationCommand.rules);
     this.validateSubjectField();
     this.validatePartitionField();
-  }
-
-
-  onRecordingBookSelectorEvent(event: EventInfo) {
-    switch (event.type as RecordingBookSelectorEventType) {
-
-      case RecordingBookSelectorEventType.RECORDING_BOOK_CLICKED:
-        this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_BOOK, event.payload);
-
-        return;
-
-      case RecordingBookSelectorEventType.RECORDING_BOOK_ENTRY_CLICKED:
-        // this.uiLayer.dispatch(RegistrationAction.SELECT_BOOK_ENTRY, event.payload);
-        console.log('SELECT_BOOK_ENTRY', event.payload);
-
-        return;
-
-      default:
-        console.log(`Unhandled user interface event ${event.type}`);
-        return;
-    }
   }
 
 
