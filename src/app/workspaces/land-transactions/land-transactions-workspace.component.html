@@ -73,6 +73,11 @@
 
   <div *ngIf="displayBookEntryEditor" class="secondary">
 
+    <emp-land-book-entry-editor
+      [bookEntry]="selectedBookEntry"
+      (closeEvent)="unselectCurrentBookEntry()">
+
+    </emp-land-book-entry-editor>
 
   </div>
 

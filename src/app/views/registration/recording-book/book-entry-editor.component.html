@@ -1,0 +1,29 @@
+<emp-ng-card [title]="cardTitle" [hint]="cardHint" (cardClose)="onClose()">
+
+  <div class="card-body-padding" [style.height.%]="98">
+
+    <emp-land-instrument-editor
+      title="Instrumento"
+      [instrument]="instrumentRecording.instrument"
+      (instrumentEditorEvent)="onInstrumentEditorEvent($event)">
+
+    </emp-land-instrument-editor>
+
+    <br>
+
+    <emp-land-recording-acts-list
+      [instrumentRecording]="instrumentRecording"
+      [showCopyToClipboard]="true"
+      title="Predios y actos jurídicos registrados en esta inscripción">
+
+    </emp-land-recording-acts-list>
+
+    <emp-ng-expansion-button [(panelState)]="panelAddState"
+      [config]="{textButtonOpen: 'Agregar otro predio',
+                 textButtonClose: 'Cancelar agregar registro'}">
+
+    </emp-ng-expansion-button>
+
+  </div>
+
+</emp-ng-card>

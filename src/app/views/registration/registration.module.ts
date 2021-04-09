@@ -17,7 +17,7 @@ import { LandControlsModule } from '../land-controls/land.controls.module';
 import { RecordableSubjectsModule } from '../recordable-subjects/recordable-subjects.module';
 import { InstrumentBookEntriesModule } from './instrument-book-entries/instrument-book-entries.module';
 
-import { BookEntryHeaderComponent } from './recording-book/book-entry-header.component';
+import { BookEntryEditorComponent } from './recording-book/book-entry-editor.component';
 import { BookEntryListComponent } from './recording-book/book-entry-list.component';
 import {
   RecordableSubjectTabbedViewComponent
@@ -45,7 +45,7 @@ import { RegistrationMainPageComponent } from './main-page/registration-main-pag
   ],
 
   declarations: [
-    BookEntryHeaderComponent,
+    BookEntryEditorComponent,
     BookEntryListComponent,
     RecordableSubjectTabbedViewComponent,
     RecordingActCreatorComponent,
@@ -56,6 +56,7 @@ import { RegistrationMainPageComponent } from './main-page/registration-main-pag
   ],
 
   exports: [
+    BookEntryEditorComponent,
     RecordableSubjectTabbedViewComponent,
     RecordingBookEditorComponent,
     RegistrationMainPageComponent,
