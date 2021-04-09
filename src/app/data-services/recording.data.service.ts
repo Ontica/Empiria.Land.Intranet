@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 import { Assertion, HttpService, Identifiable } from '@app/core';
 
 import { InstrumentBookEntryFields, InstrumentFields,
-         InstrumentRecording, RecordableSubjectFields, RegistrationCommand } from '@app/models';
+         InstrumentRecording, RecordableSubjectFields, RecordingBook, RegistrationCommand } from '@app/models';
 
 
 @Injectable()
@@ -35,6 +35,15 @@ export class RecordingDataService {
     const path = `v5/land/transactions/${transactionUID}/instrument-recording`;
 
     return this.http.get<InstrumentRecording>(path);
+  }
+
+
+  getRecordingBook(recordingBookUID: string): Observable<RecordingBook> {
+    Assertion.assertValue(recordingBookUID, 'recordingBookUID');
+
+    const path = `v5/land/registration/recording-books/${recordingBookUID}`;
+
+    return this.http.get<RecordingBook>(path);
   }
 
 

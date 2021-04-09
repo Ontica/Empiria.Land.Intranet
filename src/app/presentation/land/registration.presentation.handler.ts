@@ -200,15 +200,17 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         return;
 
       case ActionType.SELECT_RECORDING_BOOK:
-        Assertion.assertValue(params.recordingBook, 'payload.recordingBook');
-        this.setValue(SelectorType.SELECTED_RECORDING_BOOK, params.recordingBook);
+        Assertion.assertValue(params.recordingBookUID, 'payload.recordingBookUID');
+
+        this.setValue(SelectorType.SELECTED_RECORDING_BOOK,
+                      this.data.getRecordingBook(params.recordingBookUID));
+
         return;
 
       case ActionType.UNSELECT_RECORDING_BOOK:
         this.setValue(SelectorType.SELECTED_RECORDING_BOOK, EmptyRecordingBook);
         return;
 
-      // TODO: move to select and define the WS to call
       case ActionType.SELECT_BOOK_ENTRY:
         Assertion.assertValue(params.bookEntry, 'payload.bookEntry');
         this.setValue(SelectorType.SELECTED_BOOK_ENTRY, params.bookEntry);
