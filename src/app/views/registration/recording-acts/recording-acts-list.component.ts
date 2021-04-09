@@ -6,7 +6,7 @@
  */
 
 
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -14,6 +14,7 @@ import { Command, PresentationLayer, SubscriptionHelper } from '@app/core/presen
 import { RegistrationAction, RegistrationCommandType } from '@app/core/presentation/presentation-types';
 
 import { EmptyInstrumentRecording, InstrumentRecording, RecordingAct } from '@app/models';
+import { AlertService } from '@app/shared/containers/alert/alert.service';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
@@ -26,25 +27,34 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
   @Input() instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
 
+  @Input() showCopyToClipboard = false;
+
+  @Input() title = 'Actos jurídicos contenidos en el documento';
+
   helper: SubscriptionHelper;
 
   submitted = false;
 
   dataSource: MatTableDataSource<RecordingAct>;
 
-  private displayedColumnsDefault = ['number', 'name', 'electronicID', 'type', 'notes'];
+  private displayedColumnsDefault = ['number', 'name', 'electronicID', 'actionCopy',
+                                     'type', 'notes', 'status'];
 
   displayedColumns = [...this.displayedColumnsDefault];
 
 
   constructor(private uiLayer: PresentationLayer,
-              private messageBox: MessageBoxService) {
+              private messageBox: MessageBoxService,
+              private alertService: AlertService) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
 
-  ngOnChanges() {
-    this.dataSource = new MatTableDataSource(this.instrumentRecording.recordingActs);
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.instrumentRecording) {
+      this.dataSource = new MatTableDataSource(this.instrumentRecording.recordingActs);
+      console.log(this.instrumentRecording.recordingActs);
+    }
 
     this.resetColumns();
   }
@@ -56,8 +66,15 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
 
   onOpenRecordingActEditor(recordingAct: RecordingAct) {
+    if (!this.showCopyToClipboard){
       this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_ACT,
                             { instrumentRecording: this.instrumentRecording, recordingAct });
+    }
+  }
+
+
+  showAlertTextCopied() {
+    this.alertService.openAlert('Folio real copiado', 'Ok');
   }
 
 
@@ -89,8 +106,12 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
     this.displayedColumns = [...this.displayedColumns, ...this.displayedColumnsDefault];
 
+    if (!this.showCopyToClipboard) {
+      this.displayedColumns.splice(3, 1);
+    }
+
     if (this.instrumentRecording.actions.can.editRecordingActs) {
-      this.displayedColumns.push('action');
+      this.displayedColumns.push('actionDelete');
     }
   }
 
