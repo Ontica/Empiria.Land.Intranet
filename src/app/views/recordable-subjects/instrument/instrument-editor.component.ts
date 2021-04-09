@@ -40,6 +40,8 @@ type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'i
 })
 export class InstrumentEditorComponent implements OnChanges {
 
+  @Input() title = 'Documento a inscribir';
+
   @Input() instrument: Instrument = EmptyInstrument;
 
   @Input() actions: InstrumentRecordingActions = EmptyInstrumentRecordingActions;
@@ -100,8 +102,8 @@ export class InstrumentEditorComponent implements OnChanges {
 
   setFormModel() {
     this.form.reset({
-      type: this.instrument.type,
-      sheetsCount: this.instrument.sheetsCount,
+      type: this.instrument.type && this.instrument.type !== 'Empty' ? this.instrument.type : '',
+      sheetsCount: this.instrument.sheetsCount >= 0 ? this.instrument.sheetsCount : '',
       kind: this.instrument.kind,
       issueDate: this.instrument.issueDate,
       issuer: isEmpty(this.instrument.issuer) ? null : this.instrument.issuer.uid,
