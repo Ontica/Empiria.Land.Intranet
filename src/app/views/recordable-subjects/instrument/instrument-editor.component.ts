@@ -5,25 +5,25 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { concat, of, Subject, Observable } from 'rxjs';
 
-import { catchError, debounceTime, distinctUntilChanged, filter,
-         switchMap, take, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
 import { EventInfo, isEmpty, Validate } from '@app/core';
 
-import { PresentationLayer } from '@app/core/presentation';
+import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { RecordableSubjectsStateSelector } from '@app/core/presentation/presentation-types';
 
-import { Instrument, InstrumentFields, InstrumentTypeEnum, InstrumentTypesList,
-         Issuer, IssuersFilter, EmptyInstrument, InstrumentRecordingActions,
-         EmptyInstrumentRecordingActions,
+import { Instrument, InstrumentFields, InstrumentTypeEnum, InstrumentTypesList, Issuer, IssuersFilter,
+         EmptyInstrument, InstrumentRecordingActions, EmptyInstrumentRecordingActions,
          InstrumentType} from '@app/models';
 
+import { FormHandler } from '@app/shared/utils';
 
 export enum InstrumentEditorEventType {
   CREATE_INSTRUMENT = 'InstrumentEditorEventType.Event.CreateInstrument',
@@ -31,16 +31,27 @@ export enum InstrumentEditorEventType {
   UPDATE_INSTRUMENT = 'InstrumentEditorEventType.Event.UpdateInstrument',
 }
 
-
-type instrumentFormControls = 'type' | 'sheetsCount' | 'kind' | 'issueDate' | 'issuer' |
-  'instrumentNo' | 'binderNo' | 'folio' | 'endFolio' | 'summary' | 'recordingTime' | 'recordingNo' | 'status';
-
+enum InstrumentFormControls {
+  type = 'type',
+  sheetsCount = 'sheetsCount',
+  kind = 'kind',
+  issueDate = 'issueDate',
+  issuer = 'issuer',
+  instrumentNo = 'instrumentNo',
+  binderNo = 'binderNo',
+  folio = 'folio',
+  endFolio = 'endFolio',
+  summary = 'summary',
+  recordingTime = 'recordingTime',
+  recordingNo = 'recordingNo',
+  status = 'status',
+}
 
 @Component({
   selector: 'emp-land-instrument-editor',
   templateUrl: './instrument-editor.component.html'
 })
-export class InstrumentEditorComponent implements OnChanges {
+export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
   @Input() instrument: Instrument = EmptyInstrument;
 
@@ -62,25 +73,13 @@ export class InstrumentEditorComponent implements OnChanges {
 
   instrumentTypesList = InstrumentTypesList;
 
-  isLoading = false;
+  helper: SubscriptionHelper;
+
+  formHandler: FormHandler;
+  controls = InstrumentFormControls;
   editionMode = false;
   submitted = false;
-
-  form: FormGroup = new FormGroup({
-    type: new FormControl('', Validators.required),
-    sheetsCount: new FormControl(''),
-    kind: new FormControl(''),
-    issueDate: new FormControl(''),
-    issuer: new FormControl(''),
-    instrumentNo: new FormControl(''),
-    binderNo: new FormControl(''),
-    folio: new FormControl(''),
-    endFolio: new FormControl(''),
-    summary: new FormControl(''),
-    recordingTime: new FormControl(''),
-    recordingNo: new FormControl(''),
-    status: new FormControl(''),
-  });
+  isLoading = false;
 
   instrumentKindsList: any[] = [];
 
@@ -91,16 +90,25 @@ export class InstrumentEditorComponent implements OnChanges {
 
   statusList = [];
 
-  constructor(private uiLayer: PresentationLayer) { }
-
-  ngOnChanges() {
-    this.enableEditor(this.addMode);
-    this.loadInstrumentKindList(this.getFormControl('type').value);
+  constructor(private uiLayer: PresentationLayer) {
+    this.helper = uiLayer.createSubscriptionHelper();
+    this.initForm();
   }
 
 
-  get isReadyForSubmit(){
-    return this.form?.valid && this.form?.dirty;
+  ngOnChanges() {
+    this.enableEditor(this.addMode);
+    this.loadInstrumentKindList(this.typeSelected);
+  }
+
+
+  ngOnDestroy() {
+    this.helper.destroy();
+  }
+
+
+  get typeSelected() {
+    return this.formHandler.getControl(this.controls.type).value;
   }
 
 
@@ -108,41 +116,32 @@ export class InstrumentEditorComponent implements OnChanges {
     this.editionMode = enable;
     this.setFormModel();
     this.setFormValidatorsByType();
-    if (this.editionMode) {
-      this.form.enable();
-    } else {
-      this.form.disable();
-    }
+    this.formHandler.disableForm(!this.editionMode);
   }
 
 
-  getFormControl(name: instrumentFormControls) {
-    return this.form.get(name);
+  validateTypeSelected(instrumentTypesArray: InstrumentTypeEnum[]) {
+    return instrumentTypesArray.includes(this.typeSelected);
   }
 
 
-  instrumentTypeChange(change) {
+  onInstrumentTypeChange(change) {
     this.loadInstrumentKindList(change.type);
     this.resetForm(change.type === this.instrument.type);
     this.setFormValidatorsByType();
   }
 
 
-  validateTypeSelected(instrumentTypesArray: InstrumentTypeEnum[]) {
-    return instrumentTypesArray.includes(this.getFormControl('type').value);
-  }
-
-
   submit() {
-    if (this.submitted || !this.isReadyForSubmit) {
-      this.invalidateForm();
+    if (this.submitted || !this.formHandler.isReadyForSubmit) {
+      this.formHandler.invalidateForm();
       return;
     }
 
     this.submitted = true;
 
     this.sendEvent(this.addMode ? InstrumentEditorEventType.CREATE_INSTRUMENT :
-                  InstrumentEditorEventType.UPDATE_INSTRUMENT,
+                   InstrumentEditorEventType.UPDATE_INSTRUMENT,
                    this.getFormData());
 
   }
@@ -152,12 +151,30 @@ export class InstrumentEditorComponent implements OnChanges {
     this.sendEvent(InstrumentEditorEventType.PRINT_REGISTRATION_STAMP_MEDIA);
   }
 
-
   // private members
+
+  private initForm() {
+    this.formHandler = new FormHandler(
+      new FormGroup({
+        type: new FormControl('', Validators.required),
+        sheetsCount: new FormControl(''),
+        kind: new FormControl(''),
+        issueDate: new FormControl(''),
+        issuer: new FormControl(''),
+        instrumentNo: new FormControl(''),
+        binderNo: new FormControl(''),
+        folio: new FormControl(''),
+        endFolio: new FormControl(''),
+        summary: new FormControl(''),
+        recordingTime: new FormControl(''),
+        recordingNo: new FormControl(''),
+        status: new FormControl(''),
+      }));
+  }
 
 
   private setFormModel() {
-    this.form.reset({
+    this.formHandler.form.reset({
       type: this.instrument.type && this.instrument.type !== 'Empty' ?
         this.instrument.type : this.defaultType,
       sheetsCount: this.instrument.sheetsCount >= 0 ? this.instrument.sheetsCount : '',
@@ -181,7 +198,7 @@ export class InstrumentEditorComponent implements OnChanges {
 
   private resetForm(resetModel) {
     if (resetModel) {
-      this.form.patchValue({
+      this.formHandler.form.patchValue({
         kind: this.instrument.kind,
         issuer: isEmpty(this.instrument.issuer) ? null : this.instrument.issuer.uid,
         instrumentNo: this.instrument.instrumentNo,
@@ -194,69 +211,44 @@ export class InstrumentEditorComponent implements OnChanges {
       });
       this.subscribeIssuerList();
     } else {
-      this.getFormControl('kind').reset();
-      this.getFormControl('issuer').reset();
-      this.getFormControl('instrumentNo').reset();
-      this.getFormControl('binderNo').reset();
-      this.getFormControl('folio').reset();
-      this.getFormControl('endFolio').reset();
-      this.getFormControl('recordingTime').reset();
-      this.getFormControl('recordingNo').reset();
-      this.getFormControl('status').reset();
+      this.formHandler.getControl(this.controls.kind).reset();
+      this.formHandler.getControl(this.controls.issuer).reset();
+      this.formHandler.getControl(this.controls.instrumentNo).reset();
+      this.formHandler.getControl(this.controls.binderNo).reset();
+      this.formHandler.getControl(this.controls.folio).reset();
+      this.formHandler.getControl(this.controls.endFolio).reset();
+      this.formHandler.getControl(this.controls.recordingTime).reset();
+      this.formHandler.getControl(this.controls.recordingNo).reset();
+      this.formHandler.getControl(this.controls.status).reset();
     }
   }
 
 
   private setFormValidatorsByType(){
     if (this.showStatusField) {
-      this.setControlValidators('status', Validators.required);
+      this.formHandler.setControlValidators('status', Validators.required);
     }
 
-    switch (this.getFormControl('type').value) {
+    switch (this.typeSelected) {
       case 'Resumen':
-        this.clearControlValidators('sheetsCount');
-
-        this.setControlValidators('kind', Validators.required);
-        this.setControlValidators('recordingTime', Validators.required);
-        this.setControlValidators('recordingNo', Validators.required);
-
+        this.formHandler.clearControlValidators('sheetsCount');
+        this.formHandler.setControlValidators('kind', Validators.required);
+        this.formHandler.setControlValidators('recordingTime', Validators.required);
+        this.formHandler.setControlValidators('recordingNo', Validators.required);
         return;
 
       default:
-        this.clearControlValidators('kind');
-        this.clearControlValidators('recordingTime');
-        this.clearControlValidators('recordingNo');
-
-        this.setControlValidators('sheetsCount', [Validators.required, Validate.isPositive]);
-
+        this.formHandler.clearControlValidators('kind');
+        this.formHandler.clearControlValidators('recordingTime');
+        this.formHandler.clearControlValidators('recordingNo');
+        this.formHandler.setControlValidators('sheetsCount', [Validators.required, Validate.isPositive]);
         return;
     }
-  }
-
-
-  private setControlValidators(name: instrumentFormControls, validator: any | any[]) {
-    this.getFormControl(name).clearValidators();
-    this.getFormControl(name).setValidators(validator);
-    this.getFormControl(name).updateValueAndValidity();
-  }
-
-
-  private clearControlValidators(name: instrumentFormControls) {
-    this.getFormControl(name).clearValidators();
-    this.getFormControl(name).updateValueAndValidity();
-  }
-
-
-  private invalidateForm() {
-    Object.keys(this.form.controls).forEach(field => {
-      const control = this.form.get(field);
-      control.markAsTouched({ onlySelf: true });
-    });
   }
 
 
   private getFormData(): any {
-    const formModel = this.form.getRawValue();
+    const formModel = this.formHandler.form.getRawValue();
 
     const instrument: InstrumentFields = {
       uid: this.instrument.uid,
@@ -277,7 +269,7 @@ export class InstrumentEditorComponent implements OnChanges {
       recordingTime: formModel.recordingTime,
       recordingNo: formModel.recordingNo,
       status: formModel.status
-    }
+    };
 
     return data;
   }
@@ -293,8 +285,7 @@ export class InstrumentEditorComponent implements OnChanges {
       return;
     }
 
-    this.uiLayer.select<string[]>(RecordableSubjectsStateSelector.INSTRUMENT_KIND_LIST, instrumentType)
-      .pipe(take(1))
+    this.helper.select<string[]>(RecordableSubjectsStateSelector.INSTRUMENT_KIND_LIST, instrumentType)
       .subscribe(x => {
         this.instrumentKindsList = x.map(item => Object.create({ name: item }));
         this.isLoading = false;
@@ -311,7 +302,7 @@ export class InstrumentEditorComponent implements OnChanges {
         debounceTime(800),
         tap(() => this.issuerLoading = true),
         switchMap(term =>
-          this.uiLayer.select<Issuer[]>(RecordableSubjectsStateSelector.INSTRUMENT_TYPE_ISSUERS_LIST,
+          this.helper.select<Issuer[]>(RecordableSubjectsStateSelector.INSTRUMENT_TYPE_ISSUERS_LIST,
             this.buildIssuerFilter(term))
             .pipe(
               catchError(() => of([])),
@@ -324,9 +315,9 @@ export class InstrumentEditorComponent implements OnChanges {
 
   private buildIssuerFilter(keywords: string): IssuersFilter {
     const issuerFilter = {
-      instrumentType: this.getFormControl('type').value,
-      instrumentKind: this.getFormControl('kind').value,
-      onDate: this.getFormControl('issueDate').value,
+      instrumentType: this.formHandler.getControl(this.controls.type).value,
+      instrumentKind: this.formHandler.getControl(this.controls.kind).value,
+      onDate: this.formHandler.getControl(this.controls.issueDate).value.value,
       keywords
     };
 
