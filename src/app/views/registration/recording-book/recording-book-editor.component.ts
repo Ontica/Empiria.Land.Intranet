@@ -8,7 +8,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Command } from '@app/core';
 import { PresentationLayer } from '@app/core/presentation';
-import { RecordingBook } from '@app/models';
+import { EmptyInstrumentRecordingActions, InstrumentRecordingActions, RecordingBook } from '@app/models';
 import { RegistrationAction, RegistrationCommandType } from '@app/presentation/exported.presentation.types';
 import { BookEntryListEventType } from './book-entry-list.component';
 import { InstrumentEditorEventType } from '@app/views/recordable-subjects/instrument/instrument-editor.component';
@@ -31,6 +31,8 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
   panelAddState = false;
 
   submitted = false;
+
+  statusList = [];
 
   constructor(private uiLayer: PresentationLayer) { }
 
@@ -83,12 +85,12 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
 
     switch (event.type as InstrumentEditorEventType) {
 
-      case InstrumentEditorEventType.UPDATE_INSTRUMENT:
+      case InstrumentEditorEventType.CREATE_INSTRUMENT:
 
         // this.executeCommand<any>(RegistrationCommandType.ADD_RECORDING_BOOK, event.payload)
         //   .then(x => this.resetPanelState());
 
-        console.log('UPDATE_INSTRUMENT', event);
+        console.log('CREATE_INSTRUMENT', event);
 
         this.resetPanelState();
 

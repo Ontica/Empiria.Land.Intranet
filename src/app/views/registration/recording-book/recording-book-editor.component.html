@@ -12,8 +12,11 @@
       [config]="{textButtonOpen: 'Agregar una inscripción a este volumen',
                  textButtonClose: 'Cancelar agregar registro'}">
 
-      <emp-land-instrument-editor
-        [title]="null"
+      <emp-land-instrument-editor *ngIf="panelAddState"
+        title=""
+        submitButtonText="Agregar la inscripción a este volumen"
+        [addMode]="true"
+        defaultType="Resumen"
         (instrumentEditorEvent)="onInstrumentEditorEvent($event)">
 
       </emp-land-instrument-editor>

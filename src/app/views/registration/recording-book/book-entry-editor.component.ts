@@ -43,6 +43,7 @@ export class BookEntryEditorComponent implements OnChanges, OnInit {
 
 
   ngOnInit(): void {
+    this.instrumentRecording.actions.can.editInstrument = true; // Tmp
   }
 
 

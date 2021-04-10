@@ -6,7 +6,7 @@
     <div class="section-title" *ngIf="title">{{ title }}</div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
-      <div fxFlex>
+      <div [fxFlex]="100/3">
         <label>Tipo de instrumento:</label>
         <emp-ng-select formControlName="type"
           [config]="{ clearable: false }"
@@ -18,23 +18,52 @@
         </emp-ng-select>
 
       </div>
-      <div fxFlex>
-        <label>Fecha:</label>
-        <emp-ng-datepicker formControlName="issueDate">
-        </emp-ng-datepicker>
+
+      <div [fxFlex]="100/3">
+        <ng-container *ngIf="!validateTypeSelected([InstrumentType.Resumen])">
+          <label>Fecha:</label>
+          <emp-ng-datepicker formControlName="issueDate">
+
+          </emp-ng-datepicker>
+        </ng-container>
+
+        <ng-container *ngIf="validateTypeSelected([InstrumentType.Resumen])">
+          <label>Fecha de registro:</label>
+          <emp-ng-datepicker formControlName="recordingTime"
+            [showError]="getFormControl('recordingTime').touched && getFormControl('recordingTime').invalid">
+
+          </emp-ng-datepicker>
+        </ng-container>
       </div>
-      <div fxFlex fxLayoutAlign="end">
-        <div fxFlex="100px">
-          <label>Número de hojas:</label>
-          <input formControlName="sheetsCount"
-            type="number"
-            class="text-box">
+
+      <div [fxFlex]="100/3" fxLayoutAlign="end">
+        <div [fxFlex]="validateTypeSelected([InstrumentType.Resumen]) ? '181px' : '108px'">
+
+          <ng-container *ngIf="!validateTypeSelected([InstrumentType.Resumen])">
+            <label>Número de hojas:</label>
+            <input formControlName="sheetsCount"
+              type="number"
+              class="text-box"
+              [class.invalid-control]="getFormControl('sheetsCount').touched &&
+                getFormControl('sheetsCount').invalid">
+          </ng-container>
+
+          <ng-container *ngIf="validateTypeSelected([InstrumentType.Resumen])">
+            <label>Número de la inscripcion a agregar:</label>
+            <input formControlName="recordingNo"
+              type="text"
+              class="text-box"
+              style="width: 100px;"
+              [class.invalid-control]="getFormControl('recordingNo').touched &&
+                getFormControl('recordingNo').invalid">
+          </ng-container>
+
         </div>
       </div>
     </div>
 
     <ng-container *ngIf="getFormControl('type').value">
-      <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxLayout="row" fxLayout.lt-md="column" *ngIf="!validateTypeSelected([InstrumentType.Resumen])">
         <div fxFlex="100">
           <ng-container [ngSwitch]="getFormControl('type').value">
             <label *ngSwitchCase="InstrumentType.DocumentoJuzgado">Autoridad:</label>
@@ -107,20 +136,24 @@
         <div [fxFlex]="100/3" fxFlex.lt-md="100"
           *ngIf="validateTypeSelected([InstrumentType.OficioNotaria,
                                        InstrumentType.DocumentoJuzgado,
-                                       InstrumentType.DocumentoTerceros])">
+                                       InstrumentType.DocumentoTerceros,
+                                       InstrumentType.Resumen])">
 
           <ng-container [ngSwitch]="getFormControl('type').value">
             <label *ngSwitchCase="InstrumentType.DocumentoTerceros">Tipo de documento:</label>
+            <label *ngSwitchCase="InstrumentType.Resumen">Tipo de documento:</label>
             <label *ngSwitchDefault>Tipo de oficio:</label>
           </ng-container>
 
           <emp-ng-select formControlName="kind"
             [bindValue]="'name'"
-            [items]="instrumentKindsList">
+            [items]="instrumentKindsList"
+            [showError]="getFormControl('kind').touched && getFormControl('kind').invalid">
           </emp-ng-select>
         </div>
 
-        <div [fxFlex]="100/3" fxFlex.lt-md="100">
+        <div [fxFlex]="100/3" fxFlex.lt-md="100" *ngIf="!validateTypeSelected([InstrumentType.Resumen])">
+
           <ng-container [ngSwitch]="getFormControl('type').value">
             <label *ngSwitchCase="InstrumentType.EscrituraPublica">Escritura:</label>
             <label *ngSwitchCase="InstrumentType.OficioNotaria">No. Oficio:</label>
@@ -185,26 +218,39 @@
 
     <div fxLayout="row">
 
-      <div fxFlex="50" fxLayoutAlign="start">
+      <div [fxFlex]="100/3" fxLayoutAlign="start">
 
-        <button *ngIf="actions.can.editInstrument"
-          (click)="enableEditor(readonly)"
-          [ngClass]="readonly ? 'btn-action' : 'btn-warning'">
-          {{readonly ? 'Editar Documento' : 'Descartar Cambios'}}
+        <button *ngIf="actions.can.editInstrument && !addMode"
+          (click)="enableEditor(!editionMode)"
+          [ngClass]="editionMode ? 'btn-warning' : 'btn-action'">
+          {{editionMode ? 'Descartar Cambios' : 'Editar Documento'}}
         </button>
 
       </div>
 
-      <div fxFlex="50" fxLayoutAlign="end">
+      <div [fxFlex]="100/3" fxLayoutAlign="center center" *ngIf="showStatusField && editionMode">
 
-        <button *ngIf="!readonly && actions.can.editInstrument"
+          <span style="padding-right: 0.5rem;">Marcar la inscripción como:</span>
+
+          <emp-ng-select
+            formControlName="status"
+            [config]="{ clearable: false }"
+            [items]="statusList"
+            [showError]="getFormControl('status').touched && getFormControl('status').invalid">
+          </emp-ng-select>
+
+      </div>
+
+      <div fxFlex fxLayoutAlign="end">
+
+        <button *ngIf="editionMode && ( actions.can.editInstrument || addMode )"
           (click)="submit()"
-          [class.btn]="form?.invalid"
-          [class.btn-action]="form?.valid">
-          Guardar los Cambios
+          [class.btn]="!isReadyForSubmit"
+          [class.btn-action]="isReadyForSubmit">
+          {{ submitButtonText }}
         </button>
 
-        <button *ngIf="readonly && actions.show.registrationStamps"
+        <button *ngIf="!editionMode && actions.show.registrationStamps"
           (click)="submitPrintRegistrationStampMedia()"
           class="btn-action">
           Imprimir sello interesado

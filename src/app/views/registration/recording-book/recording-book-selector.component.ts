@@ -83,8 +83,6 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
 
   onRecordingBookClicked(){
     if (this.recordingBookSelected) {
-        console.log('SELECT_RECORDING_BOOK', this.recordingBookSelected );
-
         this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_BOOK,
                              { recordingBookUID: this.recordingBookSelected.uid });
     }
