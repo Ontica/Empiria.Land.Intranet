@@ -16,6 +16,8 @@
       </emp-land-real-estate-editor>
 
       <emp-land-no-property-editor *ngIf="isAssociation || isNoProperty"
+        [instrumentRecording]="instrumentRecording"
+        [recordingAct]="recordingAct"
         [recordableSubject]="recordingAct.recordableSubject"
         [isAssociation]="isAssociation"
         [readonly]="false">

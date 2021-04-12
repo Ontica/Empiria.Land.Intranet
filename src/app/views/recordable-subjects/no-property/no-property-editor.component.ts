@@ -9,16 +9,17 @@ import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Assertion, Command } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { RecordableSubject } from '@app/models/recordable-subjects';
-import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
+import { InstrumentRecording, RecordingAct } from '@app/models';
+import { RecordableSubject, RecordableSubjectStatusList } from '@app/models/recordable-subjects';
+import { RecordableSubjectsStateSelector, RegistrationCommandType } from '@app/presentation/exported.presentation.types';
 import { FormHandler } from '@app/shared/utils';
 
 
 enum NoPropertyEditorFormControls {
   electronicID = 'electronicID',
-  resourceKindUID = 'resourceKindUID',
+  kind = 'kind',
   description = 'description',
-  completed = 'completed',
+  status = 'status',
 }
 
 @Component({
@@ -27,11 +28,11 @@ enum NoPropertyEditorFormControls {
 })
 export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
+  @Input() instrumentRecording: InstrumentRecording;
+  @Input() recordingAct: RecordingAct;
   @Input() recordableSubject: RecordableSubject;
-
-  @Input() readonly = false;
-
   @Input() isAssociation: boolean;
+  @Input() readonly = false;
 
   noProperty: any = {};
 
@@ -39,12 +40,12 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   formHandler: FormHandler;
   controls = NoPropertyEditorFormControls;
-  editorMode = false;
+  editionMode = false;
   submitted = false;
   isLoading = false;
 
-  typeList: string[] = [];
-
+  kindsList: string[] = [];
+  statusList: any[] = RecordableSubjectStatusList;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
@@ -52,16 +53,16 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   ngOnInit(): void {
-    this.initForm();
     this.loadDataLists();
-    this.setFormData();
-    this.disableForm(true);
   }
 
 
   ngOnChanges() {
     if (this.recordableSubject) {
       Object.assign(this.noProperty, this.recordableSubject);
+
+      this.initForm();
+      this.enableEditor(false);
     }
   }
 
@@ -72,13 +73,14 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   enableEditor(enable) {
-    this.editorMode = enable;
+    this.editionMode = enable;
 
-    if (!this.editorMode) {
+    if (!this.editionMode) {
       this.setFormData();
     }
 
-    this.disableForm(!this.editorMode);
+    this.setRequiredFormFields(this.noProperty.status === 'Closed');
+    this.disableForm(!this.editionMode);
   }
 
 
@@ -87,36 +89,39 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  onCompletedChange(change){
-    this.setRequiredFormFields(change.checked);
+  onStatusChange(change){
+    this.setRequiredFormFields(change.status === 'Closed');
     this.formHandler.invalidateForm();
   }
 
 
-  submitRecordingAct() {
-
+  submitForm() {
     if (this.submitted || !this.formHandler.validateReadyForSubmit()) {
       this.formHandler.invalidateForm();
       return;
     }
 
     const payload = {
-      noProperty: this.getFormData()
+      instrumentRecordingUID: this.instrumentRecording.uid,
+      recordingActUID: this.recordingAct.uid,
+      recordableSubjectFields: this.getFormData()
     };
 
-    console.log(payload);
-
-    // this.executeCommand<Instrument>(InstrumentsCommandType.CREATE_PHYSICAL_RECORDING, payload);
+    this.executeCommand(RegistrationCommandType.UPDATE_RECORDABLE_SUBJECT, payload);
   }
 
 
   private initForm() {
+    if (this.formHandler) {
+      return;
+    }
+
     this.formHandler = new FormHandler(
       new FormGroup({
         electronicID: new FormControl(''),
-        resourceKindUID: new FormControl(''),
+        kind: new FormControl(''),
         description: new FormControl(''),
-        completed: new FormControl(false),
+        status: new FormControl(''),
       })
     );
   }
@@ -133,7 +138,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
     this.helper.select<string[]>(selector)
       .subscribe(x => {
-        this.typeList = x.map(item => Object.create({ name: item }));
+        this.kindsList = x.map(item => Object.create({ name: item }));
         this.isLoading = false;
       });
   }
@@ -147,9 +152,9 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
     this.formHandler.form.reset({
       electronicID: this.noProperty.electronicID || '',
-      resourceKindUID: this.noProperty.resourceKindUID || '',
-      description: this.noProperty.description || '',
-      completed: false, // this.noProperty.completed,
+      kind: this.noProperty.kind || '',
+      description: this.isAssociation ? this.noProperty.name || '' : this.noProperty.description || '',
+      status: this.noProperty.status,
     });
   }
 
@@ -162,10 +167,10 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   private setRequiredFormFields(required: boolean){
     if (required) {
-      this.formHandler.setControlValidators('resourceKindUID', Validators.required);
+      this.formHandler.setControlValidators('kind', Validators.required);
       this.formHandler.setControlValidators('description', Validators.required);
     } else {
-      this.formHandler.clearControlValidators('resourceKindUID');
+      this.formHandler.clearControlValidators('kind');
       this.formHandler.clearControlValidators('description');
     }
   }
@@ -178,12 +183,13 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
     const formModel = this.formHandler.form.getRawValue();
 
     const data: any = {
-      uid: this.noProperty.uid,
-      name: this.noProperty.name,
-      type: '',
-      resourceKindUID: formModel.resourceKindUID ?? '',
-      description: formModel.description ?? '',
-      // completed: formModel.completed
+      uid: this.recordableSubject.uid,
+      type: this.recordableSubject.type,
+      electronicID: formModel.electronicID ?? '',
+      kind: formModel.kind ?? '',
+      name: this.isAssociation && formModel.description ? formModel.description : '',
+      description: !this.isAssociation && formModel.description ? formModel.description : '',
+      // status: formModel.status ?? '',
     };
 
     return data;
