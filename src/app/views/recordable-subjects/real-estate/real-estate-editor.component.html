@@ -67,11 +67,11 @@
 
       <div fxFlex="290px">
         <label>Tipo de predio:</label>
-        <emp-ng-select [formControlName]="controls.resourceKindUID"
+        <emp-ng-select [formControlName]="controls.kind"
           [config]="{ clearable: false }"
           [bindValue]="'name'"
-          [items]="realEstateTypeList"
-          [showError]="formHandler.showInvalidControl(controls.resourceKindUID)">
+          [items]="realEstateKindList"
+          [showError]="formHandler.showInvalidControl(controls.kind)">
         </emp-ng-select>
       </div>
 

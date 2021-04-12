@@ -24,7 +24,7 @@ enum RealEstateEditorFormControls {
   cadastreLinkingDate = 'cadastreLinkingDate',
   recorderOfficeUID = 'recorderOfficeUID',
   municipalityUID = 'municipalityUID',
-  resourceKindUID = 'resourceKindUID',
+  kind = 'kind',
   lotSize = 'lotSize',
   lotSizeUnitUID = 'lotSizeUnitUID',
   description = 'description',
@@ -57,7 +57,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   recorderOfficeList: RecorderOffice[] = [];
   municipalityList: Identifiable[] = [];
-  realEstateTypeList: string[] = [];
+  realEstateKindList: string[] = [];
   lotSizeUnitList: Identifiable[] = [];
   statusList: any[] = RecordableSubjectStatusList;
 
@@ -93,6 +93,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.setRecorderOfficeAndMunicipalityDataList();
+    this.setRequiredFormFields(this.realEstate.status === 'Closed');
     this.disableForm(!this.editionMode);
   }
 
@@ -127,7 +128,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   onStatusChange(change) {
-    this.setRequiredFormFields(change.status === 'Completed');
+    this.setRequiredFormFields(change.status === 'Closed');
     this.formHandler.invalidateForm();
   }
 
@@ -170,7 +171,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
         cadastreLinkingDate: new FormControl(''),
         recorderOfficeUID: new FormControl(''),
         municipalityUID: new FormControl(''),
-        resourceKindUID: new FormControl(''),
+        kind: new FormControl(''),
         lotSize: new FormControl(''),
         lotSizeUnitUID: new FormControl(''),
         description: new FormControl(''),
@@ -193,7 +194,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       cadastreLinkingDate: this.realEstate.cadastreLinkingDate || '',
       recorderOfficeUID: isEmpty(this.realEstate.recorderOffice) ? '' : this.realEstate.recorderOffice.uid,
       municipalityUID: isEmpty(this.realEstate.municipality) ? '' : this.realEstate.municipality.uid,
-      resourceKindUID: this.realEstate.kind || '',
+      kind: this.realEstate.kind || '',
       lotSize: this.realEstate.lotSize || '',
       lotSizeUnitUID: isEmpty(this.realEstate.lotSizeUnit) ? '' : this.realEstate.lotSizeUnit.uid,
       description: this.realEstate.description || '',
@@ -212,7 +213,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
     this.helper.select<string[]>(RecordableSubjectsStateSelector.REAL_ESTATE_KIND_LIST)
       .subscribe(x => {
-        this.realEstateTypeList = x.map(item => Object.create({ name: item }));
+        this.realEstateKindList = x.map(item => Object.create({ name: item }));
       });
 
     this.helper.select<Identifiable[]>(RecordableSubjectsStateSelector.REAL_ESTATE_LOT_SIZE_UNIT_LIST)
@@ -257,18 +258,19 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       this.formHandler.setControlValidators('cadastralID', Validators.required);
       this.formHandler.setControlValidators('recorderOfficeUID', Validators.required);
       this.formHandler.setControlValidators('municipalityUID', Validators.required);
-      this.formHandler.setControlValidators('resourceKindUID', Validators.required);
+      this.formHandler.setControlValidators('kind', Validators.required);
       this.formHandler.setControlValidators('lotSize', Validators.required);
       this.formHandler.setControlValidators('lotSizeUnitUID', Validators.required);
       this.formHandler.setControlValidators('description', Validators.required);
       this.formHandler.setControlValidators('metesAndBounds', Validators.required);
     } else {
-      this.formHandler.clearControlValidators('cadastralID');
-      this.formHandler.clearControlValidators('recorderOfficeUID');
-      this.formHandler.clearControlValidators('municipalityUID');
-      this.formHandler.clearControlValidators('resourceKindUID');
+      this.formHandler.setControlValidators('recorderOfficeUID', Validators.required);
+      this.formHandler.setControlValidators('municipalityUID', Validators.required);
+      this.formHandler.setControlValidators('lotSizeUnitUID', Validators.required);
+
       this.formHandler.clearControlValidators('lotSize');
-      this.formHandler.clearControlValidators('lotSizeUnitUID');
+      this.formHandler.clearControlValidators('cadastralID');
+      this.formHandler.clearControlValidators('kind');
       this.formHandler.clearControlValidators('description');
       this.formHandler.clearControlValidators('metesAndBounds');
     }
@@ -288,7 +290,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       cadastralID: formModel.cadastralID ?? '',
       recorderOfficeUID: formModel.recorderOfficeUID ?? '',
       municipalityUID: formModel.municipalityUID ?? '',
-      kind: formModel.resourceKindUID ?? '',
+      kind: formModel.kind ?? '',
       lotSize: +formModel.lotSize ? formModel.lotSize : 0,
       lotSizeUnitUID: formModel.lotSizeUnitUID ?? '',
       description: formModel.description ?? '',
