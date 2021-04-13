@@ -74,12 +74,12 @@ export class TransactionSubmitterComponent implements OnChanges {
       total: this.payment?.total ? this.currencyPipe.transform(this.payment.total) : null
     });
 
-    if (this.paymentOrder?.total) {
-      this.formHandler.setControlValidators(this.controls.total,
-        [Validators.required, Validate.maxCurrencyValue(this.paymentOrder.total)]);
-    } else {
-      this.formHandler.clearControlValidators(this.controls.total);
-    }
+    // if (this.paymentOrder?.total) {
+    //   this.formHandler.setControlValidators(this.controls.total,
+    //     [Validators.required, Validate.maxCurrencyValue(this.paymentOrder.total)]);
+    // } else {
+    //   this.formHandler.clearControlValidators(this.controls.total);
+    // }
 
     this.formHandler.disableForm(!this.canEdit);
   }
