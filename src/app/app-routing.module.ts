@@ -24,6 +24,12 @@ const routes: Routes = [
     loadChildren: () => import('./workspaces/land-search/land-search-workspace.module')
                               .then(m => m.LandSearchWorkspaceModule)
   },
+  { path: 'historic-registration',
+    component: MainLayoutComponent,
+    canActivate: [SecurityGuardService],
+    loadChildren: () => import('./workspaces/historic-registration/historic-registration-workspace.module')
+                              .then(m => m.HistoricRegistrationWorkspaceModule)
+  },
   { path: 'security',
     loadChildren: () => import('./views/security/security-ui.module')
                               .then(m => m.SecurityUIModule)

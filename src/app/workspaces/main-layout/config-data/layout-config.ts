@@ -9,14 +9,15 @@ import { View, Layout } from '../common-models/common';
 
 import {
   TransactionViews,
-  SearchViews
+  SearchViews,
+  HistoricRegistrationViews
 } from './views.config';
 
 
-export type LayoutType = 'Transactions' | 'Search';
+export type LayoutType = 'Transactions' | 'Search' | 'HistoricRegistration';
 
 
-export const APP_VIEWS: View[] = TransactionViews.concat(SearchViews);
+export const APP_VIEWS: View[] = TransactionViews.concat(HistoricRegistrationViews, SearchViews);
 
 export const APP_LAYOUTS: Layout[] = [
   {
@@ -30,5 +31,11 @@ export const APP_LAYOUTS: Layout[] = [
     views: SearchViews,
     hint: 'Servicios de consulta en línea',
     defaultTitle: 'Consulta'
+  },
+  {
+    name: 'HistoricRegistration',
+    views: HistoricRegistrationViews,
+    hint: 'Registro histórico',
+    defaultTitle: 'Registro histórico de información'
   }
 ];

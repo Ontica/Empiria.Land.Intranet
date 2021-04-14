@@ -87,3 +87,12 @@ export const SearchViews: View[] = [
     url: '/search-services/books'
   }
 ];
+
+
+export const HistoricRegistrationViews: View[] = [
+  {
+    name: 'HistoricRegistration.ByBook',
+    title: 'Registro por volumen',
+    url: '/historic-registration/by-book'
+  },
+];
