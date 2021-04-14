@@ -40,20 +40,19 @@
 
     <emp-land-transaction-tabbed-view
         [transaction]="selectedTransaction"
-        (closeEvent)="onCloseEditor()">
+        (closeEvent)="onCloseTransactionEditor()">
     </emp-land-transaction-tabbed-view>
 
   </div>
 
 
   <div *ngIf="displayRecordingActEditor"
-    class="secondary"
-    [fxHide]="displayBookEntryEditor">
+    class="secondary">
 
     <emp-land-recordable-subject-tabbed-view
       [instrumentRecording]="selectedRecordingAct.instrumentRecording"
       [recordingAct]="selectedRecordingAct.recordingAct"
-      (closeEvent)="onCloseSecondaryEditor()">
+      (closeEvent)="unselectCurrentRecordingAct()">
 
     </emp-land-recordable-subject-tabbed-view>
 
@@ -65,16 +64,19 @@
 
     <emp-land-recording-book-editor
       [recordingBook]="selectedRecordingBook"
-      (closeEvent)="onCloseSecondaryEditor()">
+      (closeEvent)="unselectCurrentRecordingBook()">
 
     </emp-land-recording-book-editor>
 
   </div>
 
-  <div *ngIf="displayBookEntryEditor" class="secondary">
+  <div *ngIf="displayBookEntryEditor"
+    class="secondary"
+    [fxHide]="displayRecordingActEditor">
 
     <emp-land-book-entry-editor
-      [bookEntry]="selectedBookEntry"
+      [bookEntryUID]="selectedBookEntry.uid"
+      [instrumentRecordingUID]="selectedBookEntry.instrumentRecordingUID"
       (closeEvent)="unselectCurrentBookEntry()">
 
     </emp-land-book-entry-editor>

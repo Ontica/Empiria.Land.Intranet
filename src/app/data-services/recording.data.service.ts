@@ -20,6 +20,13 @@ export class RecordingDataService {
 
   constructor(private http: HttpService) { }
 
+  getInstrumentRecording(instrumentRecordingUID: string): Observable<InstrumentRecording> {
+    const path = `v5/land/registration/${instrumentRecordingUID}`;
+
+    return this.http.get<InstrumentRecording>(path);
+  }
+
+
   getRecordingActTypesList(listUID: string): Observable<Identifiable[]> {
     Assertion.assertValue(listUID, 'listUID');
 

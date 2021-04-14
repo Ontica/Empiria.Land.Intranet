@@ -31,8 +31,8 @@ import { EmptyFileViewerData,
 
 import { View } from '../main-layout';
 
-import { BookEntry, EmptyBookEntry, EmptySelectionAct, EmptyRecordingBook,
-         RecordingAct, SelectionAct, RecordingBook } from '@app/models';
+import { EmptySelectionAct, EmptyRecordingBook, SelectionAct, RecordingBook, BookEntryShortModel,
+         EmptyBookEntryShortModel } from '@app/models';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
@@ -50,7 +50,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   transactionList: TransactionShortModel[] = [];
   filter: TransactionFilter = EmptyTransactionFilter;
 
-  selectedBookEntry: BookEntry = EmptyBookEntry;
+  selectedBookEntry: BookEntryShortModel = EmptyBookEntryShortModel;
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedRecordingAct: SelectionAct = EmptySelectionAct;
   selectedRecordingBook: RecordingBook = EmptyRecordingBook;
@@ -115,7 +115,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
         this.displayRecordingBookEditor = !isEmpty(this.selectedRecordingBook);
       });
 
-    this.subscriptionHelper.select<BookEntry>(RegistrationStateSelector.SELECTED_BOOK_ENTRY)
+    this.subscriptionHelper.select<BookEntryShortModel>(RegistrationStateSelector.SELECTED_BOOK_ENTRY)
       .subscribe(x => {
         this.selectedBookEntry = x;
         this.displayBookEntryEditor = !isEmpty(this.selectedBookEntry);
@@ -136,16 +136,6 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   get secondaryEditorDisplayed(){
     return this.displayRecordingActEditor || this.displayRecordingBookEditor || this.displayBookEntryEditor;
-  }
-
-
-  onCloseEditor() {
-    this.unselectCurrentTransaction();
-  }
-
-
-  onOptionModalClosed() {
-    this.displayOptionModalSelected = null;
   }
 
 
@@ -187,6 +177,16 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
+  onOptionModalClosed() {
+    this.displayOptionModalSelected = null;
+  }
+
+
+  onCloseTransactionEditor() {
+    this.unselectCurrentTransaction();
+  }
+
+
   onCloseFileViewer() {
     this.unselectCurrentFile();
     this.unselectCurrentRecordingAct();
@@ -204,6 +204,17 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
     this.unselectCurrentRecordingBook();
     this.unselectCurrentBookEntry();
   }
+
+
+  unselectCurrentRecordingAct() {
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
+  }
+
+
+  unselectCurrentRecordingBook() {
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_BOOK);
+  }
+
 
   unselectCurrentBookEntry(){
     this.uiLayer.dispatch(RegistrationAction.UNSELECT_BOOK_ENTRY);
@@ -237,14 +248,6 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   private unselectCurrentFile() {
     this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE_LIST);
-  }
-
-  private unselectCurrentRecordingAct() {
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
-  }
-
-  private unselectCurrentRecordingBook() {
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_BOOK);
   }
 
 }

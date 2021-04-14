@@ -13,7 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Command, PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { RegistrationAction, RegistrationCommandType } from '@app/core/presentation/presentation-types';
 
-import { EmptyInstrumentRecording, InstrumentRecording, RecordingAct } from '@app/models';
+import { EmptyInstrumentRecording, InstrumentRecording, RecordingAct, SelectionAct } from '@app/models';
 import { AlertService } from '@app/shared/containers/alert/alert.service';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
@@ -26,6 +26,8 @@ import { MessageBoxService } from '@app/shared/containers/message-box';
 export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
   @Input() instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
+
+  @Input() recordingActs: RecordingAct[] = [];
 
   @Input() showCopyToClipboard = false;
 
@@ -51,9 +53,8 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.instrumentRecording) {
-      this.dataSource = new MatTableDataSource(this.instrumentRecording.recordingActs);
-      console.log(this.instrumentRecording.recordingActs);
+    if (changes.recordingActs) {
+      this.dataSource = new MatTableDataSource(this.recordingActs);
     }
 
     this.resetColumns();
@@ -66,15 +67,14 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
 
   onOpenRecordingActEditor(recordingAct: RecordingAct) {
-    if (!this.showCopyToClipboard){
-      this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_ACT,
-                            { instrumentRecording: this.instrumentRecording, recordingAct });
-    }
+    const selectionAct: SelectionAct = { instrumentRecording: this.instrumentRecording, recordingAct };
+    this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_ACT, selectionAct );
   }
 
 
-  showAlertTextCopied() {
-    this.alertService.openAlert('Folio real copiado', 'Ok');
+  showAlertTextCopied(copied: boolean) {
+    const message = copied ? 'Folio real copiado' : 'Tuve un problema al copiar el folio real ';
+    this.alertService.openAlert(message, 'Ok');
   }
 
 
@@ -118,10 +118,10 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
   private getConfirmMessage(recordingAct: RecordingAct): string {
     return `
-      <table style="margin: 0;">
+      <table style='margin: 0;'>
         <tr><td>Acto jurídico: </td><td><strong> ${recordingAct.name} </strong></td></tr>
 
-        <tr><td class="nowrap">Folio electrónico: </td><td><strong>
+        <tr><td class='nowrap'>Folio electrónico: </td><td><strong>
           ${recordingAct.recordableSubject.electronicID}
         </strong></td></tr>
 

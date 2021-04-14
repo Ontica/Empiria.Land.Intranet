@@ -8,10 +8,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Command } from '@app/core';
 import { PresentationLayer } from '@app/core/presentation';
-import { EmptyInstrumentRecordingActions, InstrumentRecordingActions, RecordingBook } from '@app/models';
+import { BookEntryShortModel, RecordingBook } from '@app/models';
 import { RegistrationAction, RegistrationCommandType } from '@app/presentation/exported.presentation.types';
 import { BookEntryListEventType } from './book-entry-list.component';
-import { InstrumentEditorEventType } from '@app/views/recordable-subjects/instrument/instrument-editor.component';
+import {
+  InstrumentEditorEventType
+} from '@app/views/recordable-subjects/instrument/instrument-editor.component';
 
 
 @Component({
@@ -58,9 +60,13 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
 
       case BookEntryListEventType.BOOK_ENTRY_CLICKED:
 
-        console.log('SELECT_BOOK_ENTRY', event);
+        const bookEntry: BookEntryShortModel = {
+          uid: event.payload.bookEntry.uid,
+          recordingNo: event.payload.bookEntry.recordingNo,
+          instrumentRecordingUID: event.payload.bookEntry.instrumentRecording.uid,
+        };
 
-        this.uiLayer.dispatch(RegistrationAction.SELECT_BOOK_ENTRY, event.payload );
+        this.uiLayer.dispatch(RegistrationAction.SELECT_BOOK_ENTRY, { bookEntry } );
 
         return;
 

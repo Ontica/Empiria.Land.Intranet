@@ -5,21 +5,27 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { BookEntry, EmptyInstrumentRecording, InstrumentRecording, RecordingBook } from '@app/models';
-import { InstrumentEditorEventType } from '@app/views/recordable-subjects/instrument/instrument-editor.component';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+import { BookEntry, EmptyBookEntry, EmptyInstrumentRecording, InstrumentRecording } from '@app/models';
+import { RegistrationStateSelector } from '@app/presentation/exported.presentation.types';
+import {
+  InstrumentEditorEventType
+} from '@app/views/recordable-subjects/instrument/instrument-editor.component';
 
 @Component({
   selector: 'emp-land-book-entry-editor',
   templateUrl: './book-entry-editor.component.html',
 })
-export class BookEntryEditorComponent implements OnChanges, OnInit {
+export class BookEntryEditorComponent implements OnChanges, OnDestroy {
 
-  @Input() bookEntry: BookEntry;
+  @Input() bookEntryUID: string;
+
+  @Input() instrumentRecordingUID: string;
 
   @Output() closeEvent = new EventEmitter<void>();
 
-  recordingBook: RecordingBook;
+  helper: SubscriptionHelper;
 
   cardTitle = 'Inscripción';
 
@@ -30,20 +36,43 @@ export class BookEntryEditorComponent implements OnChanges, OnInit {
 
   submitted = false;
 
+  isLoading = false;
+
+  bookEntry: BookEntry = EmptyBookEntry;
+
   instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
 
-  constructor() { }
+  constructor(private uiLayer: PresentationLayer) {
+    this.helper = uiLayer.createSubscriptionHelper();
+  }
 
 
   ngOnChanges() {
-    console.log('Book Entry Editor: ', this.bookEntry);
-    this.initTexts();
+    this.initLoad();
     this.resetPanelState();
   }
 
 
-  ngOnInit(): void {
-    this.instrumentRecording.actions.can.editInstrument = true; // Tmp
+  ngOnDestroy() {
+    this.helper.destroy();
+  }
+
+
+  get recordingActs(){
+    return this.instrumentRecording.bookRecordingMode ?
+      this.bookEntry.recordingActs : this.instrumentRecording.recordingActs;
+  }
+
+  initLoad(){
+    this.isLoading = true;
+    this.helper.select<InstrumentRecording>(RegistrationStateSelector.INSTRUMENT_RECORDING,
+      { instrumentRecordingUID: this.instrumentRecordingUID })
+      .subscribe(x => {
+        this.instrumentRecording = x;
+        this.setBookEntry();
+        this.initTexts();
+        this.isLoading = false;
+      });
   }
 
 
@@ -71,6 +100,14 @@ export class BookEntryEditorComponent implements OnChanges, OnInit {
       default:
         console.log(`Unhandled user interface event ${event.type}`);
         return;
+    }
+  }
+
+
+  private setBookEntry(){
+    this.bookEntry = EmptyBookEntry;
+    if (this.instrumentRecording.bookEntries.filter(x => x.uid === this.bookEntryUID).length > 0) {
+      this.bookEntry = this.instrumentRecording.bookEntries.filter(x => x.uid === this.bookEntryUID)[0];
     }
   }
 

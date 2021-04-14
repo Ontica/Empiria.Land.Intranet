@@ -60,6 +60,7 @@
 
         <div fxLayout="row">
           <emp-ng-select fxFlex [(ngModel)]="recordingBookEntrySelected" name="recordingBookEntry"
+            bindLabel="recordingNo"
             [config]="{ bindByValue: false }"
             [disabled]="!isReadyToFilterRecordingBook"
             [items]="recordingBookEntryList"

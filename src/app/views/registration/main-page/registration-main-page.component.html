@@ -30,7 +30,8 @@
   <br>
 
   <emp-land-recording-acts-list
-    [instrumentRecording]="instrumentRecording">
+    [instrumentRecording]="instrumentRecording"
+    [recordingActs]="instrumentRecording.recordingActs">
   </emp-land-recording-acts-list>
 
   <emp-ng-expansion-button *ngIf="actions.can.editRecordingActs"

@@ -1,11 +1,17 @@
-<emp-ng-card [title]="cardTitle" [hint]="cardHint" (cardClose)="onClose()">
+<emp-ng-card
+  [title]="cardTitle"
+  [hint]="cardHint"
+  (cardClose)="onClose()">
 
-  <div class="card-body-padding" [style.height.%]="98">
+  <div class="card-body-padding" [style.height.%]="98" [empNgSpinnerHost]="spinner">
+
+    <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
     <emp-land-instrument-editor
-      title="Instrumento"
+      [actions]="instrumentRecording.actions"
       [instrument]="instrumentRecording.instrument"
       [showStatusField]="true"
+      title="Instrumento"
       (instrumentEditorEvent)="onInstrumentEditorEvent($event)">
 
     </emp-land-instrument-editor>
@@ -14,6 +20,7 @@
 
     <emp-land-recording-acts-list
       [instrumentRecording]="instrumentRecording"
+      [recordingActs]="recordingActs"
       [showCopyToClipboard]="true"
       title="Predios y actos jurídicos registrados en esta inscripción">
 

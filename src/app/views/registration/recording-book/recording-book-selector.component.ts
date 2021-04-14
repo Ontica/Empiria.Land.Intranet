@@ -8,7 +8,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { EventInfo, Identifiable } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { RecorderOffice } from '@app/models';
+import { BookEntryShortModel, RecorderOffice } from '@app/models';
 import { RecordableSubjectsStateSelector,
   RegistrationAction,
          TransactionStateSelector } from '@app/presentation/exported.presentation.types';
@@ -36,7 +36,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
   recordingBookLoading = false;
   recordingBookMinTermLength = 3;
 
-  recordingBookEntryList: Identifiable[] = [];
+  recordingBookEntryList: BookEntryShortModel[] = [];
 
   recorderOfficeSelected: Identifiable;
   recordingSectionSelected: Identifiable;
@@ -177,7 +177,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
 
-    this.helper.select<Identifiable[]>(RecordableSubjectsStateSelector.RECORDING_BOOK_ENTRIES_LIST,
+    this.helper.select<BookEntryShortModel[]>(RecordableSubjectsStateSelector.RECORDING_BOOK_ENTRIES_LIST,
                                        { recordingBookUID: this.recordingBookSelected?.uid })
       .toPromise()
       .then(x => {

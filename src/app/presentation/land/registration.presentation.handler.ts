@@ -9,12 +9,11 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { Assertion, Command, toPromise } from '@app/core';
+import { Assertion, Command, toObservable, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { EmptyBookEntry, EmptyInstrumentRecording, EmptySelectionAct,
-         EmptyRecordingBook } from '@app/models';
+import { EmptyBookEntry, EmptyInstrumentRecording, EmptySelectionAct, EmptyRecordingBook} from '@app/models';
 
 import { RecordingDataService } from '@app/data-services';
 
@@ -34,6 +33,7 @@ export enum SelectorType {
   SELECTED_RECORDING_ACT           = 'Land.Registration.Selector.SelectedRecordingAct',
   SELECTED_RECORDING_BOOK          = 'Land.Registration.Selector.SelectedRecordingBook',
   SELECTED_BOOK_ENTRY              = 'Land.Registration.Selector.SelectedBookEntry',
+  INSTRUMENT_RECORDING             = 'Land.Registration.Selector.InstrumentRecording',
 }
 
 
@@ -97,6 +97,11 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         super.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, value);
 
         return super.select<U>(selectorType);
+
+      case SelectorType.INSTRUMENT_RECORDING:
+        Assertion.assertValue(params.instrumentRecordingUID, 'params.instrumentRecordingUID');
+
+        return toObservable<U>(this.data.getInstrumentRecording(params.instrumentRecordingUID));
 
       default:
         return super.select<U>(selectorType, params);
