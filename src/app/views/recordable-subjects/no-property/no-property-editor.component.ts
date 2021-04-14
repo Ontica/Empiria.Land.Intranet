@@ -7,18 +7,20 @@
 
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Assertion, Command } from '@app/core';
+import { Assertion, Command, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { InstrumentRecording, RecordingAct } from '@app/models';
+import { InstrumentRecording, RecorderOffice, RecordingAct } from '@app/models';
 import { RecordableSubject, RecordableSubjectStatusList } from '@app/models/recordable-subjects';
-import { RecordableSubjectsStateSelector, RegistrationCommandType } from '@app/presentation/exported.presentation.types';
+import { RecordableSubjectsStateSelector,
+         RegistrationCommandType } from '@app/presentation/exported.presentation.types';
 import { FormHandler } from '@app/shared/utils';
 
 
 enum NoPropertyEditorFormControls {
   electronicID = 'electronicID',
+  recorderOfficeUID = 'recorderOfficeUID',
   kind = 'kind',
-  description = 'description',
+  name = 'name',
   status = 'status',
 }
 
@@ -44,6 +46,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
   submitted = false;
   isLoading = false;
 
+  recorderOfficeList: RecorderOffice[] = [];
   kindsList: string[] = [];
   statusList: any[] = RecordableSubjectStatusList;
 
@@ -60,7 +63,6 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges() {
     if (this.recordableSubject) {
       Object.assign(this.noProperty, this.recordableSubject);
-
       this.initForm();
       this.enableEditor(false);
     }
@@ -119,8 +121,9 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
     this.formHandler = new FormHandler(
       new FormGroup({
         electronicID: new FormControl(''),
+        recorderOfficeUID: new FormControl(''),
         kind: new FormControl(''),
-        description: new FormControl(''),
+        name: new FormControl(''),
         status: new FormControl(''),
       })
     );
@@ -141,6 +144,11 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
         this.kindsList = x.map(item => Object.create({ name: item }));
         this.isLoading = false;
       });
+
+    this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
+      .subscribe(x => {
+        this.recorderOfficeList = x;
+      });
   }
 
 
@@ -152,8 +160,9 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
     this.formHandler.form.reset({
       electronicID: this.noProperty.electronicID || '',
+      recorderOfficeUID: isEmpty(this.noProperty.recorderOffice) ? '' : this.noProperty.recorderOffice.uid,
       kind: this.noProperty.kind || '',
-      description: this.isAssociation ? this.noProperty.name || '' : this.noProperty.description || '',
+      name: this.noProperty.name || '',
       status: this.noProperty.status,
     });
   }
@@ -167,11 +176,13 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   private setRequiredFormFields(required: boolean){
     if (required) {
+      this.formHandler.setControlValidators('recorderOfficeUID', Validators.required);
       this.formHandler.setControlValidators('kind', Validators.required);
-      this.formHandler.setControlValidators('description', Validators.required);
+      this.formHandler.setControlValidators('name', Validators.required);
     } else {
+      this.formHandler.setControlValidators('recorderOfficeUID', Validators.required);
       this.formHandler.clearControlValidators('kind');
-      this.formHandler.clearControlValidators('description');
+      this.formHandler.clearControlValidators('name');
     }
   }
 
@@ -186,9 +197,9 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
       uid: this.recordableSubject.uid,
       type: this.recordableSubject.type,
       electronicID: formModel.electronicID ?? '',
+      recorderOfficeUID: formModel.recorderOfficeUID ?? '',
       kind: formModel.kind ?? '',
-      name: this.isAssociation && formModel.description ? formModel.description : '',
-      description: !this.isAssociation && formModel.description ? formModel.description : '',
+      name: formModel.name ?? '',
       // status: formModel.status ?? '',
     };
 

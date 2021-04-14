@@ -15,6 +15,15 @@
             (click)="onElectronicHistoryClicked()">Historia</button>
         </div>
       </div>
+
+      <div fxFlex="290px">
+        <label>Distrito:</label>
+        <emp-ng-select [formControlName]="controls.recorderOfficeUID"
+          [config]="{ clearable: false }"
+          [items]="recorderOfficeList"
+          [showError]="formHandler.showInvalidControl(controls.recorderOfficeUID)">
+        </emp-ng-select>
+      </div>
     </div>
 
 
@@ -35,8 +44,8 @@
         <label *ngIf="isAssociation">Nombre o denominación:</label>
         <label *ngIf="!isAssociation">Descripción opcional de lo que se inscribe:</label>
 
-        <textarea class="text-area" empNgTextareaAutoresize rows="1" [formControlName]="controls.description"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
+        <textarea class="text-area" empNgTextareaAutoresize rows="1" [formControlName]="controls.name"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.name)">
 
         </textarea>
       </div>
