@@ -10,8 +10,8 @@ import { Observable } from 'rxjs';
 
 import { Assertion, DateStringLibrary, HttpService, Identifiable } from '@app/core';
 
-import { InstrumentType, Issuer, IssuersFilter, RecordableSubjectFilter, RecordableSubjectShortModel,
-         RecorderOffice, RecordingActTypeGroup } from '@app/models';
+import { BookEntryShortModel, InstrumentType, Issuer, IssuersFilter, RecordableSubjectFilter,
+         RecordableSubjectShortModel, RecorderOffice, RecordingActTypeGroup } from '@app/models';
 
 
 @Injectable()
@@ -103,10 +103,10 @@ export class RecordableSubjectsDataService {
   }
 
 
-  getRecordingBookEntries(recordingBookUID: string): Observable<Identifiable[]> {
+  getRecordingBookEntries(recordingBookUID: string): Observable<BookEntryShortModel[]> {
     const path = `v5/land/registration/recording-books/${recordingBookUID}/book-entries`;
 
-    return this.http.get<Identifiable[]>(path);
+    return this.http.get<BookEntryShortModel[]>(path);
   }
 
 

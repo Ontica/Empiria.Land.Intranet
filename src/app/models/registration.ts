@@ -35,25 +35,6 @@ export interface RecordingSection extends Identifiable {
 }
 
 
-export interface InstrumentBookEntry {
-  uid: string;
-  recordingTime: DateString;
-  recorderOfficeName: string;
-  recordingSectionName: string;
-  volumeNo: string;
-  recordingNo: string;
-  recordedBy: string;
-  stampMedia: MediaBase;
-  recordingActs: RecordingAct[];
-}
-
-
-export interface InstrumentBookEntryFields  {
-  recorderOfficeUID: string;
-  sectionUID: string;
-}
-
-
 export type RecordingStatus = 'Opened' | 'Closed' | 'Secured';
 
 
@@ -110,8 +91,9 @@ export interface InstrumentRecording {
   // recordedBy: Contact;
   // reviewedBy: Contact;
   // signedBy: Contact;
+  bookRecordingMode: boolean;
   recordingActs: RecordingAct[];
-  bookEntries?: InstrumentBookEntry[];
+  bookEntries?: BookEntry[];
   stampMedia: MediaBase;
   // status: RecordingStatus;
   transactionUID?: string;
@@ -128,6 +110,7 @@ export const EmptyInstrumentRecording: InstrumentRecording = {
   // recordedBy: EmptyContact,
   // reviewedBy: EmptyContact,
   // signedBy: EmptyContact,
+  bookRecordingMode: false,
   recordingActs: [],
   bookEntries: [],
   stampMedia: EmptyMediaBase,
@@ -228,6 +211,7 @@ export interface BookEntry {
     controlID: string;
     asText: string;
   };
+  recordingActs: RecordingAct[];
   status: RecordingStatus;
   stampMedia: MediaBase;
 }
@@ -246,9 +230,16 @@ export const EmptyBookEntry: BookEntry = {
     controlID: '',
     asText: '',
   },
+  recordingActs: [],
   status: 'Closed',
   stampMedia: EmptyMediaBase,
 };
+
+
+export interface InstrumentBookEntryFields  {
+  recorderOfficeUID: string;
+  sectionUID: string;
+}
 
 
 export interface BookEntryFields {
@@ -257,3 +248,17 @@ export interface BookEntryFields {
   recordingTime: DateString;
   recordingNo: string;
 }
+
+
+export interface BookEntryShortModel {
+  uid: string;
+  recordingNo: string;
+  instrumentRecordingUID: string;
+}
+
+
+export const EmptyBookEntryShortModel: BookEntryShortModel = {
+  uid: '',
+  recordingNo: '',
+  instrumentRecordingUID: '',
+};
