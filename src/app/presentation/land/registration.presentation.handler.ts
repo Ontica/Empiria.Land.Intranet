@@ -13,7 +13,8 @@ import { Assertion, Command, toObservable, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { EmptyBookEntry, EmptyInstrumentRecording, EmptySelectionAct, EmptyRecordingBook} from '@app/models';
+import { EmptyBookEntry, EmptyInstrumentRecording, EmptySelectionAct, EmptyRecordingBook,
+         InstrumentRecording} from '@app/models';
 
 import { RecordingDataService } from '@app/data-services';
 
@@ -124,11 +125,16 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
 
       case EffectType.UPDATE_RECORDABLE_SUBJECT:
         const instrumentRecording = params.result;
-        const recordingAct = instrumentRecording.recordingActs
-          .filter(x => x.uid === params.payload.recordingActUID)[0];
+        const instrumenRecordringSelected =
+          this.getValue<InstrumentRecording>(SelectorType.TRANSACTION_INSTRUMENT_RECORDING);
 
-        this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, instrumentRecording);
-        this.setValue(SelectorType.SELECTED_RECORDING_ACT, { instrumentRecording, recordingAct });
+        if (instrumentRecording.uid === instrumenRecordringSelected.uid) {
+          const recordingAct = instrumentRecording.recordingActs
+            .filter(x => x.uid === params.payload.recordingActUID)[0];
+
+          this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, instrumentRecording);
+          this.setValue(SelectorType.SELECTED_RECORDING_ACT, { instrumentRecording, recordingAct });
+        }
 
         return;
 
