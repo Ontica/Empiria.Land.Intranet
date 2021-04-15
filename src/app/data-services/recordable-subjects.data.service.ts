@@ -104,6 +104,8 @@ export class RecordableSubjectsDataService {
 
 
   getRecordingBookEntries(recordingBookUID: string): Observable<BookEntryShortModel[]> {
+    Assertion.assertValue(recordingBookUID, 'recordingBookUID');
+
     const path = `v5/land/registration/recording-books/${recordingBookUID}/book-entries`;
 
     return this.http.get<BookEntryShortModel[]>(path);

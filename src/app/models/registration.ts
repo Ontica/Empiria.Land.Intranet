@@ -236,9 +236,17 @@ export const EmptyBookEntry: BookEntry = {
 };
 
 
-export interface InstrumentBookEntryFields  {
+export interface InstrumentBookEntryFields {
   recorderOfficeUID: string;
   sectionUID: string;
+}
+
+
+export interface CreateManualBookEntryFields {
+  recordingNo: string;
+  instrument: InstrumentFields;
+  presentationTime: DateString;
+  authorizationDate: DateString;
 }
 
 
