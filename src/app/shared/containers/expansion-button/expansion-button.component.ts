@@ -25,7 +25,8 @@ const DefaultExpansionButtonConfig: ExpansionButtonConfig = {
 
 @Component({
   selector: 'emp-ng-expansion-button',
-  templateUrl: './expansion-button.component.html'
+  templateUrl: './expansion-button.component.html',
+  styleUrls: ['./expansion-button.component.scss']
 })
 export class ExpansionButtonComponent {
 
