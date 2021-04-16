@@ -4,31 +4,34 @@
 
   <div fxLayout="column" fxLayoutGap="0.75rem">
 
-    <mat-divider class="divider-padding">
-
-    </mat-divider>
-
     <div fxLayout="row">
       <div fxFlex="20">
+
         <label>Distrito:</label>
+
         <emp-ng-select
           [(ngModel)]="recorderOfficeSelected" name="recorderOffice"
           [config]="{ bindByValue: false, clearable: false }"
           [items]="recorderOfficeList"
           (changes)="onRecorderOfficeChange($event)">
         </emp-ng-select>
+
       </div>
 
       <div fxFlex="30">
+
         <label>Sección:</label>
+
         <emp-ng-select [(ngModel)]="recordingSectionSelected" name="recordingSection"
           [config]="{ bindByValue: false, clearable: false }"
           [items]="recordingSectionList"
           (changes)="onRecordingSectionChange($event)">
         </emp-ng-select>
+
       </div>
 
       <div fxFlex="25">
+
         <label>Volumen:</label>
 
         <div fxLayout="row">
@@ -36,8 +39,7 @@
           <emp-ng-select fxFlex [(ngModel)]="recordingBookSelected" name="recordingBook"
             [config]="{ bindByValue: false,
                         hideSelected: true,
-                        minTermLength: recordingBookMinTermLength,
-                        dropdownPosition: 'top' }"
+                        minTermLength: recordingBookMinTermLength }"
             [disabled]="!isReadyToFilterRecordingBook"
             [items]="recordingBookList$ | async"
             [typeahead]="recordingBookInput$"
@@ -47,29 +49,40 @@
 
           </emp-ng-select>
 
-          <button type="button" class="btn" fxFlex="67px" [style.marginTop.px]="2"
-            (click)="onRecordingBookClicked()">
-            Editar
-          </button>
+          <div fxFlex="80px">
+            <button *ngIf="showRecordingBookEntryField"
+              type="button" class="btn" [style.marginTop.px]="2"
+              (click)="onRecordingBookClicked()">
+              Lista
+            </button>
+          </div>
+
         </div>
 
       </div>
 
       <div fxFlex="25" *ngIf="showRecordingBookEntryField">
+
         <label>Inscripción:</label>
 
         <div fxLayout="row">
+
           <emp-ng-select fxFlex [(ngModel)]="recordingBookEntrySelected" name="recordingBookEntry"
+            [config]="{ bindByValue: false}"
             bindLabel="recordingNo"
-            [config]="{ bindByValue: false }"
             [disabled]="!isReadyToFilterRecordingBook"
             [items]="recordingBookEntryList"
-            [placeholder]="recordingBookEntryList.length === 0 ? 'Seleccione' : 'Seleccionar'">
+            [placeholder]="recordingBookEntryList.length === 0 ? 'Seleccione' : 'Seleccionar'"
+            (changes)="onBookEntryChange($event)">
           </emp-ng-select>
-          <button type="button" class="btn" fxFlex="67px" [style.marginTop.px]="2"
-            (click)="onRecordingBookEntryClicked()">
-            Ver
-          </button>
+
+          <div fxFlex="80px">
+            <button type="button" class="btn" [style.marginTop.px]="2"
+              (click)="onRecordingBookEntryClicked()">
+              {{recordingBookEntrySelected ? 'Ver' : 'Agregar'}}
+            </button>
+          </div>
+
         </div>
 
       </div>

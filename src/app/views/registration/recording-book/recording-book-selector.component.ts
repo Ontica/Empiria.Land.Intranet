@@ -6,15 +6,20 @@
  */
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { EventInfo, Identifiable } from '@app/core';
+import { Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { BookEntryShortModel, RecorderOffice } from '@app/models';
+import { BookEntryShortModel, EmptyBookEntryShortModel, RecorderOffice } from '@app/models';
 import { RecordableSubjectsStateSelector,
-  RegistrationAction,
          TransactionStateSelector } from '@app/presentation/exported.presentation.types';
 import { concat, Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
+export enum RecordingBookSelectorEventType {
+  RECORDING_BOOK_CLICKED = 'RecordingBookSelectorComponent.Event.RecordingBookClicked',
+  BOOK_ENTRY_CLICKED = 'RecordingBookSelectorComponent.Event.BookEntryClicked',
+  RECORDING_BOOK_CHANGED = 'RecordingBookSelectorComponent.Event.RecordingBookChanged',
+  BOOK_ENTRY_CHANGED = 'RecordingBookSelectorComponent.Event.BookEntryChanged',
+}
 
 @Component({
   selector: 'emp-land-recording-book-selector',
@@ -23,6 +28,8 @@ import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap 
 export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
 
   @Input() showRecordingBookEntryField: boolean;
+
+  @Output() recordingBookSelectorEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;
 
@@ -41,7 +48,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
   recorderOfficeSelected: Identifiable;
   recordingSectionSelected: Identifiable;
   recordingBookSelected: Identifiable;
-  recordingBookEntrySelected: Identifiable;
+  recordingBookEntrySelected: BookEntryShortModel;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
@@ -67,33 +74,53 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
   onRecorderOfficeChange(recorderOffice: RecorderOffice){
     this.recordingSectionSelected = null;
     this.resetRecordingBookField();
+    this.emitRecordingBook(Empty);
   }
 
 
   onRecordingSectionChange(recordingSection: Identifiable) {
     this.resetRecordingBookField();
+    this.emitRecordingBook(Empty);
   }
 
 
   onRecordingBookChange(recordingBook: Identifiable) {
     this.resetRecordingBookEntries();
     this.loadRecordingBookEntryList();
+
+    this.emitRecordingBook(isEmpty(recordingBook) ? Empty : this.recordingBookSelected);
+  }
+
+
+  onBookEntryChange(bookEntry: BookEntryShortModel) {
+    this.emitBookEntry(isEmpty(bookEntry) ? EmptyBookEntryShortModel : this.recordingBookEntrySelected );
   }
 
 
   onRecordingBookClicked(){
     if (this.recordingBookSelected) {
-        this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_BOOK,
-                             { recordingBookUID: this.recordingBookSelected.uid });
+      this.sendEvent(RecordingBookSelectorEventType.RECORDING_BOOK_CLICKED,
+        { recordingBook: this.recordingBookSelected });
     }
   }
 
 
   onRecordingBookEntryClicked(){
     if (this.recordingBookEntrySelected) {
-        this.uiLayer.dispatch(RegistrationAction.SELECT_BOOK_ENTRY,
-                              { bookEntry: this.recordingBookEntrySelected });
+      this.sendEvent(RecordingBookSelectorEventType.BOOK_ENTRY_CLICKED,
+        { recordingBookEntry: this.recordingBookEntrySelected });
     }
+  }
+
+
+  private emitRecordingBook(recordingBook: Identifiable) {
+    this.sendEvent(RecordingBookSelectorEventType.RECORDING_BOOK_CHANGED, { recordingBook });
+    this.emitBookEntry(EmptyBookEntryShortModel);
+  }
+
+
+  private emitBookEntry(bookEntry: BookEntryShortModel) {
+    this.sendEvent(RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED, { bookEntry });
   }
 
 
@@ -184,6 +211,16 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
         this.recordingBookEntryList = x;
         this.isLoading = false;
       });
+  }
+
+
+  private sendEvent(eventType: RecordingBookSelectorEventType, payload?: any) {
+    const event: EventInfo = {
+      type: eventType,
+      payload
+    };
+
+    this.recordingBookSelectorEvent.emit(event);
   }
 
 }
