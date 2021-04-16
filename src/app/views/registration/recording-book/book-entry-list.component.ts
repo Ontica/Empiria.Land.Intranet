@@ -5,11 +5,11 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DateStringLibrary, EventInfo } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { BookEntry, EmptyRecordingBook, RecordingBook, RecordingStatus } from '@app/models';
+import { BookEntry, EmptyBookEntry, EmptyRecordingBook, RecordingBook } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 export enum BookEntryListEventType {
@@ -27,6 +27,8 @@ export class BookEntryListComponent implements OnChanges {
 
   @Input() recordingBook: RecordingBook = EmptyRecordingBook;
 
+  @Input() bookEntrySelected: BookEntry = EmptyBookEntry;
+
   @Output() bookEntryListEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;
@@ -40,13 +42,16 @@ export class BookEntryListComponent implements OnChanges {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
-  ngOnChanges() {
-    this.dataSource = new MatTableDataSource(this.recordingBook.bookEntries);
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.recordingBook) {
+      this.dataSource = new MatTableDataSource(this.recordingBook.bookEntries);
+    }
   }
 
 
   onBookEntryClicked(bookEntry: BookEntry){
     if (bookEntry) {
+      this.bookEntrySelected = bookEntry;
       this.sendEvent(BookEntryListEventType.BOOK_ENTRY_CLICKED,
                     { bookEntry });
     }
@@ -60,7 +65,6 @@ export class BookEntryListComponent implements OnChanges {
       .toPromise()
       .then(x => {
         if (x) {
-
           const payload = {
             recorderBookUID: this.recordingBook.uid,
             bookEntryUID: bookEntry.uid
