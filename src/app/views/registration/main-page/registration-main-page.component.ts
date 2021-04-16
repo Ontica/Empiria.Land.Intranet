@@ -41,6 +41,7 @@ export class RegistrationMainPageComponent implements OnChanges, OnDestroy {
   helper: SubscriptionHelper;
 
   panelAddState = false;
+  submitted = false;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
@@ -70,6 +71,10 @@ export class RegistrationMainPageComponent implements OnChanges, OnDestroy {
 
 
   onInstrumentEditorEvent(event: EventInfo) {
+    if (this.submitted) {
+      return;
+    }
+
     switch (event.type) {
       case InstrumentEditorEventType.PRINT_REGISTRATION_STAMP_MEDIA:
         this.filePrintPreview.open(this.instrumentRecording.stampMedia.url,
@@ -80,7 +85,16 @@ export class RegistrationMainPageComponent implements OnChanges, OnDestroy {
         Assertion.assertValue(event.payload, 'event.payload');
         Assertion.assertValue(event.payload.instrumentFields, 'event.payload.instruementFields');
 
-        this.updateInstrument(event.payload.instrumentFields as InstrumentFields);
+        const commandType = isEmpty(this.instrumentRecording) ?
+          RegistrationCommandType.CREATE_INSTRUMENT_RECORDING :
+          RegistrationCommandType.UPDATE_RECORDED_INSTRUMENT;
+
+        const payload = {
+          transactionUID: this.transactionUID,
+          instrument: event.payload.instrumentFields as InstrumentFields
+        };
+
+        this.executeCommand(commandType, payload);
         return;
 
       default:
@@ -91,21 +105,17 @@ export class RegistrationMainPageComponent implements OnChanges, OnDestroy {
 
   // private methods
 
-  private updateInstrument(instrumentFields: InstrumentFields) {
-    let commandType = RegistrationCommandType.UPDATE_RECORDED_INSTRUMENT;
-    if (isEmpty(this.instrumentRecording)) {
-      commandType = RegistrationCommandType.CREATE_INSTRUMENT_RECORDING;
-    }
+  private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
+
+    this.submitted = true;
 
     const command: Command = {
       type: commandType,
-      payload: {
-        transactionUID: this.transactionUID,
-        instrument: instrumentFields
-      }
+      payload
     };
 
-    this.uiLayer.execute(command);
+    return this.uiLayer.execute<T>(command)
+      .finally(() => this.submitted = false);
   }
 
 }

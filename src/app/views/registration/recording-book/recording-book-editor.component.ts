@@ -164,6 +164,7 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
     }
 
     this.isLoading = true;
+    this.submitted = true;
 
     this.data.getRecordingBook(recordingBook.uid)
       .toPromise()
@@ -172,7 +173,10 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
         this.displayRecordingBookEditor = !isEmpty(this.recordingBookSelected);
         this.initTexts();
       })
-      .finally(() => this.isLoading = false);
+      .finally(() => {
+        this.isLoading = false;
+        this.submitted = false;
+      });
   }
 
 
@@ -185,6 +189,7 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
     };
 
     this.isLoading = true;
+    this.submitted = true;
 
     this.data.createBookEntry(this.recordingBookSelected.uid, bookEntryFields)
       .toPromise()
@@ -194,12 +199,14 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
       })
       .finally(() => {
         this.isLoading = false;
+        this.submitted = false;
       });
   }
 
 
   private deleteBookEntry(bookEntryUID: string){
     this.isLoading = true;
+    this.submitted = true;
 
     this.data.deleteBookEntry(this.recordingBookSelected.uid, bookEntryUID)
       .toPromise()
@@ -211,7 +218,10 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
             { bookEntry: EmptyBookEntryShortModel });
         }
       })
-      .finally(() => this.isLoading = false);
+      .finally(() => {
+        this.isLoading = false;
+        this.submitted = false;
+      });
   }
 
 

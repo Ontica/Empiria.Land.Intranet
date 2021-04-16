@@ -78,7 +78,6 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
   formHandler: FormHandler;
   controls = InstrumentFormControls;
   editionMode = false;
-  submitted = false;
   isLoading = false;
 
   instrumentKindsList: any[] = [];
@@ -133,17 +132,14 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
 
   submit() {
-    if (this.submitted || !this.formHandler.isReadyForSubmit) {
+    if (!this.formHandler.isReadyForSubmit) {
       this.formHandler.invalidateForm();
       return;
     }
 
-    this.submitted = true;
-
     this.sendEvent(this.addMode ? InstrumentEditorEventType.CREATE_INSTRUMENT :
                    InstrumentEditorEventType.UPDATE_INSTRUMENT,
                    this.getFormData());
-
   }
 
 
@@ -190,7 +186,7 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
       recordingNo: '' ,
       status: '',
     });
-    this.submitted = false;
+
     this.subscribeIssuerList();
   }
 
