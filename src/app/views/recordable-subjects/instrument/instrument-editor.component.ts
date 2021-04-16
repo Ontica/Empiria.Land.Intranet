@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -42,7 +42,7 @@ enum InstrumentFormControls {
   folio = 'folio',
   endFolio = 'endFolio',
   summary = 'summary',
-  recordingTime = 'recordingTime',
+  authorizationDate = 'authorizationDate',
   recordingNo = 'recordingNo',
   status = 'status',
 }
@@ -166,7 +166,7 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
         folio: new FormControl(''),
         endFolio: new FormControl(''),
         summary: new FormControl(''),
-        recordingTime: new FormControl(''),
+        authorizationDate: new FormControl(''),
         recordingNo: new FormControl(''),
         status: new FormControl(''),
       }));
@@ -186,8 +186,7 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
       folio: this.instrument.folio,
       endFolio: this.instrument.endFolio,
       summary: this.instrument.summary,
-
-      recordingTime: '',
+      authorizationDate: '',
       recordingNo: '' ,
       status: '',
     });
@@ -205,7 +204,7 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
         binderNo: this.instrument.binderNo,
         folio: this.instrument.folio,
         endFolio: this.instrument.endFolio,
-        recordingTime: '',
+        authorizationDate: '',
         recordingNo: '' ,
         status: '',
       });
@@ -217,7 +216,7 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
       this.formHandler.getControl(this.controls.binderNo).reset();
       this.formHandler.getControl(this.controls.folio).reset();
       this.formHandler.getControl(this.controls.endFolio).reset();
-      this.formHandler.getControl(this.controls.recordingTime).reset();
+      this.formHandler.getControl(this.controls.authorizationDate).reset();
       this.formHandler.getControl(this.controls.recordingNo).reset();
       this.formHandler.getControl(this.controls.status).reset();
     }
@@ -226,20 +225,20 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
   private setFormValidatorsByType(){
     if (this.showStatusField) {
-      this.formHandler.setControlValidators('status', Validators.required);
+      // this.formHandler.setControlValidators('status', Validators.required);
     }
 
     switch (this.typeSelected) {
       case 'Resumen':
         this.formHandler.clearControlValidators('sheetsCount');
         this.formHandler.setControlValidators('kind', Validators.required);
-        this.formHandler.setControlValidators('recordingTime', Validators.required);
+        this.formHandler.setControlValidators('authorizationDate', Validators.required);
         this.formHandler.setControlValidators('recordingNo', Validators.required);
         return;
 
       default:
         this.formHandler.clearControlValidators('kind');
-        this.formHandler.clearControlValidators('recordingTime');
+        this.formHandler.clearControlValidators('authorizationDate');
         this.formHandler.clearControlValidators('recordingNo');
         this.formHandler.setControlValidators('sheetsCount', [Validators.required, Validate.isPositive]);
         return;
@@ -266,7 +265,7 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
     const data: any = {
       instrumentFields: instrument,
-      recordingTime: formModel.recordingTime,
+      authorizationDate: formModel.authorizationDate,
       recordingNo: formModel.recordingNo,
       status: formModel.status
     };

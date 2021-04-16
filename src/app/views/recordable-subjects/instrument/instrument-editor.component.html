@@ -29,8 +29,8 @@
 
         <ng-container *ngIf="validateTypeSelected([InstrumentType.Resumen])">
           <label>Fecha de registro:</label>
-          <emp-ng-datepicker [formControlName]="controls.recordingTime"
-            [showError]="formHandler.showInvalidControl(controls.recordingTime)">
+          <emp-ng-datepicker [formControlName]="controls.authorizationDate"
+            [showError]="formHandler.showInvalidControl(controls.authorizationDate)">
 
           </emp-ng-datepicker>
         </ng-container>
@@ -213,6 +213,11 @@
         </emp-ng-text-editor>
       </div>
     </div>
+
+    <mat-divider *ngIf="actions.can.editInstrument || actions.show.registrationStamps || addMode"
+      class="divider-padding" >
+
+    </mat-divider>
 
     <div fxLayout="row">
 
