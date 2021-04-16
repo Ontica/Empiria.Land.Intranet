@@ -237,6 +237,10 @@ table.mat-table {
 
     &.mat-row {
       background-color: $white;
+
+      &.row-selected {
+        background-color: $selected-control-background-color;
+      }
     }
 
     &:hover .mat-cell {

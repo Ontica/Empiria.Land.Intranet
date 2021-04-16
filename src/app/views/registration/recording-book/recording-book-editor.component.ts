@@ -5,16 +5,20 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { Command } from '@app/core';
-import { PresentationLayer } from '@app/core/presentation';
-import { BookEntryShortModel, RecordingBook } from '@app/models';
-import { RegistrationAction, RegistrationCommandType } from '@app/presentation/exported.presentation.types';
+import { Component, EventEmitter, OnChanges, OnInit, Output } from '@angular/core';
+import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
+import { BookEntryShortModel, CreateManualBookEntryFields, EmptyRecordingBook, InstrumentFields,
+         RecordingBook, EmptyBookEntryShortModel } from '@app/models';
 import { BookEntryListEventType } from './book-entry-list.component';
 import {
   InstrumentEditorEventType
 } from '@app/views/recordable-subjects/instrument/instrument-editor.component';
+import { RecordingBookSelectorEventType } from './recording-book-selector.component';
+import { RecordingDataService } from '@app/data-services';
 
+export enum RecordingBookEditorEventType {
+  BOOK_ENTRY_SELECTED = 'RecordingBookEditorComponent.Event.BookEntrySelected',
+}
 
 @Component({
   selector: 'emp-land-recording-book-editor',
@@ -22,13 +26,11 @@ import {
 })
 export class RecordingBookEditorComponent implements OnInit, OnChanges {
 
-  @Input() recordingBook: RecordingBook;
+  @Output() recordingBookEditorEvent = new EventEmitter<EventInfo>();
 
-  @Output() closeEvent = new EventEmitter<void>();
+  cardHint = 'Seleccione el volumen';
 
-  cardTitle = 'Volumen';
-
-  cardHint: string;
+  isLoading = false;
 
   panelAddState = false;
 
@@ -36,20 +38,48 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
 
   statusList = [];
 
-  constructor(private uiLayer: PresentationLayer) { }
+  recordingBookSelected: RecordingBook = EmptyRecordingBook;
+
+  bookEntrySelected: BookEntryShortModel = EmptyBookEntryShortModel;
+
+  displayRecordingBookEditor = false;
+
+  constructor(private data: RecordingDataService ) { }
 
   ngOnInit(): void {
+    this.initTexts();
   }
+
 
   ngOnChanges() {
-    console.log('Recording Book Editor: ', this.recordingBook);
-    this.initTexts();
-    this.resetPanelState();
   }
 
-  onClose() {
-    this.closeEvent.emit();
+
+  onRecordingBookSelectorEvent(event){
+    switch (event.type as RecordingBookSelectorEventType) {
+
+      case RecordingBookSelectorEventType.RECORDING_BOOK_CHANGED:
+
+        Assertion.assertValue(event.payload.recordingBook, 'event.payload.recordingBook');
+
+        this.resetPanelState();
+
+        this.loadRecordingBookData(event.payload.recordingBook);
+
+        return;
+
+      case RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED:
+
+        this.sendEvent(RecordingBookEditorEventType.BOOK_ENTRY_SELECTED, event.payload);
+
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
   }
+
 
   onBookEntryListEvent(event) {
     if (this.submitted) {
@@ -60,21 +90,26 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
 
       case BookEntryListEventType.BOOK_ENTRY_CLICKED:
 
-        const bookEntry: BookEntryShortModel = {
+        Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
+        Assertion.assertValue(event.payload.bookEntry.instrumentRecording,
+          'event.payload.bookEntry.instrumentRecording');
+
+        this.bookEntrySelected = {
           uid: event.payload.bookEntry.uid,
           recordingNo: event.payload.bookEntry.recordingNo,
           instrumentRecordingUID: event.payload.bookEntry.instrumentRecording.uid,
         };
 
-        this.uiLayer.dispatch(RegistrationAction.SELECT_BOOK_ENTRY, { bookEntry } );
+        this.sendEvent(RecordingBookEditorEventType.BOOK_ENTRY_SELECTED,
+          { bookEntry: this.bookEntrySelected });
 
         return;
 
       case BookEntryListEventType.DELETE_BOOK_ENTRY_CLICKED:
 
-        // this.executeCommand<any>(RegistrationCommandType.DELETE_RECORDING_BOOK_ENTRY, event.payload);
+        Assertion.assertValue(event.payload.bookEntry.bookEntryUID, 'event.payload.bookEntry.bookEntryUID');
 
-        console.log('DELETE_RECORDING_BOOK_ENTRY', event);
+        this.deleteBookEntry(event.payload.bookEntry.bookEntryUID);
 
         return;
 
@@ -83,6 +118,7 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
         return;
     }
   }
+
 
   onInstrumentEditorEvent(event) {
     if (this.submitted) {
@@ -92,13 +128,10 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
     switch (event.type as InstrumentEditorEventType) {
 
       case InstrumentEditorEventType.CREATE_INSTRUMENT:
+        Assertion.assertValue(event.payload.instrumentFields, 'event.payload.instruementFields');
+        Assertion.assertValue(event.payload, 'event.payload');
 
-        // this.executeCommand<any>(RegistrationCommandType.ADD_RECORDING_BOOK, event.payload)
-        //   .then(x => this.resetPanelState());
-
-        console.log('CREATE_INSTRUMENT', event);
-
-        this.resetPanelState();
+        this.createBookEntry(event.payload);
 
         return;
 
@@ -108,26 +141,91 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
     }
   }
 
+
   private initTexts(){
-    this.cardTitle = `Volumen ${this.recordingBook.volumeNo},
-     ${this.recordingBook.recordingSection.name}, ${this.recordingBook.recorderOffice.name}`;
+    if (isEmpty(this.recordingBookSelected)) {
+      this.cardHint = 'Seleccione el volumen';
+      return;
+    }
+
+    this.cardHint = 'Volumen ' + this.recordingBookSelected.volumeNo + ', ' +
+      this.recordingBookSelected.recordingSection.name + ', ' +
+      this.recordingBookSelected.recorderOffice.name;
   }
+
+
+  private loadRecordingBookData(recordingBook: Identifiable){
+    if (isEmpty(recordingBook)) {
+      this.recordingBookSelected = EmptyRecordingBook;
+      this.displayRecordingBookEditor = false;
+      this.initTexts();
+
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.data.getRecordingBook(recordingBook.uid)
+      .toPromise()
+      .then(x => {
+        this.recordingBookSelected = x;
+        this.displayRecordingBookEditor = !isEmpty(this.recordingBookSelected);
+        this.initTexts();
+      })
+      .finally(() => this.isLoading = false);
+  }
+
+
+  private createBookEntry(data: any){
+    const bookEntryFields: CreateManualBookEntryFields = {
+      recordingNo: data.recordingNo,
+      instrument: data.instrumentFields as InstrumentFields,
+      authorizationDate: data.recordingTime,
+      presentationTime: '',
+    };
+
+    this.isLoading = true;
+
+    this.data.createBookEntry(this.recordingBookSelected.uid, bookEntryFields)
+      .toPromise()
+      .then(x => {
+        this.recordingBookSelected = x;
+        this.resetPanelState();
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
+  }
+
+
+  private deleteBookEntry(bookEntryUID: string){
+    this.isLoading = true;
+
+    this.data.deleteBookEntry(this.recordingBookSelected.uid, bookEntryUID)
+      .toPromise()
+      .then(x => {
+        this.recordingBookSelected = x;
+
+        if (bookEntryUID === this.bookEntrySelected.uid) {
+          this.sendEvent(RecordingBookEditorEventType.BOOK_ENTRY_SELECTED,
+            { bookEntry: EmptyBookEntryShortModel });
+        }
+      })
+      .finally(() => this.isLoading = false);
+  }
+
 
   private resetPanelState() {
     this.panelAddState = false;
   }
 
 
-  private executeCommand<T>(commandType: RegistrationCommandType, payload?: any): Promise<T> {
-    this.submitted = true;
-
-    const command: Command = {
-      type: commandType,
+  private sendEvent(eventType: RecordingBookEditorEventType, payload?: any) {
+    const event: EventInfo = {
+      type: eventType,
       payload
     };
 
-    return this.uiLayer.execute<T>(command)
-      .finally(() => this.submitted = false);
+    this.recordingBookEditorEvent.emit(event);
   }
-
 }
