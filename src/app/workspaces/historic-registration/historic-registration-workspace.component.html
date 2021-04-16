@@ -1,1 +1,52 @@
-Historic registration works!!!
+<div class="explorer" fxLayoutGap="32px">
+
+  <div *ngIf="displayFileViewer"
+    class="primary-resizable"
+    [ngClass.lt-lg]="'primary-resizable-disable'"
+    empNgResizable>
+
+    <emp-land-file-viewer
+      [fileViewerData]="selectedFileViewerData">
+
+    </emp-land-file-viewer>
+
+  </div>
+
+  <div class="primary"
+    [fxHide.lt-lg]="displayBookEntryEditor">
+
+    <emp-land-recording-book-editor
+      (recordingBookEditorEvent)="onRecordingBookEditorEvent($event)">
+
+    </emp-land-recording-book-editor>
+
+  </div>
+
+  <div *ngIf="displayBookEntryEditor"
+    class="secondary"
+    [fxHide]="displayRecordingActEditor"
+    [fxHide.lt-lg]="displayRecordingActEditor">
+
+    <emp-land-book-entry-editor
+      [bookEntryUID]="selectedBookEntry.uid"
+      [instrumentRecordingUID]="selectedBookEntry.instrumentRecordingUID"
+      (closeEvent)="unselectBookEntry()">
+
+    </emp-land-book-entry-editor>
+
+  </div>
+
+  <div *ngIf="displayRecordingActEditor"
+    class="secondary">
+
+    <emp-land-recordable-subject-tabbed-view
+      [instrumentRecording]="selectedRecordingAct.instrumentRecording"
+      [recordingAct]="selectedRecordingAct.recordingAct"
+      (closeEvent)="unselectCurrentRecordingAct()">
+
+    </emp-land-recordable-subject-tabbed-view>
+
+  </div>
+
+
+</div>

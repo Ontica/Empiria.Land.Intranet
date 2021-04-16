@@ -5,11 +5,66 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Assertion, isEmpty } from '@app/core';
+import { BookEntryShortModel, EmptyBookEntryShortModel, EmptySelectionAct, SelectionAct } from '@app/models';
+import { EmptyFileViewerData,
+         FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
+import {
+  RecordingBookEditorEventType
+} from '@app/views/registration/recording-book/recording-book-editor.component';
 
 
 @Component({
   selector: 'emp-land-hsitoric-registration',
   templateUrl: './historic-registration-workspace.component.html'
 })
-export class HistoricRegistrationWorkspaceComponent {}
+export class HistoricRegistrationWorkspaceComponent implements OnInit, OnDestroy {
+
+  selectedBookEntry: BookEntryShortModel = EmptyBookEntryShortModel;
+  selectedFileViewerData: FileViewerData = EmptyFileViewerData;
+  selectedRecordingAct: SelectionAct = EmptySelectionAct;
+
+  displayBookEntryEditor = false;
+  displayFileViewer = false;
+  displayRecordingActEditor = false;
+
+  constructor() {}
+
+
+  ngOnInit() {}
+
+
+  ngOnDestroy() {}
+
+
+  onRecordingBookEditorEvent(event) {
+    switch (event.type as RecordingBookEditorEventType) {
+
+      case RecordingBookEditorEventType.BOOK_ENTRY_SELECTED:
+        Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
+
+        this.selectedBookEntry = event.payload.bookEntry;
+        this.displayBookEntryEditor = !isEmpty(this.selectedBookEntry);
+        this.unselectCurrentRecordingAct();
+
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
+  }
+
+  unselectBookEntry(){
+    this.selectedBookEntry = EmptyBookEntryShortModel;
+    this.displayBookEntryEditor = false;
+  }
+
+
+  unselectCurrentRecordingAct() {
+    this.selectedRecordingAct = EmptySelectionAct;
+    this.displayRecordingActEditor = false;
+  }
+
+}

@@ -36,7 +36,7 @@
   <div *ngIf="displayTransactionTabbedView"
     class="secondary"
     [fxHide]="secondaryEditorDisplayed"
-    [fxHide.lt-lg]="secondaryEditorDisplayed || displayFileViewer" >
+    [fxHide.lt-lg]="secondaryEditorDisplayed || displayFileViewer">
 
     <emp-land-transaction-tabbed-view
         [transaction]="selectedTransaction"
@@ -58,7 +58,7 @@
 
   </div>
 
-  <div *ngIf="displayRecordingBookEditor"
+  <!-- <div *ngIf="displayRecordingBookEditor"
     class="secondary"
     [fxHide]="displayBookEntryEditor">
 
@@ -81,7 +81,7 @@
 
     </emp-land-book-entry-editor>
 
-  </div>
+  </div> -->
 
 </div>
 

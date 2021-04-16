@@ -11,7 +11,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { HistoricRegistrationWorkspaceComponent } from './historic-registration-workspace.component';
 
-import { HsitoricRegistrationWorkspaceRoutingModule } from './historic-registration-workspace-routing.module';
+import { HistoricRegistrationWorkspaceRoutingModule } from './historic-registration-workspace-routing.module';
+import { SharedModule } from '@app/shared/shared.module';
+import { RegistrationModule } from '@app/views/registration/registration.module';
+import { RecordableSubjectsModule } from '@app/views/recordable-subjects/recordable-subjects.module';
+import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
+import { LandControlsModule } from '@app/views/land-controls/land.controls.module';
 
 
 @NgModule({
@@ -19,8 +24,13 @@ import { HsitoricRegistrationWorkspaceRoutingModule } from './historic-registrat
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    AngularFlexLayoutModule,
 
-    HsitoricRegistrationWorkspaceRoutingModule
+    HistoricRegistrationWorkspaceRoutingModule,
+    SharedModule,
+    LandControlsModule,
+    RegistrationModule,
+    RecordableSubjectsModule,
   ],
 
   declarations: [
