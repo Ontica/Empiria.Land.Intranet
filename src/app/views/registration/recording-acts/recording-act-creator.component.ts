@@ -12,7 +12,7 @@ import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap 
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Assertion, Command, EventInfo } from '@app/core';
+import { Assertion, Command } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { EmptyInstrumentRecording, EmptyRegistrationCommandRule, InstrumentRecording,
@@ -20,8 +20,7 @@ import { EmptyInstrumentRecording, EmptyRegistrationCommandRule, InstrumentRecor
          RegistrationCommand, RegistrationCommandConfig, RegistrationCommandRule } from '@app/models';
 
 import { RegistrationCommandType,
-         RecordableSubjectsStateSelector,
-         RegistrationAction} from '@app/presentation/exported.presentation.types';
+         RecordableSubjectsStateSelector} from '@app/presentation/exported.presentation.types';
 
 import { FormHandler } from '@app/shared/utils';
 
@@ -60,8 +59,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   subjectMinTermLength = 5;
 
   partitionKindList: any[] = [];
-
-  showSeeker = false;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
@@ -219,8 +216,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   private validateSubjectField(){
-    this.showSeeker = false;
-
     this.formHandler.getControl(this.controls.subject).reset();
 
     if (this.registrationCommandRules.selectSubject) {
