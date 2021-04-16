@@ -63,18 +63,6 @@ export class BookEntryEditorComponent implements OnChanges, OnDestroy {
       this.bookEntry.recordingActs : this.instrumentRecording.recordingActs;
   }
 
-  initLoad(){
-    this.isLoading = true;
-    this.helper.select<InstrumentRecording>(RegistrationStateSelector.INSTRUMENT_RECORDING,
-      { instrumentRecordingUID: this.instrumentRecordingUID })
-      .subscribe(x => {
-        this.instrumentRecording = x;
-        this.setBookEntry();
-        this.initTexts();
-        this.isLoading = false;
-      });
-  }
-
 
   onClose() {
     this.closeEvent.emit();
@@ -101,6 +89,19 @@ export class BookEntryEditorComponent implements OnChanges, OnDestroy {
         console.log(`Unhandled user interface event ${event.type}`);
         return;
     }
+  }
+
+
+  private initLoad(){
+    this.isLoading = true;
+    this.helper.select<InstrumentRecording>(RegistrationStateSelector.INSTRUMENT_RECORDING,
+      { instrumentRecordingUID: this.instrumentRecordingUID })
+      .subscribe(x => {
+        this.instrumentRecording = x;
+        this.setBookEntry();
+        this.initTexts();
+        this.isLoading = false;
+      });
   }
 
 
