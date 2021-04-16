@@ -66,6 +66,16 @@ export class RecordingDataService {
   }
 
 
+  deleteBookEntry(recordingBookUID: string, bookEntryUID: string): Observable<RecordingBook> {
+    Assertion.assertValue(recordingBookUID, 'recordingBookUID');
+    Assertion.assertValue(bookEntryUID, 'bookEntryUID');
+
+    const path = `v5/land/registration/recording-books/${recordingBookUID}/book-entries/${bookEntryUID}`;
+
+    return this.http.delete<RecordingBook>(path);
+  }
+
+
   createTransactionInstrumentRecording(transactionUID: string,
                                        instrument: InstrumentFields): Observable<InstrumentRecording> {
     Assertion.assertValue(transactionUID, 'transactionUID');
