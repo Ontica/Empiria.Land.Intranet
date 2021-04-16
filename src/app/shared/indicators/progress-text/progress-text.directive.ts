@@ -47,7 +47,9 @@ export class ProgressTextDirective implements OnChanges, OnDestroy {
     if (this.isLoading) {
       this.setEllipsis(this.loadingText || 'Cargando');
     } else {
-      this.subscription.unsubscribe();
+      if (this.subscription) {
+        this.subscription.unsubscribe();
+      }
       this.el.nativeElement.innerText = this.finalText || this.originalInnerText || 'Finalizado';
     }
   }
