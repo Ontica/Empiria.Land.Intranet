@@ -6,6 +6,7 @@
  */
 
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
 
 import { Assertion, Cache, toObservable } from '@app/core';
@@ -28,8 +29,6 @@ export enum SelectorType {
   REAL_ESTATE_LOT_SIZE_UNIT_LIST  = 'Land.RecordableSubjects.Selector.RealEstateLoteSizeUnit.List',
   RECORDING_BOOKS_LIST            = 'Land.RecordableSubjects.Selector.RecordingBooks.List',
   RECORDING_BOOK_ENTRIES_LIST     = 'Land.RecordableSubjects.Selector.RecordingBookEntries.List',
-  RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT =
-    'Land.RecordableSubjects.Selector.RecordingActTypesForInstrument.List',
   RECORDABLE_SUBJECTS_LIST        = 'Land.RecordableSubjects.Selector.RecordableSubjects.List',
 }
 
@@ -125,11 +124,6 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
         Assertion.assertValue(params.recordingBookUID, 'params.recordingBookUID');
 
         return toObservable<U>(this.data.getRecordingBookEntries(params.recordingBookUID));
-
-      case SelectorType.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT:
-        Assertion.assertValue(params.instrumentUID, 'params.instrumentUID');
-
-        return toObservable<U>(this.data.getRecordingActTypesForInstrument(params.instrumentUID));
 
       case SelectorType.RECORDABLE_SUBJECTS_LIST:
         Assertion.assertValue(params.type, 'params.type');

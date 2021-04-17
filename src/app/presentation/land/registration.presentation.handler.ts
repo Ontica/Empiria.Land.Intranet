@@ -20,6 +20,8 @@ import { RecordingDataService } from '@app/data-services';
 
 
 export enum ActionType {
+  SELECT_TRANSACTION_INSTRUMENT_RECORDINGT = 'Land.Registration.Action.SelectTransactionInstrumentRecording',
+  UNSELECT_TRANSACTION_INSTRUMENT_RECORDING = 'Land.Registration.Action.UnselectTransactionInstrumentRecording',
   SELECT_RECORDING_ACT =    'Land.Registration.Action.SelectRecordingAct',
   UNSELECT_RECORDING_ACT =  'Land.Registration.Action.UnselectRecordingAct',
   SELECT_RECORDING_BOOK =   'Land.Registration.Action.SelectRecordingBook',
@@ -35,14 +37,16 @@ export enum SelectorType {
   SELECTED_RECORDING_BOOK          = 'Land.Registration.Selector.SelectedRecordingBook',
   SELECTED_BOOK_ENTRY              = 'Land.Registration.Selector.SelectedBookEntry',
   INSTRUMENT_RECORDING             = 'Land.Registration.Selector.InstrumentRecording',
+  RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT =
+    'Land.RecordableSubjects.Selector.RecordingActTypesForInstrument.List',
 }
 
 
 export enum CommandType {
   CREATE_INSTRUMENT_RECORDING = 'Land.Registration.Create.Instrument',
   UPDATE_RECORDED_INSTRUMENT  = 'Land.Registration.Update.Instrument',
-  CREATE_RECORDING_ACT        = 'Land.Registration.Create.RecordingAct',
-  DELETE_RECORDING_ACT        = 'Land.Registration.Delete.RecordingAct',
+  APPEND_RECORDING_ACT        = 'Land.Registration.Append.RecordingAct',
+  REMOVE_RECORDING_ACT        = 'Land.Registration.Remove.RecordingAct',
   UPDATE_RECORDABLE_SUBJECT   = 'Land.Registration.Update.RecordableSubject',
   CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY = 'Land.Registration.Create.InstrumentRecordingBookEntry',
   DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY = 'Land.Registration.Delete.InstrumentRecordingBookEntry'
@@ -53,8 +57,8 @@ export enum EffectType {
   CREATE_INSTRUMENT_RECORDING = CommandType.CREATE_INSTRUMENT_RECORDING,
   UPDATE_RECORDED_INSTRUMENT  = CommandType.UPDATE_RECORDED_INSTRUMENT,
 
-  CREATE_RECORDING_ACT        = CommandType.CREATE_RECORDING_ACT,
-  DELETE_RECORDING_ACT        = CommandType.DELETE_RECORDING_ACT,
+  APPEND_RECORDING_ACT        = CommandType.APPEND_RECORDING_ACT,
+  REMOVE_RECORDING_ACT        = CommandType.REMOVE_RECORDING_ACT,
 
   UPDATE_RECORDABLE_SUBJECT   = CommandType.UPDATE_RECORDABLE_SUBJECT,
 
@@ -88,21 +92,15 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
   select<U>(selectorType: SelectorType, params?: any): Observable<U> {
     switch (selectorType) {
 
-      case SelectorType.TRANSACTION_INSTRUMENT_RECORDING:
-        Assertion.assertValue(params, 'params');
-
-        const transactionUID = params;
-
-        const value = this.data.getTransactionInstrumentRecording(transactionUID);
-
-        super.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, value);
-
-        return super.select<U>(selectorType);
-
       case SelectorType.INSTRUMENT_RECORDING:
         Assertion.assertValue(params.instrumentRecordingUID, 'params.instrumentRecordingUID');
 
         return toObservable<U>(this.data.getInstrumentRecording(params.instrumentRecordingUID));
+
+      case SelectorType.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT:
+        Assertion.assertValue(params.instrumentUID, 'params.instrumentUID');
+
+        return toObservable<U>(this.data.getRecordingActTypesForInstrument(params.instrumentUID));
 
       default:
         return super.select<U>(selectorType, params);
@@ -116,8 +114,8 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
 
       case EffectType.CREATE_INSTRUMENT_RECORDING:
       case EffectType.UPDATE_RECORDED_INSTRUMENT:
-      case EffectType.CREATE_RECORDING_ACT:
-      case EffectType.DELETE_RECORDING_ACT:
+      case EffectType.APPEND_RECORDING_ACT:
+      case EffectType.REMOVE_RECORDING_ACT:
       case EffectType.CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY:
       case EffectType.DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY:
         this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, params.result);
@@ -160,15 +158,15 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
                                                          command.payload.instrument)
         );
 
-      case CommandType.CREATE_RECORDING_ACT:
+      case CommandType.APPEND_RECORDING_ACT:
         return toPromise<U>(
-          this.data.createRecordingAct(command.payload.instrumentRecordingUID,
+          this.data.appendRecordingAct(command.payload.instrumentRecordingUID,
                                        command.payload.registrationCommand)
         );
 
-      case CommandType.DELETE_RECORDING_ACT:
+      case CommandType.REMOVE_RECORDING_ACT:
         return toPromise<U>(
-          this.data.deleteRecordingAct(command.payload.instrumentRecordingUID,
+          this.data.removeRecordingAct(command.payload.instrumentRecordingUID,
                                        command.payload.recordingActUID)
         );
 
@@ -200,6 +198,16 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
   dispatch(actionType: ActionType, params?: any): void {
     switch (actionType) {
 
+      case ActionType.SELECT_TRANSACTION_INSTRUMENT_RECORDINGT:
+        Assertion.assertValue(params.transactionUID, 'params.transactionUID');
+        super.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING,
+                       this.data.getTransactionInstrumentRecording(params.transactionUID));
+        return;
+
+      case ActionType.UNSELECT_TRANSACTION_INSTRUMENT_RECORDING:
+        this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, EmptySelectionAct);
+        return;
+
       case ActionType.SELECT_RECORDING_ACT:
         Assertion.assertValue(params.instrumentRecording, 'payload.instrumentRecording');
         Assertion.assertValue(params.recordingAct, 'payload.recordingAct');
@@ -207,12 +215,11 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         return;
 
       case ActionType.UNSELECT_RECORDING_ACT:
-        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptySelectionAct);
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptyInstrumentRecording);
         return;
 
       case ActionType.SELECT_RECORDING_BOOK:
         Assertion.assertValue(params.recordingBookUID, 'payload.recordingBookUID');
-
         this.setValue(SelectorType.SELECTED_RECORDING_BOOK,
                       this.data.getRecordingBook(params.recordingBookUID));
 
