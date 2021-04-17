@@ -14,6 +14,7 @@ import { BookEntryShortModel, EmptyBookEntryShortModel, EmptyRecordingBook, Empt
 
 import { EmptyFileViewerData,
          FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
+import { BookEntryEditorEventType } from '@app/views/registration/recording-book/book-entry-editor.component';
 
 import {
   RecordingBookEditorEventType
@@ -69,6 +70,25 @@ export class HistoricRegistrationWorkspaceComponent implements OnInit, OnDestroy
         return;
     }
   }
+
+
+  onBookEntryEditorEvent(event) {
+    switch (event.type as BookEntryEditorEventType) {
+
+      case BookEntryEditorEventType.RECORDING_ACT_SELECTED:
+        Assertion.assertValue(event.payload.recordingActSelect, 'event.payload.recordingActSelect');
+
+        this.selectedRecordingAct = event.payload.recordingActSelect;
+        this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct.recordingAct);
+
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
+  }
+
 
   unselectBookEntry(){
     this.selectedBookEntry = EmptyBookEntryShortModel;

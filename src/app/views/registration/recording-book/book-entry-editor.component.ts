@@ -22,6 +22,11 @@ import { RecordingActCreatorEventType } from '../recording-acts/recording-act-cr
 
 import { RecordingActsListEventType } from '../recording-acts/recording-acts-list.component';
 
+export enum BookEntryEditorEventType {
+  RECORDING_ACT_SELECTED = 'BookEntryEditorComponent.Event.RecordingActSelected',
+}
+
+
 @Component({
   selector: 'emp-land-book-entry-editor',
   templateUrl: './book-entry-editor.component.html',
@@ -33,6 +38,8 @@ export class BookEntryEditorComponent implements OnChanges {
   @Input() bookEntryUID: string;
 
   @Input() instrumentRecordingUID: string;
+
+  @Output() bookEntryEditorEvent = new EventEmitter<EventInfo>();
 
   @Output() closeEvent = new EventEmitter<void>();
 
@@ -118,7 +125,8 @@ export class BookEntryEditorComponent implements OnChanges {
 
     switch (event.type as RecordingActsListEventType) {
       case RecordingActsListEventType.SELECT_RECORDING_ACT:
-        console.log('SELECT_RECORDING_ACT', event);
+        this.sendEvent(BookEntryEditorEventType.RECORDING_ACT_SELECTED,
+          {'recordingActSelect': event.payload});
 
         return;
 
@@ -217,6 +225,16 @@ export class BookEntryEditorComponent implements OnChanges {
   private setSubmited(submitted: boolean) {
     this.isLoading = submitted;
     this.submitted = submitted;
+  }
+
+
+  private sendEvent(eventType: BookEntryEditorEventType, payload?: any) {
+    const event: EventInfo = {
+      type: eventType,
+      payload
+    };
+
+    this.bookEntryEditorEvent.emit(event);
   }
 
 }

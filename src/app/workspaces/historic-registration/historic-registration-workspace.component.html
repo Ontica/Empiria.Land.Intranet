@@ -31,6 +31,7 @@
       [recordingBookUID]="selectedRecordingBook.uid"
       [bookEntryUID]="selectedBookEntry.uid"
       [instrumentRecordingUID]="selectedBookEntry.instrumentRecordingUID"
+      (bookEntryEditorEvent)="onBookEntryEditorEvent($event)"
       (closeEvent)="unselectBookEntry()">
 
     </emp-land-book-entry-editor>
