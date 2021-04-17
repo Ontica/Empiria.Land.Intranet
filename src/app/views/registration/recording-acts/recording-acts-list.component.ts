@@ -6,24 +6,28 @@
  */
 
 
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Command, PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-import { RegistrationAction, RegistrationCommandType } from '@app/core/presentation/presentation-types';
+import { EventInfo } from '@app/core';
 
 import { EmptyInstrumentRecording, InstrumentRecording, RecordingAct, SelectionAct } from '@app/models';
+
 import { AlertService } from '@app/shared/containers/alert/alert.service';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
+export enum RecordingActsListEventType {
+  REMOVE_RECORDING_ACT = 'RecordingActsListComponent.Event.RemoveRecordingAct',
+  SELECT_RECORDING_ACT = 'RecordingActsListComponent.Event.SelectRecordingAct',
+}
 
 @Component({
   selector: 'emp-land-recording-acts-list',
   templateUrl: './recording-acts-list.component.html',
 })
-export class RecordingActsListComponent implements OnChanges, OnDestroy {
+export class RecordingActsListComponent implements OnChanges {
 
   @Input() instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
 
@@ -33,9 +37,7 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
   @Input() title = 'Actos jurídicos contenidos en el documento';
 
-  helper: SubscriptionHelper;
-
-  submitted = false;
+  @Output() recordingActsListEvent = new EventEmitter<EventInfo>();
 
   dataSource: MatTableDataSource<RecordingAct>;
 
@@ -45,10 +47,8 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
   displayedColumns = [...this.displayedColumnsDefault];
 
 
-  constructor(private uiLayer: PresentationLayer,
-              private messageBox: MessageBoxService,
+  constructor(private messageBox: MessageBoxService,
               private alertService: AlertService) {
-    this.helper = uiLayer.createSubscriptionHelper();
   }
 
 
@@ -61,14 +61,9 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
   }
 
 
-  ngOnDestroy() {
-    this.helper.destroy();
-  }
-
-
   onOpenRecordingActEditor(recordingAct: RecordingAct) {
     const selectionAct: SelectionAct = { instrumentRecording: this.instrumentRecording, recordingAct };
-    this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_ACT, selectionAct );
+    this.sendEvent(RecordingActsListEventType.SELECT_RECORDING_ACT, selectionAct);
   }
 
 
@@ -79,25 +74,20 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
 
 
   removeRecordingAct(recordingAct: RecordingAct) {
-    if (!this.submitted) {
-      const message = this.getConfirmMessage(recordingAct);
+    const message = this.getConfirmMessage(recordingAct);
 
-      this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
-        .toPromise()
-        .then(x => {
-          if (x) {
-            this.submitted = true;
+    this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
+      .toPromise()
+      .then(x => {
+        if (x) {
+          const payload = {
+            instrumentRecordingUID: this.instrumentRecording.uid,
+            recordingActUID: recordingAct.uid
+          };
 
-            const payload = {
-              instrumentRecordingUID: this.instrumentRecording.uid,
-              recordingActUID: recordingAct.uid
-            };
-
-            this.executeCommand(RegistrationCommandType.DELETE_RECORDING_ACT, payload)
-                .then(() => this.submitted = false);
-          }
-        });
-    }
+          this.sendEvent(RecordingActsListEventType.REMOVE_RECORDING_ACT, payload);
+        }
+      });
   }
 
 
@@ -135,13 +125,13 @@ export class RecordingActsListComponent implements OnChanges, OnDestroy {
   }
 
 
-  private executeCommand<T>(commandType: RegistrationCommandType, payload?: any): Promise<T> {
-    const command: Command = {
-      type: commandType,
+  private sendEvent(eventType: RecordingActsListEventType, payload?: any) {
+    const event: EventInfo = {
+      type: eventType,
       payload
     };
 
-    return this.uiLayer.execute<T>(command);
+    this.recordingActsListEvent.emit(event);
   }
 
 }

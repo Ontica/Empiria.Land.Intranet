@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -57,7 +57,7 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
   @Input() actions: InstrumentRecordingActions = EmptyInstrumentRecordingActions;
 
-  @Input() addMode = false; // TODO: improve this input name
+  @Input() addMode = false;
 
   @Input() showStatusField = false;
 
@@ -147,7 +147,6 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
     this.sendEvent(InstrumentEditorEventType.PRINT_REGISTRATION_STAMP_MEDIA);
   }
 
-  // private members
 
   private initForm() {
     this.formHandler = new FormHandler(

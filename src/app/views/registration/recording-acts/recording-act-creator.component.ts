@@ -5,24 +5,29 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { concat, Observable, of, Subject } from 'rxjs';
+
 import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Assertion, Command } from '@app/core';
+import { Assertion, EventInfo } from '@app/core';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { EmptyInstrumentRecording, EmptyRegistrationCommandRule, InstrumentRecording,
          RecordableSubjectFilter, RecordableSubjectShortModel, RecordingActType, RecordingActTypeGroup,
          RegistrationCommand, RegistrationCommandConfig, RegistrationCommandRule } from '@app/models';
 
-import { RegistrationCommandType,
-         RecordableSubjectsStateSelector} from '@app/presentation/exported.presentation.types';
+import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
 import { FormHandler } from '@app/shared/utils';
+
+export enum RecordingActCreatorEventType {
+  APPEND_RECORDING_ACT = 'RecordingActCreatorComponent.Event.AppendRecordingAct',
+}
 
 enum RecordingActCreatorFormControls {
   recordingActTypeGroup = 'recordingActTypeGroup',
@@ -41,13 +46,15 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   @Input() instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
 
+  @Input() recordingActTypeGroupList: RecordingActTypeGroup[] = [];
+
+  @Output() recordingActCreatorEvent = new EventEmitter<EventInfo>();
+
   helper: SubscriptionHelper;
 
   formHandler: FormHandler;
   controls = RecordingActCreatorFormControls;
-  submitted = false;
 
-  recordingActTypeGroupList: RecordingActTypeGroup[] = [];
   recordingActTypeList: RecordingActType[] = [];
   registrationCommands: RegistrationCommandConfig[] = [];
 
@@ -118,7 +125,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   submitRecordingAct() {
-    if (this.submitted || !this.formHandler.validateReadyForSubmit()) {
+    if (!this.formHandler.validateReadyForSubmit()) {
       this.formHandler.invalidateForm();
       return;
     }
@@ -140,7 +147,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
       registrationCommand
     };
 
-    this.executeCommand(RegistrationCommandType.CREATE_RECORDING_ACT, payload);
+    this.sendEvent(RecordingActCreatorEventType.APPEND_RECORDING_ACT, payload);
   }
 
 
@@ -159,13 +166,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   private initLoad() {
-    this.helper.select<RecordingActTypeGroup[]>(
-      RecordableSubjectsStateSelector.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT,
-      { instrumentUID: this.instrumentRecording.instrument.uid })
-      .subscribe(x => {
-        this.recordingActTypeGroupList = x;
-      });
-
     this.helper.select<string[]>(RecordableSubjectsStateSelector.REAL_ESTATE_PARTITION_KIND_LIST)
       .subscribe(x => {
         this.partitionKindList = x.map(item => Object.create({ name: item }));
@@ -259,16 +259,13 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
-    this.submitted = true;
-
-    const command: Command = {
-      type: commandType,
+  private sendEvent(eventType: RecordingActCreatorEventType, payload?: any) {
+    const event: EventInfo = {
+      type: eventType,
       payload
     };
 
-    return this.uiLayer.execute<T>(command)
-      .finally(() => this.submitted = false);
+    this.recordingActCreatorEvent.emit(event);
   }
 
 }
