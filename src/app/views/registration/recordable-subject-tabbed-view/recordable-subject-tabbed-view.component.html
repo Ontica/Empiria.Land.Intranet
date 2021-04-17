@@ -12,7 +12,8 @@
         [instrumentRecording]="instrumentRecording"
         [recordingAct]="recordingAct"
         [realEstate]="realEstate"
-        [readonly]="false">
+        [readonly]="false"
+        (realEstateEditorEvent)="onRealEstateEditorEvent($event)">
       </emp-land-real-estate-editor>
 
       <emp-land-no-property-editor *ngIf="isAssociation || isNoProperty"
@@ -20,7 +21,8 @@
         [recordingAct]="recordingAct"
         [recordableSubject]="recordingAct.recordableSubject"
         [isAssociation]="isAssociation"
-        [readonly]="false">
+        [readonly]="false"
+        (noPropertyEditorEvent)="onNoPropertyEditorEvent($event)">
 
       </emp-land-no-property-editor>
 

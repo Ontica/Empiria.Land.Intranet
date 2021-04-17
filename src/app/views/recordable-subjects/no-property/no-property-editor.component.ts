@@ -5,16 +5,25 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Assertion, Command, isEmpty } from '@app/core';
+
+import { Assertion, EventInfo, isEmpty } from '@app/core';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
 import { InstrumentRecording, RecorderOffice, RecordingAct } from '@app/models';
+
 import { RecordableSubject, RecordableSubjectStatusList } from '@app/models/recordable-subjects';
-import { RecordableSubjectsStateSelector,
-         RegistrationCommandType } from '@app/presentation/exported.presentation.types';
+
+import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
+
 import { FormHandler } from '@app/shared/utils';
 
+export enum NoPropertyEditorComponentEventType {
+  UPDATE_NO_PROPERTY = 'NoPropertyEditorComponent.Event.UpdateNoProperty',
+}
 
 enum NoPropertyEditorFormControls {
   electronicID = 'electronicID',
@@ -23,6 +32,7 @@ enum NoPropertyEditorFormControls {
   name = 'name',
   status = 'status',
 }
+
 
 @Component({
   selector: 'emp-land-no-property-editor',
@@ -35,6 +45,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() recordableSubject: RecordableSubject;
   @Input() isAssociation: boolean;
   @Input() readonly = false;
+  @Output() noPropertyEditorEvent = new EventEmitter<EventInfo>();
 
   noProperty: any = {};
 
@@ -43,7 +54,6 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
   formHandler: FormHandler;
   controls = NoPropertyEditorFormControls;
   editionMode = false;
-  submitted = false;
   isLoading = false;
 
   recorderOfficeList: RecorderOffice[] = [];
@@ -98,7 +108,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   submitForm() {
-    if (this.submitted || !this.formHandler.validateReadyForSubmit()) {
+    if (!this.formHandler.validateReadyForSubmit()) {
       this.formHandler.invalidateForm();
       return;
     }
@@ -109,7 +119,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
       recordableSubjectFields: this.getFormData()
     };
 
-    this.executeCommand(RegistrationCommandType.UPDATE_RECORDABLE_SUBJECT, payload);
+    this.sendEvent(NoPropertyEditorComponentEventType.UPDATE_NO_PROPERTY, payload);
   }
 
 
@@ -206,17 +216,13 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
     return data;
   }
 
-
-  private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
-    this.submitted = true;
-
-    const command: Command = {
-      type: commandType,
+  private sendEvent(eventType: NoPropertyEditorComponentEventType, payload?: any) {
+    const event: EventInfo = {
+      type: eventType,
       payload
     };
 
-    return this.uiLayer.execute<T>(command)
-      .finally(() => this.submitted = false);
+    this.noPropertyEditorEvent.emit(event);
   }
 
 }

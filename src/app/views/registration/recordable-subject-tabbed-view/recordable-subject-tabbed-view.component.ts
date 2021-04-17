@@ -5,16 +5,30 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+
+import { Assertion, Command } from '@app/core';
+
+import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { InstrumentRecording, RealEstate, RecordingAct } from '@app/models';
+
+import { RegistrationCommandType } from '@app/presentation/exported.presentation.types';
+
+import {
+  NoPropertyEditorComponentEventType
+} from '@app/views/recordable-subjects/no-property/no-property-editor.component';
+
+import {
+  RealEstateEditorComponentEventType
+} from '@app/views/recordable-subjects/real-estate/real-estate-editor.component';
 
 
 @Component({
   selector: 'emp-land-recordable-subject-tabbed-view',
   templateUrl: './recordable-subject-tabbed-view.component.html',
 })
-export class RecordableSubjectTabbedViewComponent implements OnInit, OnChanges {
+export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestroy {
 
   @Input() instrumentRecording: InstrumentRecording;
 
@@ -22,22 +36,28 @@ export class RecordableSubjectTabbedViewComponent implements OnInit, OnChanges {
 
   @Output() closeEvent = new EventEmitter<void>();
 
+  helper: SubscriptionHelper;
+
   cardTitle = 'Visor y editor';
 
   cardHint: string;
 
   tabEditorLabel = 'Datos del predio';
 
-  constructor() {
-  }
+  submitted = false;
 
-
-  ngOnInit(): void {
+  constructor(private uiLayer: PresentationLayer) {
+    this.helper = uiLayer.createSubscriptionHelper();
   }
 
 
   ngOnChanges() {
     this.initTexts();
+  }
+
+
+  ngOnDestroy() {
+    this.helper.destroy();
   }
 
 
@@ -66,6 +86,47 @@ export class RecordableSubjectTabbedViewComponent implements OnInit, OnChanges {
   }
 
 
+  onRealEstateEditorEvent(event) {
+    if (this.submitted) {
+      return;
+    }
+
+    switch (event.type as RealEstateEditorComponentEventType) {
+      case RealEstateEditorComponentEventType.UPDATE_REAL_ESTATE:
+        this.updateRecordableSubject(event.payload);
+        return;
+
+      default:
+        throw Assertion.assertNoReachThisCode(`Unrecoginzed event ${event.type}.`);
+    }
+  }
+
+
+  onNoPropertyEditorEvent(event) {
+    if (this.submitted) {
+      return;
+    }
+
+    switch (event.type as NoPropertyEditorComponentEventType) {
+      case NoPropertyEditorComponentEventType.UPDATE_NO_PROPERTY:
+        this.updateRecordableSubject(event.payload);
+        return;
+
+      default:
+        throw Assertion.assertNoReachThisCode(`Unrecoginzed event ${event.type}.`);
+    }
+  }
+
+
+  private updateRecordableSubject(data: any) {
+    Assertion.assertValue(data.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
+    Assertion.assertValue(data.recordingActUID, 'event.payload.recordingActUID');
+    Assertion.assertValue(data.recordableSubjectFields, 'event.payload.recordableSubjectFields');
+
+    this.executeCommand(RegistrationCommandType.UPDATE_RECORDABLE_SUBJECT, data);
+  }
+
+
   private initTexts(){
     this.cardTitle = 'Visor y editor de predios';
     this.setTitleText();
@@ -91,8 +152,6 @@ export class RecordableSubjectTabbedViewComponent implements OnInit, OnChanges {
 
   private setCardHint() {
     this.cardHint = `<strong>${this.recordingAct.recordableSubject.electronicID}</strong>`;
-      // &nbsp; &nbsp; | &nbsp; &nbsp; <strong> ${this.recordingAct.name} </strong> &nbsp; &nbsp;` +
-      //     ` | ${this.recordingAct.type.name}`;
   }
 
 
@@ -108,6 +167,19 @@ export class RecordableSubjectTabbedViewComponent implements OnInit, OnChanges {
     }
 
     this.tabEditorLabel = 'Información';
+  }
+
+
+  private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
+    this.submitted = true;
+
+    const command: Command = {
+      type: commandType,
+      payload
+    };
+
+    return this.uiLayer.execute<T>(command)
+      .finally(() => this.submitted = false);
   }
 
 }

@@ -5,18 +5,26 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,
+         SimpleChanges } from '@angular/core';
+
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Assertion, Command, Identifiable, isEmpty } from '@app/core';
+import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
 import { EmptyRealEstate, InstrumentRecording, RealEstate, RecorderOffice, RecordingAct } from '@app/models';
+
 import { RealEstateFields, RecordableSubjectStatusList } from '@app/models/recordable-subjects';
-import { RecordableSubjectsStateSelector,
-         RegistrationCommandType } from '@app/presentation/exported.presentation.types';
+
+import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
 import { ArrayLibrary, FormHandler } from '@app/shared/utils';
 
+export enum RealEstateEditorComponentEventType {
+  UPDATE_REAL_ESTATE = 'RealEstateEditorComponent.Event.UpdateRealEstate',
+}
 
 enum RealEstateEditorFormControls {
   electronicID = 'electronicID',
@@ -44,15 +52,14 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() instrumentRecording: InstrumentRecording;
   @Input() recordingAct: RecordingAct;
   @Input() realEstate: RealEstate = EmptyRealEstate;
-
   @Input() readonly = false;
+  @Output() realEstateEditorEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;
 
   formHandler: FormHandler;
   controls = RealEstateEditorFormControls;
   editionMode = false;
-  submitted = false;
   isLoading = false;
 
   recorderOfficeList: RecorderOffice[] = [];
@@ -115,7 +122,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   onCadastralClicked() {
-    if (!this.editionMode || this.submitted) {
+    if (!this.editionMode) {
       return;
     }
 
@@ -134,7 +141,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   submitForm() {
-    if (this.submitted || !this.formHandler.validateReadyForSubmit()) {
+    if (!this.formHandler.validateReadyForSubmit()) {
       this.formHandler.invalidateForm();
       return;
     }
@@ -145,7 +152,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       recordableSubjectFields: this.getFormData()
     };
 
-    this.executeCommand(RegistrationCommandType.UPDATE_RECORDABLE_SUBJECT, payload);
+    this.sendEvent(RealEstateEditorComponentEventType.UPDATE_REAL_ESTATE, payload);
   }
 
 
@@ -205,10 +212,13 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   private loadDataLists() {
+    this.isLoading = true;
+
     this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
       .subscribe(x => {
         this.recorderOfficeList = x;
         this.setRecorderOfficeAndMunicipalityDataList();
+        this.isLoading = false;
       });
 
     this.helper.select<string[]>(RecordableSubjectsStateSelector.REAL_ESTATE_KIND_LIST)
@@ -302,16 +312,13 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
-    this.submitted = true;
-
-    const command: Command = {
-      type: commandType,
+  private sendEvent(eventType: RealEstateEditorComponentEventType, payload?: any) {
+    const event: EventInfo = {
+      type: eventType,
       payload
     };
 
-    return this.uiLayer.execute<T>(command)
-      .finally(() => this.submitted = false);
+    this.realEstateEditorEvent.emit(event);
   }
 
 }
