@@ -31,7 +31,8 @@
 
   <emp-land-recording-acts-list
     [instrumentRecording]="instrumentRecording"
-    [recordingActs]="instrumentRecording.recordingActs">
+    [recordingActs]="instrumentRecording.recordingActs"
+    (recordingActsListEvent)="onRecordingActsListEvent($event)">
   </emp-land-recording-acts-list>
 
   <emp-ng-expansion-button *ngIf="actions.can.editRecordingActs"
@@ -40,7 +41,9 @@
                textButtonClose: 'Cancelar agregar registro'}">
 
     <emp-land-recording-act-creator *ngIf="panelAddState"
-      [instrumentRecording]="instrumentRecording">
+      [instrumentRecording]="instrumentRecording"
+      [recordingActTypeGroupList]="recordingActTypeGroupList"
+      (recordingActCreatorEvent)="onRecordingActCreatorEvent($event)">
     </emp-land-recording-act-creator>
 
   </emp-ng-expansion-button>
