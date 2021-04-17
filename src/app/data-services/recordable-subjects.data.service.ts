@@ -6,12 +6,13 @@
  */
 
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
 
 import { Assertion, DateStringLibrary, HttpService, Identifiable } from '@app/core';
 
 import { BookEntryShortModel, InstrumentType, Issuer, IssuersFilter, RecordableSubjectFilter,
-         RecordableSubjectShortModel, RecorderOffice, RecordingActTypeGroup } from '@app/models';
+         RecordableSubjectShortModel, RecorderOffice } from '@app/models';
 
 
 @Injectable()
@@ -109,15 +110,6 @@ export class RecordableSubjectsDataService {
     const path = `v5/land/registration/recording-books/${recordingBookUID}/book-entries`;
 
     return this.http.get<BookEntryShortModel[]>(path);
-  }
-
-
-  getRecordingActTypesForInstrument(instrumentUID: string): Observable<RecordingActTypeGroup[]> {
-    Assertion.assertValue(instrumentUID, 'instrumentUID');
-
-    const path = `v5/land/registration/${instrumentUID}/recording-act-types`;
-
-    return this.http.get<RecordingActTypeGroup[]>(path);
   }
 
 

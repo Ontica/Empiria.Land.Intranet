@@ -6,13 +6,14 @@
  */
 
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
 
 import { Assertion, HttpService, Identifiable } from '@app/core';
 
-import { CreateManualBookEntryFields, InstrumentBookEntryFields, InstrumentFields,
-         InstrumentRecording, RecordableSubjectFields,
-         RecordingBook, RegistrationCommand } from '@app/models';
+import { CreateManualBookEntryFields, InstrumentBookEntryFields, InstrumentFields, InstrumentRecording,
+         RecordableSubjectFields, RecordingActTypeGroup, RecordingBook,
+         RegistrationCommand } from '@app/models';
 
 
 @Injectable()
@@ -34,6 +35,27 @@ export class RecordingDataService {
     const path = `v5/land/registration/recording-act-types/${listUID}`;
 
     return this.http.get<Identifiable[]>(path);
+  }
+
+
+  getRecordingActTypesForInstrument(instrumentUID: string): Observable<RecordingActTypeGroup[]> {
+    Assertion.assertValue(instrumentUID, 'instrumentUID');
+
+    const path = `v5/land/registration/${instrumentUID}/recording-act-types`;
+
+    return this.http.get<RecordingActTypeGroup[]>(path);
+  }
+
+
+  getRecordingActTypesForBookEntry(recordingBookUID: string,
+                                   bookEntryUID: string): Observable<RecordingActTypeGroup[]> {
+    Assertion.assertValue(recordingBookUID, 'recordingBookUID');
+    Assertion.assertValue(bookEntryUID, 'bookEntryUID');
+
+    const path = `v5/land/registration/recording-books/${recordingBookUID}` +
+      `/book-entries/${bookEntryUID}/recording-act-types`;
+
+    return this.http.get<RecordingActTypeGroup[]>(path);
   }
 
 
@@ -98,7 +120,7 @@ export class RecordingDataService {
   }
 
 
-  createRecordingAct(instrumentRecordingUID: string,
+  appendRecordingAct(instrumentRecordingUID: string,
                      registrationCommand: RegistrationCommand): Observable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(registrationCommand, 'registrationCommand');
@@ -109,12 +131,40 @@ export class RecordingDataService {
   }
 
 
-  deleteRecordingAct(instrumentRecordingUID: string,
+  removeRecordingAct(instrumentRecordingUID: string,
                      recordingActUID: string): Observable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(recordingActUID, 'recordingActUID');
 
     const path = `v5/land/registration/${instrumentRecordingUID}/recording-acts/${recordingActUID}`;
+
+    return this.http.delete<InstrumentRecording>(path);
+  }
+
+
+  appendRecordingActToBookEntry(recordingBookUID: string,
+                                bookEntryUID: string,
+                                registrationCommand: RegistrationCommand): Observable<InstrumentRecording> {
+    Assertion.assertValue(recordingBookUID, 'recordingBookUID');
+    Assertion.assertValue(bookEntryUID, 'bookEntryUID');
+    Assertion.assertValue(registrationCommand, 'registrationCommand');
+
+    const path = `v5/land/registration/recording-books/${recordingBookUID}` +
+      `/book-entries/${bookEntryUID}/recording-acts`;
+
+    return this.http.post<InstrumentRecording>(path, registrationCommand);
+  }
+
+
+  removeRecordingActFromBookEntry(recordingBookUID: string,
+                                  bookEntryUID: string,
+                                  recordingActUID: string): Observable<InstrumentRecording> {
+    Assertion.assertValue(recordingBookUID, 'recordingBookUID');
+    Assertion.assertValue(bookEntryUID, 'bookEntryUID');
+    Assertion.assertValue(recordingActUID, 'recordingActUID');
+
+    const path = `v5/land/registration/recording-books/${recordingBookUID}/book-entries/${bookEntryUID}` +
+      `/recording-acts/${recordingActUID}`;
 
     return this.http.delete<InstrumentRecording>(path);
   }
@@ -149,7 +199,8 @@ export class RecordingDataService {
     Assertion.assertValue(recordingActUID, 'recordingActUID');
     Assertion.assertValue(recordableSubjectFields, 'recordableSubjectFields');
 
-    const path = `v5/land/registration/${instrumentRecordingUID}/recording-acts/${recordingActUID}/update-recordable-subject`;
+    const path = `v5/land/registration/${instrumentRecordingUID}/recording-acts/` +
+      `${recordingActUID}/update-recordable-subject`;
 
     return this.http.put<InstrumentRecording>(path, recordableSubjectFields);
   }
