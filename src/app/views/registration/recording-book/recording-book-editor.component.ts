@@ -17,6 +17,7 @@ import { RecordingBookSelectorEventType } from './recording-book-selector.compon
 import { RecordingDataService } from '@app/data-services';
 
 export enum RecordingBookEditorEventType {
+  RECORDING_BOOK_SELECTED = 'RecordingBookEditorComponent.Event.RecordingBookSelected',
   BOOK_ENTRY_SELECTED = 'RecordingBookEditorComponent.Event.BookEntrySelected',
 }
 
@@ -65,6 +66,9 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
         this.resetPanelState();
 
         this.loadRecordingBookData(event.payload.recordingBook);
+
+        this.sendEvent(RecordingBookEditorEventType.RECORDING_BOOK_SELECTED,
+          { recordingBook: event.payload.recordingBook });
 
         return;
 

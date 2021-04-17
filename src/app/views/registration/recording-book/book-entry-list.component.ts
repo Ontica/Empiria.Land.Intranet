@@ -6,16 +6,20 @@
  */
 
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+
 import { MatTableDataSource } from '@angular/material/table';
+
 import { DateStringLibrary, EventInfo } from '@app/core';
-import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
 import { BookEntry, EmptyBookEntry, EmptyRecordingBook, RecordingBook } from '@app/models';
+
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 export enum BookEntryListEventType {
   BOOK_ENTRY_CLICKED = 'BookEntryListComponent.Event.BookEntryClicked',
   DELETE_BOOK_ENTRY_CLICKED = 'BookEntryListComponent.Event.DeleteBookEntryClicked',
 }
+
 
 @Component({
   selector: 'emp-land-book-entry-list',
@@ -31,15 +35,11 @@ export class BookEntryListComponent implements OnChanges {
 
   @Output() bookEntryListEvent = new EventEmitter<EventInfo>();
 
-  helper: SubscriptionHelper;
-
   dataSource: MatTableDataSource<BookEntry>;
 
   displayedColumns = ['recordingNo', 'instrumentName', 'recordingTime', 'status', 'action'];
 
-  constructor(private uiLayer: PresentationLayer,
-              private messageBox: MessageBoxService) {
-    this.helper = uiLayer.createSubscriptionHelper();
+  constructor(private messageBox: MessageBoxService) {
   }
 
   ngOnChanges(changes: SimpleChanges) {

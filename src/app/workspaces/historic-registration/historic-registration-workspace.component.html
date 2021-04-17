@@ -28,6 +28,7 @@
     [fxHide.lt-lg]="displayRecordingActEditor">
 
     <emp-land-book-entry-editor
+      [recordingBookUID]="selectedRecordingBook.uid"
       [bookEntryUID]="selectedBookEntry.uid"
       [instrumentRecordingUID]="selectedBookEntry.instrumentRecordingUID"
       (closeEvent)="unselectBookEntry()">

@@ -22,13 +22,20 @@
       [instrumentRecording]="instrumentRecording"
       [recordingActs]="recordingActs"
       [showCopyToClipboard]="true"
-      title="Predios y actos jurídicos registrados en esta inscripción">
+      title="Predios y actos jurídicos registrados en esta inscripción"
+      (recordingActsListEvent)="onRecordingActsListEvent($event)">
 
     </emp-land-recording-acts-list>
 
     <emp-ng-expansion-button [(panelState)]="panelAddState"
-      [config]="{textButtonOpen: 'Agregar otro predio',
-                 textButtonClose: 'Cancelar agregar registro'}">
+      [config]="{textButtonOpen: 'Registrar un acto jurídico',
+                 textButtonClose: 'Cancelar registro'}">
+
+    <emp-land-recording-act-creator *ngIf="panelAddState"
+      [instrumentRecording]="instrumentRecording"
+      [recordingActTypeGroupList]="recordingActTypeGroupList"
+      (recordingActCreatorEvent)="onRecordingActCreatorEvent($event)">
+    </emp-land-recording-act-creator>
 
     </emp-ng-expansion-button>
 
