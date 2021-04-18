@@ -30,6 +30,7 @@ enum NoPropertyEditorFormControls {
   recorderOfficeUID = 'recorderOfficeUID',
   kind = 'kind',
   name = 'name',
+  description = 'description',
   status = 'status',
 }
 
@@ -134,6 +135,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
         recorderOfficeUID: new FormControl(''),
         kind: new FormControl(''),
         name: new FormControl(''),
+        description: new FormControl(''),
         status: new FormControl(''),
       })
     );
@@ -173,6 +175,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
       recorderOfficeUID: isEmpty(this.noProperty.recorderOffice) ? '' : this.noProperty.recorderOffice.uid,
       kind: this.noProperty.kind || '',
       name: this.noProperty.name || '',
+      description: this.noProperty.description || '',
       status: this.noProperty.status,
     });
   }
@@ -210,7 +213,8 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
       recorderOfficeUID: formModel.recorderOfficeUID ?? '',
       kind: formModel.kind ?? '',
       name: formModel.name ?? '',
-      // status: formModel.status ?? '',
+      description: formModel.description ?? '',
+      status: formModel.status
     };
 
     return data;

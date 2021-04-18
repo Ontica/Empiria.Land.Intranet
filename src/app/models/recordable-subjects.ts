@@ -15,9 +15,11 @@ export type RecordableSubjectStatus = 'Closed' | 'Incompleted' | 'NotLegible';
 
 
 export const RecordableSubjectStatusList: any[] = [
-  { status: 'Closed',   statusName: 'Completado' },
-  { status: 'Incompleted', statusName: 'Incompleto' },
+  // { status: 'Closed',   statusName: 'Cerrado' },
+  { status: 'Registered',   statusName: 'Completo' },
+  { status: 'Incomplete', statusName: 'Incompleto' },
   { status: 'NotLegible',  statusName: 'No legible' },
+  { status: 'Obsolete',  statusName: 'Obsoleto' },
 ];
 
 
@@ -39,10 +41,12 @@ export interface RecordableSubjectFields {
 
 export interface AssociationFields extends RecordableSubjectFields {
   name: string;
+  description: string;
 }
 
 
 export interface NoPropertyFields extends RecordableSubjectFields {
+  name: string;
   description: string;
 }
 
@@ -61,8 +65,9 @@ export const EmptyRecordingContext: RecordingContext = {
 
 export interface RecordableSubject extends Identifiable, PartitionedType {
   electronicID: string;
-  kind: string;
   recorderOffice: Identifiable;
+  kind: string;
+  description: string;
   recordingContext: RecordingContext;
   status: RecordableSubjectStatus;
 }
@@ -72,9 +77,10 @@ export const EmptyRecordableSubject: RecordableSubject = {
   uid: '',
   type: '',
   electronicID: '',
-  name: '',
   recorderOffice: Empty,
   kind: '',
+  name: '',
+  description: '',
   recordingContext: EmptyRecordingContext,
   status: 'Incompleted',
 };
@@ -144,6 +150,7 @@ export const EmptyAssociationFields: AssociationFields = {
   recorderOfficeUID: '',
   kind: '',
   name: '',
+  description: '',
   status: 'Incompleted',
 };
 
@@ -154,6 +161,7 @@ export const EmptyNoPropertyFields: NoPropertyFields = {
   electronicID: '',
   recorderOfficeUID: '',
   kind: '',
+  name: '',
   description: '',
   status: 'Incompleted',
 };

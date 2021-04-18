@@ -206,7 +206,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       lotSizeUnitUID: isEmpty(this.realEstate.lotSizeUnit) ? '' : this.realEstate.lotSizeUnit.uid,
       description: this.realEstate.description || '',
       metesAndBounds: this.realEstate.metesAndBounds || '',
-      status: this.realEstate.status,
+      status: this.realEstate.status
     });
   }
 
@@ -305,7 +305,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       lotSizeUnitUID: formModel.lotSizeUnitUID ?? '',
       description: formModel.description ?? '',
       metesAndBounds: formModel.metesAndBounds ?? '',
-      // status: formModel.status ?? '',
+      status: formModel.status
     };
 
     return data;

@@ -41,17 +41,25 @@
       </div>
 
       <div fxFlex="100">
-        <label *ngIf="isAssociation">Nombre o denominación:</label>
-        <label *ngIf="!isAssociation">Descripción opcional de lo que se inscribe:</label>
+        <label>Nombre o denominación:</label>
 
         <textarea class="text-area" empNgTextareaAutoresize rows="1" [formControlName]="controls.name"
           [class.invalid-control]="formHandler.showInvalidControl(controls.name)">
-
         </textarea>
       </div>
 
     </div>
 
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex="100%">
+        <label *ngIf="!isAssociation">Descripción (opcional):</label>
+
+        <textarea class="text-area" empNgTextareaAutoresize rows="4" [formControlName]="controls.description"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
+        </textarea>
+
+      </div>
+    </div>
 
     <div fxLayout="row">
 
@@ -65,9 +73,9 @@
 
       <div fxFlex fxLayoutAlign="center center">
 
-        <ng-container *ngIf="editionMode && !readonly">
+        <ng-container>
 
-          <span style="padding-right: 0.5rem;">Marcar el predio como:</span>
+          <span style="padding-right: 0.5rem;">Marcar como:</span>
 
           <emp-ng-select
             [formControlName]="controls.status"
