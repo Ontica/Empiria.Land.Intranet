@@ -14,7 +14,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 export class IconSvgModule {
 
-  private path: string = '../../assets/img/files';
+  private path = '../../assets/img/files';
 
   constructor(private matIconRegistry: MatIconRegistry,
               private sanitizer: DomSanitizer){

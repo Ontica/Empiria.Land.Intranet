@@ -24,7 +24,7 @@ import { WorkflowTask } from '@app/models';
 })
 export class WorkflowHistoryComponent implements OnInit, OnDestroy {
 
-  @Input() transactionUID: string = 'Empty';
+  @Input() transactionUID = 'Empty';
 
   helper: SubscriptionHelper;
 
