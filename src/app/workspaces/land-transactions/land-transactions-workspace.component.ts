@@ -7,7 +7,7 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Empty, EventInfo, isEmpty } from '@app/core';
+import { EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
@@ -31,8 +31,7 @@ import { EmptyFileViewerData,
 
 import { View } from '../main-layout';
 
-import { EmptySelectionAct, EmptyRecordingBook, SelectionAct, RecordingBook, BookEntryShortModel,
-         EmptyBookEntryShortModel } from '@app/models';
+import { EmptySelectionAct, SelectionAct } from '@app/models';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
@@ -50,19 +49,15 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   transactionList: TransactionShortModel[] = [];
   filter: TransactionFilter = EmptyTransactionFilter;
 
-  selectedBookEntry: BookEntryShortModel = EmptyBookEntryShortModel;
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedRecordingAct: SelectionAct = EmptySelectionAct;
-  selectedRecordingBook: RecordingBook = EmptyRecordingBook;
   selectedTransaction: Transaction = EmptyTransaction;
 
   displayOptionModalSelected: TransactionModalOptions = null;
   selectedTransactions: TransactionShortModel[] = [];
 
   displayFileViewer = false;
-  displayBookEntryEditor = false;
   displayRecordingActEditor = false;
-  displayRecordingBookEditor = false;
   displayTransactionTabbedView = false;
 
   isLoading = false;
@@ -109,18 +104,6 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
         this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct?.recordingAct);
       });
 
-    this.subscriptionHelper.select<RecordingBook>(RegistrationStateSelector.SELECTED_RECORDING_BOOK)
-      .subscribe(x => {
-        this.selectedRecordingBook = x;
-        this.displayRecordingBookEditor = !isEmpty(this.selectedRecordingBook);
-      });
-
-    this.subscriptionHelper.select<BookEntryShortModel>(RegistrationStateSelector.SELECTED_BOOK_ENTRY)
-      .subscribe(x => {
-        this.selectedBookEntry = x;
-        this.displayBookEntryEditor = !isEmpty(this.selectedBookEntry);
-      });
-
     this.subscriptionHelper.select<FileViewerData>(TransactionStateSelector.SELECTED_FILE_LIST)
       .subscribe(x => {
         this.selectedFileViewerData = x;
@@ -135,7 +118,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
 
   get secondaryEditorDisplayed(){
-    return this.displayRecordingActEditor || this.displayRecordingBookEditor || this.displayBookEntryEditor;
+    return this.displayRecordingActEditor;
   }
 
 
@@ -201,23 +184,11 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   unselectCurrentSelections(){
     this.unselectCurrentFile();
     this.unselectCurrentRecordingAct();
-    this.unselectCurrentRecordingBook();
-    this.unselectCurrentBookEntry();
   }
 
 
   unselectCurrentRecordingAct() {
     this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
-  }
-
-
-  unselectCurrentRecordingBook() {
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_BOOK);
-  }
-
-
-  unselectCurrentBookEntry(){
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_BOOK_ENTRY);
   }
 
   // private methods
