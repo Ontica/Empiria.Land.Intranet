@@ -3,15 +3,16 @@
   <div class="card-header card-header-flat">
 
     <div class="card-title">
-      Visor de Archivos
 
-      <div class="card-hint">
-        {{ selectedFile?.name }}
+      {{ fileViewerData.title ? fileViewerData.title : 'Visor de Archivos' }}
+
+      <div class="card-hint" [innerHTML]="getHintText() | safeHtml">
+
       </div>
     </div>
 
     <div class="card-header-options">
-      <mat-icon (click)="onClose()">close</mat-icon>
+      <mat-icon *ngIf="showCloseButton" (click)="onClose()">close</mat-icon>
     </div>
 
   </div>
@@ -56,10 +57,17 @@
 
             <div #imageContainer class="image-container">
 
-                <img #imageFile class="image-file"
+                <img #imageFile class="image-file" *ngIf="isImageModeContainerSize"
+                  cdkDrag cdkDragBoundary=".image-file"
                   [style.width.%]="imageZoom"
                   [src]="file.url | safeUrl"
                   (load)="onLoad()">
+
+                <img #imageFile class="image-file" *ngIf="isImageModeOriginalSize"
+                  [style.width.px]="imageWidthZoomed"
+                  [src]="file.url | safeUrl"
+                  (load)="onLoad()">
+
             </div>
 
           </ng-container>

@@ -5,10 +5,13 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component,
-         EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges,
+         Output, ViewChild } from '@angular/core';
 import { EmptyFileViewerData, FileData,
          FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
+
+export type ImageZoomMode = 'OriginalSize' | 'ContainerSize';
+
 
 @Component({
   selector: 'emp-land-file-viewer',
@@ -18,7 +21,13 @@ import { EmptyFileViewerData, FileData,
 })
 export class FileViewerComponent implements OnChanges {
 
+  @ViewChild('imageFile') imageFile: ElementRef;
+
   @Input() fileViewerData: FileViewerData = EmptyFileViewerData;
+
+  @Input() imageZoomMode = 'ContainerSize';
+
+  @Input() showCloseButton = true;
 
   @Output() closeEvent = new EventEmitter<void>();
 
@@ -36,8 +45,11 @@ export class FileViewerComponent implements OnChanges {
 
   imageZoom = 100;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  imageWidthBase: number;
 
+  imageWidthZoomed: number;
+
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnChanges() {
     if (this.fileViewerData.fileList.length > 0) {
@@ -56,12 +68,27 @@ export class FileViewerComponent implements OnChanges {
   }
 
 
+  get isImageModeContainerSize() {
+    return this.selectedFile.type.includes('image') && this.imageZoomMode === 'ContainerSize';
+  }
+
+
+  get isImageModeOriginalSize() {
+    return this.selectedFile.type.includes('image') && this.imageZoomMode === 'OriginalSize';
+  }
+
+
   setInitialValues(){
     this.showFileContainer = false;
     this.isLoading = false;
     this.multiple = false;
     this.selectedFileIndex = 0;
     this.selectedFile = null;
+  }
+
+
+  getHintText() {
+    return ( this.fileViewerData.hint ? this.fileViewerData.hint + ' | ' : '' )  + this.selectedFile?.name;
   }
 
 
@@ -83,6 +110,7 @@ export class FileViewerComponent implements OnChanges {
   onLoad(){
     setTimeout(() => {
       this.isLoading = false;
+      this.validateAndSetImageWidthBase();
       this.cdr.detectChanges();
     });
   }
@@ -90,6 +118,10 @@ export class FileViewerComponent implements OnChanges {
 
   onZoomChanged(zoom){
     this.imageZoom = zoom;
+
+    if (this.isImageModeOriginalSize) {
+      this.imageWidthZoomed = this.imageWidthBase * (this.imageZoom / 100);
+    }
   }
 
 
@@ -109,6 +141,17 @@ export class FileViewerComponent implements OnChanges {
   private resetImageZoom(){
     this.imageZoom = 100;
     this.showZoom = this.selectedFile.type.includes('image');
+
+    this.imageWidthBase = null;
+    this.imageWidthZoomed = null;
+  }
+
+
+  private validateAndSetImageWidthBase(){
+    if (this.isImageModeOriginalSize) {
+      this.imageWidthBase = this.imageFile.nativeElement.clientWidth;
+      this.imageWidthZoomed = this.imageWidthBase;
+    }
   }
 
 }

@@ -86,9 +86,13 @@ export const EmptyFileData: FileData = {
 export interface FileViewerData {
   fileList: FileData[];
   selectedFile?: FileData;
+  title?: string;
+  hint?: string;
 }
 
 
 export const EmptyFileViewerData: FileViewerData = {
-  fileList: []
+  fileList: [],
+  title: 'Visor de Archivos',
+  hint: '',
 };
