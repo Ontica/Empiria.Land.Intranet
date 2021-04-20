@@ -11,8 +11,8 @@ import { Assertion, EventInfo } from '@app/core';
 
 import { RecordingDataService } from '@app/data-services';
 
-import { BookEntry, EmptyBookEntry, EmptyInstrumentRecording, InstrumentRecording,
-         RecordingActTypeGroup, RegistrationCommand} from '@app/models';
+import { BookEntry, CreateManualBookEntryFields, EmptyBookEntry, EmptyInstrumentRecording, InstrumentFields,
+         InstrumentRecording, RecordingActTypeGroup, RegistrationCommand} from '@app/models';
 
 import {
   InstrumentEditorEventType
@@ -89,7 +89,14 @@ export class BookEntryEditorComponent implements OnChanges {
 
       case InstrumentEditorEventType.UPDATE_INSTRUMENT:
 
-        console.log('UPDATE_INSTRUMENT', event);
+        const bookEntryFields: CreateManualBookEntryFields = {
+          recordingNo: event.payload.recordingNo,
+          instrument: event.payload.instrumentFields as InstrumentFields,
+          authorizationDate: event.payload.recordingTime,
+          presentationTime: '',
+        };
+
+        this.updateBookEntryInstrumentRecording(bookEntryFields);
 
         return;
 
@@ -150,6 +157,21 @@ export class BookEntryEditorComponent implements OnChanges {
         this.getRecordingActTypesForBookEntry();
       })
       .add(() => this.isLoading = false);
+  }
+
+
+  private updateBookEntryInstrumentRecording(instrumentFields: CreateManualBookEntryFields) {
+    this.setSubmited(true);
+
+    this.recordingData
+      .updateBookEntryInstrumentRecording(this.instrumentRecording.uid, this.bookEntryUID, instrumentFields)
+      .toPromise()
+      .then(x => {
+        this.setInstrumentRecording(x);
+      })
+      .finally(() => {
+        this.setSubmited(false);
+      });
   }
 
 

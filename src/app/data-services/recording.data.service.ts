@@ -120,6 +120,22 @@ export class RecordingDataService {
   }
 
 
+  updateBookEntryInstrumentRecording(
+    instrumentRecordingUID: string,
+    bookEntryUID: string,
+    instrument: CreateManualBookEntryFields
+  ): Observable<InstrumentRecording> {
+    Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
+    Assertion.assertValue(bookEntryUID, 'bookEntryUID');
+    Assertion.assertValue(instrument, 'instrument');
+
+    const path = `v5/land/registration/${instrumentRecordingUID}/book-entries/${bookEntryUID}` +
+      `/update-instrument`;
+
+    return this.http.put<InstrumentRecording>(path, instrument);
+  }
+
+
   appendRecordingAct(instrumentRecordingUID: string,
                      registrationCommand: RegistrationCommand): Observable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
