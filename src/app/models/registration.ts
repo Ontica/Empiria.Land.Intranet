@@ -7,6 +7,8 @@
 
 import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
 
+import { FileData } from '@app/shared/form-controls/file-control/file-control-data';
+
 import { EmptyInstrument, Instrument, InstrumentFields } from './instrument';
 
 import { RealEstate, RecordableSubjectType } from './recordable-subjects';
@@ -214,6 +216,7 @@ export interface BookEntry {
   recordingActs: RecordingAct[];
   status: RecordingStatus;
   stampMedia: MediaBase;
+  mediaFiles: FileData[];
 }
 
 
@@ -233,6 +236,7 @@ export const EmptyBookEntry: BookEntry = {
   recordingActs: [],
   status: 'Closed',
   stampMedia: EmptyMediaBase,
+  mediaFiles: [],
 };
 
 

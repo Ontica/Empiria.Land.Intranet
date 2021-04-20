@@ -6,19 +6,28 @@
  */
 
 import { Component, EventEmitter, OnChanges, OnInit, Output } from '@angular/core';
+
 import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
+
 import { BookEntryShortModel, CreateManualBookEntryFields, EmptyRecordingBook, InstrumentFields,
          RecordingBook, EmptyBookEntryShortModel } from '@app/models';
+
 import { BookEntryListEventType } from './book-entry-list.component';
+
 import {
   InstrumentEditorEventType
 } from '@app/views/recordable-subjects/instrument/instrument-editor.component';
+
 import { RecordingBookSelectorEventType } from './recording-book-selector.component';
+
 import { RecordingDataService } from '@app/data-services';
+
+import { FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 export enum RecordingBookEditorEventType {
   RECORDING_BOOK_SELECTED = 'RecordingBookEditorComponent.Event.RecordingBookSelected',
   BOOK_ENTRY_SELECTED = 'RecordingBookEditorComponent.Event.BookEntrySelected',
+  FILES_SELECTED = 'RecordingBookEditorComponent.Event.FilesSelected',
 }
 
 @Component({
@@ -117,6 +126,19 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
 
         return;
 
+      case BookEntryListEventType.SHOW_FILES_CLICKED:
+
+        Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
+
+        const fileViewerData: FileViewerData = {
+          fileList: event.payload.bookEntry.mediaFiles,
+          hint: `<strong>Inscripción ${event.payload.bookEntry.recordingNo}, ${this.cardHint}</strong>`
+        };
+
+        this.sendEvent(RecordingBookEditorEventType.FILES_SELECTED, { fileViewerData });
+
+        return;
+
       default:
         console.log(`Unhandled user interface event ${event.type}`);
         return;
@@ -167,8 +189,7 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.isLoading = true;
-    this.submitted = true;
+    this.setSubmitted(true);
 
     this.data.getRecordingBook(recordingBook.uid)
       .toPromise()
@@ -177,10 +198,7 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
         this.displayRecordingBookEditor = !isEmpty(this.recordingBookSelected);
         this.initTexts();
       })
-      .finally(() => {
-        this.isLoading = false;
-        this.submitted = false;
-      });
+      .finally(() => this.setSubmitted(false));
   }
 
 
@@ -192,8 +210,7 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
       presentationTime: '',
     };
 
-    this.isLoading = true;
-    this.submitted = true;
+    this.setSubmitted(true);
 
     this.data.createBookEntry(this.recordingBookSelected.uid, bookEntryFields)
       .toPromise()
@@ -201,16 +218,12 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
         this.recordingBookSelected = x;
         this.resetPanelState();
       })
-      .finally(() => {
-        this.isLoading = false;
-        this.submitted = false;
-      });
+      .finally(() => this.setSubmitted(false));
   }
 
 
   private deleteBookEntry(bookEntryUID: string){
-    this.isLoading = true;
-    this.submitted = true;
+    this.setSubmitted(true);
 
     this.data.deleteBookEntry(this.recordingBookSelected.uid, bookEntryUID)
       .toPromise()
@@ -222,15 +235,18 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
             { bookEntry: EmptyBookEntryShortModel });
         }
       })
-      .finally(() => {
-        this.isLoading = false;
-        this.submitted = false;
-      });
+      .finally(() => this.setSubmitted(false));
   }
 
 
   private resetPanelState() {
     this.panelAddState = false;
+  }
+
+
+  private setSubmitted(submitted: boolean) {
+    this.isLoading = submitted;
+    this.submitted = submitted;
   }
 
 
@@ -242,4 +258,5 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
 
     this.recordingBookEditorEvent.emit(event);
   }
+
 }

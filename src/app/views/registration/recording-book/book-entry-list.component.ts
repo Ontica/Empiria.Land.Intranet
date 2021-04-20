@@ -18,6 +18,7 @@ import { MessageBoxService } from '@app/shared/containers/message-box';
 export enum BookEntryListEventType {
   BOOK_ENTRY_CLICKED = 'BookEntryListComponent.Event.BookEntryClicked',
   DELETE_BOOK_ENTRY_CLICKED = 'BookEntryListComponent.Event.DeleteBookEntryClicked',
+  SHOW_FILES_CLICKED = 'BookEntryListComponent.Event.ShowFilesClicked',
 }
 
 
@@ -37,10 +38,13 @@ export class BookEntryListComponent implements OnChanges {
 
   dataSource: MatTableDataSource<BookEntry>;
 
-  displayedColumns = ['recordingNo', 'instrumentName', 'recordingTime', 'status', 'action'];
+  displayedColumns = ['recordingNo', 'instrumentName', 'recordingTime', 'status',
+                      'actionShowFiles', 'actionDelete'];
+
 
   constructor(private messageBox: MessageBoxService) {
   }
+
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.recordingBook) {
@@ -74,6 +78,11 @@ export class BookEntryListComponent implements OnChanges {
                         { bookEntry: payload });
         }
       });
+  }
+
+
+  showFilesBookEntry(bookEntry: BookEntry) {
+    this.sendEvent(BookEntryListEventType.SHOW_FILES_CLICKED, { bookEntry });
   }
 
 

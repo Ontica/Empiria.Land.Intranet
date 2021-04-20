@@ -2,18 +2,21 @@
 
   <div *ngIf="displayFileViewer"
     class="primary-resizable"
-    [ngClass.lt-lg]="'primary-resizable-disable'"
+    ngClass.lt-lg="primary-resizable-disable"
     empNgResizable>
 
     <emp-land-file-viewer
-      [fileViewerData]="selectedFileViewerData">
+      [fileViewerData]="selectedFileViewerData"
+      [showCloseButton]="true"
+      (closeEvent)="onCloseFileViewer()">
 
     </emp-land-file-viewer>
 
   </div>
 
   <div class="primary"
-    [fxHide.lt-lg]="displayBookEntryEditor">
+    [fxHide]="displayFileViewer && displayBookEntryEditor"
+    [fxHide.lt-lg]="displayBookEntryEditor || displayFileViewer">
 
     <emp-land-recording-book-editor
       (recordingBookEditorEvent)="onRecordingBookEditorEvent($event)">
@@ -25,14 +28,14 @@
   <div *ngIf="displayBookEntryEditor"
     class="secondary"
     [fxHide]="displayRecordingActEditor"
-    [fxHide.lt-lg]="displayRecordingActEditor">
+    [fxHide.lt-lg]="displayRecordingActEditor || displayFileViewer">
 
     <emp-land-book-entry-editor
       [recordingBookUID]="selectedRecordingBook.uid"
       [bookEntryUID]="selectedBookEntry.uid"
       [instrumentRecordingUID]="selectedBookEntry.instrumentRecordingUID"
       (bookEntryEditorEvent)="onBookEntryEditorEvent($event)"
-      (closeEvent)="unselectBookEntry()">
+      (closeEvent)="onCloseBookEntryEditor()">
 
     </emp-land-book-entry-editor>
 
@@ -44,11 +47,10 @@
     <emp-land-recordable-subject-tabbed-view
       [instrumentRecording]="selectedRecordingAct.instrumentRecording"
       [recordingAct]="selectedRecordingAct.recordingAct"
-      (closeEvent)="unselectCurrentRecordingAct()">
+      (closeEvent)="onCloseRecordingActEditor()">
 
     </emp-land-recordable-subject-tabbed-view>
 
   </div>
-
 
 </div>

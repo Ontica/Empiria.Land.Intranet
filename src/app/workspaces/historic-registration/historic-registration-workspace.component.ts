@@ -52,6 +52,8 @@ export class HistoricRegistrationWorkspaceComponent implements OnInit, OnDestroy
         Assertion.assertValue(event.payload.recordingBook, 'event.payload.recordingBook');
 
         this.selectedRecordingBook = event.payload.recordingBook;
+        this.unselectBookEntry();
+        this.unselectCurrentFile();
         this.unselectCurrentRecordingAct();
 
         return;
@@ -62,6 +64,14 @@ export class HistoricRegistrationWorkspaceComponent implements OnInit, OnDestroy
         this.selectedBookEntry = event.payload.bookEntry;
         this.displayBookEntryEditor = !isEmpty(this.selectedBookEntry);
         this.unselectCurrentRecordingAct();
+
+        return;
+
+      case RecordingBookEditorEventType.FILES_SELECTED:
+        Assertion.assertValue(event.payload.fileViewerData, 'event.payload.fileViewerData');
+
+        this.selectedFileViewerData = event.payload.fileViewerData;
+        this.displayFileViewer = this.selectedFileViewerData.fileList?.length > 0;
 
         return;
 
@@ -90,15 +100,36 @@ export class HistoricRegistrationWorkspaceComponent implements OnInit, OnDestroy
   }
 
 
-  unselectBookEntry(){
+  onCloseBookEntryEditor() {
+    this.unselectBookEntry();
+  }
+
+
+  onCloseFileViewer() {
+    this.unselectCurrentFile();
+  }
+
+
+  onCloseRecordingActEditor() {
+    this.unselectCurrentRecordingAct();
+  }
+
+
+  private unselectBookEntry(){
     this.selectedBookEntry = EmptyBookEntryShortModel;
     this.displayBookEntryEditor = false;
   }
 
 
-  unselectCurrentRecordingAct() {
+  private unselectCurrentRecordingAct() {
     this.selectedRecordingAct = EmptySelectionAct;
     this.displayRecordingActEditor = false;
+  }
+
+
+  private unselectCurrentFile() {
+    this.selectedFileViewerData = EmptyFileViewerData;
+    this.displayFileViewer = false;
   }
 
 }

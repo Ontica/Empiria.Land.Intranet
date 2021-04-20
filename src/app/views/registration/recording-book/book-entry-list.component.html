@@ -18,11 +18,21 @@
       <td mat-cell *matCellDef="let row"> {{ row.status }} </td>
     </ng-container>
 
-    <ng-container matColumnDef="action">
+    <ng-container matColumnDef="actionShowFiles">
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let row; let i = index" class="column-action">
-        <mat-icon
-          (click)="removeBookEntry(row); $event.stopPropagation();" title="Eliminar inscripción">
+        <mat-icon title="Mostrar archivos" *ngIf="row.mediaFiles?.length > 0"
+          (click)="showFilesBookEntry(row); $event.stopPropagation();">
+          auto_stories
+        </mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actionDelete">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let row; let i = index" class="column-action">
+        <mat-icon title="Eliminar inscripción"
+          (click)="removeBookEntry(row); $event.stopPropagation();">
           delete
         </mat-icon>
       </td>
