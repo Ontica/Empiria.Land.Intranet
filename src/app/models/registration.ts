@@ -202,6 +202,7 @@ export const EmptyRecordingBook: RecordingBook = {
 
 export interface BookEntry {
   uid: string;
+  recordingBookUID: string;
   recordingTime: DateString;
   recorderOfficeName: string;
   recordingSectionName: string;
@@ -222,6 +223,7 @@ export interface BookEntry {
 
 export const EmptyBookEntry: BookEntry = {
   uid: '',
+  recordingBookUID: '',
   recordingTime: '',
   recorderOfficeName: '',
   recordingSectionName: '',

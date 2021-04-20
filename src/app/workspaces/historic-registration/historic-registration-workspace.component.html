@@ -8,7 +8,7 @@
     <emp-land-file-viewer
       [fileViewerData]="selectedFileViewerData"
       [showCloseButton]="true"
-      (closeEvent)="onCloseFileViewer()">
+      (closeEvent)="unselectCurrentFile()">
 
     </emp-land-file-viewer>
 
@@ -31,11 +31,11 @@
     [fxHide.lt-lg]="displayRecordingActEditor || displayFileViewer">
 
     <emp-land-book-entry-editor
-      [recordingBookUID]="selectedRecordingBook.uid"
+      [recordingBookUID]="selectedBookEntry.recordingBookUID"
       [bookEntryUID]="selectedBookEntry.uid"
-      [instrumentRecordingUID]="selectedBookEntry.instrumentRecordingUID"
+      [instrumentRecordingUID]="selectedBookEntry.instrumentRecording.uid"
       (bookEntryEditorEvent)="onBookEntryEditorEvent($event)"
-      (closeEvent)="onCloseBookEntryEditor()">
+      (closeEvent)="unselectBookEntry()">
 
     </emp-land-book-entry-editor>
 
@@ -47,7 +47,7 @@
     <emp-land-recordable-subject-tabbed-view
       [instrumentRecording]="selectedRecordingAct.instrumentRecording"
       [recordingAct]="selectedRecordingAct.recordingAct"
-      (closeEvent)="onCloseRecordingActEditor()">
+      (closeEvent)="unselectCurrentRecordingAct()">
 
     </emp-land-recordable-subject-tabbed-view>
 

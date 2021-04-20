@@ -5,12 +5,12 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 
-import { BookEntryShortModel, CreateManualBookEntryFields, EmptyRecordingBook, InstrumentFields,
-         RecordingBook, EmptyBookEntryShortModel } from '@app/models';
+import { CreateManualBookEntryFields, EmptyRecordingBook, InstrumentFields,
+         RecordingBook, BookEntry, EmptyBookEntry } from '@app/models';
 
 import { BookEntryListEventType } from './book-entry-list.component';
 
@@ -34,7 +34,7 @@ export enum RecordingBookEditorEventType {
   selector: 'emp-land-recording-book-editor',
   templateUrl: './recording-book-editor.component.html',
 })
-export class RecordingBookEditorComponent implements OnInit, OnChanges {
+export class RecordingBookEditorComponent implements OnInit {
 
   @Output() recordingBookEditorEvent = new EventEmitter<EventInfo>();
 
@@ -50,18 +50,12 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
 
   recordingBookSelected: RecordingBook = EmptyRecordingBook;
 
-  bookEntrySelected: BookEntryShortModel = EmptyBookEntryShortModel;
-
   displayRecordingBookEditor = false;
 
   constructor(private data: RecordingDataService ) { }
 
   ngOnInit(): void {
     this.initTexts();
-  }
-
-
-  ngOnChanges() {
   }
 
 
@@ -75,15 +69,6 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
         this.resetPanelState();
 
         this.loadRecordingBookData(event.payload.recordingBook);
-
-        this.sendEvent(RecordingBookEditorEventType.RECORDING_BOOK_SELECTED,
-          { recordingBook: event.payload.recordingBook });
-
-        return;
-
-      case RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED:
-
-        this.sendEvent(RecordingBookEditorEventType.BOOK_ENTRY_SELECTED, event.payload);
 
         return;
 
@@ -107,22 +92,16 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
         Assertion.assertValue(event.payload.bookEntry.instrumentRecording,
           'event.payload.bookEntry.instrumentRecording');
 
-        this.bookEntrySelected = {
-          uid: event.payload.bookEntry.uid,
-          recordingNo: event.payload.bookEntry.recordingNo,
-          instrumentRecordingUID: event.payload.bookEntry.instrumentRecording.uid,
-        };
-
         this.sendEvent(RecordingBookEditorEventType.BOOK_ENTRY_SELECTED,
-          { bookEntry: this.bookEntrySelected });
+          { bookEntry: event.payload.bookEntry });
 
         return;
 
       case BookEntryListEventType.DELETE_BOOK_ENTRY_CLICKED:
 
-        Assertion.assertValue(event.payload.bookEntry.bookEntryUID, 'event.payload.bookEntry.bookEntryUID');
+        Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
 
-        this.deleteBookEntry(event.payload.bookEntry.bookEntryUID);
+        this.deleteBookEntry(event.payload.bookEntry);
 
         return;
 
@@ -132,7 +111,8 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
 
         const fileViewerData: FileViewerData = {
           fileList: event.payload.bookEntry.mediaFiles,
-          hint: `<strong>Inscripción ${event.payload.bookEntry.recordingNo}, ${this.cardHint}</strong>`
+          title: `Inscripción ${event.payload.bookEntry.recordingNo}, ${this.cardHint}`,
+          hint: `<strong>Visor de Archivos</strong>`,
         };
 
         this.sendEvent(RecordingBookEditorEventType.FILES_SELECTED, { fileViewerData });
@@ -222,18 +202,16 @@ export class RecordingBookEditorComponent implements OnInit, OnChanges {
   }
 
 
-  private deleteBookEntry(bookEntryUID: string){
+  private deleteBookEntry(bookEntry: BookEntry){
     this.setSubmitted(true);
 
-    this.data.deleteBookEntry(this.recordingBookSelected.uid, bookEntryUID)
+    this.data.deleteBookEntry(bookEntry.recordingBookUID, bookEntry.uid)
       .toPromise()
       .then(x => {
         this.recordingBookSelected = x;
 
-        if (bookEntryUID === this.bookEntrySelected.uid) {
-          this.sendEvent(RecordingBookEditorEventType.BOOK_ENTRY_SELECTED,
-            { bookEntry: EmptyBookEntryShortModel });
-        }
+        this.sendEvent(RecordingBookEditorEventType.BOOK_ENTRY_SELECTED,
+          { bookEntry: EmptyBookEntry });
       })
       .finally(() => this.setSubmitted(false));
   }

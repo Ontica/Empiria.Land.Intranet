@@ -5,15 +5,15 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { Assertion, isEmpty } from '@app/core';
 
-import { BookEntryShortModel, EmptyBookEntryShortModel, EmptyRecordingBook, EmptySelectionAct,
-         RecordingBook, SelectionAct } from '@app/models';
+import { BookEntry, EmptyBookEntry, EmptySelectionAct, SelectionAct } from '@app/models';
 
 import { EmptyFileViewerData,
          FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
+
 import { BookEntryEditorEventType } from '@app/views/registration/recording-book/book-entry-editor.component';
 
 import {
@@ -25,10 +25,9 @@ import {
   selector: 'emp-land-hsitoric-registration',
   templateUrl: './historic-registration-workspace.component.html'
 })
-export class HistoricRegistrationWorkspaceComponent implements OnInit, OnDestroy {
+export class HistoricRegistrationWorkspaceComponent {
 
-  selectedRecordingBook: RecordingBook = EmptyRecordingBook;
-  selectedBookEntry: BookEntryShortModel = EmptyBookEntryShortModel;
+  selectedBookEntry: BookEntry = EmptyBookEntry;
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedRecordingAct: SelectionAct = EmptySelectionAct;
 
@@ -39,30 +38,15 @@ export class HistoricRegistrationWorkspaceComponent implements OnInit, OnDestroy
   constructor() {}
 
 
-  ngOnInit() {}
-
-
-  ngOnDestroy() {}
-
-
   onRecordingBookEditorEvent(event) {
     switch (event.type as RecordingBookEditorEventType) {
-
-      case RecordingBookEditorEventType.RECORDING_BOOK_SELECTED:
-        Assertion.assertValue(event.payload.recordingBook, 'event.payload.recordingBook');
-
-        this.selectedRecordingBook = event.payload.recordingBook;
-        this.unselectBookEntry();
-        this.unselectCurrentFile();
-        this.unselectCurrentRecordingAct();
-
-        return;
 
       case RecordingBookEditorEventType.BOOK_ENTRY_SELECTED:
         Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
 
         this.selectedBookEntry = event.payload.bookEntry;
         this.displayBookEntryEditor = !isEmpty(this.selectedBookEntry);
+
         this.unselectCurrentRecordingAct();
 
         return;
@@ -100,34 +84,19 @@ export class HistoricRegistrationWorkspaceComponent implements OnInit, OnDestroy
   }
 
 
-  onCloseBookEntryEditor() {
-    this.unselectBookEntry();
-  }
-
-
-  onCloseFileViewer() {
-    this.unselectCurrentFile();
-  }
-
-
-  onCloseRecordingActEditor() {
-    this.unselectCurrentRecordingAct();
-  }
-
-
-  private unselectBookEntry(){
-    this.selectedBookEntry = EmptyBookEntryShortModel;
+  unselectBookEntry(){
+    this.selectedBookEntry = EmptyBookEntry;
     this.displayBookEntryEditor = false;
   }
 
 
-  private unselectCurrentRecordingAct() {
+  unselectCurrentRecordingAct() {
     this.selectedRecordingAct = EmptySelectionAct;
     this.displayRecordingActEditor = false;
   }
 
 
-  private unselectCurrentFile() {
+  unselectCurrentFile() {
     this.selectedFileViewerData = EmptyFileViewerData;
     this.displayFileViewer = false;
   }

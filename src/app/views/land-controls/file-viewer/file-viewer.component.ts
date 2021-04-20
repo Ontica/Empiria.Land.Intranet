@@ -88,7 +88,8 @@ export class FileViewerComponent implements OnChanges {
 
 
   getHintText() {
-    return ( this.fileViewerData.hint ? this.fileViewerData.hint + ' | ' : '' )  + this.selectedFile?.name;
+    return ( this.fileViewerData.hint ? this.fileViewerData.hint + ' &nbsp; &nbsp; | &nbsp; &nbsp; ' : '' ) +
+      this.selectedFile?.name;
   }
 
 

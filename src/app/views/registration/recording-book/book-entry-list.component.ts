@@ -39,7 +39,7 @@ export class BookEntryListComponent implements OnChanges {
   dataSource: MatTableDataSource<BookEntry>;
 
   displayedColumns = ['recordingNo', 'instrumentName', 'recordingTime', 'status',
-                      'actionShowFiles', 'actionDelete'];
+                      'actionShowFiles', 'actionEdit', 'actionDelete'];
 
 
   constructor(private messageBox: MessageBoxService) {
@@ -69,13 +69,8 @@ export class BookEntryListComponent implements OnChanges {
       .toPromise()
       .then(x => {
         if (x) {
-          const payload = {
-            recorderBookUID: this.recordingBook.uid,
-            bookEntryUID: bookEntry.uid
-          };
-
           this.sendEvent(BookEntryListEventType.DELETE_BOOK_ENTRY_CLICKED,
-                        { bookEntry: payload });
+                        { bookEntry });
         }
       });
   }
