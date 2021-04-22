@@ -1,0 +1,43 @@
+<emp-ng-card
+  [title]="cardTitle"
+  [hint]="cardHint"
+  (cardClose)="onClose()">
+
+  <div class="card-body-padding" [style.height.%]="98" [empNgSpinnerHost]="spinner">
+
+    <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+
+    <emp-land-book-entry-editor
+      [actions]="instrumentRecording.actions"
+      [bookEntry]="bookEntry"
+      [instrument]="instrumentRecording.instrument"
+      (bookEntryEditorEvent)="onBookEntryEditorEvent($event)">
+
+    </emp-land-book-entry-editor>
+
+    <br>
+
+    <emp-land-recording-acts-list
+      [instrumentRecording]="instrumentRecording"
+      [recordingActs]="recordingActs"
+      [showCopyToClipboard]="true"
+      title="Predios y actos jurídicos registrados en esta inscripción"
+      (recordingActsListEvent)="onRecordingActsListEvent($event)">
+
+    </emp-land-recording-acts-list>
+
+    <emp-ng-expansion-button [(panelState)]="panelAddState"
+      [config]="{textButtonOpen: 'Registrar un acto jurídico',
+                 textButtonClose: 'Cancelar registro'}">
+
+    <emp-land-recording-act-creator *ngIf="panelAddState"
+      [instrumentRecording]="instrumentRecording"
+      [recordingActTypeGroupList]="recordingActTypeGroupList"
+      (recordingActCreatorEvent)="onRecordingActCreatorEvent($event)">
+    </emp-land-recording-act-creator>
+
+    </emp-ng-expansion-button>
+
+  </div>
+
+</emp-ng-card>

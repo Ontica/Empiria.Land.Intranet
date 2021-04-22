@@ -111,6 +111,10 @@ export class RegistrationMainPageComponent implements OnInit, OnChanges, OnDestr
         this.executeCommand(commandType, payload);
         return;
 
+      case InstrumentEditorEventType.EDITION_MODE_CHANGED:
+
+        return;
+
       default:
         throw Assertion.assertNoReachThisCode(`Unrecoginzed event ${event.type}.`);
     }

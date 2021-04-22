@@ -29,6 +29,7 @@ export enum InstrumentEditorEventType {
   CREATE_INSTRUMENT = 'InstrumentEditorEventType.Event.CreateInstrument',
   PRINT_REGISTRATION_STAMP_MEDIA = 'InstrumentEditorEventType.Event.PrintRegistrationStampMedia',
   UPDATE_INSTRUMENT = 'InstrumentEditorEventType.Event.UpdateInstrument',
+  EDITION_MODE_CHANGED = 'InstrumentEditorEventType.Event.EditionModeChanged',
 }
 
 enum InstrumentFormControls {
@@ -42,8 +43,6 @@ enum InstrumentFormControls {
   folio = 'folio',
   endFolio = 'endFolio',
   summary = 'summary',
-  authorizationDate = 'authorizationDate',
-  recordingNo = 'recordingNo',
   status = 'status',
 }
 
@@ -116,6 +115,7 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
     this.setFormModel();
     this.setFormValidatorsByType();
     this.formHandler.disableForm(!this.editionMode);
+    this.sendEvent(InstrumentEditorEventType.EDITION_MODE_CHANGED, this.editionMode);
   }
 
 
@@ -132,14 +132,14 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
 
   submit() {
-    if (!this.formHandler.isReadyForSubmit) {
+    if (!this.formHandler.form.valid) {
       this.formHandler.invalidateForm();
       return;
     }
 
     this.sendEvent(this.addMode ? InstrumentEditorEventType.CREATE_INSTRUMENT :
                    InstrumentEditorEventType.UPDATE_INSTRUMENT,
-                   this.getFormData());
+                   { instrumentFields: this.getFormData() });
   }
 
 
@@ -161,8 +161,6 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
         folio: new FormControl(''),
         endFolio: new FormControl(''),
         summary: new FormControl(''),
-        authorizationDate: new FormControl(''),
-        recordingNo: new FormControl(''),
         status: new FormControl(''),
       }));
   }
@@ -181,8 +179,6 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
       folio: this.instrument.folio,
       endFolio: this.instrument.endFolio,
       summary: this.instrument.summary,
-      authorizationDate: '',
-      recordingNo: '' ,
       status: '',
     });
 
@@ -199,8 +195,6 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
         binderNo: this.instrument.binderNo,
         folio: this.instrument.folio,
         endFolio: this.instrument.endFolio,
-        authorizationDate: '',
-        recordingNo: '' ,
         status: '',
       });
       this.subscribeIssuerList();
@@ -211,8 +205,6 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
       this.formHandler.getControl(this.controls.binderNo).reset();
       this.formHandler.getControl(this.controls.folio).reset();
       this.formHandler.getControl(this.controls.endFolio).reset();
-      this.formHandler.getControl(this.controls.authorizationDate).reset();
-      this.formHandler.getControl(this.controls.recordingNo).reset();
       this.formHandler.getControl(this.controls.status).reset();
     }
   }
@@ -227,24 +219,20 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
       case 'Resumen':
         this.formHandler.clearControlValidators('sheetsCount');
         this.formHandler.setControlValidators('kind', Validators.required);
-        this.formHandler.setControlValidators('authorizationDate', Validators.required);
-        this.formHandler.setControlValidators('recordingNo', Validators.required);
         return;
 
       default:
         this.formHandler.clearControlValidators('kind');
-        this.formHandler.clearControlValidators('authorizationDate');
-        this.formHandler.clearControlValidators('recordingNo');
         this.formHandler.setControlValidators('sheetsCount', [Validators.required, Validate.isPositive]);
         return;
     }
   }
 
 
-  private getFormData(): any {
+  private getFormData(): InstrumentFields {
     const formModel = this.formHandler.form.getRawValue();
 
-    const instrument: InstrumentFields = {
+    const data: InstrumentFields = {
       uid: this.instrument.uid,
       type: formModel.type,
       kind: formModel.kind ?? '',
@@ -256,13 +244,6 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
       binderNo: formModel.binderNo,
       folio: formModel.folio,
       endFolio: formModel.endFolio,
-    };
-
-    const data: any = {
-      instrumentFields: instrument,
-      authorizationDate: formModel.authorizationDate,
-      recordingNo: formModel.recordingNo,
-      status: formModel.status
     };
 
     return data;

@@ -19,45 +19,23 @@
 
       </div>
 
-      <div [fxFlex]="100/3">
-        <ng-container *ngIf="!validateTypeSelected([InstrumentType.Resumen])">
+      <ng-container *ngIf="!validateTypeSelected([InstrumentType.Resumen])">
+        <div [fxFlex]="100/3">
           <label>Fecha:</label>
           <emp-ng-datepicker [formControlName]="controls.issueDate">
 
           </emp-ng-datepicker>
-        </ng-container>
-
-        <ng-container *ngIf="validateTypeSelected([InstrumentType.Resumen])">
-          <label>Fecha de registro:</label>
-          <emp-ng-datepicker [formControlName]="controls.authorizationDate"
-            [showError]="formHandler.showInvalidControl(controls.authorizationDate)">
-
-          </emp-ng-datepicker>
-        </ng-container>
-      </div>
-
-      <div [fxFlex]="100/3" fxLayoutAlign="end">
-        <div [fxFlex]="validateTypeSelected([InstrumentType.Resumen]) ? '181px' : '108px'">
-
-          <ng-container *ngIf="!validateTypeSelected([InstrumentType.Resumen])">
-            <label>Número de hojas:</label>
-            <input [formControlName]="controls.sheetsCount"
-              type="number"
-              class="text-box"
-              [class.invalid-control]="formHandler.showInvalidControl(controls.sheetsCount)">
-          </ng-container>
-
-          <ng-container *ngIf="validateTypeSelected([InstrumentType.Resumen])">
-            <label>Número de la inscripcion a agregar:</label>
-            <input [formControlName]="controls.recordingNo"
-              type="text"
-              class="text-box"
-              style="width: 100px;"
-              [class.invalid-control]="formHandler.showInvalidControl(controls.recordingNo)">
-          </ng-container>
-
         </div>
-      </div>
+
+        <div [fxFlex]="100/3" fxLayoutAlign="end">
+          <div fxFlex="100px">
+            <label>Número de hojas:</label>
+            <input [formControlName]="controls.sheetsCount" type="number" class="text-box"
+              [class.invalid-control]="formHandler.showInvalidControl(controls.sheetsCount)">
+          </div>
+        </div>
+      </ng-container>
+
     </div>
 
     <ng-container *ngIf="typeSelected">
@@ -248,8 +226,7 @@
 
         <button *ngIf="editionMode && ( actions.can.editInstrument || addMode )"
           (click)="submit()"
-          [class.btn]="!formHandler.isValid"
-          [class.btn-action]="formHandler.isValid">
+          class="btn-action">
           {{ submitButtonText }}
         </button>
 

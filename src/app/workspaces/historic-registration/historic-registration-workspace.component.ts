@@ -14,11 +14,11 @@ import { BookEntry, EmptyBookEntry, EmptySelectionAct, SelectionAct } from '@app
 import { EmptyFileViewerData,
          FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
-import { BookEntryEditorEventType } from '@app/views/registration/recording-book/book-entry-editor.component';
+import { BookEntryEditionEventType } from '@app/views/registration/recording-book/book-entry-edition.component';
 
 import {
-  RecordingBookEditorEventType
-} from '@app/views/registration/recording-book/recording-book-editor.component';
+  RecordingBookEditionEventType
+} from '@app/views/registration/recording-book/recording-book-edition.component';
 
 
 @Component({
@@ -31,27 +31,27 @@ export class HistoricRegistrationWorkspaceComponent {
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedRecordingAct: SelectionAct = EmptySelectionAct;
 
-  displayBookEntryEditor = false;
+  displayBookEntryEdition = false;
   displayFileViewer = false;
   displayRecordingActEditor = false;
 
   constructor() {}
 
 
-  onRecordingBookEditorEvent(event) {
-    switch (event.type as RecordingBookEditorEventType) {
+  onRecordingBookEditionEvent(event) {
+    switch (event.type as RecordingBookEditionEventType) {
 
-      case RecordingBookEditorEventType.BOOK_ENTRY_SELECTED:
+      case RecordingBookEditionEventType.BOOK_ENTRY_SELECTED:
         Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
 
         this.selectedBookEntry = event.payload.bookEntry;
-        this.displayBookEntryEditor = !isEmpty(this.selectedBookEntry);
+        this.displayBookEntryEdition = !isEmpty(this.selectedBookEntry);
 
         this.unselectCurrentRecordingAct();
 
         return;
 
-      case RecordingBookEditorEventType.FILES_SELECTED:
+      case RecordingBookEditionEventType.FILES_SELECTED:
         Assertion.assertValue(event.payload.fileViewerData, 'event.payload.fileViewerData');
 
         this.selectedFileViewerData = event.payload.fileViewerData;
@@ -66,10 +66,10 @@ export class HistoricRegistrationWorkspaceComponent {
   }
 
 
-  onBookEntryEditorEvent(event) {
-    switch (event.type as BookEntryEditorEventType) {
+  onBookEntryEditionEvent(event) {
+    switch (event.type as BookEntryEditionEventType) {
 
-      case BookEntryEditorEventType.RECORDING_ACT_SELECTED:
+      case BookEntryEditionEventType.RECORDING_ACT_SELECTED:
         Assertion.assertValue(event.payload.recordingActSelect, 'event.payload.recordingActSelect');
 
         this.selectedRecordingAct = event.payload.recordingActSelect;
@@ -86,7 +86,7 @@ export class HistoricRegistrationWorkspaceComponent {
 
   unselectBookEntry(){
     this.selectedBookEntry = EmptyBookEntry;
-    this.displayBookEntryEditor = false;
+    this.displayBookEntryEdition = false;
   }
 
 

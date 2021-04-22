@@ -15,29 +15,29 @@
   </div>
 
   <div class="primary"
-    [fxHide]="displayFileViewer && displayBookEntryEditor"
-    [fxHide.lt-lg]="displayBookEntryEditor || displayFileViewer">
+    [fxHide]="displayFileViewer && displayBookEntryEdition"
+    [fxHide.lt-lg]="displayBookEntryEdition || displayFileViewer">
 
-    <emp-land-recording-book-editor
-      (recordingBookEditorEvent)="onRecordingBookEditorEvent($event)">
+    <emp-land-recording-book-edition
+      (RecordingBookEditionEvent)="onRecordingBookEditionEvent($event)">
 
-    </emp-land-recording-book-editor>
+    </emp-land-recording-book-edition>
 
   </div>
 
-  <div *ngIf="displayBookEntryEditor"
+  <div *ngIf="displayBookEntryEdition"
     class="secondary"
     [fxHide]="displayRecordingActEditor"
     [fxHide.lt-lg]="displayRecordingActEditor || displayFileViewer">
 
-    <emp-land-book-entry-editor
+    <emp-land-book-entry-edition
       [recordingBookUID]="selectedBookEntry.recordingBookUID"
       [bookEntryUID]="selectedBookEntry.uid"
       [instrumentRecordingUID]="selectedBookEntry.instrumentRecording.uid"
-      (bookEntryEditorEvent)="onBookEntryEditorEvent($event)"
+      (BookEntryEditionEvent)="onBookEntryEditionEvent($event)"
       (closeEvent)="unselectBookEntry()">
 
-    </emp-land-book-entry-editor>
+    </emp-land-book-entry-edition>
 
   </div>
 

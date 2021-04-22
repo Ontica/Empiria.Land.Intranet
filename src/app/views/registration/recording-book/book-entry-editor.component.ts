@@ -5,25 +5,31 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
-import { Assertion, EventInfo } from '@app/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { RecordingDataService } from '@app/data-services';
+import { EventInfo, isEmpty } from '@app/core';
 
-import { BookEntry, CreateManualBookEntryFields, EmptyBookEntry, EmptyInstrumentRecording, InstrumentFields,
-         InstrumentRecording, RecordingActTypeGroup, RegistrationCommand} from '@app/models';
+import { BookEntry, CreateManualBookEntryFields, EmptyBookEntry, EmptyInstrument,
+         EmptyInstrumentRecordingActions, Instrument, InstrumentFields,
+         InstrumentRecordingActions } from '@app/models';
+
+import { FormHandler } from '@app/shared/utils';
 
 import {
   InstrumentEditorEventType
 } from '@app/views/recordable-subjects/instrument/instrument-editor.component';
 
-import { RecordingActCreatorEventType } from '../recording-acts/recording-act-creator.component';
-
-import { RecordingActsListEventType } from '../recording-acts/recording-acts-list.component';
+enum BookEntryEditorControls {
+  recordingNo = 'recordingNo',
+  authorizationDate = 'authorizationDate',
+  presentationTime = 'presentationTime',
+}
 
 export enum BookEntryEditorEventType {
-  RECORDING_ACT_SELECTED = 'BookEntryEditorComponent.Event.RecordingActSelected',
+  CREATE_BOOK_ENTRY = 'BookEntryEditorComponent.Event.CreateBookEntry',
+  UPDATE_BOOK_ENTRY = 'BookEntryEditorComponent.Event.UpdateBookEntry',
 }
 
 
@@ -31,72 +37,68 @@ export enum BookEntryEditorEventType {
   selector: 'emp-land-book-entry-editor',
   templateUrl: './book-entry-editor.component.html',
 })
-export class BookEntryEditorComponent implements OnChanges {
 
-  @Input() recordingBookUID: string;
+export class BookEntryEditorComponent implements OnInit, OnChanges {
 
-  @Input() bookEntryUID: string;
+  @Input() bookEntry: BookEntry = EmptyBookEntry;
 
-  @Input() instrumentRecordingUID: string;
+  @Input() instrument: Instrument = EmptyInstrument;
+
+  @Input() actions: InstrumentRecordingActions = EmptyInstrumentRecordingActions;
 
   @Output() bookEntryEditorEvent = new EventEmitter<EventInfo>();
 
-  @Output() closeEvent = new EventEmitter<void>();
+  formHandler: FormHandler;
 
-  cardTitle = 'Inscripción';
+  controls = BookEntryEditorControls;
 
-  cardHint =
-    'Herramienta para buscar, y en su caso generar, folios reales en inscripciones en libros físicos';
+  editionMode = false;
 
-  panelAddState = false;
-
-  submitted = false;
-
-  isLoading = false;
-
-  bookEntry: BookEntry = EmptyBookEntry;
-
-  instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
-
-  recordingActTypeGroupList: RecordingActTypeGroup[] = [];
-
-  constructor(private recordingData: RecordingDataService) {
+  constructor() {
+    this.initForm();
   }
 
 
-  ngOnChanges() {
-    this.getInstrumentRecording();
+  ngOnInit(): void {
+    this.setEditionMode(!isEmpty(this.bookEntry));
   }
 
 
-  get recordingActs(){
-    return this.instrumentRecording.bookRecordingMode ?
-      this.bookEntry.recordingActs : this.instrumentRecording.recordingActs;
-  }
-
-
-  onClose() {
-    this.closeEvent.emit();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bookEntry) {
+      this.resetFormModel();
+    }
   }
 
 
   onInstrumentEditorEvent(event) {
-    if (this.submitted) {
-      return;
-    }
 
     switch (event.type as InstrumentEditorEventType) {
 
+      case InstrumentEditorEventType.CREATE_INSTRUMENT:
+
+        if (!this.formHandler.isValid) {
+          return;
+        }
+
+        this.sendEvent(BookEntryEditorEventType.CREATE_BOOK_ENTRY,
+          this.getFormData(event.payload.instrumentFields as InstrumentFields));
+
+        return;
+
       case InstrumentEditorEventType.UPDATE_INSTRUMENT:
 
-        const bookEntryFields: CreateManualBookEntryFields = {
-          recordingNo: event.payload.recordingNo,
-          instrument: event.payload.instrumentFields as InstrumentFields,
-          authorizationDate: event.payload.recordingTime,
-          presentationTime: '',
-        };
+        if (!this.formHandler.isValid) {
+          return;
+        }
 
-        this.updateBookEntryInstrumentRecording(bookEntryFields);
+        this.sendEvent(BookEntryEditorEventType.UPDATE_BOOK_ENTRY,
+          this.getFormData(event.payload.instrumentFields as InstrumentFields));
+
+        return;
+
+      case InstrumentEditorEventType.EDITION_MODE_CHANGED:
+        this.setEditionMode(event.payload);
 
         return;
 
@@ -107,146 +109,43 @@ export class BookEntryEditorComponent implements OnChanges {
   }
 
 
-  onRecordingActCreatorEvent(event: EventInfo) {
-    if (this.submitted) {
-      return;
-    }
-
-    switch (event.type as RecordingActCreatorEventType) {
-      case RecordingActCreatorEventType.APPEND_RECORDING_ACT:
-        Assertion.assertValue(event.payload.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
-        Assertion.assertValue(event.payload.registrationCommand, 'event.payload.registrationCommand');
-        this.appendRecordingActToBookEntry(event.payload.registrationCommand as RegistrationCommand);
-        return;
-
-      default:
-        throw Assertion.assertNoReachThisCode(`Unrecoginzed event ${event.type}.`);
-    }
+  private initForm() {
+    this.formHandler = new FormHandler(
+      new FormGroup({
+        recordingNo: new FormControl('', Validators.required),
+        authorizationDate: new FormControl('', Validators.required),
+        presentationTime: new FormControl('', Validators.required),
+      }));
   }
 
 
-  onRecordingActsListEvent(event: EventInfo) {
-    if (this.submitted) {
-      return;
-    }
-
-    switch (event.type as RecordingActsListEventType) {
-      case RecordingActsListEventType.SELECT_RECORDING_ACT:
-        this.sendEvent(BookEntryEditorEventType.RECORDING_ACT_SELECTED,
-          {'recordingActSelect': event.payload});
-
-        return;
-
-      case RecordingActsListEventType.REMOVE_RECORDING_ACT:
-        Assertion.assertValue(event.payload.recordingActUID, 'event.payload.recordingActUID');
-        this.removeRecordingActFromBookEntry(event.payload.recordingActUID);
-        return;
-
-      default:
-        throw Assertion.assertNoReachThisCode(`Unrecoginzed event ${event.type}.`);
-    }
+  private resetFormModel() {
+    this.formHandler.form.reset({
+      recordingNo: this.bookEntry.recordingNo,
+      authorizationDate: '', // this.bookEntry.recordingTime,
+      presentationTime: '', // this.bookEntry.recordingTime,
+    });
   }
 
 
-  private getInstrumentRecording(){
-    this.isLoading = true;
-    this.recordingData.getInstrumentRecording(this.instrumentRecordingUID)
-      .subscribe(x => {
-        this.setInstrumentRecording(x);
-        this.initTexts();
-        this.getRecordingActTypesForBookEntry();
-      })
-      .add(() => this.isLoading = false);
+  private setEditionMode(editionMode: boolean) {
+    setTimeout(() => {
+      this.editionMode = editionMode;
+      this.resetFormModel();
+      this.formHandler.disableForm(!this.editionMode);
+    });
   }
 
 
-  private updateBookEntryInstrumentRecording(instrumentFields: CreateManualBookEntryFields) {
-    this.setSubmited(true);
+  private getFormData(instrument: InstrumentFields): CreateManualBookEntryFields {
+    const bookEntryFields: CreateManualBookEntryFields = {
+      recordingNo: this.formHandler.getControl(this.controls.recordingNo).value,
+      authorizationDate: this.formHandler.getControl(this.controls.authorizationDate).value,
+      presentationTime: this.formHandler.getControl(this.controls.presentationTime).value,
+      instrument,
+    };
 
-    this.recordingData
-      .updateBookEntryInstrumentRecording(this.instrumentRecording.uid, this.bookEntryUID, instrumentFields)
-      .toPromise()
-      .then(x => {
-        this.setInstrumentRecording(x);
-      })
-      .finally(() => {
-        this.setSubmited(false);
-      });
-  }
-
-
-  private getRecordingActTypesForBookEntry(){
-    this.recordingData.getRecordingActTypesForBookEntry(this.recordingBookUID, this.bookEntryUID)
-      .subscribe(x => {
-        this.recordingActTypeGroupList = x;
-      });
-  }
-
-
-  private appendRecordingActToBookEntry(registrationCommand: RegistrationCommand) {
-    this.setSubmited(true);
-
-    this.recordingData
-      .appendRecordingActToBookEntry(this.recordingBookUID, this.bookEntryUID, registrationCommand)
-      .toPromise()
-      .then(x => {
-        this.setInstrumentRecording(x);
-      })
-      .finally(() => {
-        this.setSubmited(false);
-      });
-  }
-
-
-  private removeRecordingActFromBookEntry(recordingActUID: string) {
-    this.setSubmited(true);
-
-    this.recordingData
-      .removeRecordingActFromBookEntry(this.recordingBookUID, this.bookEntryUID, recordingActUID)
-      .toPromise()
-      .then(x => {
-        this.setInstrumentRecording(x);
-      })
-      .finally(() => {
-        this.setSubmited(false);
-      });
-  }
-
-
-  private setInstrumentRecording(instrumentRecording: InstrumentRecording){
-    this.instrumentRecording = instrumentRecording;
-    this.setBookEntry();
-    this.resetPanelState();
-  }
-
-
-  private setBookEntry(){
-    this.bookEntry = EmptyBookEntry;
-    if (this.instrumentRecording.bookEntries.filter(x => x.uid === this.bookEntryUID).length > 0) {
-      this.bookEntry = this.instrumentRecording.bookEntries.filter(x => x.uid === this.bookEntryUID)[0];
-    }
-  }
-
-
-  private initTexts(){
-    this.cardTitle = `Inscripción ${this.bookEntry?.recordingNo},
-     Volumen ${this.bookEntry?.volumeNo},
-     ${this.bookEntry?.recordingSectionName},
-     ${this.bookEntry?.recorderOfficeName}`;
-
-    this.cardHint = `<strong>Estado: ${this.bookEntry?.status} </strong><br>
-      Herramienta para buscar, y en su caso generar, folios reales en inscripciones en libros físicos`;
-  }
-
-
-  private resetPanelState() {
-    this.panelAddState = false;
-  }
-
-
-  private setSubmited(submitted: boolean) {
-    this.isLoading = submitted;
-    this.submitted = submitted;
+    return bookEntryFields;
   }
 
 

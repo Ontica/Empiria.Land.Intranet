@@ -1,44 +1,52 @@
-<emp-ng-card
-  [title]="cardTitle"
-  [hint]="cardHint"
-  (cardClose)="onClose()">
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section">
 
-  <div class="card-body-padding" [style.height.%]="98" [empNgSpinnerHost]="spinner">
+  <div fxLayout="row" fxLayout.lt-md="column">
 
-    <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+    <div [fxFlex]="100/3">
+      <div fxFlex="190px">
+        <label>Número de la inscripcion a agregar:</label>
+        <input autocomplete="off" [formControlName]="controls.recordingNo" type="text" class="text-box"
+          style="width: 100px;" [class.invalid-control]="formHandler.getControl(controls.recordingNo).invalid">
+      </div>
+    </div>
 
-    <emp-land-instrument-editor
-      [actions]="instrumentRecording.actions"
-      [instrument]="instrumentRecording.instrument"
-      [showStatusField]="true"
-      title="Instrumento"
-      (instrumentEditorEvent)="onInstrumentEditorEvent($event)">
+    <div [fxFlex]="100/3">
+      <div fxFlex fxLayoutAlign="start">
+        <div fxFlex="126px">
+          <label>Fecha de registro:</label>
+          <emp-ng-datepicker name="authorizationDate" [formControlName]="controls.authorizationDate"
+            [showError]="formHandler.getControl(controls.authorizationDate).invalid">
 
-    </emp-land-instrument-editor>
+          </emp-ng-datepicker>
+        </div>
+      </div>
 
-    <br>
+      <div fxFlex fxLayoutAlign="end">
+        <div fxFlex="126px">
+          <label>Fecha de presentación:</label>
+          <emp-ng-datepicker name="presentationTime" [formControlName]="controls.presentationTime"
+            [showError]="formHandler.getControl(controls.presentationTime).invalid">
 
-    <emp-land-recording-acts-list
-      [instrumentRecording]="instrumentRecording"
-      [recordingActs]="recordingActs"
-      [showCopyToClipboard]="true"
-      title="Predios y actos jurídicos registrados en esta inscripción"
-      (recordingActsListEvent)="onRecordingActsListEvent($event)">
-
-    </emp-land-recording-acts-list>
-
-    <emp-ng-expansion-button [(panelState)]="panelAddState"
-      [config]="{textButtonOpen: 'Registrar un acto jurídico',
-                 textButtonClose: 'Cancelar registro'}">
-
-    <emp-land-recording-act-creator *ngIf="panelAddState"
-      [instrumentRecording]="instrumentRecording"
-      [recordingActTypeGroupList]="recordingActTypeGroupList"
-      (recordingActCreatorEvent)="onRecordingActCreatorEvent($event)">
-    </emp-land-recording-act-creator>
-
-    </emp-ng-expansion-button>
-
+          </emp-ng-datepicker>
+        </div>
+      </div>
+    </div>
   </div>
 
-</emp-ng-card>
+</form>
+
+<mat-divider class="divider-padding">
+
+</mat-divider>
+
+<emp-land-instrument-editor #instrumentEditor
+  [actions]="actions"
+  [instrument]="instrument"
+  [title]="instrument.uid ? 'Instrumento' : ''"
+  [showStatusField]="instrument.uid ? true : false"
+  [submitButtonText]="instrument.uid ? 'Guardar los Cambios' : 'Agregar la inscripción a este volumen'"
+  [addMode]="!instrument.uid"
+  defaultType="Resumen"
+  (instrumentEditorEvent)="onInstrumentEditorEvent($event)">
+
+</emp-land-instrument-editor>

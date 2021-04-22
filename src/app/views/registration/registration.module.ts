@@ -18,13 +18,14 @@ import { RecordableSubjectsModule } from '../recordable-subjects/recordable-subj
 import { InstrumentBookEntriesModule } from './instrument-book-entries/instrument-book-entries.module';
 
 import { BookEntryEditorComponent } from './recording-book/book-entry-editor.component';
+import { BookEntryEditionComponent } from './recording-book/book-entry-edition.component';
 import { BookEntryListComponent } from './recording-book/book-entry-list.component';
 import {
   RecordableSubjectTabbedViewComponent
 } from './recordable-subject-tabbed-view/recordable-subject-tabbed-view.component';
 import { RecordingActCreatorComponent } from './recording-acts/recording-act-creator.component';
 import { RecordingActsListComponent } from './recording-acts/recording-acts-list.component';
-import { RecordingBookEditorComponent } from './recording-book/recording-book-editor.component';
+import { RecordingBookEditionComponent } from './recording-book/recording-book-edition.component';
 import { RecordingBookSelectorComponent } from './recording-book/recording-book-selector.component';
 import { RegistrationMainPageComponent } from './main-page/registration-main-page.component';
 
@@ -45,20 +46,21 @@ import { RegistrationMainPageComponent } from './main-page/registration-main-pag
   ],
 
   declarations: [
+    BookEntryEditionComponent,
     BookEntryEditorComponent,
     BookEntryListComponent,
     RecordableSubjectTabbedViewComponent,
     RecordingActCreatorComponent,
     RecordingActsListComponent,
-    RecordingBookEditorComponent,
+    RecordingBookEditionComponent,
     RecordingBookSelectorComponent,
     RegistrationMainPageComponent,
   ],
 
   exports: [
-    BookEntryEditorComponent,
+    BookEntryEditionComponent,
     RecordableSubjectTabbedViewComponent,
-    RecordingBookEditorComponent,
+    RecordingBookEditionComponent,
     RegistrationMainPageComponent,
   ]
 })

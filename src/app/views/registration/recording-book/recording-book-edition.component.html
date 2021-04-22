@@ -29,7 +29,7 @@
 
     </div>
 
-    <ng-container *ngIf="displayRecordingBookEditor">
+    <ng-container *ngIf="displayRecordingBookEdition">
 
       <emp-land-book-entry-list
         [recordingBook]="recordingBookSelected"
@@ -41,14 +41,14 @@
         [config]="{textButtonOpen: 'Agregar una inscripción a este volumen',
                   textButtonClose: 'Cancelar agregar registro'}" class="no-margin">
 
-        <emp-land-instrument-editor *ngIf="panelAddState"
-          title=""
-          submitButtonText="Agregar la inscripción a este volumen"
-          [addMode]="true"
-          defaultType="Resumen"
-          (instrumentEditorEvent)="onInstrumentEditorEvent($event)">
+        <ng-container *ngIf="panelAddState">
 
-        </emp-land-instrument-editor>
+          <emp-land-book-entry-editor
+            (bookEntryEditorEvent)="onBookEntryEditorEvent($event)">
+
+          </emp-land-book-entry-editor>
+
+        </ng-container>
 
       </emp-ng-expansion-button>
 

@@ -9,14 +9,12 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 
-import { CreateManualBookEntryFields, EmptyRecordingBook, InstrumentFields,
+import { CreateManualBookEntryFields, EmptyRecordingBook,
          RecordingBook, BookEntry, EmptyBookEntry } from '@app/models';
 
-import { BookEntryListEventType } from './book-entry-list.component';
+import { BookEntryEditorEventType } from './book-entry-editor.component';
 
-import {
-  InstrumentEditorEventType
-} from '@app/views/recordable-subjects/instrument/instrument-editor.component';
+import { BookEntryListEventType } from './book-entry-list.component';
 
 import { RecordingBookSelectorEventType } from './recording-book-selector.component';
 
@@ -24,19 +22,20 @@ import { RecordingDataService } from '@app/data-services';
 
 import { FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
-export enum RecordingBookEditorEventType {
-  RECORDING_BOOK_SELECTED = 'RecordingBookEditorComponent.Event.RecordingBookSelected',
-  BOOK_ENTRY_SELECTED = 'RecordingBookEditorComponent.Event.BookEntrySelected',
-  FILES_SELECTED = 'RecordingBookEditorComponent.Event.FilesSelected',
+
+export enum RecordingBookEditionEventType {
+  RECORDING_BOOK_SELECTED = 'RecordingBookEditionComponent.Event.RecordingBookSelected',
+  BOOK_ENTRY_SELECTED = 'RecordingBookEditionComponent.Event.BookEntrySelected',
+  FILES_SELECTED = 'RecordingBookEditionComponent.Event.FilesSelected',
 }
 
 @Component({
-  selector: 'emp-land-recording-book-editor',
-  templateUrl: './recording-book-editor.component.html',
+  selector: 'emp-land-recording-book-edition',
+  templateUrl: './recording-book-edition.component.html',
 })
-export class RecordingBookEditorComponent implements OnInit {
+export class RecordingBookEditionComponent implements OnInit {
 
-  @Output() recordingBookEditorEvent = new EventEmitter<EventInfo>();
+  @Output() RecordingBookEditionEvent = new EventEmitter<EventInfo>();
 
   cardHint = 'Seleccione el volumen';
 
@@ -50,7 +49,7 @@ export class RecordingBookEditorComponent implements OnInit {
 
   recordingBookSelected: RecordingBook = EmptyRecordingBook;
 
-  displayRecordingBookEditor = false;
+  displayRecordingBookEdition = false;
 
   constructor(private data: RecordingDataService ) { }
 
@@ -92,7 +91,7 @@ export class RecordingBookEditorComponent implements OnInit {
         Assertion.assertValue(event.payload.bookEntry.instrumentRecording,
           'event.payload.bookEntry.instrumentRecording');
 
-        this.sendEvent(RecordingBookEditorEventType.BOOK_ENTRY_SELECTED,
+        this.sendEvent(RecordingBookEditionEventType.BOOK_ENTRY_SELECTED,
           { bookEntry: event.payload.bookEntry });
 
         return;
@@ -115,7 +114,7 @@ export class RecordingBookEditorComponent implements OnInit {
           hint: `<strong>Visor de Archivos</strong>`,
         };
 
-        this.sendEvent(RecordingBookEditorEventType.FILES_SELECTED, { fileViewerData });
+        this.sendEvent(RecordingBookEditionEventType.FILES_SELECTED, { fileViewerData });
 
         return;
 
@@ -126,18 +125,20 @@ export class RecordingBookEditorComponent implements OnInit {
   }
 
 
-  onInstrumentEditorEvent(event) {
+  onBookEntryEditorEvent(event) {
     if (this.submitted) {
       return;
     }
 
-    switch (event.type as InstrumentEditorEventType) {
+    switch (event.type as BookEntryEditorEventType) {
 
-      case InstrumentEditorEventType.CREATE_INSTRUMENT:
-        Assertion.assertValue(event.payload.instrumentFields, 'event.payload.instruementFields');
-        Assertion.assertValue(event.payload, 'event.payload');
+      case BookEntryEditorEventType.CREATE_BOOK_ENTRY:
+        Assertion.assertValue(event.payload.recordingNo, 'event.payload.recordingNo');
+        Assertion.assertValue(event.payload.authorizationDate, 'event.payload.authorizationDate');
+        Assertion.assertValue(event.payload.presentationTime, 'event.payload.presentationTime');
+        Assertion.assertValue(event.payload.instrument, 'event.payload.instrument');
 
-        this.createBookEntry(event.payload);
+        this.createBookEntry(event.payload as CreateManualBookEntryFields);
 
         return;
 
@@ -163,7 +164,7 @@ export class RecordingBookEditorComponent implements OnInit {
   private loadRecordingBookData(recordingBook: Identifiable){
     if (isEmpty(recordingBook)) {
       this.recordingBookSelected = EmptyRecordingBook;
-      this.displayRecordingBookEditor = false;
+      this.displayRecordingBookEdition = false;
       this.initTexts();
 
       return;
@@ -175,20 +176,14 @@ export class RecordingBookEditorComponent implements OnInit {
       .toPromise()
       .then(x => {
         this.recordingBookSelected = x;
-        this.displayRecordingBookEditor = !isEmpty(this.recordingBookSelected);
+        this.displayRecordingBookEdition = !isEmpty(this.recordingBookSelected);
         this.initTexts();
       })
       .finally(() => this.setSubmitted(false));
   }
 
 
-  private createBookEntry(data: any){
-    const bookEntryFields: CreateManualBookEntryFields = {
-      recordingNo: data.recordingNo,
-      instrument: data.instrumentFields as InstrumentFields,
-      authorizationDate: data.recordingTime,
-      presentationTime: '',
-    };
+  private createBookEntry(bookEntryFields: CreateManualBookEntryFields){
 
     this.setSubmitted(true);
 
@@ -210,7 +205,7 @@ export class RecordingBookEditorComponent implements OnInit {
       .then(x => {
         this.recordingBookSelected = x;
 
-        this.sendEvent(RecordingBookEditorEventType.BOOK_ENTRY_SELECTED,
+        this.sendEvent(RecordingBookEditionEventType.BOOK_ENTRY_SELECTED,
           { bookEntry: EmptyBookEntry });
       })
       .finally(() => this.setSubmitted(false));
@@ -228,13 +223,13 @@ export class RecordingBookEditorComponent implements OnInit {
   }
 
 
-  private sendEvent(eventType: RecordingBookEditorEventType, payload?: any) {
+  private sendEvent(eventType: RecordingBookEditionEventType, payload?: any) {
     const event: EventInfo = {
       type: eventType,
       payload
     };
 
-    this.recordingBookEditorEvent.emit(event);
+    this.RecordingBookEditionEvent.emit(event);
   }
 
 }
