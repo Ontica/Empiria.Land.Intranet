@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 
-import { Assertion, Command } from '@app/core';
+import { Assertion, Command, EventInfo } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
@@ -23,6 +23,10 @@ import {
   RealEstateEditorComponentEventType
 } from '@app/views/recordable-subjects/real-estate/real-estate-editor.component';
 
+export enum RecordableSubjectTabbedViewEventType {
+  UPDATED_RECORDABLE_SUBJECT = 'RecordableSubjectTabbedViewComponent.Event.UpdatedRecordableSubject',
+}
+
 
 @Component({
   selector: 'emp-land-recordable-subject-tabbed-view',
@@ -35,6 +39,8 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
   @Input() recordingAct: RecordingAct;
 
   @Output() closeEvent = new EventEmitter<void>();
+
+  @Output() recordableSubjectTabbedViewEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;
 
@@ -123,7 +129,10 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
     Assertion.assertValue(data.recordingActUID, 'event.payload.recordingActUID');
     Assertion.assertValue(data.recordableSubjectFields, 'event.payload.recordableSubjectFields');
 
-    this.executeCommand(RegistrationCommandType.UPDATE_RECORDABLE_SUBJECT, data);
+    this.executeCommand(RegistrationCommandType.UPDATE_RECORDABLE_SUBJECT, data)
+      .then(instrumentRecording =>
+        this.sendEvent(RecordableSubjectTabbedViewEventType.UPDATED_RECORDABLE_SUBJECT, {instrumentRecording})
+      );
   }
 
 
@@ -180,6 +189,16 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
     return this.uiLayer.execute<T>(command)
       .finally(() => this.submitted = false);
+  }
+
+
+  private sendEvent(eventType: RecordableSubjectTabbedViewEventType, payload?: any) {
+    const event: EventInfo = {
+      type: eventType,
+      payload
+    };
+
+    this.recordableSubjectTabbedViewEvent.emit(event);
   }
 
 }
