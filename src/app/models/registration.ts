@@ -131,6 +131,9 @@ export interface RegistrationCommand {
 export interface RegistrationCommandPayload {
   recordingActTypeUID: string;
   recordableSubjectUID?: string;
+  recordingBookUID?: string;
+  bookEntryUID?: string;
+  bookEntryNo?: string;
   partitionType?: string;
   partitionNo?: string;
 }
@@ -139,6 +142,7 @@ export interface RegistrationCommandPayload {
 export interface RegistrationCommandRule {
   subjectType: RecordableSubjectType;
   selectSubject: boolean;
+  selectBookEntry: boolean;
   selectTargetAct: boolean;
   newPartition: boolean;
 }
@@ -147,6 +151,7 @@ export interface RegistrationCommandRule {
 export const EmptyRegistrationCommandRule: RegistrationCommandRule = {
   subjectType: 'None',
   selectSubject: false,
+  selectBookEntry: false,
   selectTargetAct: false,
   newPartition: false,
 };

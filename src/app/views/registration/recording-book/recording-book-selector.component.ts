@@ -5,13 +5,20 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,
+         SimpleChanges } from '@angular/core';
+
 import { Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
 import { BookEntryShortModel, EmptyBookEntryShortModel, RecorderOffice } from '@app/models';
+
 import { RecordableSubjectsStateSelector,
          TransactionStateSelector } from '@app/presentation/exported.presentation.types';
+
 import { concat, Observable, of, Subject } from 'rxjs';
+
 import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
 export enum RecordingBookSelectorEventType {
@@ -21,13 +28,28 @@ export enum RecordingBookSelectorEventType {
   BOOK_ENTRY_CHANGED = 'RecordingBookSelectorComponent.Event.BookEntryChanged',
 }
 
+
 @Component({
   selector: 'emp-land-recording-book-selector',
   templateUrl: './recording-book-selector.component.html',
 })
-export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
+export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() showRecordingBookEntryField: boolean;
+  @Input() bookEntryButtonText = 'Editar';
+
+  @Input() bookEntryInput = false;
+
+  @Input() fieldsRequired = false;
+
+  @Input() selectorPosition: 'auto' | 'top' | 'bottom' = 'auto';
+
+  @Input() showBookEntryButton = false;
+
+  @Input() showRecordingBookButton = false;
+
+  @Input() showRecordingBookEntryField = false;
+
+  @Input() recordingBookButtonText = 'Ver';
 
   @Output() recordingBookSelectorEvent = new EventEmitter<EventInfo>();
 
@@ -49,10 +71,12 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
   recordingSectionSelected: Identifiable;
   recordingBookSelected: Identifiable;
   recordingBookEntrySelected: BookEntryShortModel;
+  bookEntryNo: string;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
+
 
   ngOnInit(): void {
     this.initForm();
@@ -61,6 +85,15 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
     this.recorderOfficeSelected = null;
     this.recordingSectionSelected = null;
   }
+
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bookEntryInput) {
+      this.recordingBookEntrySelected = null;
+      this.bookEntryNo = null;
+    }
+  }
+
 
   ngOnDestroy() {
     this.helper.destroy();
@@ -94,6 +127,12 @@ export class RecordingBookSelectorComponent implements OnInit, OnDestroy {
 
   onBookEntryChange(bookEntry: BookEntryShortModel) {
     this.emitBookEntry(isEmpty(bookEntry) ? EmptyBookEntryShortModel : this.recordingBookEntrySelected );
+  }
+
+
+  onBookEntryNoChange(bookEntryNo: string) {
+    this.sendEvent(RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED,
+      { bookEntry: { recordingNo: bookEntryNo } });
   }
 
 

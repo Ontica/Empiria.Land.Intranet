@@ -11,79 +11,104 @@
 
         <emp-ng-select
           [(ngModel)]="recorderOfficeSelected" name="recorderOffice"
-          [config]="{ bindByValue: false, clearable: false }"
+          [config]="{ bindByValue: false,
+                      clearable: false,
+                      dropdownPosition: selectorPosition }"
           [items]="recorderOfficeList"
+          [required]="fieldsRequired"
+          [showError]="fieldsRequired && ( !recorderOfficeSelected || !recorderOfficeSelected.uid )"
           (changes)="onRecorderOfficeChange($event)">
         </emp-ng-select>
 
       </div>
 
-      <div fxFlex="30">
+      <div [style.width.%]="100" [style.max-width.px]="showRecordingBookEntryField ? 330 : 351">
 
         <label>Sección:</label>
 
         <emp-ng-select [(ngModel)]="recordingSectionSelected" name="recordingSection"
-          [config]="{ bindByValue: false, clearable: false }"
+          [config]="{ bindByValue: false,
+                      clearable: false,
+                      dropdownPosition: selectorPosition }"
           [items]="recordingSectionList"
+          [required]="fieldsRequired"
+          [showError]="fieldsRequired && ( !recordingSectionSelected || !recordingSectionSelected.uid )"
+          [style.width.%]="100"
           (changes)="onRecordingSectionChange($event)">
         </emp-ng-select>
 
       </div>
 
-      <div fxFlex="25">
+      <div fxFlex="120px">
 
         <label>Volumen:</label>
 
-        <div fxLayout="row">
+        <emp-ng-select [(ngModel)]="recordingBookSelected" name="recordingBook"
+          [config]="{ bindByValue: false,
+                      dropdownPosition: selectorPosition,
+                      hideSelected: true,
+                      minTermLength: recordingBookMinTermLength }"
+          [disabled]="!isReadyToFilterRecordingBook"
+          [items]="recordingBookList$ | async"
+          [typeahead]="recordingBookInput$"
+          [loading]="recordingBookLoading"
+          [placeholder]="isReadyToFilterRecordingBook ? 'Buscar' : 'Seleccione'"
+          [required]="fieldsRequired"
+          [showError]="fieldsRequired && ( !recordingBookSelected || !recordingBookSelected.uid )"
+          (changes)="onRecordingBookChange($event)">
 
-          <emp-ng-select fxFlex [(ngModel)]="recordingBookSelected" name="recordingBook"
-            [config]="{ bindByValue: false,
-                        hideSelected: true,
-                        minTermLength: recordingBookMinTermLength }"
-            [disabled]="!isReadyToFilterRecordingBook"
-            [items]="recordingBookList$ | async"
-            [typeahead]="recordingBookInput$"
-            [loading]="recordingBookLoading"
-            [placeholder]="isReadyToFilterRecordingBook ? 'Buscar' : 'Seleccione'"
-            (changes)="onRecordingBookChange($event)">
-
-          </emp-ng-select>
-
-          <div fxFlex="80px">
-            <button *ngIf="showRecordingBookEntryField"
-              type="button" class="btn" [style.marginTop.px]="2"
-              (click)="onRecordingBookClicked()">
-              Lista
-            </button>
-          </div>
-
-        </div>
+        </emp-ng-select>
 
       </div>
 
-      <div fxFlex="25" *ngIf="showRecordingBookEntryField">
+      <div *ngIf="showRecordingBookButton" fxFlex="75px" fxLayoutAlign="end end" [style.marginBottom.px]="2"
+        [style.marginLeft.px]="8">
 
-        <label>Inscripción:</label>
+        <button type="button" class="btn" fxFlex="75px"
+          (click)="onRecordingBookClicked()">
+          {{ recordingBookButtonText }}
+        </button>
 
-        <div fxLayout="row">
+      </div>
 
-          <emp-ng-select fxFlex [(ngModel)]="recordingBookEntrySelected" name="recordingBookEntry"
-            [config]="{ bindByValue: false}"
+      <div fxFlex="120px" >
+
+        <ng-container *ngIf="showRecordingBookEntryField">
+
+          <label>Inscripción:</label>
+
+          <emp-ng-select name="recordingBookEntry" *ngIf="!bookEntryInput"
+            [(ngModel)]="recordingBookEntrySelected"
+            [config]="{ bindByValue: false,
+                        dropdownPosition: selectorPosition }"
             bindLabel="recordingNo"
             [disabled]="!isReadyToFilterRecordingBook"
             [items]="recordingBookEntryList"
             [placeholder]="recordingBookEntryList.length === 0 ? 'Seleccione' : 'Seleccionar'"
+            [required]="fieldsRequired"
+            [showError]="fieldsRequired && ( !recordingBookEntrySelected || !recordingBookEntrySelected.uid )"
             (changes)="onBookEntryChange($event)">
           </emp-ng-select>
 
-          <div fxFlex="80px">
-            <button type="button" class="btn" [style.marginTop.px]="2"
-              (click)="onRecordingBookEntryClicked()">
-              {{recordingBookEntrySelected ? 'Ver' : 'Agregar'}}
-            </button>
-          </div>
+          <input *ngIf="bookEntryInput"
+            [disabled]="!isReadyToFilterRecordingBook"
+            type="text" class="text-box" name="recordingNo"
+            [(ngModel)]="bookEntryNo" [required]="fieldsRequired"
+            [class.invalid-control]="bookEntryNo == null || bookEntryNo == ''"
+            (input)="onBookEntryNoChange(bookEntryNo)">
 
-        </div>
+        </ng-container>
+
+      </div>
+
+      <div *ngIf="showBookEntryButton" fxFlex="75px" fxLayoutAlign="end end" [style.marginBottom.px]="2"
+        [style.marginLeft.px]="8">
+
+        <button *ngIf="showBookEntryButton"
+          type="button" class="btn" fxFlex="75px"
+          (click)="onRecordingBookEntryClicked()">
+          {{ bookEntryButtonText }}
+        </button>
 
       </div>
 

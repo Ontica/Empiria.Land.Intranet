@@ -19,11 +19,13 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { EmptyInstrumentRecording, EmptyRegistrationCommandRule, InstrumentRecording,
          RecordableSubjectFilter, RecordableSubjectShortModel, RecordingActType, RecordingActTypeGroup,
-         RegistrationCommand, RegistrationCommandConfig, RegistrationCommandRule } from '@app/models';
+         RegistrationCommand, RegistrationCommandConfig, RegistrationCommandPayload,
+         RegistrationCommandRule } from '@app/models';
 
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
 import { FormHandler } from '@app/shared/utils';
+import { RecordingBookSelectorEventType } from '../recording-book/recording-book-selector.component';
 
 export enum RecordingActCreatorEventType {
   APPEND_RECORDING_ACT = 'RecordingActCreatorComponent.Event.AppendRecordingAct',
@@ -33,7 +35,10 @@ enum RecordingActCreatorFormControls {
   recordingActTypeGroup = 'recordingActTypeGroup',
   recordingActType = 'recordingActType',
   registrationCommand = 'registrationCommand',
-  subject = 'subject',
+  recordableSubject = 'recordableSubject',
+  recordingBookUID = 'recordingBookUID',
+  bookEntryUID = 'bookEntryUID',
+  bookEntryNo = 'bookEntryNo',
   partitionType = 'partitionType',
   partitionNo = 'partitionNo',
 }
@@ -60,12 +65,14 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   registrationCommandRules: RegistrationCommandRule = EmptyRegistrationCommandRule;
 
-  subjectList$: Observable<RecordableSubjectShortModel[]>;
-  subjectInput$ = new Subject<string>();
-  subjectLoading = false;
-  subjectMinTermLength = 5;
+  recordableSubjectList$: Observable<RecordableSubjectShortModel[]>;
+  recordableSubjectInput$ = new Subject<string>();
+  recordableSubjectLoading = false;
+  recordableSubjectMinTermLength = 5;
 
   partitionKindList: any[] = [];
+
+  checkBookEntryInput = false;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
@@ -75,7 +82,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.initLoad();
-    this.subscribeSubjectList();
+    this.subscribeRecordableSubjectList();
   }
 
 
@@ -106,48 +113,84 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     this.formHandler.getControl(this.controls.recordingActType).reset();
     this.formHandler.getControl(this.controls.registrationCommand).reset();
 
-    this.resetRegistrationCommandRules();
+    this.resetRegistrationCommandRules(EmptyRegistrationCommandRule);
   }
 
 
   onRecordingActTypeChange(recordingActType: RecordingActType) {
     this.registrationCommands = recordingActType.registrationCommands ?? [];
     this.formHandler.getControl(this.controls.registrationCommand).reset();
-    this.resetRegistrationCommandRules();
+    this.resetRegistrationCommandRules(EmptyRegistrationCommandRule);
   }
 
 
   onRegistrationCommandChange(registrationCommand: RegistrationCommandConfig){
-    this.setRegistrationCommandRules(registrationCommand.rules);
-    this.validateSubjectField();
-    this.validatePartitionField();
+    this.resetRegistrationCommandRules(registrationCommand.rules);
+    this.formHandler.invalidateForm();
+  }
+
+
+  onBookEntryCheckChanged(check: boolean) {
+    this.validateBookEntryFields();
+  }
+
+
+  onRecordingBookSelectorEvent(event){
+    switch (event.type as RecordingBookSelectorEventType) {
+
+      case RecordingBookSelectorEventType.RECORDING_BOOK_CHANGED:
+
+        Assertion.assertValue(event.payload.recordingBook, 'event.payload.recordingBook');
+
+        this.formHandler.getControl(this.controls.recordingBookUID).setValue(event.payload.recordingBook.uid);
+
+        return;
+
+      case RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED:
+
+        Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
+
+        if (this.checkBookEntryInput) {
+          this.formHandler.getControl(this.controls.bookEntryNo)
+            .setValue(event.payload.bookEntry.recordingNo);
+        } else {
+          this.formHandler.getControl(this.controls.bookEntryUID)
+            .setValue(event.payload.bookEntry.uid);
+        }
+
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
   }
 
 
   submitRecordingAct() {
     if (!this.formHandler.validateReadyForSubmit()) {
-      this.formHandler.invalidateForm();
       return;
     }
 
     const data = this.getFormData();
 
+    const registrationCommandPayload: RegistrationCommandPayload = {
+      recordingActTypeUID: data.recordingActType,
+      recordableSubjectUID: data.recordableSubject,
+      recordingBookUID: data.recordingBookUID,
+      bookEntryUID: data.bookEntryUID,
+      bookEntryNo: data.bookEntryNo,
+      partitionType: data.partitionType,
+      partitionNo: data.partitionNo,
+    };
+
     const registrationCommand: RegistrationCommand = {
       type: data.registrationCommand,
-      payload: {
-        recordingActTypeUID: data.recordingActType,
-        recordableSubjectUID: data.subject,
-        partitionType: data.partitionType,
-        partitionNo: data.partitionNo,
-      }
+      payload: registrationCommandPayload
     };
 
-    const payload = {
-      instrumentRecordingUID: this.instrumentRecording.uid,
-      registrationCommand
-    };
-
-    this.sendEvent(RecordingActCreatorEventType.APPEND_RECORDING_ACT, payload);
+    this.sendEvent(RecordingActCreatorEventType.APPEND_RECORDING_ACT,
+      { instrumentRecordingUID: this.instrumentRecording.uid, registrationCommand });
   }
 
 
@@ -157,7 +200,10 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
         recordingActTypeGroup: new FormControl('', Validators.required),
         recordingActType: new FormControl('', Validators.required),
         registrationCommand: new FormControl('', Validators.required),
-        subject: new FormControl(''),
+        recordableSubject: new FormControl(''),
+        recordingBookUID: new FormControl(''),
+        bookEntryUID: new FormControl(''),
+        bookEntryNo: new FormControl(''),
         partitionType: new FormControl(''),
         partitionNo: new FormControl(''),
       })
@@ -173,20 +219,20 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private subscribeSubjectList() {
-    this.subjectList$ = concat(
+  private subscribeRecordableSubjectList() {
+    this.recordableSubjectList$ = concat(
       of([]),
-      this.subjectInput$.pipe(
-          filter(keyword => keyword !== null && keyword.length >= this.subjectMinTermLength),
+      this.recordableSubjectInput$.pipe(
+          filter(keyword => keyword !== null && keyword.length >= this.recordableSubjectMinTermLength),
           distinctUntilChanged(),
           debounceTime(800),
-          tap(() => this.subjectLoading = true),
+          tap(() => this.recordableSubjectLoading = true),
           switchMap(keyword => this.helper.select<RecordableSubjectShortModel[]>(
             RecordableSubjectsStateSelector.RECORDABLE_SUBJECTS_LIST,
             this.buildRecordableSubjectFilter(keyword))
             .pipe(
               catchError(() => of([])),
-              tap(() => this.subjectLoading = false)
+              tap(() => this.recordableSubjectLoading = false)
           ))
       )
     );
@@ -194,19 +240,21 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   private buildRecordableSubjectFilter(keywords: string): RecordableSubjectFilter {
-    const subjectFilter: RecordableSubjectFilter = {
+    const recordableSubjectFilter: RecordableSubjectFilter = {
       type: this.registrationCommandRules.subjectType,
       keywords
     };
 
-    return subjectFilter;
+    return recordableSubjectFilter;
   }
 
 
-  private resetRegistrationCommandRules(){
-    this.setRegistrationCommandRules(EmptyRegistrationCommandRule);
-    this.validateSubjectField();
+  private resetRegistrationCommandRules(registrationCommandRule: RegistrationCommandRule){
+    this.checkBookEntryInput = false;
+    this.setRegistrationCommandRules(registrationCommandRule);
+    this.validateRecordableSubjectField();
     this.validatePartitionField();
+    this.validateRecordingBookFields();
   }
 
 
@@ -215,13 +263,13 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private validateSubjectField(){
-    this.formHandler.getControl(this.controls.subject).reset();
+  private validateRecordableSubjectField(){
+    this.formHandler.getControl(this.controls.recordableSubject).reset();
 
     if (this.registrationCommandRules.selectSubject) {
-      this.formHandler.setControlValidators(this.controls.subject, Validators.required);
+      this.formHandler.setControlValidators(this.controls.recordableSubject, Validators.required);
     } else {
-      this.formHandler.clearControlValidators(this.controls.subject);
+      this.formHandler.clearControlValidators(this.controls.recordableSubject);
     }
   }
 
@@ -240,6 +288,36 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
+  private validateRecordingBookFields(){
+    this.formHandler.getControl(this.controls.recordingBookUID).reset();
+
+    if (this.registrationCommandRules.selectBookEntry) {
+      this.formHandler.setControlValidators(this.controls.recordingBookUID, Validators.required);
+    } else {
+      this.formHandler.clearControlValidators(this.controls.recordingBookUID);
+    }
+
+    this.validateBookEntryFields();
+  }
+
+
+  private validateBookEntryFields() {
+    this.formHandler.getControl(this.controls.bookEntryUID).reset();
+    this.formHandler.getControl(this.controls.bookEntryNo).reset();
+
+    this.formHandler.clearControlValidators(this.controls.bookEntryUID);
+    this.formHandler.clearControlValidators(this.controls.bookEntryNo);
+
+    if (this.registrationCommandRules.selectBookEntry) {
+      if (this.checkBookEntryInput) {
+        this.formHandler.setControlValidators(this.controls.bookEntryNo, Validators.required);
+      } else {
+        this.formHandler.setControlValidators(this.controls.bookEntryUID, Validators.required);
+      }
+    }
+  }
+
+
   private getFormData(): any {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
@@ -250,7 +328,10 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
       recordingActTypeGroup: formModel.recordingActTypeGroup ?? '',
       recordingActType: formModel.recordingActType ?? '',
       registrationCommand: formModel.registrationCommand ?? '',
-      subject: formModel.subject ?? '',
+      recordableSubject: formModel.recordableSubject ?? '',
+      recordingBookUID: formModel.recordingBookUID ?? '',
+      bookEntryUID: formModel.bookEntryUID ?? '',
+      bookEntryNo: formModel.bookEntryNo ?? '',
       partitionType: formModel.partitionType ?? '',
       partitionNo: formModel.partitionNo ?? '',
     };
