@@ -13,12 +13,13 @@ import { Assertion, Cache, toObservable } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { IssuersFilter, RecordableSubjectFilter } from '@app/models';
+import { EmptyTractIndex, IssuersFilter, RecordableSubjectFilter } from '@app/models';
 
 import { RecordableSubjectsDataService } from '@app/data-services';
 
 
 export enum SelectorType {
+  AMENDABLE_RECORDING_ACTS        = 'Land.RecordableSubjects.Selector.AmendableRecordingActs.List',
   ASSOCIATION_KIND_LIST           = 'Land.RecordableSubjects.Selector.AssociationKind.List',
   INSTRUMENT_KIND_LIST            = 'Land.RecordableSubjects.Selector.InstrumentKind.List',
   INSTRUMENT_TYPE_ISSUERS_LIST    = 'Land.RecordableSubjects.Selector.InstrumentTypeIssuers.List',
@@ -34,6 +35,7 @@ export enum SelectorType {
 
 
 const initialState: StateValues = [
+  { key: SelectorType.AMENDABLE_RECORDING_ACTS, value: EmptyTractIndex },
   { key: SelectorType.ASSOCIATION_KIND_LIST, value: [] },
   { key: SelectorType.INSTRUMENT_KIND_LIST, value: new Cache<string[]>() },
   { key: SelectorType.NO_PROPERTY_KIND_LIST, value: [] },
@@ -59,6 +61,16 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
     let provider: () => any;
 
     switch (selectorType) {
+
+      case SelectorType.AMENDABLE_RECORDING_ACTS:
+        Assertion.assertValue(params.recordableSubject, 'params.recordableSubject');
+        Assertion.assertValue(params.instrumentRecordingUID, 'params.instrumentRecordingUID');
+        Assertion.assertValue(params.amendmentRecordingActTypeUID, 'params.amendmentRecordingActTypeUID');
+
+        return toObservable<U>(this.data.getAmendableRecordingActs(params.recordableSubject,
+                                                                  params.instrumentRecordingUID,
+                                                                  params.amendmentRecordingActTypeUID));
+
 
       case SelectorType.ASSOCIATION_KIND_LIST:
         provider = () => this.data.getAssociationKinds();

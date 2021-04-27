@@ -136,6 +136,7 @@ export interface RegistrationCommandPayload {
   bookEntryNo?: string;
   partitionType?: string;
   partitionNo?: string;
+  amendedRecordingActUID?: string;
 }
 
 

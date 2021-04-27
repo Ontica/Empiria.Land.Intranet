@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 import { Assertion, DateStringLibrary, HttpService, Identifiable } from '@app/core';
 
 import { BookEntryShortModel, InstrumentType, Issuer, IssuersFilter, RecordableSubjectFilter,
-         RecordableSubjectShortModel, RecorderOffice } from '@app/models';
+         RecordableSubjectShortModel, RecorderOffice, TractIndex } from '@app/models';
 
 
 @Injectable()
@@ -36,6 +36,17 @@ export class RecordableSubjectsDataService {
     }
 
     return this.http.get<Issuer[]>(path);
+  }
+
+
+  getAmendableRecordingActs(recordableSubject: string,
+                            instrumentRecordingUID: string,
+                            amendmentRecordingActTypeUID: string): Observable<TractIndex> {
+    const path = `v5/land/registration/recordable-subjects/${recordableSubject}`
+      + `/amendable-recording-acts/?instrumentRecordingUID=${instrumentRecordingUID}`
+      + `&amendmentRecordingActTypeUID=${amendmentRecordingActTypeUID}`;
+
+    return this.http.get<TractIndex>(path);
   }
 
 

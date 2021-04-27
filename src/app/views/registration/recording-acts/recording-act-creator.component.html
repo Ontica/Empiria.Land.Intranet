@@ -14,8 +14,8 @@
         </emp-ng-select>
       </div>
 
-      <div fxFlex>
-        <label>Acto jurídico a registrar:</label>
+      <div fxFlex class="resizable-field-width">
+        <label class="ellipsis">Acto jurídico a registrar:</label>
         <emp-ng-select [formControlName]="controls.recordingActType"
           [config]="{ clearable: false }"
           [items]="recordingActTypeList"
@@ -47,58 +47,95 @@
       </div>
 
       <ng-container *ngIf="registrationCommandRules.selectSubject">
-        <div fxFlex>
-          <label> Buscar y seleccionar
-            <span *ngIf="isRealEstate"> el folio real del predio</span>
-            <span *ngIf="isAssociation"> la asociación o sociedad</span>
-            <span *ngIf="isNoProperty"> el documento</span>
-            <span *ngIf="registrationCommandRules.newPartition">
-              del cual se va a desprender la fracción</span>:
+
+        <div fxFlex class="resizable-field-width">
+          <label class="ellipsis"> Buscar y seleccionar
+            <ng-container *ngIf="isRealEstate"> el folio real del predio</ng-container>
+            <ng-container *ngIf="isAssociation"> la asociación o sociedad</ng-container>
+            <ng-container *ngIf="isNoProperty"> el documento</ng-container>
+            <ng-container *ngIf="registrationCommandRules.newPartition">
+              del cual se va a desprender la fracción</ng-container>:
           </label>
+          <emp-ng-select [formControlName]="controls.recordableSubject"
+            [config]="{ hideSelected: true,
+                        minTermLength: recordableSubjectMinTermLength,
+                        dropdownPosition: 'top'  }"
+            [items]="recordableSubjectList$ | async"
+            [typeahead]="recordableSubjectInput$"
+            [loading]="recordableSubjectLoading"
+            placeholder="Buscar"
+            [showError]="formHandler.showInvalidControl(controls.recordableSubject)"
+            [style.width.%]="100"
+            (changes)="onRecordableSubjectChange($event)">
 
-          <div fxLayout="row">
-            <div fxFlex>
-              <div [style.max-width.px]="432">
-                <emp-ng-select [formControlName]="controls.recordableSubject"
-                  [config]="{ hideSelected: true,
-                              minTermLength: recordableSubjectMinTermLength,
-                              dropdownPosition: 'top'  }"
-                  [items]="recordableSubjectList$ | async"
-                  [typeahead]="recordableSubjectInput$"
-                  [loading]="recordableSubjectLoading"
-                  placeholder="Buscar"
-                  [showError]="formHandler.showInvalidControl(controls.recordableSubject)"
-                  [style.width.%]="100"
-                  [style.max-width.px]="432">
+            <ng-template #labelTemplate let-item="item">
+              {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
+            </ng-template>
 
-                  <ng-template #labelTemplate let-item="item">
-                    {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
-                  </ng-template>
+            <ng-template #optionTemplate let-item="item">
+              {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
+            </ng-template>
 
-                  <ng-template #optionTemplate let-item="item">
-                    {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
-                  </ng-template>
+          </emp-ng-select>
+        </div>
 
-                </emp-ng-select>
-              </div>
-            </div>
+        <div fxFlex="75px" fxLayoutAlign="end end" [style.paddingBottom.px]="2">
+          <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
+            Ver
+          </button>
+        </div>
 
-            <div fxFlex="75px" fxLayoutAlign="end end" [style.paddingBottom.px]="2">
-              <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
-                Ver
-              </button>
-            </div>
-
-            <div fxFlex="75px" fxLayoutAlign="end end" [style.paddingBottom.px]="2">
-              <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
-                Sello
-              </button>
-            </div>
-          </div>
-
+        <div fxFlex="75px" fxLayoutAlign="end end" [style.paddingBottom.px]="2">
+          <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
+            Sello
+          </button>
         </div>
 
       </ng-container>
+
+    </div>
+
+
+    <div fxLayout="row" *ngIf="registrationCommandRules.selectTargetAct">
+
+      <div fxFlexOffset="270px" fxFlex class="resizable-field-width">
+
+        <label class="ellipsis">Acto jurídico a cancelar o modificar:</label>
+
+        <emp-ng-select [formControlName]="controls.amendmentRecordingActUID"
+          bindValue="recordingActUID"
+          [placeholder]="formHandler.showInvalidControl(controls.recordableSubject) ?
+            'Seleccione el folio real' : 'Seleccione'"
+          [items]="tractIndexSelected.tractIndex"
+          [showError]="formHandler.showInvalidControl(controls.amendmentRecordingActUID)">
+
+            <ng-template #labelTemplate let-item="item">
+              {{item.recordingActName}}
+              {{item.presentationTime ? ', ' + ( item.presentationTime | dateTimeFormat ) : ''}}
+              {{item.antecedent ? ', ' + item.antecedent : ''}}
+            </ng-template>
+
+            <ng-template #optionTemplate let-item="item">
+              {{item.recordingActName}}
+              {{item.presentationTime ? ', ' + ( item.presentationTime | dateTimeFormat ) : ''}}
+              {{item.antecedent ? ', ' + item.antecedent : ''}}
+            </ng-template>
+
+        </emp-ng-select>
+
+      </div>
+
+      <div fxFlex="75px" fxLayoutAlign="end end" [style.paddingBottom.px]="2">
+        <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
+          Ver
+        </button>
+      </div>
+
+      <div fxFlex="75px" fxLayoutAlign="end end" [style.paddingBottom.px]="2">
+        <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
+          Sello
+        </button>
+      </div>
 
     </div>
 
@@ -150,13 +187,10 @@
 
     <div fxLayout="row" *ngIf="registrationCommandRules.newPartition">
 
-      <div fxFlex="270px" *ngIf="!registrationCommandRules.selectBookEntry">
+      <div [fxFlex]="registrationCommandRules.selectBookEntry ? '270px' : '35%'"
+        [fxFlexOffset]="registrationCommandRules.selectBookEntry ? '0' : '270px'">
 
-      </div>
-
-      <div fxFlex="270px">
-
-        <label>Tipo de la nueva fracción:</label>
+        <label class="ellipsis">Tipo de la nueva fracción:</label>
 
         <emp-ng-select [formControlName]="controls.partitionType"
           bindValue="name"
@@ -167,16 +201,14 @@
 
       </div>
 
-      <div fxFlex>
+      <div [fxFlex]="registrationCommandRules.selectBookEntry ? '270px' : '35%'">
 
-        <label>Número o identificador de la nueva fracción:</label>
+        <label class="ellipsis">Número o identificador de la nueva fracción:</label>
 
         <input type="text" class="text-box" [formControlName]="controls.partitionNo"
           [class.invalid-control]="formHandler.showInvalidControl(controls.partitionNo)">
 
       </div>
-
-      <div fxFlex="162px" *ngIf="registrationCommandRules.selectBookEntry"></div>
 
     </div>
 

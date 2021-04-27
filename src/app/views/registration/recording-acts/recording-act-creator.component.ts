@@ -13,14 +13,14 @@ import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap 
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Assertion, EventInfo } from '@app/core';
+import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { EmptyInstrumentRecording, EmptyRegistrationCommandRule, InstrumentRecording,
+import { EmptyInstrumentRecording, EmptyRegistrationCommandRule, EmptyTractIndex, InstrumentRecording,
          RecordableSubjectFilter, RecordableSubjectShortModel, RecordingActType, RecordingActTypeGroup,
          RegistrationCommand, RegistrationCommandConfig, RegistrationCommandPayload,
-         RegistrationCommandRule } from '@app/models';
+         RegistrationCommandRule, TractIndex} from '@app/models';
 
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
@@ -41,11 +41,15 @@ enum RecordingActCreatorFormControls {
   bookEntryNo = 'bookEntryNo',
   partitionType = 'partitionType',
   partitionNo = 'partitionNo',
+  amendmentRecordingActUID = 'amendmentRecordingActUID',
 }
 
 @Component({
   selector: 'emp-land-recording-act-creator',
   templateUrl: './recording-act-creator.component.html',
+  styles: [`.resizable-field-width {
+    width: calc(100% - 420px);
+  }`]
 })
 export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
@@ -71,6 +75,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   recordableSubjectMinTermLength = 5;
 
   partitionKindList: any[] = [];
+  tractIndexSelected: TractIndex = EmptyTractIndex;
 
   checkBookEntryInput = false;
 
@@ -130,6 +135,18 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
+  onRecordableSubjectChange(recordableSubject: RecordableSubjectShortModel) {
+    this.validateAmendmentRecordingActFields();
+
+    if (isEmpty(recordableSubject)) {
+      this.setTractIndexSelected(EmptyTractIndex);
+      return;
+    }
+
+    this.getAmendmentRecordingActs();
+  }
+
+
   onBookEntryCheckChanged(check: boolean) {
     this.validateBookEntryFields();
   }
@@ -182,6 +199,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
       bookEntryNo: data.bookEntryNo,
       partitionType: data.partitionType,
       partitionNo: data.partitionNo,
+      amendedRecordingActUID: data.amendmentRecordingActUID
     };
 
     const registrationCommand: RegistrationCommand = {
@@ -206,6 +224,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
         bookEntryNo: new FormControl(''),
         partitionType: new FormControl(''),
         partitionNo: new FormControl(''),
+        amendmentRecordingActUID: new FormControl(''),
       })
     );
   }
@@ -249,17 +268,38 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
+  private getAmendmentRecordingActs() {
+    const payload = {
+      instrumentRecordingUID: this.instrumentRecording.uid,
+      recordableSubject: this.formHandler.getControl(this.controls.recordableSubject).value,
+      amendmentRecordingActTypeUID: 'ObjectType.RecordingAct.CancelationAct.02',
+    };
+
+    this.helper.select<TractIndex>(RecordableSubjectsStateSelector.AMENDABLE_RECORDING_ACTS, payload)
+      .subscribe(x => {
+        this.tractIndexSelected = x;
+      });
+  }
+
+
   private resetRegistrationCommandRules(registrationCommandRule: RegistrationCommandRule){
     this.checkBookEntryInput = false;
     this.setRegistrationCommandRules(registrationCommandRule);
+    this.setTractIndexSelected(EmptyTractIndex);
     this.validateRecordableSubjectField();
     this.validatePartitionField();
     this.validateRecordingBookFields();
+    this.validateAmendmentRecordingActFields();
   }
 
 
   private setRegistrationCommandRules(rules: RegistrationCommandRule){
     this.registrationCommandRules = rules;
+  }
+
+
+  private setTractIndexSelected(tractIndex: TractIndex) {
+    this.tractIndexSelected = tractIndex;
   }
 
 
@@ -318,6 +358,17 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
+  private validateAmendmentRecordingActFields(){
+    this.formHandler.getControl(this.controls.amendmentRecordingActUID).reset();
+
+    if (this.registrationCommandRules.selectTargetAct) {
+      this.formHandler.setControlValidators(this.controls.amendmentRecordingActUID, Validators.required);
+    } else {
+      this.formHandler.clearControlValidators(this.controls.amendmentRecordingActUID);
+    }
+  }
+
+
   private getFormData(): any {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
@@ -334,6 +385,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
       bookEntryNo: formModel.bookEntryNo ?? '',
       partitionType: formModel.partitionType ?? '',
       partitionNo: formModel.partitionNo ?? '',
+      amendmentRecordingActUID: formModel.amendmentRecordingActUID ?? '',
     };
 
     return data;

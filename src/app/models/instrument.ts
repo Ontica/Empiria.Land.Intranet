@@ -69,7 +69,7 @@ export interface Instrument {
 
 export const EmptyInstrument: Instrument = {
   uid: '',
-  type: null,
+  type: 'Empty',
   typeName: '',
   kind: '',
   issueDate: '',

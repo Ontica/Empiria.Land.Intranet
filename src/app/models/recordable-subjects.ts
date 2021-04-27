@@ -133,6 +133,27 @@ export interface RealEstateFields extends RecordableSubjectFields {
 }
 
 
+export interface TractIndex {
+  recordableSubject: RecordableSubject;
+  tractIndex: TractIndexEntry[];
+}
+
+
+export interface TractIndexEntry {
+  recordingActUID: string;
+  recordingActName: string;
+  antecedent: string;
+  presentationTime: DateString;
+  recordingDate: DateString;
+}
+
+
+export const EmptyTractIndex: TractIndex = {
+  recordableSubject: EmptyRecordableSubject,
+  tractIndex: [],
+};
+
+
 export const EmptyRecordableSubjectFields: RecordableSubjectFields = {
   uid: '',
   type: 'None',
