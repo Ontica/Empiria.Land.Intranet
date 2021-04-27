@@ -57,8 +57,8 @@ export class RegistrationMainPageComponent implements OnInit, OnChanges, OnDestr
   ngOnInit(){
     this.helper.select<InstrumentRecording>(RegistrationStateSelector.TRANSACTION_INSTRUMENT_RECORDING)
       .subscribe(x => {
-        this.instrumentRecording = x;
-        this.actions = x.actions;
+        this.instrumentRecording = isEmpty(x) ? EmptyInstrumentRecording : x;
+        this.actions = x.actions ?? EmptyInstrumentRecordingActions;
         if (!isEmpty(this.instrumentRecording)) {
           this.loadData();
           this.resetPanelState();
