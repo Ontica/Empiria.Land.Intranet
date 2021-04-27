@@ -27,8 +27,8 @@
 
   <div *ngIf="displayBookEntryEdition"
     class="secondary"
-    [fxHide]="displayRecordingActEditor"
-    [fxHide.lt-lg]="displayRecordingActEditor || displayFileViewer">
+    [fxHide]="displayRecordableSubjectTabbedView || displayRecordingActEditor"
+    [fxHide.lt-lg]="displayRecordableSubjectTabbedView || displayFileViewer || displayRecordingActEditor">
 
     <emp-land-book-entry-edition #bookEntryEdition
       [recordingBookUID]="selectedBookEntry.recordingBookUID"
@@ -41,7 +41,7 @@
 
   </div>
 
-  <div *ngIf="displayRecordingActEditor"
+  <div *ngIf="displayRecordableSubjectTabbedView"
     class="secondary">
 
     <emp-land-recordable-subject-tabbed-view
@@ -51,6 +51,11 @@
       (recordableSubjectTabbedViewEvent)="onRecordableSubjectTabbedViewEvent($event)">
 
     </emp-land-recordable-subject-tabbed-view>
+
+  </div>
+
+  <div *ngIf="displayRecordingActEditor"
+    class="secondary">
 
   </div>
 

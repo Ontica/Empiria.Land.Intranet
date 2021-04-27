@@ -43,6 +43,7 @@ export class HistoricRegistrationWorkspaceComponent {
   displayBookEntryEdition = false;
   displayFileViewer = false;
   displayRecordingActEditor = false;
+  displayRecordableSubjectTabbedView = false;
 
   constructor() {}
 
@@ -86,6 +87,14 @@ export class HistoricRegistrationWorkspaceComponent {
 
         return;
 
+      case BookEntryEditionEventType.RECORDABLE_SUBJECT_SELECTED:
+        Assertion.assertValue(event.payload.recordingActSelect, 'event.payload.recordingActSelect');
+
+        this.selectedRecordingAct = event.payload.recordingActSelect;
+        this.displayRecordableSubjectTabbedView = !isEmpty(this.selectedRecordingAct.recordingAct);
+
+        return;
+
       default:
         console.log(`Unhandled user interface event ${event.type}`);
         return;
@@ -120,6 +129,7 @@ export class HistoricRegistrationWorkspaceComponent {
   unselectCurrentRecordingAct() {
     this.selectedRecordingAct = EmptySelectionAct;
     this.displayRecordingActEditor = false;
+    this.displayRecordableSubjectTabbedView = false;
   }
 
 

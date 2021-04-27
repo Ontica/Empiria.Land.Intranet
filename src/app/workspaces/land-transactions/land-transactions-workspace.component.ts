@@ -57,7 +57,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   selectedTransactions: TransactionShortModel[] = [];
 
   displayFileViewer = false;
-  displayRecordingActEditor = false;
+  displayRecordableSubjectTabbedView = false;
   displayTransactionTabbedView = false;
 
   isLoading = false;
@@ -101,7 +101,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
     this.subscriptionHelper.select<SelectionAct>(RegistrationStateSelector.SELECTED_RECORDING_ACT)
       .subscribe(x => {
         this.selectedRecordingAct = x;
-        this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct?.recordingAct);
+        this.displayRecordableSubjectTabbedView = !isEmpty(this.selectedRecordingAct?.recordingAct);
       });
 
     this.subscriptionHelper.select<FileViewerData>(TransactionStateSelector.SELECTED_FILE_LIST)
@@ -118,7 +118,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
 
   get secondaryEditorDisplayed(){
-    return this.displayRecordingActEditor;
+    return this.displayRecordableSubjectTabbedView;
   }
 
 

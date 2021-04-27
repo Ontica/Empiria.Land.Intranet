@@ -14,7 +14,7 @@ import { Assertion, Command, toObservable, toPromise } from '@app/core';
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
 import { EmptyBookEntry, EmptyInstrumentRecording, EmptySelectionAct, EmptyRecordingBook,
-         InstrumentRecording} from '@app/models';
+         InstrumentRecording } from '@app/models';
 
 import { RecordingDataService } from '@app/data-services';
 
@@ -205,7 +205,7 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         return;
 
       case ActionType.UNSELECT_TRANSACTION_INSTRUMENT_RECORDING:
-        this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, EmptySelectionAct);
+        this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, EmptyInstrumentRecording);
         return;
 
       case ActionType.SELECT_RECORDING_ACT:
@@ -215,7 +215,7 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         return;
 
       case ActionType.UNSELECT_RECORDING_ACT:
-        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptyInstrumentRecording);
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptySelectionAct);
         return;
 
       case ActionType.SELECT_RECORDING_BOOK:

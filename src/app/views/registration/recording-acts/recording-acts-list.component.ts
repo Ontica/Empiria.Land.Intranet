@@ -20,6 +20,7 @@ import { MessageBoxService } from '@app/shared/containers/message-box';
 
 export enum RecordingActsListEventType {
   REMOVE_RECORDING_ACT = 'RecordingActsListComponent.Event.RemoveRecordingAct',
+  SELECT_RECORDABLE_SUBJECT = 'RecordingActsListComponent.Event.SelectRecordableSubject',
   SELECT_RECORDING_ACT = 'RecordingActsListComponent.Event.SelectRecordingAct',
 }
 
@@ -34,6 +35,8 @@ export class RecordingActsListComponent implements OnChanges {
   @Input() recordingActs: RecordingAct[] = [];
 
   @Input() showCopyToClipboard = false;
+
+  @Input() showRecordingActLink = false;
 
   @Input() title = 'Actos jurídicos contenidos en el documento';
 
@@ -58,6 +61,12 @@ export class RecordingActsListComponent implements OnChanges {
     }
 
     this.resetColumns();
+  }
+
+  onOpenRecordableSubjactTabbedView(recordingAct: RecordingAct) {
+    const selectionAct: SelectionAct =
+      { instrumentRecording: this.instrumentRecording, recordingAct };
+    this.sendEvent(RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT, selectionAct);
   }
 
 

@@ -21,6 +21,7 @@ import { RecordingActsListEventType } from '../recording-acts/recording-acts-lis
 import { BookEntryEditorEventType } from './book-entry-editor.component';
 
 export enum BookEntryEditionEventType {
+  RECORDABLE_SUBJECT_SELECTED = 'BookEntryEditionComponent.Event.RecordableSubjectSelected',
   RECORDING_ACT_SELECTED = 'BookEntryEditionComponent.Event.RecordingActSelected',
 }
 
@@ -126,6 +127,12 @@ export class BookEntryEditionComponent implements OnChanges {
     }
 
     switch (event.type as RecordingActsListEventType) {
+      case RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT:
+        this.sendEvent(BookEntryEditionEventType.RECORDABLE_SUBJECT_SELECTED,
+          { recordingActSelect: event.payload });
+
+        return;
+
       case RecordingActsListEventType.SELECT_RECORDING_ACT:
         this.sendEvent(BookEntryEditionEventType.RECORDING_ACT_SELECTED,
           { recordingActSelect: event.payload });
