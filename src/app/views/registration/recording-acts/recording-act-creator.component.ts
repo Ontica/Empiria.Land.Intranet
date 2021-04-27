@@ -272,7 +272,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     const payload = {
       instrumentRecordingUID: this.instrumentRecording.uid,
       recordableSubject: this.formHandler.getControl(this.controls.recordableSubject).value,
-      amendmentRecordingActTypeUID: 'ObjectType.RecordingAct.CancelationAct.02',
+      amendmentRecordingActTypeUID: this.formHandler.getControl(this.controls.recordingActType).value,
     };
 
     this.helper.select<TractIndex>(RecordableSubjectsStateSelector.AMENDABLE_RECORDING_ACTS, payload)
