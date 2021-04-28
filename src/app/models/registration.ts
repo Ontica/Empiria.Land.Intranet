@@ -13,7 +13,7 @@ import { EmptyInstrument, Instrument, InstrumentFields } from './instrument';
 
 import { RealEstate, RecordableSubjectType } from './recordable-subjects';
 
-import { RecordingAct } from './recording-act';
+import { RecordingActEntry } from './recording-act';
 
 
 // tslint:disable-next-line: no-empty-interface
@@ -94,7 +94,7 @@ export interface InstrumentRecording {
   // reviewedBy: Contact;
   // signedBy: Contact;
   bookRecordingMode: boolean;
-  recordingActs: RecordingAct[];
+  recordingActs: RecordingActEntry[];
   bookEntries?: BookEntry[];
   stampMedia: MediaBase;
   // status: RecordingStatus;
@@ -166,7 +166,7 @@ export interface RegistrationCommandConfig extends Identifiable {
 // ToDo: review these types
 
 export interface RegistrationEntry {
-  recordingAct: RecordingAct;
+  recordingAct: RecordingActEntry;
   registration: Identifiable;
   registrationMode: string;
 }
@@ -220,7 +220,7 @@ export interface BookEntry {
     controlID: string;
     asText: string;
   };
-  recordingActs: RecordingAct[];
+  recordingActs: RecordingActEntry[];
   status: RecordingStatus;
   stampMedia: MediaBase;
   mediaFiles: FileData[];

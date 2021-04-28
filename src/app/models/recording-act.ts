@@ -24,7 +24,7 @@ export interface RecordingActType extends Identifiable {
 
 
 export interface RecordingDocument extends Identifiable, PartitionedType {
-  recordingActs: RecordingAct[];
+  recordingActs: RecordingActEntry[];
 }
 
 
@@ -33,21 +33,19 @@ export interface BaseRecordingAct extends Identifiable {
 }
 
 
-export interface RecordingAct extends BaseRecordingAct {
+export interface RecordingActEntry extends BaseRecordingAct {
   recordableSubject: RecordableSubject;
-  parties: RoledParty[];
-  operationAmount?: Money;
 }
 
 
 export interface CancelationAct extends BaseRecordingAct {
-  targetAct: RecordingAct;
+  targetAct: RecordingActEntry;
   notes: string;
 }
 
 
 export interface ModificationAct extends BaseRecordingAct {
-  targetAct: RecordingAct;
+  targetAct: RecordingActEntry;
   parties: RoledParty[];
   operationAmount?: Money;
   notes: string;
@@ -56,21 +54,19 @@ export interface ModificationAct extends BaseRecordingAct {
 
 export interface SelectionAct {
   instrumentRecording: InstrumentRecording;
-  recordingAct: RecordingAct;
+  recordingAct: RecordingActEntry;
 }
 
 
-export const EmptyRecordingAct: RecordingAct = {
+export const EmptyRecordingActEntry: RecordingActEntry = {
   uid: 'Empty',
   name: '',
   recordableSubject: EmptyRecordableSubject,
-  parties: [],
-  operationAmount: null,
   antecedent: ''
 };
 
 
 export const EmptySelectionAct: SelectionAct = {
   instrumentRecording: EmptyInstrumentRecording,
-  recordingAct: EmptyRecordingAct
+  recordingAct: EmptyRecordingActEntry
 };

@@ -12,7 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo } from '@app/core';
 
-import { EmptyInstrumentRecording, InstrumentRecording, RecordingAct, SelectionAct } from '@app/models';
+import { EmptyInstrumentRecording, InstrumentRecording, RecordingActEntry, SelectionAct } from '@app/models';
 
 import { AlertService } from '@app/shared/containers/alert/alert.service';
 
@@ -32,7 +32,7 @@ export class RecordingActsListComponent implements OnChanges {
 
   @Input() instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
 
-  @Input() recordingActs: RecordingAct[] = [];
+  @Input() recordingActs: RecordingActEntry[] = [];
 
   @Input() showCopyToClipboard = false;
 
@@ -42,7 +42,7 @@ export class RecordingActsListComponent implements OnChanges {
 
   @Output() recordingActsListEvent = new EventEmitter<EventInfo>();
 
-  dataSource: MatTableDataSource<RecordingAct>;
+  dataSource: MatTableDataSource<RecordingActEntry>;
 
   private displayedColumnsDefault = ['number', 'name', 'electronicID', 'actionCopy',
                                      'type', 'notes', 'status'];
@@ -63,14 +63,14 @@ export class RecordingActsListComponent implements OnChanges {
     this.resetColumns();
   }
 
-  onOpenRecordableSubjactTabbedView(recordingAct: RecordingAct) {
+  onOpenRecordableSubjactTabbedView(recordingAct: RecordingActEntry) {
     const selectionAct: SelectionAct =
       { instrumentRecording: this.instrumentRecording, recordingAct };
     this.sendEvent(RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT, selectionAct);
   }
 
 
-  onOpenRecordingActEditor(recordingAct: RecordingAct) {
+  onOpenRecordingActEditor(recordingAct: RecordingActEntry) {
     const selectionAct: SelectionAct = { instrumentRecording: this.instrumentRecording, recordingAct };
     this.sendEvent(RecordingActsListEventType.SELECT_RECORDING_ACT, selectionAct);
   }
@@ -82,7 +82,7 @@ export class RecordingActsListComponent implements OnChanges {
   }
 
 
-  removeRecordingAct(recordingAct: RecordingAct) {
+  removeRecordingAct(recordingAct: RecordingActEntry) {
     const message = this.getConfirmMessage(recordingAct);
 
     this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
@@ -115,7 +115,7 @@ export class RecordingActsListComponent implements OnChanges {
   }
 
 
-  private getConfirmMessage(recordingAct: RecordingAct): string {
+  private getConfirmMessage(recordingAct: RecordingActEntry): string {
     return `
       <table style='margin: 0;'>
         <tr><td>Acto jurídico: </td><td><strong> ${recordingAct.name} </strong></td></tr>

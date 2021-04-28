@@ -14,7 +14,8 @@ import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { EmptyRealEstate, InstrumentRecording, RealEstate, RecorderOffice, RecordingAct } from '@app/models';
+import { EmptyRealEstate, InstrumentRecording, RealEstate, RecorderOffice,
+         RecordingActEntry } from '@app/models';
 
 import { RealEstateFields, RecordableSubjectStatusList } from '@app/models/recordable-subjects';
 
@@ -50,7 +51,7 @@ enum RealEstateEditorFormControls {
 export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() instrumentRecording: InstrumentRecording;
-  @Input() recordingAct: RecordingAct;
+  @Input() recordingAct: RecordingActEntry;
   @Input() realEstate: RealEstate = EmptyRealEstate;
   @Input() readonly = false;
   @Output() realEstateEditorEvent = new EventEmitter<EventInfo>();

@@ -11,7 +11,7 @@ import { Assertion, Command, EventInfo } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { InstrumentRecording, RealEstate, RecordingAct } from '@app/models';
+import { InstrumentRecording, RealEstate, RecordingActEntry } from '@app/models';
 
 import { RegistrationCommandType } from '@app/presentation/exported.presentation.types';
 
@@ -36,7 +36,7 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
   @Input() instrumentRecording: InstrumentRecording;
 
-  @Input() recordingAct: RecordingAct;
+  @Input() recordingAct: RecordingActEntry;
 
   @Output() closeEvent = new EventEmitter<void>();
 

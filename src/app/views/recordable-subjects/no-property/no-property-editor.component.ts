@@ -13,7 +13,7 @@ import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { InstrumentRecording, RecorderOffice, RecordingAct } from '@app/models';
+import { InstrumentRecording, RecorderOffice, RecordingActEntry } from '@app/models';
 
 import { RecordableSubject, RecordableSubjectStatusList } from '@app/models/recordable-subjects';
 
@@ -42,7 +42,7 @@ enum NoPropertyEditorFormControls {
 export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() instrumentRecording: InstrumentRecording;
-  @Input() recordingAct: RecordingAct;
+  @Input() recordingAct: RecordingActEntry;
   @Input() recordableSubject: RecordableSubject;
   @Input() isAssociation: boolean;
   @Input() readonly = false;
