@@ -11,7 +11,7 @@ import { Assertion, EventInfo } from '@app/core';
 
 import { RecordingDataService } from '@app/data-services';
 
-import { BookEntry, CreateManualBookEntryFields, EmptyBookEntry, EmptyInstrumentRecording,
+import { BookEntry, ManualBookEntryFields, EmptyBookEntry, EmptyInstrumentRecording,
          InstrumentRecording, RecordingActTypeGroup, RegistrationCommand} from '@app/models';
 
 import { RecordingActCreatorEventType } from '../recording-acts/recording-act-creator.component';
@@ -87,12 +87,12 @@ export class BookEntryEditionComponent implements OnChanges {
     switch (event.type as BookEntryEditorEventType) {
 
       case BookEntryEditorEventType.UPDATE_BOOK_ENTRY:
-        Assertion.assertValue(event.payload.recordingNo, 'event.payload.recordingNo');
-        Assertion.assertValue(event.payload.authorizationDate, 'event.payload.authorizationDate');
-        Assertion.assertValue(event.payload.presentationTime, 'event.payload.presentationTime');
+        Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
+        Assertion.assertValue(event.payload.bookEntry.recordingNo, 'event.payload.bookEntry.recordingNo');
+        Assertion.assertValue(event.payload.bookEntry.authorizationDate, 'event.payload.bookEntry.authorizationDate');
         Assertion.assertValue(event.payload.instrument, 'event.payload.instrument');
 
-        this.updateBookEntryInstrumentRecording(event.payload as CreateManualBookEntryFields);
+        this.updateBookEntryInstrumentRecording(event.payload as ManualBookEntryFields);
 
         return;
 
@@ -162,7 +162,7 @@ export class BookEntryEditionComponent implements OnChanges {
   }
 
 
-  private updateBookEntryInstrumentRecording(bookEntryFields: CreateManualBookEntryFields) {
+  private updateBookEntryInstrumentRecording(bookEntryFields: ManualBookEntryFields) {
 
     this.setSubmited(true);
 

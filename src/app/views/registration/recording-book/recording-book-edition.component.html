@@ -29,15 +29,15 @@
 
     </div>
 
-    <ng-container *ngIf="displayRecordingBookEdition">
+    <ng-container>
 
       <emp-land-book-entry-list
-        [recordingBook]="recordingBookSelected"
+        [recordingBook]="selectedRecordingBook"
         (bookEntryListEvent)="onBookEntryListEvent($event)">
-
       </emp-land-book-entry-list>
 
-      <emp-ng-expansion-button [(panelState)]="panelAddState"
+      <emp-ng-expansion-button *ngIf="displayRecordingBookEdition"
+        [(panelState)]="panelAddState"
         [config]="{textButtonOpen: 'Agregar una inscripción a este volumen',
                   textButtonClose: 'Cancelar agregar registro'}" class="no-margin">
 

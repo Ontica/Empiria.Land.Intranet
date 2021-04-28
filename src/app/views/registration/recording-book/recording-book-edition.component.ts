@@ -9,7 +9,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 
-import { CreateManualBookEntryFields, EmptyRecordingBook,
+import { ManualBookEntryFields, EmptyRecordingBook,
          RecordingBook, BookEntry, EmptyBookEntry } from '@app/models';
 
 import { BookEntryEditorEventType } from './book-entry-editor.component';
@@ -47,7 +47,7 @@ export class RecordingBookEditionComponent implements OnInit {
 
   statusList = [];
 
-  recordingBookSelected: RecordingBook = EmptyRecordingBook;
+  selectedRecordingBook: RecordingBook = EmptyRecordingBook;
 
   displayRecordingBookEdition = false;
 
@@ -133,12 +133,12 @@ export class RecordingBookEditionComponent implements OnInit {
     switch (event.type as BookEntryEditorEventType) {
 
       case BookEntryEditorEventType.CREATE_BOOK_ENTRY:
-        Assertion.assertValue(event.payload.recordingNo, 'event.payload.recordingNo');
-        Assertion.assertValue(event.payload.authorizationDate, 'event.payload.authorizationDate');
-        Assertion.assertValue(event.payload.presentationTime, 'event.payload.presentationTime');
+        Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
+        Assertion.assertValue(event.payload.bookEntry.recordingNo, 'event.payload.bookEntry.recordingNo');
+        Assertion.assertValue(event.payload.bookEntry.authorizationDate, 'event.payload.bookEntry.authorizationDate');
         Assertion.assertValue(event.payload.instrument, 'event.payload.instrument');
 
-        this.createBookEntry(event.payload as CreateManualBookEntryFields);
+        this.createBookEntry(event.payload as ManualBookEntryFields);
 
         return;
 
@@ -150,20 +150,20 @@ export class RecordingBookEditionComponent implements OnInit {
 
 
   private initTexts(){
-    if (isEmpty(this.recordingBookSelected)) {
+    if (isEmpty(this.selectedRecordingBook)) {
       this.cardHint = 'Seleccione el volumen';
       return;
     }
 
-    this.cardHint = 'Volumen ' + this.recordingBookSelected.volumeNo + ', ' +
-      this.recordingBookSelected.recordingSection.name + ', ' +
-      this.recordingBookSelected.recorderOffice.name;
+    this.cardHint = 'Volumen ' + this.selectedRecordingBook.volumeNo + ', ' +
+      this.selectedRecordingBook.recordingSection.name + ', ' +
+      this.selectedRecordingBook.recorderOffice.name;
   }
 
 
   private loadRecordingBookData(recordingBook: Identifiable){
     if (isEmpty(recordingBook)) {
-      this.recordingBookSelected = EmptyRecordingBook;
+      this.selectedRecordingBook = EmptyRecordingBook;
       this.displayRecordingBookEdition = false;
       this.initTexts();
 
@@ -175,22 +175,23 @@ export class RecordingBookEditionComponent implements OnInit {
     this.data.getRecordingBook(recordingBook.uid)
       .toPromise()
       .then(x => {
-        this.recordingBookSelected = x;
-        this.displayRecordingBookEdition = !isEmpty(this.recordingBookSelected);
+        this.selectedRecordingBook = x;
+        this.displayRecordingBookEdition = !isEmpty(this.selectedRecordingBook) &&
+                                           this.selectedRecordingBook.status !== 'Closed';
         this.initTexts();
       })
       .finally(() => this.setSubmitted(false));
   }
 
 
-  private createBookEntry(bookEntryFields: CreateManualBookEntryFields){
+  private createBookEntry(bookEntryFields: ManualBookEntryFields){
 
     this.setSubmitted(true);
 
-    this.data.createBookEntry(this.recordingBookSelected.uid, bookEntryFields)
+    this.data.createBookEntry(this.selectedRecordingBook.uid, bookEntryFields)
       .toPromise()
       .then(x => {
-        this.recordingBookSelected = x;
+        this.selectedRecordingBook = x;
         this.resetPanelState();
       })
       .finally(() => this.setSubmitted(false));
@@ -203,7 +204,7 @@ export class RecordingBookEditionComponent implements OnInit {
     this.data.deleteBookEntry(bookEntry.recordingBookUID, bookEntry.uid)
       .toPromise()
       .then(x => {
-        this.recordingBookSelected = x;
+        this.selectedRecordingBook = x;
 
         this.sendEvent(RecordingBookEditionEventType.BOOK_ENTRY_SELECTED,
           { bookEntry: EmptyBookEntry });

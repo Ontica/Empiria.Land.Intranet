@@ -214,6 +214,8 @@ export interface BookEntry {
   recordingSectionName: string;
   volumeNo: string;
   recordingNo: string;
+  presentationTime: DateString;
+  authorizationDate: DateString;
   recordedBy: string;
   instrumentRecording: {
     uid: string;
@@ -235,6 +237,8 @@ export const EmptyBookEntry: BookEntry = {
   recordingSectionName: '',
   volumeNo: '',
   recordingNo: '',
+  presentationTime: '',
+  authorizationDate: '',
   recordedBy: '',
   instrumentRecording: {
     uid: '',
@@ -254,11 +258,13 @@ export interface InstrumentBookEntryFields {
 }
 
 
-export interface CreateManualBookEntryFields {
-  recordingNo: string;
+export interface ManualBookEntryFields {
+  bookEntry: {
+    recordingNo: string;
+    presentationTime: DateString;
+    authorizationDate: DateString;
+  },
   instrument: InstrumentFields;
-  presentationTime: DateString;
-  authorizationDate: DateString;
 }
 
 

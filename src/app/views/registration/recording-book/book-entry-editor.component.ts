@@ -11,7 +11,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { EventInfo, isEmpty } from '@app/core';
 
-import { BookEntry, CreateManualBookEntryFields, EmptyBookEntry, EmptyInstrument,
+import { BookEntry, ManualBookEntryFields, EmptyBookEntry, EmptyInstrument,
          EmptyInstrumentRecordingActions, Instrument, InstrumentFields,
          InstrumentRecordingActions } from '@app/models';
 
@@ -113,8 +113,8 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
     this.formHandler = new FormHandler(
       new FormGroup({
         recordingNo: new FormControl('', Validators.required),
-        authorizationDate: new FormControl('', Validators.required),
-        presentationTime: new FormControl('', Validators.required),
+        presentationTime: new FormControl(''),
+        authorizationDate: new FormControl('', Validators.required)
       }));
   }
 
@@ -122,8 +122,8 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
   private resetFormModel() {
     this.formHandler.form.reset({
       recordingNo: this.bookEntry.recordingNo,
-      authorizationDate: '', // this.bookEntry.recordingTime,
-      presentationTime: '', // this.bookEntry.recordingTime,
+      presentationTime: this.bookEntry.presentationTime,
+      authorizationDate: this.bookEntry.authorizationDate,
     });
   }
 
@@ -137,12 +137,14 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
   }
 
 
-  private getFormData(instrument: InstrumentFields): CreateManualBookEntryFields {
-    const bookEntryFields: CreateManualBookEntryFields = {
-      recordingNo: this.formHandler.getControl(this.controls.recordingNo).value,
-      authorizationDate: this.formHandler.getControl(this.controls.authorizationDate).value,
-      presentationTime: this.formHandler.getControl(this.controls.presentationTime).value,
-      instrument,
+  private getFormData(instrument: InstrumentFields): ManualBookEntryFields {
+    const bookEntryFields: ManualBookEntryFields = {
+      bookEntry : {
+        recordingNo: this.formHandler.getControl(this.controls.recordingNo).value,
+        presentationTime: this.formHandler.getControl(this.controls.presentationTime).value,
+        authorizationDate: this.formHandler.getControl(this.controls.authorizationDate).value
+      },
+      instrument
     };
 
     return bookEntryFields;

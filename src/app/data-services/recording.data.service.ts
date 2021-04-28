@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService, Identifiable } from '@app/core';
 
-import { CreateManualBookEntryFields, InstrumentBookEntryFields, InstrumentFields, InstrumentRecording,
+import { ManualBookEntryFields, InstrumentBookEntryFields, InstrumentFields, InstrumentRecording,
          RecordableSubjectFields, RecordingActTypeGroup, RecordingBook,
          RegistrationCommand } from '@app/models';
 
@@ -78,13 +78,13 @@ export class RecordingDataService {
 
 
   createBookEntry(recordingBookUID: string,
-                  fields: CreateManualBookEntryFields): Observable<RecordingBook> {
+                  manualBookEntryFields: ManualBookEntryFields): Observable<RecordingBook> {
     Assertion.assertValue(recordingBookUID, 'recordingBookUID');
-    Assertion.assertValue(fields, 'fields');
+    Assertion.assertValue(manualBookEntryFields, 'manualBookEntryFields');
 
     const path = `v5/land/registration/recording-books/${recordingBookUID}/book-entries`;
 
-    return this.http.post<RecordingBook>(path, fields);
+    return this.http.post<RecordingBook>(path, manualBookEntryFields);
   }
 
 
@@ -120,17 +120,15 @@ export class RecordingDataService {
   }
 
 
-  updateBookEntryInstrumentRecording(
-    instrumentRecordingUID: string,
-    bookEntryUID: string,
-    instrument: CreateManualBookEntryFields
-  ): Observable<InstrumentRecording> {
+  updateBookEntryInstrumentRecording(instrumentRecordingUID: string,
+                                     bookEntryUID: string,
+                                     instrument: ManualBookEntryFields): Observable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(bookEntryUID, 'bookEntryUID');
     Assertion.assertValue(instrument, 'instrument');
 
     const path = `v5/land/registration/${instrumentRecordingUID}/book-entries/${bookEntryUID}` +
-      `/update-instrument`;
+                 `/update-instrument`;
 
     return this.http.put<InstrumentRecording>(path, instrument);
   }

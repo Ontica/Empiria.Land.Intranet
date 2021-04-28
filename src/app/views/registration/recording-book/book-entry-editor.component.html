@@ -4,7 +4,7 @@
 
     <div [fxFlex]="100/3">
       <div fxFlex="190px">
-        <label>Número de la inscripcion a agregar:</label>
+        <label>Número de la inscripción a agregar:</label>
         <input autocomplete="off" [formControlName]="controls.recordingNo" type="text" class="text-box"
           style="width: 100px;" [class.invalid-control]="formHandler.getControl(controls.recordingNo).invalid">
       </div>
@@ -13,9 +13,9 @@
     <div [fxFlex]="100/3">
       <div fxFlex fxLayoutAlign="start">
         <div fxFlex="126px">
-          <label>Fecha de registro:</label>
-          <emp-ng-datepicker name="authorizationDate" [formControlName]="controls.authorizationDate"
-            [showError]="formHandler.getControl(controls.authorizationDate).invalid">
+          <label>Fecha de presentación:</label>
+          <emp-ng-datepicker name="presentationTime" [formControlName]="controls.presentationTime"
+            [showError]="formHandler.getControl(controls.presentationTime).invalid">
 
           </emp-ng-datepicker>
         </div>
@@ -23,9 +23,9 @@
 
       <div fxFlex fxLayoutAlign="end">
         <div fxFlex="126px">
-          <label>Fecha de presentación:</label>
-          <emp-ng-datepicker name="presentationTime" [formControlName]="controls.presentationTime"
-            [showError]="formHandler.getControl(controls.presentationTime).invalid">
+          <label>Fecha de registro:</label>
+          <emp-ng-datepicker name="authorizationDate" [formControlName]="controls.authorizationDate"
+            [showError]="formHandler.getControl(controls.authorizationDate).invalid">
 
           </emp-ng-datepicker>
         </div>
