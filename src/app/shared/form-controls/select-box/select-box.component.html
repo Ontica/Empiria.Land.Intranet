@@ -39,7 +39,7 @@
       <ng-container *ngTemplateOutlet="groupTemplate; context:{item: item}"></ng-container>
     </ng-container>
     <ng-container *ngIf="!groupTemplate">
-      {{item[bindLabel]}}
+      {{bindLabel ? item[bindLabel] : item}}
     </ng-container>
   </ng-template>
 
@@ -48,7 +48,7 @@
       <ng-container *ngTemplateOutlet="optionTemplate; context:{item: item}"></ng-container>
     </ng-container>
     <ng-container *ngIf="!optionTemplate">
-     {{item[bindLabel]}}
+     {{bindLabel ? item[bindLabel] : item}}
     </ng-container>
   </ng-template>
 
