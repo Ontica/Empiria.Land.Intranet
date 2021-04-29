@@ -1,0 +1,146 @@
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section">
+
+  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between"
+      *ngIf="recordingAct.actions.editableFields.includes('RecordingActType') ||
+             recordingAct.actions.editableFields.includes('Kinds') ||
+             recordingAct.actions.editableFields.includes('OperationAmount')">
+
+      <div *ngIf="recordingAct.actions.editableFields.includes('RecordingActType')"
+        [fxFlex]="100/3" [fxFlex.lt-md]="100">
+
+        <label>Acto jurídico:</label>
+
+        <emp-ng-select [formControlName]="controls.typeUID"
+          [config]="{ clearable: false }"
+          [items]="recordingAct.actions.editionValues.recordingActTypes"
+          [showError]="formHandler.showInvalidControl(controls.typeUID)">
+        </emp-ng-select>
+
+      </div>
+
+      <div *ngIf="recordingAct.actions.editableFields.includes('Kinds')"
+        [fxFlex]="100/3" [fxFlex.lt-md]="100">
+
+        <label>Tipo de acto jurídico:</label>
+
+        <emp-ng-select [formControlName]="controls.kind"
+          [config]="{ bindByValue: false, clearable: false }"
+          [bindLabel]="null"
+          [items]="recordingAct.actions.editionValues.kinds"
+          [showError]="formHandler.showInvalidControl(controls.kind)"
+          [style.width.%]="100">
+        </emp-ng-select>
+
+      </div>
+
+      <div fxFlex></div>
+
+      <div *ngIf="recordingAct.actions.editableFields.includes('OperationAmount')"
+        [fxFlex]="100/3">
+
+        <div fxLayout="row">
+
+          <label [fxFlex]="100">Monto de la operación:</label>
+
+        </div>
+
+        <div fxLayout="row">
+
+          <div [fxFlex]="40" [fxFlex.lt-md]="100">
+
+            <input [formControlName]="controls.operationAmount" empNgCurrency
+              [empNgCurrencyCode]="getCurrencyCode()"
+              [empNgCurrencyDisplaySymbol]="getCurrencyCode() !== '' ? 'symbol-narrow' : ''"
+              type="text" class="text-box"
+              [class.invalid-control]="formHandler.showInvalidControl(controls.operationAmount)">
+
+          </div>
+
+          <div [fxFlex]="60" [fxFlex.lt-md]="100" fxLayoutAlign="start end">
+
+            <emp-ng-select [formControlName]="controls.currencyUID"
+              [config]="{ clearable: false }"
+              [items]="recordingAct.actions.editionValues.currencies"
+              [style.width.%]="100"
+              [showError]="formHandler.showInvalidControl(controls.currencyUID)">
+            </emp-ng-select>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div fxFlex>
+
+        <label>Descripción del acto jurídico:</label>
+
+        <textarea class="text-area" empNgTextareaAutoresize rows="1"
+          [formControlName]="controls.description"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
+        </textarea>
+
+      </div>
+
+    </div>
+
+
+    <ng-container *ngIf="recordingAct.actions.isEditable">
+
+      <mat-divider class="divider-padding" >
+
+      </mat-divider>
+
+      <div fxLayout="row">
+
+        <div [fxFlex]="100/3" fxLayoutAlign="start">
+
+          <button *ngIf="recordingAct.actions.isEditable"
+            (click)="enableEditor(!editionMode)"
+            [ngClass]="editionMode ? 'btn-warning' : 'btn-action'">
+            {{ editionMode ? 'Descartar Cambios' : 'Editar Documento' }}
+          </button>
+
+        </div>
+
+        <div [fxFlex]="100/3" fxLayoutAlign="center center">
+
+          <span style="padding-right: 0.5rem;">Marcar como:</span>
+
+          <emp-ng-select
+            [formControlName]="controls.status"
+            bindLabel="statusName"
+            bindValue="status"
+            [config]="{ clearable: false }"
+            [items]="statusList"
+            [showError]="formHandler.showInvalidControl(controls.status)"
+            [style.width.px]="125"
+            (changes)="onStatusChange()">
+          </emp-ng-select>
+
+        </div>
+
+        <div fxFlex fxLayoutAlign="end">
+
+          <button *ngIf="editionMode"
+            (click)="submit()"
+            [class.btn]="!formHandler.isValid"
+            [class.btn-action]="formHandler.isValid">
+            Guardar
+          </button>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+
+  </div>
+
+</form>

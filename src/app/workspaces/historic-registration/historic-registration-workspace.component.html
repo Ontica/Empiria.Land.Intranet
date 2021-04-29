@@ -57,6 +57,13 @@
   <div *ngIf="displayRecordingActEditor"
     class="secondary">
 
+    <emp-land-recording-act-edition
+      [instrumentRecordingUID]="selectedRecordingAct.instrumentRecording.uid"
+      [recordingActUID]="selectedRecordingAct.recordingAct.uid"
+      (closeEvent)="unselectCurrentRecordingAct()">
+
+    </emp-land-recording-act-edition>
+
   </div>
 
 </div>

@@ -1,0 +1,19 @@
+
+<emp-ng-card
+  title="Editor del acto jurídico"
+  [hint]="cardHint"
+  (cardClose)="onClose()">
+
+  <div class="card-body-padding" [empNgSpinnerHost]="spinner">
+
+    <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+
+    <emp-land-recording-act-editor
+      [recordingAct]="recordingAct"
+      (recordingActEditorEvent)="onRecordingActEditorEvent($event)">
+
+    </emp-land-recording-act-editor>
+
+  </div>
+
+</emp-ng-card>
