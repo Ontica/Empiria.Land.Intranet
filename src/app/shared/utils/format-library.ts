@@ -8,6 +8,9 @@
 export class FormatLibrary {
 
   static stringToNumber(value: string): number {
+    if (!value) {
+      return 0;
+    }
     return Number(value.replace(/[^0-9.-]+/g, ''));
   }
 

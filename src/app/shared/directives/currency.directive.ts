@@ -5,7 +5,8 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Directive, ElementRef, HostListener, Optional } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnChanges, Optional } from '@angular/core';
+
 import { CurrencyPipe } from '@angular/common';
 
 import { NgControl } from '@angular/forms';
@@ -14,16 +15,25 @@ import { NgControl } from '@angular/forms';
 @Directive({
   selector: 'input[empNgCurrency]'
 })
-export class EmpCurrencyDirective {
+export class EmpCurrencyDirective implements OnChanges {
+
+  @Input() empNgCurrencyCode = 'MXN';
+
+  @Input() empNgCurrencyDisplaySymbol = 'symbol-narrow';
 
   constructor(private el: ElementRef,
               private currencyPipe: CurrencyPipe,
               @Optional() private control: NgControl) { }
 
 
+  ngOnChanges() {
+    this.format();
+  }
+
+
   @HostListener('input', ['$event']) onInputChange(event) {
     const initalValue = this.el.nativeElement.value;
-    const formattedValue = initalValue.replace(/[^0-9.,$]*/g, '');
+    const formattedValue = initalValue.replace(/[^0-9.,$€]*/g, '');
 
     this.setValue(formattedValue);
 
@@ -48,9 +58,11 @@ export class EmpCurrencyDirective {
   format() {
     const initalValue = this.el.nativeElement.value;
 
-    const numberValue = parseFloat(String(initalValue).replace(/[,$]*/g, ''));
+    const numberValue = parseFloat(String(initalValue).replace(/[,$€]*/g, ''));
 
-    const formattedValue = this.currencyPipe.transform(numberValue);
+    const formattedValue = this.currencyPipe.transform(numberValue,
+                                                       this.empNgCurrencyCode,
+                                                       this.empNgCurrencyDisplaySymbol);
 
     this.setValue(formattedValue);
   }
