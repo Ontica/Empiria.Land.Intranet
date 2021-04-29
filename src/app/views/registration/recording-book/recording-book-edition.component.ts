@@ -51,7 +51,7 @@ export class RecordingBookEditionComponent implements OnInit {
 
   displayRecordingBookEdition = false;
 
-  constructor(private data: RecordingDataService ) { }
+  constructor(private recordingData: RecordingDataService ) { }
 
   ngOnInit(): void {
     this.initTexts();
@@ -172,7 +172,7 @@ export class RecordingBookEditionComponent implements OnInit {
 
     this.setSubmitted(true);
 
-    this.data.getRecordingBook(recordingBook.uid)
+    this.recordingData.getRecordingBook(recordingBook.uid)
       .toPromise()
       .then(x => {
         this.selectedRecordingBook = x;
@@ -188,7 +188,7 @@ export class RecordingBookEditionComponent implements OnInit {
 
     this.setSubmitted(true);
 
-    this.data.createBookEntry(this.selectedRecordingBook.uid, bookEntryFields)
+    this.recordingData.createBookEntry(this.selectedRecordingBook.uid, bookEntryFields)
       .toPromise()
       .then(x => {
         this.selectedRecordingBook = x;
@@ -201,7 +201,7 @@ export class RecordingBookEditionComponent implements OnInit {
   private deleteBookEntry(bookEntry: BookEntry){
     this.setSubmitted(true);
 
-    this.data.deleteBookEntry(bookEntry.recordingBookUID, bookEntry.uid)
+    this.recordingData.deleteBookEntry(bookEntry.recordingBookUID, bookEntry.uid)
       .toPromise()
       .then(x => {
         this.selectedRecordingBook = x;
