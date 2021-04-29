@@ -14,7 +14,6 @@ export type RecordingActPartyType  = 'Primary' | 'Secondary';
 export interface RecordingActPartyFields {
   uid: string;
   type: RecordingActPartyType;
-  recordingActUID: string;
   party: PartyFields;
   roleUID: string;
   partAmount: number;

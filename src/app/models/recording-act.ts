@@ -46,7 +46,7 @@ export interface RecordingAct extends Identifiable, PartitionedType {
   operationAmount: number;
   currencyUID: string;
   recordableSubject: Identifiable;
-  participants: RecordingActParty[];
+  parties: RecordingActParty[];
   status: RecordableObjectStatus;
   actions: RecordingActActions;
 }
@@ -111,7 +111,7 @@ export const EmptyRecordingAct: RecordingAct = {
   operationAmount: 0,
   currencyUID: '',
   recordableSubject: Empty,
-  participants: [],
+  parties: [],
   status: 'Incomplete',
   actions: EmptyRecordingActActions,
 };

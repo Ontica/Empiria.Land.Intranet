@@ -247,7 +247,6 @@ export class PartyEditorComponent implements OnInit {
     const data: RecordingActPartyFields = {
       uid: this.selectedParty.uid,
       type: this.selectedParty.type,
-      recordingActUID: '',
       party: {
         uid: '',
         type: 'Organization',
