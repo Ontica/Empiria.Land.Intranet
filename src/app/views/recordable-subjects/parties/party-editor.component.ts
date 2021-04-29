@@ -10,7 +10,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { concat, Observable, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
-import { participationTypeEnum, PartyTypesEnum, RecordingActParty, RolesGroupEnum } from '@app/models';
+import { RecordingActParty, RecordingActPartyFields, RecordingActPartyType } from '@app/models';
 import { SelectBoxComponent } from '@app/shared/form-controls/select-box/select-box.component';
 
 
@@ -19,8 +19,8 @@ import { SelectBoxComponent } from '@app/shared/form-controls/select-box/select-
   templateUrl: './party-editor.component.html'
 })
 export class PartyEditorComponent implements OnInit {
-  @ViewChild(MatExpansionPanel, {static: true}) matExpansionPanelElement: MatExpansionPanel;
-  @ViewChild('selectSearchParty')  public ngSelectSearchParty: SelectBoxComponent;
+  @ViewChild(MatExpansionPanel, { static: true }) matExpansionPanelElement: MatExpansionPanel;
+  @ViewChild('selectSearchParty') public ngSelectSearchParty: SelectBoxComponent;
 
   @Output() emitSaved = new Subject<boolean>();
 
@@ -43,7 +43,7 @@ export class PartyEditorComponent implements OnInit {
   participationTypesList: any[];
   partiesInRecordingActList: any[];
 
-  rolesGroup = RolesGroupEnum;
+  rolesGroup: RecordingActPartyType;
 
   constructor() {
   }
@@ -64,20 +64,20 @@ export class PartyEditorComponent implements OnInit {
     this.parties$ = concat(
       of([]),
       this.partiesInput$.pipe(
-          distinctUntilChanged(),
-          tap(() => this.partiesLoading = true),
-          switchMap(term =>
-            // TODO: call to web api
-            of([])
-          .pipe(
+        distinctUntilChanged(),
+        tap(() => this.partiesLoading = true),
+        switchMap(term =>
+          // TODO: call to web api
+          of([])
+            .pipe(
               catchError(() => of([])),
               tap(() => this.partiesLoading = false)
-          ))
+            ))
       )
     );
   }
 
-  loadFormSelectsData(){
+  loadFormSelectsData() {
     // TODO: suscribe to data
     this.partyTypesList = [];
     this.identificationTypesList = [];
@@ -90,11 +90,11 @@ export class PartyEditorComponent implements OnInit {
   //#region  FORM CONTROL
   setFormControls = () => {
     this.form = new FormGroup({
-      name: new FormControl({value: '', disabled: false}, Validators.required),
-      curp: new FormControl({value: '', disabled: false}),
-      rfc: new FormControl({value: '', disabled: false}),
-      typeIdentification: new FormControl({value: null, disabled: false}),
-      identification: new FormControl({value: '', disabled: false}),
+      name: new FormControl({ value: '', disabled: false }, Validators.required),
+      curp: new FormControl({ value: '', disabled: false }),
+      rfc: new FormControl({ value: '', disabled: false }),
+      typeIdentification: new FormControl({ value: null, disabled: false }),
+      identification: new FormControl({ value: '', disabled: false }),
       notes: new FormControl(''),
       role: new FormControl(null, Validators.required),
       participationType: new FormControl(''),
@@ -118,37 +118,38 @@ export class PartyEditorComponent implements OnInit {
   get observations(): any { return this.form.get('observations'); }
   get of(): any { return this.form.get('of'); }
 
-  subscribeToValidators(){
+  subscribeToValidators() {
     this.role
-        .valueChanges
-        .subscribe(value => {
-          if (value === RolesGroupEnum.primary) {
-            this.participationType.setValidators([Validators.required]);
-            this.participationAmount.clearValidators();
-            this.of.clearValidators();
-          } else {
-            this.participationType.clearValidators();
-            this.participationAmount.clearValidators();
-            this.of.setValidators([Validators.required]);
-          }
-          this.participationType.updateValueAndValidity();
-          this.participationAmount.updateValueAndValidity();
-          this.of.updateValueAndValidity();
-        });
+      .valueChanges
+      .subscribe((value: RecordingActPartyType) => {
+        if (value === 'Primary') {
+          this.participationType.setValidators([Validators.required]);
+          this.participationAmount.clearValidators();
+          this.of.clearValidators();
+
+        } else if (value === 'Secondary') {
+          this.participationType.clearValidators();
+          this.participationAmount.clearValidators();
+          this.of.setValidators([Validators.required]);
+        }
+        this.participationType.updateValueAndValidity();
+        this.participationAmount.updateValueAndValidity();
+        this.of.updateValueAndValidity();
+      });
 
     this.participationType
-        .valueChanges
-        .subscribe(value => {
-          if (this.validateParticipationTypeWithAmount(value)) {
-            this.participationAmount.setValidators([Validators.required]);
-          } else {
-            this.participationAmount.clearValidators();
-          }
-          this.participationAmount.updateValueAndValidity();
-        });
+      .valueChanges
+      .subscribe(value => {
+        if (this.validateParticipationTypeWithAmount(value)) {
+          this.participationAmount.setValidators([Validators.required]);
+        } else {
+          this.participationAmount.clearValidators();
+        }
+        this.participationAmount.updateValueAndValidity();
+      });
   }
 
-  resetForm(){
+  resetForm() {
     this.form.reset();
     this.selectedParty = null;
     this.uidSelectedParty = null;
@@ -161,7 +162,7 @@ export class PartyEditorComponent implements OnInit {
     this.ngSelectSearchParty.clearModel();
   }
 
-  setFormData(event){
+  setFormData(event) {
     if (event) {
       this.selectedParty = event;
       this.showForm = true;
@@ -172,22 +173,22 @@ export class PartyEditorComponent implements OnInit {
 
       if (this.isRegisteredParty) {
         this.form.patchValue({
-          name: this.selectedParty?.name,
-          curp: this.selectedParty?.curp,
-          rfc: this.selectedParty?.identification.numberIdentification,
-          typeIdentification: this.selectedParty?.identification.typeIdentification.uid,
-          identification: this.selectedParty?.identification.numberIdentification,
+          uid: this.selectedParty.party.uid,
+          type: this.selectedParty.party.type,
+          name: this.selectedParty?.party.fullName,
+          curp: this.selectedParty?.party.curp,
+          rfc: this.selectedParty?.party.rfc
         });
       } else {
         this.form.patchValue({
-          name: this.selectedParty?.name,
+          name: this.selectedParty?.party.fullName,
         });
       }
       this.disablePartyFields(this.isRegisteredParty);
     }
   }
 
-  disablePartyFields(disable: boolean){
+  disablePartyFields(disable: boolean) {
     if (disable) {
       this.name.disable();
       this.curp.disable();
@@ -208,7 +209,7 @@ export class PartyEditorComponent implements OnInit {
     if (this.form.valid) {
       // TODO: confirm or reject submit
       this.isLoading = true;
-      const partyAdd: RecordingActParty = this.getFormData();
+      const partyAdd: RecordingActPartyFields = this.getFormData();
       this.validateData(partyAdd);
       // TODO: save Party
       console.log(partyAdd);
@@ -218,23 +219,22 @@ export class PartyEditorComponent implements OnInit {
     }
   }
 
-  validateData(partyAdd: RecordingActParty){
+  validateData(partyAdd: RecordingActPartyFields) {
     let message = '';
     // TODO: return message to alert from data with format not valid and show confirm save data
-    if (partyAdd.curp !== null && !curpValida(partyAdd.curp)){
-      message = `La Curp no es valida: ${partyAdd.curp}. `;
+    if (partyAdd.party.curp && !curpValida(partyAdd.party.curp)) {
+      message = `La Curp no es valida: ${partyAdd.party.curp}. `;
     }
 
-    if (partyAdd.identification.typeIdentification.uid === '2' &&
-      !validateRFC(partyAdd.identification.numberIdentification)) {
-      message = `El RFC no es valido:  ${partyAdd.identification.numberIdentification}. `;
+    if (partyAdd.party.rfc && !validateRFC(partyAdd.party.rfc)) {
+      message = `El RFC no es valido:  ${partyAdd.party.rfc}. `;
     }
 
     console.log(message);
     return message;
   }
 
-  effectOfSaved(){
+  effectOfSaved() {
     setTimeout(() => {
       this.emitSaved.next(true);
       this.resetForm();
@@ -242,37 +242,32 @@ export class PartyEditorComponent implements OnInit {
     }, 500);
   }
 
-  getFormData(){
+  getFormData(): RecordingActPartyFields {
     const formModel = this.form.getRawValue();
-    const data: RecordingActParty = {
+    const data: RecordingActPartyFields = {
       uid: this.selectedParty.uid,
-      name: formModel.name.toString().toUpperCase(),
-      curp: formModel.curp ? formModel.curp.toString().toUpperCase() : '' ,
-      governmentID: '',
-      governmentIDType: '',
-      identification: {
-        typeIdentification: this.selectedParty.type === PartyTypesEnum.person ?
-                            ( formModel.typeIdentification ?? {uid: '', name: ''} ) :
-                            {uid: '2', name: 'RFC'},
-        numberIdentification: this.selectedParty.type === PartyTypesEnum.person ?
-                              formModel.identification ?? '' :
-                              formModel.rfc
-      },
       type: this.selectedParty.type,
+      recordingActUID: '',
+      party: {
+        uid: '',
+        type: 'Organization',
+        fullName: formModel.name.toString().toUpperCase(),
+        curp: formModel.curp ? formModel.curp.toString().toUpperCase() : '',
+        rfc: formModel.rfc,
+        notes: formModel.notes
+      },
+      roleUID: formModel.role,
       notes: formModel.notes,
-      role: formModel.role,
-      participationType: formModel.participationType,
-      participationAmount: formModel.participationAmount,
-      observations: formModel.observations,
-      of: formModel.of,
-      partiesList: []
+      partAmount: formModel.participationAmount,
+      partUnitUID: formModel.participationType,
+      associatedWithUID: formModel.of,
     };
     return data;
   }
 
-  getListItemsFromGroup(list){
-    return  list.map(x => x.items )
-                .reduce((prev, current) => [...prev, ...current]);
+  getListItemsFromGroup(list) {
+    return list.map(x => x.items)
+      .reduce((prev, current) => [...prev, ...current]);
   }
 
   invalidateForm = () => {
@@ -284,21 +279,23 @@ export class PartyEditorComponent implements OnInit {
   //#endregion
 
   //#region  COMPONENT LOGIC AND VALIDATIONS
-  getRoleTypeSelected(){
+  getRoleTypeSelected() {
     const roleType =
-    this.rolesList.filter(x => x.items.filter(y => y.uid === this.role.value).length > 0);
-    if (roleType.length > 0){
+      this.rolesList.filter(x => x.items.filter(y => y.uid === this.role.value).length > 0);
+    if (roleType.length > 0) {
       return roleType[0].uid;
     } else {
       return null;
     }
   }
 
-  validateParticipationTypeWithAmount(value){
-    return [participationTypeEnum.porcentaje,
-            participationTypeEnum.m2,
-            participationTypeEnum.hectarea].includes(value);
+  validateParticipationTypeWithAmount(value) {
+    // return [participationTypeEnum.porcentaje,
+    //         participationTypeEnum.m2,
+    //         participationTypeEnum.hectarea].includes(value);
+    return true;
   }
+
   //#endregion
 }
 
@@ -307,7 +304,7 @@ export class PartyEditorComponent implements OnInit {
 function curpValida(curp) {
   const re = /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/;
   const validado = curp.match(re);
-  if (!validado){ // Does it match the general format?
+  if (!validado) { // Does it match the general format?
     return false;
   }
   // Validate that the check digit matches
@@ -317,11 +314,11 @@ function curpValida(curp) {
     let lngSuma = 0.0;
     let lngDigito = 0.0;
 
-    for (let i = 0; i < 17; i++){
+    for (let i = 0; i < 17; i++) {
       lngSuma = lngSuma + diccionario.indexOf(curp17.charAt(i)) * (18 - i);
     }
     lngDigito = 10 - lngSuma % 10;
-    if (lngDigito === 10){
+    if (lngDigito === 10) {
       return 0;
     }
     return lngDigito;
@@ -346,9 +343,9 @@ function validateRFC(rfc) {
     '(([A-ZÑ&]{4})([0-9]{2})[0][2]([0][1-9]|[1][0-9]|[2][0-8])([A-Z0-9]{3}))$';
 
   if (rfc.match(patternPM) || rfc.match(patternPF)) {
-      return true;
+    return true;
   } else {
-      return false;
+    return false;
   }
 }
 //#endregion

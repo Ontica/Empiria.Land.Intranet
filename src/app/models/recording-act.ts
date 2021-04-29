@@ -5,14 +5,12 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Empty, Identifiable, Money, PartitionedType } from '@app/core';
+import { Empty, Identifiable, PartitionedType } from '@app/core';
+import { RecordingActParty } from './party';
 
 import { EmptyRecordableSubject, RecordableObjectStatus, RecordableSubject } from './recordable-subjects';
 
 import { EmptyInstrumentRecording, InstrumentRecording, RegistrationCommandConfig } from './registration';
-
-import { RoledParty } from './party';
-
 
 export interface RecordingActTypeGroup extends Identifiable {
   recordingActTypes: RecordingActType[];
@@ -48,7 +46,7 @@ export interface RecordingAct extends Identifiable, PartitionedType {
   operationAmount: number;
   currencyUID: string;
   recordableSubject: Identifiable;
-  participants: RoledParty[];
+  participants: RecordingActParty[];
   status: RecordableObjectStatus;
   actions: RecordingActActions;
 }
@@ -80,20 +78,6 @@ export interface RecordingActFields {
 export interface SelectionAct {
   instrumentRecording: InstrumentRecording;
   recordingAct: RecordingActEntry;
-}
-
-
-export interface CancelationAct extends BaseRecordingAct {
-  targetAct: RecordingActEntry;
-  notes: string;
-}
-
-
-export interface ModificationAct extends BaseRecordingAct {
-  targetAct: RecordingActEntry;
-  parties: RoledParty[];
-  operationAmount?: Money;
-  notes: string;
 }
 
 

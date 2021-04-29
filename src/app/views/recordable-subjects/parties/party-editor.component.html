@@ -71,7 +71,7 @@
     <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
       <div fxLayout="row" fxLayout.lt-md="column">
         <div fxFlex="100">
-          <label>{{selectedParty.type == '1' ? 'Nombre Completo:' : 'Nombre o razón social'}}</label>
+          <label>{{selectedParty.party.type === 'Person' ? 'Nombre Completo:' : 'Nombre o razón social'}}</label>
           <input formControlName='name'
             type="text"
             class="text-box uppercase"
@@ -80,7 +80,7 @@
       </div>
 
       <div fxLayout="row" fxLayout.lt-md="column">
-        <div *ngIf="selectedParty.type == '1'" fxFlex="100">
+        <div *ngIf="selectedParty.party.type === 'Person'" fxFlex="100">
           <label>CURP:</label>
           <input formControlName='curp'
             type="text"
@@ -88,24 +88,8 @@
         </div>
       </div>
 
-      <div *ngIf="selectedParty.type == '1'" fxLayout="row" fxLayout.lt-md="column">
-        <div fxFlex="60">
-          <label>Identificación:</label>
-          <emp-ng-select #selectIdentificationTypes
-            [placeholder]="'( Ninguna )'"
-            [items]="identificationTypesList"
-            formControlName="typeIdentification">
-          </emp-ng-select>
-        </div>
-        <div fxFlex="40" fxLayoutAlign="start end" >
-          <input formControlName="identification"
-            type="text"
-            class="text-box uppercase">
-        </div>
-      </div>
-
       <div fxLayout="row" fxLayout.lt-md="column">
-        <div *ngIf="selectedParty.type != '1'" fxFlex="100">
+        <div fxFlex="100">
           <label>RFC:</label>
           <input formControlName='rfc'
             type="text"
@@ -136,7 +120,7 @@
         </div>
 
         <ng-container [ngSwitch]="getRoleTypeSelected()">
-          <ng-container *ngSwitchCase="rolesGroup.primary">
+          <ng-container *ngSwitchCase="rolesGroup === 'Primary'">
             <div fxFlex="40">
               <label>Sobre:</label>
               <emp-ng-select #selectParticipationTypes
@@ -155,7 +139,7 @@
                 [class.invalid-control]="participationAmount.touched && participationAmount.errors">
             </div>
           </ng-container>
-          <ng-container *ngSwitchCase="rolesGroup.secondary">
+          <ng-container *ngSwitchCase="rolesGroup === 'Secondary'">
             <div fxFlex="60">
               <label>Sobre:</label>
               <emp-ng-select #selectPartiesInRecordingAct
