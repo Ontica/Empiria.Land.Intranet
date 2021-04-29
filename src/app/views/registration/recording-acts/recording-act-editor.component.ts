@@ -122,7 +122,7 @@ export class RecordingActEditorComponent implements OnInit, OnChanges {
       currencyUID: this.recordingAct.currencyUID && this.recordingAct.currencyUID !== 'Empty' ?
         this.recordingAct.currencyUID : null,
       description: this.recordingAct.description,
-      status: '',
+      status: this.recordingAct.status
     });
 
     this.setRequiredFormFields();

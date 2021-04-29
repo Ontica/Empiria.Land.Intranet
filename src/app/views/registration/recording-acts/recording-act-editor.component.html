@@ -10,7 +10,7 @@
       <div *ngIf="recordingAct.actions.editableFields.includes('RecordingActType')"
         [fxFlex]="100/3" [fxFlex.lt-md]="100">
 
-        <label>Acto jurídico:</label>
+        <label>Tipo de acto jurídico:</label>
 
         <emp-ng-select [formControlName]="controls.typeUID"
           [config]="{ clearable: false }"
@@ -23,7 +23,7 @@
       <div *ngIf="recordingAct.actions.editableFields.includes('Kinds')"
         [fxFlex]="100/3" [fxFlex.lt-md]="100">
 
-        <label>Tipo de acto jurídico:</label>
+        <label>Clasificación del acto jurídico:</label>
 
         <emp-ng-select [formControlName]="controls.kind"
           [config]="{ bindByValue: false, clearable: false }"
