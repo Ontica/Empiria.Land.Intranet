@@ -5,9 +5,10 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Identifiable, Money, PartitionedType } from '@app/core';
+import { Empty, Identifiable, Money, PartitionedType } from '@app/core';
 
-import { EmptyRecordableSubject, RecordableSubject } from './recordable-subjects';
+import { EmptyRecordableSubject, RecordableObjectStatus, RecordableSubject } from './recordable-subjects';
+
 import { EmptyInstrumentRecording, InstrumentRecording, RegistrationCommandConfig } from './registration';
 
 import { RoledParty } from './party';
@@ -38,6 +39,50 @@ export interface RecordingActEntry extends BaseRecordingAct {
 }
 
 
+export type RecordingActEditableFields = 'Kinds' | 'OperationAmount' | 'Participants' | 'RecordingActType';
+
+
+export interface RecordingAct extends Identifiable, PartitionedType {
+  kind: string;
+  description: string;
+  operationAmount: number;
+  currencyUID: string;
+  recordableSubject: Identifiable;
+  participants: RoledParty[];
+  status: RecordableObjectStatus;
+  actions: RecordingActActions;
+}
+
+
+export interface RecordingActActions {
+  isEditable: boolean;
+  editableFields: RecordingActEditableFields[];
+  editionValues: {
+    recordingActTypes: Identifiable[];
+    kinds: string[];
+    currencies: Identifiable[];
+    mainParticipantRoles: Identifiable[];
+    secondaryParticipantRoles: Identifiable[];
+  };
+}
+
+
+export interface RecordingActFields {
+  description: string;
+  typeUID?: string;
+  kind?: string;
+  operationAmount?: number;
+  currencyUID?: string;
+  status: RecordableObjectStatus;
+}
+
+
+export interface SelectionAct {
+  instrumentRecording: InstrumentRecording;
+  recordingAct: RecordingActEntry;
+}
+
+
 export interface CancelationAct extends BaseRecordingAct {
   targetAct: RecordingActEntry;
   notes: string;
@@ -52,17 +97,39 @@ export interface ModificationAct extends BaseRecordingAct {
 }
 
 
-export interface SelectionAct {
-  instrumentRecording: InstrumentRecording;
-  recordingAct: RecordingActEntry;
-}
-
-
 export const EmptyRecordingActEntry: RecordingActEntry = {
   uid: 'Empty',
   name: '',
   recordableSubject: EmptyRecordableSubject,
   antecedent: ''
+};
+
+
+export const EmptyRecordingActActions: RecordingActActions = {
+  isEditable: false,
+  editableFields: [],
+  editionValues: {
+    recordingActTypes: [],
+    kinds: [],
+    currencies: [],
+    mainParticipantRoles: [],
+    secondaryParticipantRoles: [],
+  }
+};
+
+
+export const EmptyRecordingAct: RecordingAct = {
+  uid: 'Empty',
+  name: '',
+  type: '',
+  kind: '',
+  description: '',
+  operationAmount: 0,
+  currencyUID: '',
+  recordableSubject: Empty,
+  participants: [],
+  status: 'Incomplete',
+  actions: EmptyRecordingActActions,
 };
 
 
