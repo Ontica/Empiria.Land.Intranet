@@ -263,7 +263,7 @@ export interface ManualBookEntryFields {
     recordingNo: string;
     presentationTime: DateString;
     authorizationDate: DateString;
-  },
+  };
   instrument: InstrumentFields;
 }
 

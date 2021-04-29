@@ -15,7 +15,8 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { InstrumentRecording, RecorderOffice, RecordingActEntry } from '@app/models';
 
-import { RecordableSubject, RecordableSubjectStatusList } from '@app/models/recordable-subjects';
+import { RecordableObjectStatusItem, RecordableObjectStatusList,
+         RecordableSubject  } from '@app/models/recordable-subjects';
 
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
@@ -59,7 +60,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   recorderOfficeList: RecorderOffice[] = [];
   kindsList: string[] = [];
-  statusList: any[] = RecordableSubjectStatusList;
+  statusList: RecordableObjectStatusItem[] = RecordableObjectStatusList;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
@@ -92,7 +93,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
       this.setFormData();
     }
 
-    this.setRequiredFormFields(this.noProperty.status === 'Closed');
+    this.setRequiredFormFields(this.noProperty.status === 'Registered');
     this.disableForm(!this.editionMode);
   }
 
@@ -103,7 +104,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   onStatusChange(change){
-    this.setRequiredFormFields(change.status === 'Closed');
+    this.setRequiredFormFields(change.status === 'Registered');
     this.formHandler.invalidateForm();
   }
 

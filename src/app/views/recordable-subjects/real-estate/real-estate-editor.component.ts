@@ -17,7 +17,8 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { EmptyRealEstate, InstrumentRecording, RealEstate, RecorderOffice,
          RecordingActEntry } from '@app/models';
 
-import { RealEstateFields, RecordableSubjectStatusList } from '@app/models/recordable-subjects';
+import { RealEstateFields, RecordableObjectStatusItem,
+         RecordableObjectStatusList } from '@app/models/recordable-subjects';
 
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
@@ -67,7 +68,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   municipalityList: Identifiable[] = [];
   realEstateKindList: string[] = [];
   lotSizeUnitList: Identifiable[] = [];
-  statusList: any[] = RecordableSubjectStatusList;
+  statusList: RecordableObjectStatusItem[] = RecordableObjectStatusList;
 
 
   constructor(private uiLayer: PresentationLayer) {
@@ -101,7 +102,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.setRecorderOfficeAndMunicipalityDataList();
-    this.setRequiredFormFields(this.realEstate.status === 'Closed');
+    this.setRequiredFormFields(this.realEstate.status === 'Registered');
     this.disableForm(!this.editionMode);
   }
 
@@ -136,7 +137,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
 
   onStatusChange(change) {
-    this.setRequiredFormFields(change.status === 'Closed');
+    this.setRequiredFormFields(change.status === 'Registered');
     this.formHandler.invalidateForm();
   }
 
