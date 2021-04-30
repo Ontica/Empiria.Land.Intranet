@@ -25,6 +25,7 @@ import { EmptyInstrumentRecording, EmptyRegistrationCommandRule, EmptyTractIndex
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
 import { FormHandler } from '@app/shared/utils';
+
 import { RecordingBookSelectorEventType } from '../recording-book/recording-book-selector.component';
 
 export enum RecordingActCreatorEventType {

@@ -6,9 +6,13 @@
  */
 
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+
 import { MatTableDataSource } from '@angular/material/table';
+
 import { EventInfo } from '@app/core';
+
 import { RecordingActParty } from '@app/models';
+
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 export enum PartyListEventType {
