@@ -14,6 +14,43 @@
 
     </emp-land-recording-act-editor>
 
+    <ng-container *ngIf="recordingAct.actions.editableFields.includes('Participants')">
+
+      <br>
+
+      <emp-land-party-list
+        [partiesList]="recordingAct.parties"
+        (partyListEvent)="onPartyListEvent($event)">
+
+      </emp-land-party-list>
+
+      <emp-ng-expansion-button [panelState]="panelAddState" (panelStateChange)="onPanelEstateChange($event)"
+        [config]="{ textButtonOpen: 'Agregar una nueva persona u organización a este acto jurídico',
+                    textButtonClose: 'Cancelar registro'}">
+
+
+        <ng-container *ngIf="panelAddState">
+
+          <emp-land-party-selector
+            (partySelectedChange)="onPartySelectedChange($event)">
+
+          </emp-land-party-selector>
+
+          <emp-land-party-editor *ngIf="partySelected && partySelected?.party?.fullName !== ''"
+            [partySelected]="partySelected"
+            [partUnits]="recordingAct.actions.editionValues.partUnits"
+            [primaryPartyRoles]="recordingAct.actions.editionValues.primaryPartyRoles"
+            [secondaryPartyRoles]="recordingAct.actions.editionValues.secondaryPartyRoles"
+            (partyEditorEvent)="onPartyEditorEvent($event)">
+
+          </emp-land-party-editor>
+
+        </ng-container>
+
+      </emp-ng-expansion-button>
+
+    </ng-container>
+
   </div>
 
 </emp-ng-card>
