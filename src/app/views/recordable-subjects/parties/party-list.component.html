@@ -1,42 +1,54 @@
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef> Nombre </th>
-    <td mat-cell *matCellDef="let row">
-      <strong>{{row.name}}</strong>
-      <div class="grid-text-item" fxLayout="row" *ngFor="let item of row.partiesList" style="font-size: 8pt;">
-        <div class="pr-1 label">{{item.role.name}}: </div>
-        <strong>{{item.name}}</strong>
-      </div>
-    </td>
-  </ng-container>
-  <ng-container matColumnDef="typeIdentification">
-    <th mat-header-cell *matHeaderCellDef> Identificación </th>
-    <td mat-cell *matCellDef="let row">
-      <ng-container *ngIf="row.identification?.typeIdentification.name != ''">
-        {{row.identification?.typeIdentification.name}}:
-      </ng-container>
-      {{row.identification?.numberIdentification}}
-  </td>
-  </ng-container>
-  <ng-container matColumnDef="role">
-    <th mat-header-cell *matHeaderCellDef> Participa como </th>
-    <td mat-cell *matCellDef="let row"> {{row.role?.name}} </td>
-  </ng-container>
-  <ng-container matColumnDef="participationAmount">
-    <th mat-header-cell *matHeaderCellDef> Titularidad </th>
-    <td mat-cell *matCellDef="let row"> {{row.participationType?.name}} </td>
-  </ng-container>
-  <ng-container matColumnDef="action">
-    <th mat-header-cell *matHeaderCellDef> </th>
-    <td mat-cell *matCellDef="let row" class="text-align-center">
-      <mat-icon (click)="removeParty(row)">delete</mat-icon>
-    </td>
-  </ng-container>
+<div class="section-title"> Personas registradas </div>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+<div class="tab-container scrollable-container mat-elevation-z1">
 
-<div *ngIf="dataSource.data.length == 0" class="text-not-found">
-  <p>No se han agregado personas u organizaciones.</p>
+  <table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let row">
+        <strong>{{row.party.name}}</strong>
+        <div class="grid-text-item" fxLayout="row" *ngFor="let item of partiesList" style="font-size: 8pt;">
+          <div *ngIf="item.uid === row.party.uid">
+            <div class="pr-1 label">{{item.role.name}}: </div>
+            <strong>{{item.party}}</strong>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="typeIdentification">
+      <th mat-header-cell *matHeaderCellDef> Identificación </th>
+      <td mat-cell *matCellDef="let row">
+        <div *ngIf="row.party.curp !== ''">
+          CURP: {{row.party.curp}}
+        </div>
+        <div *ngIf="row.party.rfc !== ''">
+          RFC: {{row.party.rfc}}
+        </div>
+    </td>
+    </ng-container>
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef> Participa como </th>
+      <td mat-cell *matCellDef="let row"> {{row.role?.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="participationAmount">
+      <th mat-header-cell *matHeaderCellDef> Titularidad </th>
+      <td mat-cell *matCellDef="let row"> {{row.type}} </td>
+    </ng-container>
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let row" class="text-align-center">
+        <mat-icon (click)="removeParty(row)">delete</mat-icon>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+
+  <div *ngIf="dataSource.data.length == 0" class="text-not-found">
+    <p>No se han agregado personas u organizaciones.</p>
+  </div>
+
 </div>
