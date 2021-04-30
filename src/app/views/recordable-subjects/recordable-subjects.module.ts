@@ -15,11 +15,12 @@ import { SharedModule } from '@app/shared/shared.module';
 
 import { InstrumentEditorComponent } from './instrument/instrument-editor.component';
 
+import { NoPropertyEditorComponent } from './no-property/no-property-editor.component';
+import { RealEstateEditorComponent } from './real-estate/real-estate-editor.component';
+
 import { PartyEditorComponent } from './parties/party-editor.component';
 import { PartyListComponent } from './parties/party-list.component';
-
-import { RealEstateEditorComponent } from './real-estate/real-estate-editor.component';
-import { NoPropertyEditorComponent } from './no-property/no-property-editor.component';
+import { PartySelectorComponent } from './parties/party-selector.component';
 
 
 @NgModule({
@@ -36,16 +37,18 @@ import { NoPropertyEditorComponent } from './no-property/no-property-editor.comp
     InstrumentEditorComponent,
     PartyEditorComponent,
     PartyListComponent,
-    RealEstateEditorComponent,
+    PartySelectorComponent,
     NoPropertyEditorComponent,
+    RealEstateEditorComponent,
   ],
 
   exports: [
     InstrumentEditorComponent,
     PartyEditorComponent,
     PartyListComponent,
-    RealEstateEditorComponent,
+    PartySelectorComponent,
     NoPropertyEditorComponent,
+    RealEstateEditorComponent,
   ]
 })
 export class RecordableSubjectsModule { }

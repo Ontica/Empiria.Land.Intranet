@@ -5,39 +5,30 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatExpansionPanel } from '@angular/material/expansion';
-import { concat, Observable, of, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
-import { RecordingActParty, RecordingActPartyFields, RecordingActPartyType } from '@app/models';
-import { SelectBoxComponent } from '@app/shared/form-controls/select-box/select-box.component';
+
+import { Subject } from 'rxjs';
+
+import { isEmpty } from '@app/core';
+
+import { EmptyRecordingActParty, RecordingActParty, RecordingActPartyFields,
+         RecordingActPartyType } from '@app/models';
 
 
 @Component({
   selector: 'emp-land-party-editor',
   templateUrl: './party-editor.component.html'
 })
-export class PartyEditorComponent implements OnInit {
-  @ViewChild(MatExpansionPanel, { static: true }) matExpansionPanelElement: MatExpansionPanel;
-  @ViewChild('selectSearchParty') public ngSelectSearchParty: SelectBoxComponent;
+export class PartyEditorComponent implements OnInit, OnChanges {
+
+  @Input() partySelected: RecordingActParty = EmptyRecordingActParty;
 
   @Output() emitSaved = new Subject<boolean>();
 
-  isLoading = false;
-
-  parties$: Observable<any[]>;
-  partiesInput$ = new Subject<string>();
-  isRegisteredParty = false;
-  partiesLoading = false;
-  selectedParty: RecordingActParty;
-  uidSelectedParty: any = null;
-
-  showForm = false;
   form: FormGroup;
-  selectedPartyType: any = null;
 
-  partyTypesList: any[];
   identificationTypesList: any[];
   rolesList: any[];
   participationTypesList: any[];
@@ -46,49 +37,76 @@ export class PartyEditorComponent implements OnInit {
   rolesGroup: RecordingActPartyType;
 
   constructor() {
-  }
-
-  ngOnInit(): void {
-    this.selectedParty = null;
-    this.uidSelectedParty = null;
-    this.selectedPartyType = null;
-    this.isRegisteredParty = false;
-    this.showForm = false;
-    this.setFormControls();
-    this.loadParties();
+    this.initFormControls();
     this.loadFormSelectsData();
   }
 
-  //#region LOAD DATA
-  loadParties() {
-    this.parties$ = concat(
-      of([]),
-      this.partiesInput$.pipe(
-        distinctUntilChanged(),
-        tap(() => this.partiesLoading = true),
-        switchMap(term =>
-          // TODO: call to web api
-          of([])
-            .pipe(
-              catchError(() => of([])),
-              tap(() => this.partiesLoading = false)
-            ))
-      )
-    );
+
+  ngOnChanges(): void {
+    this.setFormData();
   }
 
-  loadFormSelectsData() {
-    // TODO: suscribe to data
-    this.partyTypesList = [];
+
+  ngOnInit(): void { }
+
+
+  get isPerson() {
+    return this.partySelected?.party?.type === 'Person';
+  }
+
+
+  get name(): any { return this.form.get('name'); }
+  get curp(): any { return this.form.get('curp'); }
+  get rfc(): any { return this.form.get('rfc'); }
+  get typeIdentification(): any { return this.form.get('typeIdentification'); }
+  get identification(): any { return this.form.get('identification'); }
+  get notes(): any { return this.form.get('notes'); }
+  get role(): any { return this.form.get('role'); }
+  get participationType(): any { return this.form.get('participationType'); }
+  get participationAmount(): any { return this.form.get('participationAmount'); }
+  get observations(): any { return this.form.get('observations'); }
+  get of(): any { return this.form.get('of'); }
+
+
+  getRoleTypeSelected() {
+    const roleType = this.rolesList.filter(x => x.items.filter(y => y.uid === this.role.value).length > 0);
+
+    if (roleType.length > 0) {
+      return roleType[0].uid;
+    } else {
+      return null;
+    }
+  }
+
+
+  validateParticipationTypeWithAmount(value) {
+    // return [participationTypeEnum.porcentaje,
+    //         participationTypeEnum.m2,
+    //         participationTypeEnum.hectarea].includes(value);
+    return true;
+  }
+
+
+  submit = () => {
+    if (this.form.valid) {
+      const partyAdd: RecordingActPartyFields = this.getFormData();
+      this.validateData(partyAdd);
+      console.log(partyAdd); // TODO: emit party
+    } else {
+      this.invalidateForm();
+    }
+  }
+
+
+  private loadFormSelectsData() {
     this.identificationTypesList = [];
     this.rolesList = [];
     this.participationTypesList = [];
     this.partiesInRecordingActList = [];
   }
-  //#endregion
 
-  //#region  FORM CONTROL
-  setFormControls = () => {
+
+  private initFormControls = () => {
     this.form = new FormGroup({
       name: new FormControl({ value: '', disabled: false }, Validators.required),
       curp: new FormControl({ value: '', disabled: false }),
@@ -106,19 +124,8 @@ export class PartyEditorComponent implements OnInit {
     this.subscribeToValidators();
   }
 
-  get name(): any { return this.form.get('name'); }
-  get curp(): any { return this.form.get('curp'); }
-  get rfc(): any { return this.form.get('rfc'); }
-  get typeIdentification(): any { return this.form.get('typeIdentification'); }
-  get identification(): any { return this.form.get('identification'); }
-  get notes(): any { return this.form.get('notes'); }
-  get role(): any { return this.form.get('role'); }
-  get participationType(): any { return this.form.get('participationType'); }
-  get participationAmount(): any { return this.form.get('participationAmount'); }
-  get observations(): any { return this.form.get('observations'); }
-  get of(): any { return this.form.get('of'); }
 
-  subscribeToValidators() {
+  private subscribeToValidators() {
     this.role
       .valueChanges
       .subscribe((value: RecordingActPartyType) => {
@@ -126,7 +133,6 @@ export class PartyEditorComponent implements OnInit {
           this.participationType.setValidators([Validators.required]);
           this.participationAmount.clearValidators();
           this.of.clearValidators();
-
         } else if (value === 'Secondary') {
           this.participationType.clearValidators();
           this.participationAmount.clearValidators();
@@ -149,46 +155,29 @@ export class PartyEditorComponent implements OnInit {
       });
   }
 
-  resetForm() {
+
+  private setFormData() {
     this.form.reset();
-    this.selectedParty = null;
-    this.uidSelectedParty = null;
-    this.isRegisteredParty = false;
-    this.selectedPartyType = null;
 
-    this.showForm = false;
-    this.isLoading = false;
-
-    this.ngSelectSearchParty.clearModel();
-  }
-
-  setFormData(event) {
-    if (event) {
-      this.selectedParty = event;
-      this.showForm = true;
-      this.isRegisteredParty = 'uid' in this.selectedParty;
-      const typeSelected = 'type' in this.selectedParty ? this.selectedParty.type : this.selectedPartyType ?? '1';
-      this.selectedParty.type = typeSelected;
-      this.form.reset();
-
-      if (this.isRegisteredParty) {
-        this.form.patchValue({
-          uid: this.selectedParty.party.uid,
-          type: this.selectedParty.party.type,
-          name: this.selectedParty?.party.fullName,
-          curp: this.selectedParty?.party.curp,
-          rfc: this.selectedParty?.party.rfc
-        });
-      } else {
-        this.form.patchValue({
-          name: this.selectedParty?.party.fullName,
-        });
-      }
-      this.disablePartyFields(this.isRegisteredParty);
+    if (!isEmpty(this.partySelected)) {
+      this.form.patchValue({
+        uid: this.partySelected.party.uid,
+        type: this.partySelected.party.type,
+        name: this.partySelected?.party.fullName,
+        curp: this.partySelected?.party.curp,
+        rfc: this.partySelected?.party.rfc
+      });
+    } else {
+      this.form.patchValue({
+        name: this.partySelected?.party.fullName,
+      });
     }
+
+    this.disablePartyFields(!isEmpty(this.partySelected));
   }
 
-  disablePartyFields(disable: boolean) {
+
+  private disablePartyFields(disable: boolean) {
     if (disable) {
       this.name.disable();
       this.curp.disable();
@@ -204,22 +193,8 @@ export class PartyEditorComponent implements OnInit {
     }
   }
 
-  //#region SUBMIT DATA
-  submit = () => {
-    if (this.form.valid) {
-      // TODO: confirm or reject submit
-      this.isLoading = true;
-      const partyAdd: RecordingActPartyFields = this.getFormData();
-      this.validateData(partyAdd);
-      // TODO: save Party
-      console.log(partyAdd);
-      this.effectOfSaved();
-    } else {
-      this.invalidateForm();
-    }
-  }
 
-  validateData(partyAdd: RecordingActPartyFields) {
+  private validateData(partyAdd: RecordingActPartyFields) {
     let message = '';
     // TODO: return message to alert from data with format not valid and show confirm save data
     if (partyAdd.party.curp && !curpValida(partyAdd.party.curp)) {
@@ -234,22 +209,15 @@ export class PartyEditorComponent implements OnInit {
     return message;
   }
 
-  effectOfSaved() {
-    setTimeout(() => {
-      this.emitSaved.next(true);
-      this.resetForm();
-      this.matExpansionPanelElement.toggle();
-    }, 500);
-  }
 
-  getFormData(): RecordingActPartyFields {
+  private getFormData(): RecordingActPartyFields {
     const formModel = this.form.getRawValue();
     const data: RecordingActPartyFields = {
-      uid: this.selectedParty.uid,
-      type: this.selectedParty.type,
+      uid: this.partySelected.uid,
+      type: this.partySelected.type,
       party: {
         uid: '',
-        type: 'Organization',
+        type: 'Organization', // check
         fullName: formModel.name.toString().toUpperCase(),
         curp: formModel.curp ? formModel.curp.toString().toUpperCase() : '',
         rfc: formModel.rfc,
@@ -264,42 +232,17 @@ export class PartyEditorComponent implements OnInit {
     return data;
   }
 
-  getListItemsFromGroup(list) {
-    return list.map(x => x.items)
-      .reduce((prev, current) => [...prev, ...current]);
-  }
 
-  invalidateForm = () => {
+  private invalidateForm = () => {
     Object.keys(this.form.controls).forEach(field => {
       const control = this.form.get(field);
       control.markAsTouched({ onlySelf: true });
     });
   }
-  //#endregion
 
-  //#region  COMPONENT LOGIC AND VALIDATIONS
-  getRoleTypeSelected() {
-    const roleType =
-      this.rolesList.filter(x => x.items.filter(y => y.uid === this.role.value).length > 0);
-    if (roleType.length > 0) {
-      return roleType[0].uid;
-    } else {
-      return null;
-    }
-  }
-
-  validateParticipationTypeWithAmount(value) {
-    // return [participationTypeEnum.porcentaje,
-    //         participationTypeEnum.m2,
-    //         participationTypeEnum.hectarea].includes(value);
-    return true;
-  }
-
-  //#endregion
 }
 
-//#region function TODO: check if we use these functions and move them to a class or a pipe
-// Function that validates a CURP
+
 function curpValida(curp) {
   const re = /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/;
   const validado = curp.match(re);
@@ -326,10 +269,10 @@ function curpValida(curp) {
   if (validado[2] !== digitoVerificador(validado[1])) {
     return false;
   }
-  return true; // valid
+  return true;
 }
 
-// Function that validates a rfc
+
 function validateRFC(rfc) {
   // regex from the SAT official site to validate RFCs
   const patternPM = '^(([A-ZÑ&]{3})([0-9]{2})([0][13578]|[1][02])(([0][1-9]|[12][\\d])|[3][01])([A-Z0-9]{3}))|' +
@@ -347,4 +290,3 @@ function validateRFC(rfc) {
     return false;
   }
 }
-//#endregion

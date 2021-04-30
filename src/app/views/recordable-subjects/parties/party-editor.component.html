@@ -1,176 +1,132 @@
-<mat-accordion [displayMode]="'flat'" hideToggle>
-  <mat-expansion-panel #matExpansionPanel (closed)="resetForm()">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <mat-icon>add</mat-icon>
-        <span style="padding-left: 1rem;">Agregar una nueva persona u organización a este acto jurídico</span>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
+<form [formGroup]="form" fxLayout="column" autocomplete="off" class="form-section">
 
-    <ng-container *ngTemplateOutlet="searchPartyTemplate"></ng-container>
+  <mat-divider class="divider-padding">
 
-    <ng-container *ngTemplateOutlet="formTemplate"></ng-container>
+  </mat-divider>
 
-    <mat-action-row *ngIf="showForm">
-      <button (click)="submit()"
-              [class.btn]="form?.invalid"
-              [class.btn-action]="form?.valid">
-        Agregar
-      </button>
-    </mat-action-row>
-  </mat-expansion-panel>
-</mat-accordion>
+  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex="100">
+        <label>{{ isPerson ? 'Nombre Completo:' : 'Nombre o razón social' }}</label>
+        <input formControlName='name'
+          type="text"
+          class="text-box uppercase"
+          [class.invalid-control]="name.touched && name.errors">
+      </div>
+    </div>
 
-<ng-template #searchPartyTemplate>
-  <div fxLayout="row" fxLayout.lt-md="column">
-    <div fxFlex="100" fxLayoutAlign="start center">
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div *ngIf="isPerson" fxFlex="100">
+        <label>CURP:</label>
+        <input formControlName='curp'
+          type="text"
+          class="text-box uppercase">
+      </div>
+    </div>
 
-      <label fxFlex="60px">Buscar:</label>
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex="100">
+        <label>RFC:</label>
+        <input formControlName='rfc'
+          type="text"
+          class="text-box uppercase">
+      </div>
+    </div>
 
-      <emp-ng-select #selectSearchParty
-        [config]="{addTag: true, hideSelected: true, addTagText: 'Agregar Persona'}"
-        [items]="parties$ | async"
-        [loading]="partiesLoading"
-        [typeahead]="partiesInput$"
-        [(ngModel)]="uidSelectedParty"
-        (changes)="setFormData($event)"
-        (clear)="resetForm()"
-        fxFlex>
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex="100">
+        <label>Otra información:</label>
+        <textarea formControlName="notes"
+          class="text-area uppercase"
+          rows="3">
+        </textarea>
+      </div>
+    </div>
 
-        <ng-template #optionTemplate ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-          <div style="padding: 0.25rem 0;">
-            {{item.name}}
-            <br>
-            <div style="font-size: 0.7rem;">
-              <strong>{{item.identification?.typeIdentification.name}}: </strong>
-              {{item.identification?.numberIdentification}}
-            </div>
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex="40">
+        <label>Participa como:</label>
+        <emp-ng-select #selectRoles
+          [config]="{groupBy: 'items'}"
+          [placeholder]="'( Seleccionar rol )'"
+          [items]="rolesList"
+          [showError]="role.touched && role.errors"
+          formControlName="role">
+        </emp-ng-select>
+      </div>
+
+      <ng-container [ngSwitch]="getRoleTypeSelected()">
+        <ng-container *ngSwitchCase="'Primary'">
+          <div fxFlex="40">
+            <label>Sobre:</label>
+            <emp-ng-select #selectParticipationTypes
+              [items]="participationTypesList"
+              [placeholder]="'( U de M )'"
+              [showError]="participationType.touched && participationType.errors"
+              formControlName="participationType">
+            </emp-ng-select>
           </div>
-        </ng-template>
 
-      </emp-ng-select>
+          <div fxFlex="20" *ngIf="validateParticipationTypeWithAmount(participationType.value)">
+            <label>Cantidad:</label>
+            <input formControlName="participationAmount"
+              type="number"
+              class="text-box"
+              [class.invalid-control]="participationAmount.touched && participationAmount.errors">
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="'Secondary'">
+          <div fxFlex="60">
+            <label>Sobre:</label>
+            <emp-ng-select #selectPartiesInRecordingAct
+              [config]="{closeOnSelect: false,
+                          multiple: true,
+                          searchable: false,
+                          clearable: false }"
+              [placeholder]="'Seleccionar una persona u organización'"
+              [items]="partiesInRecordingActList"
 
-      <emp-ng-select #selectPartyType
-        [items]="partyTypesList"
-        [(ngModel)]="selectedPartyType"
-        placeholder="( Todas )"
-        fxFlex="160px">
-      </emp-ng-select>
+              [showError]="of.touched && of.errors"
+              formControlName="of">
+            </emp-ng-select>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <div fxFlex="60" fxLayoutAlign="center end">
+            <p style="height: 28px;">Primero Seleccione un rol de la lista de la izquierda</p>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
 
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxFlex="100">
+        <label>Observaciones:</label>
+        <textarea formControlName="observations"
+          class="text-area uppercase"
+          rows="3">
+        </textarea>
+      </div>
     </div>
   </div>
-</ng-template>
 
-<ng-template #formTemplate>
-  <form *ngIf="showForm" [formGroup]="form" fxLayout="column" autocomplete="off" class="form-section">
+  <mat-divider class="divider-padding">
 
-    <mat-divider class="divider-padding"></mat-divider>
+  </mat-divider>
 
-    <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+  <div fxLayout="row">
 
-    <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
-      <div fxLayout="row" fxLayout.lt-md="column">
-        <div fxFlex="100">
-          <label>{{selectedParty.party.type === 'Person' ? 'Nombre Completo:' : 'Nombre o razón social'}}</label>
-          <input formControlName='name'
-            type="text"
-            class="text-box uppercase"
-            [class.invalid-control]="name.touched && name.errors">
-        </div>
-      </div>
+    <div fxFlex fxLayoutAlign="end">
 
-      <div fxLayout="row" fxLayout.lt-md="column">
-        <div *ngIf="selectedParty.party.type === 'Person'" fxFlex="100">
-          <label>CURP:</label>
-          <input formControlName='curp'
-            type="text"
-            class="text-box uppercase">
-        </div>
-      </div>
+      <button
+        (click)="submit()"
+        [class.btn]="form?.invalid"
+        [class.btn-action]="form?.valid">
+        Agregar
+      </button>
 
-      <div fxLayout="row" fxLayout.lt-md="column">
-        <div fxFlex="100">
-          <label>RFC:</label>
-          <input formControlName='rfc'
-            type="text"
-            class="text-box uppercase">
-        </div>
-      </div>
-
-      <div fxLayout="row" fxLayout.lt-md="column">
-        <div fxFlex="100">
-          <label>Otra información:</label>
-          <textarea formControlName="notes"
-            class="text-area uppercase"
-            rows="3">
-          </textarea>
-        </div>
-      </div>
-
-      <div fxLayout="row" fxLayout.lt-md="column">
-        <div fxFlex="40">
-          <label>Participa como:</label>
-          <emp-ng-select #selectRoles
-            [config]="{groupBy: 'items'}"
-            [placeholder]="'( Seleccionar rol )'"
-            [items]="rolesList"
-            [showError]="role.touched && role.errors"
-            formControlName="role">
-          </emp-ng-select>
-        </div>
-
-        <ng-container [ngSwitch]="getRoleTypeSelected()">
-          <ng-container *ngSwitchCase="rolesGroup === 'Primary'">
-            <div fxFlex="40">
-              <label>Sobre:</label>
-              <emp-ng-select #selectParticipationTypes
-                [items]="participationTypesList"
-                [placeholder]="'( U de M )'"
-                [showError]="participationType.touched && participationType.errors"
-                formControlName="participationType">
-              </emp-ng-select>
-            </div>
-
-            <div fxFlex="20" *ngIf="validateParticipationTypeWithAmount(participationType.value)">
-              <label>Cantidad:</label>
-              <input formControlName="participationAmount"
-                type="number"
-                class="text-box"
-                [class.invalid-control]="participationAmount.touched && participationAmount.errors">
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="rolesGroup === 'Secondary'">
-            <div fxFlex="60">
-              <label>Sobre:</label>
-              <emp-ng-select #selectPartiesInRecordingAct
-                [config]="{closeOnSelect: false,
-                           multiple: true,
-                           searchable: false,
-                           clearable: false }"
-                [placeholder]="'Seleccionar una persona u organización'"
-                [items]="partiesInRecordingActList"
-
-                [showError]="of.touched && of.errors"
-                formControlName="of">
-              </emp-ng-select>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchDefault>
-            <div fxFlex="60" fxLayoutAlign="center end"><p style="height: 28px;">Primero Seleccione un rol de la lista de la izquierda</p></div>
-          </ng-container>
-        </ng-container>
-      </div>
-
-      <div fxLayout="row" fxLayout.lt-md="column">
-        <div fxFlex="100">
-          <label>Observaciones:</label>
-          <textarea formControlName="observations"
-            class="text-area uppercase"
-            rows="3">
-          </textarea>
-        </div>
-      </div>
     </div>
 
-  </form>
-</ng-template>
+  </div>
+
+</form>

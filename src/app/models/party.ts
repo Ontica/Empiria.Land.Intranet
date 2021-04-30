@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Identifiable } from '@app/core';
+import { Empty, Identifiable } from '@app/core';
 
 
 export type RecordingActPartyType  = 'Primary' | 'Secondary';
@@ -48,6 +48,18 @@ export interface RecordingActParty {
 export type PartyType  = 'Person' | 'Organization';
 
 
+export interface PartyTypeItem {
+  type: PartyType;
+  typeName: string;
+}
+
+
+export const PartyTypeList: PartyTypeItem[] = [
+  { type: 'Person', typeName: 'Persona' },
+  { type: 'Organization', typeName: 'Organización' },
+];
+
+
 export interface Party {
   uid: string;
   type: PartyType;
@@ -56,3 +68,34 @@ export interface Party {
   rfc: string;
   notes: string;
 }
+
+
+export interface Party {
+  uid: string;
+  type: PartyType;
+  fullName: string;
+  curp: string;
+  rfc: string;
+  notes: string;
+}
+
+export const EmptyParty: Party = {
+  uid: 'Empty',
+  type: 'Person',
+  fullName: '',
+  curp: '',
+  rfc: '',
+  notes: '',
+};
+
+
+export const EmptyRecordingActParty: RecordingActParty = {
+  uid: 'Empty',
+  type: 'Primary',
+  party: EmptyParty,
+  role: Empty,
+  partAmount: 0,
+  partUnit: Empty,
+  associatedWith: EmptyParty,
+  notes: '',
+};

@@ -1,0 +1,48 @@
+  <div fxLayout="row" fxLayout.lt-md="column">
+
+    <div fxFlex="100" fxLayoutAlign="start center">
+
+      <label fxFlex="60px">Buscar:</label>
+
+      <emp-ng-select fxFlex
+        [config]="{bindByValue: false,
+                   addTag: true,
+                   hideSelected: true,
+                   addTagText: 'Agregar Persona'}"
+        [bindLabel]="null"
+        [bindValue]="null"
+        [items]="partyList$ | async"
+        [loading]="partyLoading"
+        [typeahead]="partyInput$"
+        [(ngModel)]="partySelected"
+        (changes)="isNewParty($event) ? onNewPartySelectedChange($event) : onPartySelectedChange($event)"
+        (clear)="onNewPartySelectedChange('')">
+
+        <ng-template #optionTemplate ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+          <div style="padding: 0.25rem 0;">
+            {{item.party.fullname}}
+            <br>
+            <div *ngIf="item.party.curp !== ''" style="font-size: 0.7rem;">
+              CURP: {{item.party.curp}}
+            </div>
+            <div *ngIf="item.party.rfc !== ''" style="font-size: 0.7rem;">
+              RFC: {{item.party.rfc}}
+            </div>
+          </div>
+        </ng-template>
+
+      </emp-ng-select>
+
+      <emp-ng-select
+        [config]="{bindByValue: false}"
+        [items]="typesList"
+        bindLabel="typeName"
+        bindValue="type"
+        [(ngModel)]="typeSelected"
+        placeholder="( Todas )"
+        fxFlex="160px">
+      </emp-ng-select>
+
+    </div>
+
+  </div>
