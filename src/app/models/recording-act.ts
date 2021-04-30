@@ -56,11 +56,12 @@ export interface RecordingActActions {
   isEditable: boolean;
   editableFields: RecordingActEditableFields[];
   editionValues: {
-    recordingActTypes: Identifiable[];
-    kinds: string[];
     currencies: Identifiable[];
-    mainParticipantRoles: Identifiable[];
-    secondaryParticipantRoles: Identifiable[];
+    kinds: string[];
+    partUnits: Identifiable[];
+    primaryPartyRoles: Identifiable[];
+    recordingActTypes: Identifiable[];
+    secondaryPartyRoles: Identifiable[];
   };
 }
 
@@ -93,11 +94,12 @@ export const EmptyRecordingActActions: RecordingActActions = {
   isEditable: false,
   editableFields: [],
   editionValues: {
-    recordingActTypes: [],
-    kinds: [],
     currencies: [],
-    mainParticipantRoles: [],
-    secondaryParticipantRoles: [],
+    kinds: [],
+    partUnits: [],
+    primaryPartyRoles: [],
+    recordingActTypes: [],
+    secondaryPartyRoles: [],
   }
 };
 

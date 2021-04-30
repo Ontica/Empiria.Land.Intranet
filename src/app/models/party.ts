@@ -8,6 +8,10 @@
 import { Empty, Identifiable } from '@app/core';
 
 
+export type PartUnit = 'Unit.Full' | 'Unit.Undivided' | 'Unit.Percentage' |
+                       'AreaUnit.SquareMeters' | 'AreaUnit.Hectarea';
+
+
 export type RecordingActPartyType  = 'Primary' | 'Secondary';
 
 
