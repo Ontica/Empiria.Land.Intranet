@@ -85,13 +85,17 @@ table.form-section .form-section-title {
   font: $control-font;
 }
 
-//Tmp JM
 .pr-1 {
   padding-right: 0.5rem;
 }
 
+.pl-1 {
+  padding-left: 0.5rem;
+}
+
 .grid-text-item {
   padding-left: 1rem;
+  font-size: 8pt;
 }
 
 .section-title {
