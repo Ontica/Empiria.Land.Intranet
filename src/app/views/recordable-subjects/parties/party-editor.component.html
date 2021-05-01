@@ -77,15 +77,12 @@
         </ng-container>
         <ng-container *ngSwitchCase="'Secondary'">
           <div fxFlex="60">
-            <label>Sobre:</label>
+            <label>De:</label>
             <emp-ng-select
-              [config]="{closeOnSelect: false,
-                          multiple: true,
-                          searchable: false,
-                          clearable: false }"
+              [config]="{clearable: false }"
+              bindLabel="fullName"
               [placeholder]="'Seleccionar una persona u organización'"
               [items]="partiesInRecordingActList"
-
               [showError]="associatedWithUID.touched && associatedWithUID.errors"
               formControlName="associatedWithUID">
             </emp-ng-select>

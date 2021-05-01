@@ -9,10 +9,9 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { EventInfo, Identifiable, isEmpty, Validate } from '@app/core';
+import { EventInfo, Identifiable, isEmpty } from '@app/core';
 
-import { EmptyRecordingActParty, RecordingActParty, RecordingActPartyFields,
-         RecordingActPartyType } from '@app/models';
+import { EmptyParty, Party, RecordingActPartyFields, RecordingActPartyType } from '@app/models';
 
 export enum PartyEditorEventType {
   ADD_PARTY = 'PartyEditorComponent.Event.AddParty',
@@ -25,7 +24,7 @@ export enum PartyEditorEventType {
 })
 export class PartyEditorComponent implements OnInit, OnChanges {
 
-  @Input() partySelected: RecordingActParty = EmptyRecordingActParty;
+  @Input() partySelected: Party = EmptyParty;
 
   @Input() partUnits: Identifiable[] = [];
 
@@ -33,13 +32,13 @@ export class PartyEditorComponent implements OnInit, OnChanges {
 
   @Input() secondaryPartyRoles: Identifiable[] = [];
 
+  @Input() partiesInRecordingActList: Party[] = [];
+
   @Output() partyEditorEvent = new EventEmitter<EventInfo>();
 
   form: FormGroup;
 
   rolesList: any[] = [];
-
-  partiesInRecordingActList: any[] = [];
 
   typeRoleSelected: RecordingActPartyType = null;
 
@@ -60,10 +59,7 @@ export class PartyEditorComponent implements OnInit, OnChanges {
   ngOnInit(): void { }
 
 
-  get isPerson() {
-    return this.partySelected?.party?.type === 'Person';
-  }
-
+  get isPerson() { return this.partySelected?.type === 'Person'; }
 
   get fullName(): any { return this.form.get('fullName'); }
   get curp(): any { return this.form.get('curp'); }
@@ -114,9 +110,7 @@ export class PartyEditorComponent implements OnInit, OnChanges {
 
 
   validatePartUnitUIDWithAmount(value) {
-    return ['Unit.Percentage',
-            'AreaUnit.SquareMeters',
-            'AreaUnit.Hectarea'].includes(value);
+    return ['Unit.Percentage', 'AreaUnit.SquareMeters', 'AreaUnit.Hectarea'].includes(value);
   }
 
 
@@ -125,9 +119,7 @@ export class PartyEditorComponent implements OnInit, OnChanges {
       this.invalidateForm();
     }
 
-    const party: RecordingActPartyFields = this.getFormData();
-    this.validateData(party);
-    this.sendEvent(PartyEditorEventType.ADD_PARTY, { party });
+    this.sendEvent(PartyEditorEventType.ADD_PARTY, { party: this.getFormData() });
   }
 
 
@@ -151,14 +143,14 @@ export class PartyEditorComponent implements OnInit, OnChanges {
 
     if (!isEmpty(this.partySelected)) {
       this.form.patchValue({
-        uid: this.partySelected.party.uid,
-        type: this.partySelected.party.type,
-        fullName: this.partySelected?.party.fullName,
-        curp: this.partySelected?.party.curp,
-        rfc: this.partySelected?.party.rfc
+        uid: this.partySelected.uid,
+        type: this.partySelected.type,
+        fullName: this.partySelected.fullName,
+        curp: this.partySelected.curp,
+        rfc: this.partySelected.rfc
       });
     } else {
-      this.form.patchValue({ fullName: this.partySelected?.party.fullName });
+      this.form.patchValue({ fullName: this.partySelected.fullName });
     }
 
     this.disablePartyFields(!isEmpty(this.partySelected));
@@ -212,29 +204,14 @@ export class PartyEditorComponent implements OnInit, OnChanges {
   }
 
 
-  private validateData(partyAdd: RecordingActPartyFields) {
-    let message = '';
-    if (partyAdd.party.curp && !Validate.curpValid(partyAdd.party.curp)) {
-      message += `La Curp no es valida: ${partyAdd.party.curp}. `;
-    }
-
-    if (partyAdd.party.rfc && !Validate.rfcValid(partyAdd.party.rfc)) {
-      message += `El RFC no es valido:  ${partyAdd.party.rfc}. `;
-    }
-
-    console.log(message);
-    return message;
-  }
-
-
   private getFormData(): RecordingActPartyFields {
     const formModel = this.form.getRawValue();
     const data: RecordingActPartyFields = {
       uid: '',
       type: this.typeRoleSelected,
       party: {
-        uid: isEmpty(this.partySelected.party) ? '' : this.partySelected.party.uid,
-        type: this.partySelected.party.type,
+        uid: isEmpty(this.partySelected) ? '' : this.partySelected.uid,
+        type: this.partySelected.type,
         fullName: formModel.fullName.toString().toUpperCase(),
         curp: formModel.curp ? formModel.curp.toString().toUpperCase() : '',
         rfc: formModel.rfc ? formModel.rfc.toString().toUpperCase() : '',
