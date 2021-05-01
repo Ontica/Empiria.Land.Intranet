@@ -11,9 +11,11 @@ import { isEmpty } from '@app/core';
 
 import { concat, Observable, of, Subject } from 'rxjs';
 
-import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
-import { EmptyRecordingActParty, PartyTypeItem, PartyTypeList, RecordingActParty } from '@app/models';
+import { EmptyParty, Party, PartyFilter, PartyTypeItem, PartyTypeList } from '@app/models';
+
+import { RecordingDataService } from '@app/data-services';
 
 @Component({
   selector: 'emp-land-party-selector',
@@ -21,19 +23,28 @@ import { EmptyRecordingActParty, PartyTypeItem, PartyTypeList, RecordingActParty
 })
 export class PartySelectorComponent implements OnInit {
 
-  @Input() partySelected: RecordingActParty;
+  @Input() instrumentRecordingUID: string;
 
-  @Output() partySelectedChange = new EventEmitter<RecordingActParty>();
+  @Input() recordingActUID: string;
 
-  partyList$: Observable<RecordingActParty[]>;
+  @Input() partySelected: Party;
+
+  @Output() partySelectedChange = new EventEmitter<Party>();
+
+  partyList$: Observable<Party[]>;
+
   partyInput$ = new Subject<string>();
+
   partyLoading = false;
 
+  partyMinTermLength = 5;
+
   typesList: PartyTypeItem[] = PartyTypeList;
+
   typeSelected: PartyTypeItem = null;
 
 
-  constructor() { }
+  constructor(private recordingData: RecordingDataService) { }
 
 
   ngOnInit(): void {
@@ -41,21 +52,30 @@ export class PartySelectorComponent implements OnInit {
   }
 
 
-  isNewParty(party: RecordingActParty) {
+  isNewParty(party: Party) {
     return isEmpty(party);
   }
 
 
-  onPartySelectedChange(party: RecordingActParty){
+  onPartySelectedChange(party: Party){
     this.partySelectedChange.emit(party);
   }
 
 
-  onNewPartySelectedChange(name: string){
-    const party: RecordingActParty = EmptyRecordingActParty;
-    party.party.fullName = name;
-    party.party.type = this.typeSelected?.type ?? party.party.type;
+  onNewPartySelectedChange(newParty: Party){
+    const party: Party = Object.assign({}, EmptyParty, newParty);
+    party.fullName = newParty?.fullName ?? '';
+    party.type = this.typeSelected?.type ?? 'Person';
     this.partySelectedChange.emit(party);
+  }
+
+
+  onTypeSelectedChanged(typeSelected: PartyTypeItem){
+    if (isEmpty(this.partySelected)) {
+      const party: Party = Object.assign({}, EmptyParty);
+      party.type = this.typeSelected?.type ?? 'Person';
+      this.partySelectedChange.emit(party);
+    }
   }
 
 
@@ -63,17 +83,28 @@ export class PartySelectorComponent implements OnInit {
     this.partyList$ = concat(
       of([]),
       this.partyInput$.pipe(
-          distinctUntilChanged(),
-          tap(() => this.partyLoading = true),
-          switchMap(term =>
-            // TODO: call to web api
-            of([])
+        filter(keyword => keyword !== null && keyword.length >= this.partyMinTermLength),
+        distinctUntilChanged(),
+        debounceTime(800),
+        tap(() => this.partyLoading = true),
+        switchMap(keyword => this.recordingData.searchParties(this.buildPartyFilter(keyword))
           .pipe(
-              catchError(() => of([])),
-              tap(() => this.partyLoading = false)
-          ))
+            catchError(() => of([])),
+            tap(() => this.partyLoading = false)
+        ))
       )
     );
+  }
+
+
+  private buildPartyFilter(keywords: string): PartyFilter {
+    const partyFilter: PartyFilter = {
+      instrumentRecordingUID: this.instrumentRecordingUID,
+      recordingActUID: this.recordingActUID,
+      keywords
+    };
+
+    return partyFilter;
   }
 
 }

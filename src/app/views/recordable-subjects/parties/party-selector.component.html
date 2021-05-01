@@ -7,26 +7,26 @@
       <emp-ng-select fxFlex
         [config]="{bindByValue: false,
                    addTag: true,
-                   hideSelected: true,
                    addTagText: 'Agregar Persona'}"
-        [bindLabel]="null"
+        [bindLabel]="'fullName'"
         [bindValue]="null"
         [items]="partyList$ | async"
         [loading]="partyLoading"
         [typeahead]="partyInput$"
         [(ngModel)]="partySelected"
-        (changes)="isNewParty($event) ? onNewPartySelectedChange($event) : onPartySelectedChange($event)"
-        (clear)="onNewPartySelectedChange('')">
+        (changes)="isNewParty($event) ?
+          onNewPartySelectedChange($event) : onPartySelectedChange($event)"
+        (clear)="onNewPartySelectedChange(null)">
 
         <ng-template #optionTemplate ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-          <div style="padding: 0.25rem 0;">
-            {{item.party.fullname}}
+          <div class="ellipsis" style="padding: 0.25rem 0;">
+            {{item.fullName}}
             <br>
-            <div *ngIf="item.party.curp !== ''" style="font-size: 0.7rem;">
-              CURP: {{item.party.curp}}
+            <div *ngIf="item.curp !== ''" style="font-size: 0.7rem;">
+              CURP: {{item.curp}}
             </div>
-            <div *ngIf="item.party.rfc !== ''" style="font-size: 0.7rem;">
-              RFC: {{item.party.rfc}}
+            <div *ngIf="item.rfc !== ''" style="font-size: 0.7rem;">
+              RFC: {{item.rfc}}
             </div>
           </div>
         </ng-template>
@@ -39,6 +39,7 @@
         bindLabel="typeName"
         bindValue="type"
         [(ngModel)]="typeSelected"
+        (changes)="onTypeSelectedChanged($event)"
         placeholder="( Todas )"
         fxFlex="160px">
       </emp-ng-select>
