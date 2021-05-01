@@ -4,7 +4,7 @@
   [hint]="cardHint"
   (cardClose)="onClose()">
 
-  <div class="card-body-padding" [empNgSpinnerHost]="spinner">
+  <div class="card-body-padding"  [style.height.%]="100" [empNgSpinnerHost]="spinner">
 
     <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
@@ -32,15 +32,18 @@
         <ng-container *ngIf="panelAddState">
 
           <emp-land-party-selector
+            [instrumentRecordingUID]="instrumentRecordingUID"
+            [recordingActUID]="recordingActUID"
             (partySelectedChange)="onPartySelectedChange($event)">
 
           </emp-land-party-selector>
 
-          <emp-land-party-editor *ngIf="partySelected && partySelected?.party?.fullName !== ''"
+          <emp-land-party-editor *ngIf="partySelected"
             [partySelected]="partySelected"
             [partUnits]="recordingAct.actions.editionValues.partUnits"
             [primaryPartyRoles]="recordingAct.actions.editionValues.primaryPartyRoles"
             [secondaryPartyRoles]="recordingAct.actions.editionValues.secondaryPartyRoles"
+            [partiesInRecordingActList]="primaryPartyList"
             (partyEditorEvent)="onPartyEditorEvent($event)">
 
           </emp-land-party-editor>
@@ -48,6 +51,8 @@
         </ng-container>
 
       </emp-ng-expansion-button>
+
+      <br>
 
     </ng-container>
 

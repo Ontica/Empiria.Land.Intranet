@@ -5,14 +5,14 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 import { Assertion } from '@app/core';
 
 import { RecordingDataService } from '@app/data-services';
 
-import { EmptyRecordingAct, EmptyRecordingActParty, RecordingAct, RecordingActFields,
-         RecordingActParty } from '@app/models';
+import { EmptyParty, EmptyRecordingAct, Party, RecordingAct, RecordingActFields,
+         RecordingActPartyFields} from '@app/models';
 
 import { PartyEditorEventType } from '@app/views/recordable-subjects/parties/party-editor.component';
 
@@ -24,7 +24,7 @@ import { RecordingActEditorEventType } from './recording-act-editor.component';
   selector: 'emp-land-recording-act-edition',
   templateUrl: './recording-act-edition.component.html',
 })
-export class RecordingActEditionComponent implements OnInit, OnChanges {
+export class RecordingActEditionComponent implements OnChanges {
 
   @Input() instrumentRecordingUID: string;
 
@@ -42,7 +42,9 @@ export class RecordingActEditionComponent implements OnInit, OnChanges {
 
   panelAddState = false;
 
-  partySelected: RecordingActParty = EmptyRecordingActParty;
+  partySelected: Party = EmptyParty;
+
+  primaryPartyList: Party[] = [];
 
 
   constructor(private recordingData: RecordingDataService) { }
@@ -53,10 +55,6 @@ export class RecordingActEditionComponent implements OnInit, OnChanges {
   }
 
 
-  ngOnInit(): void {
-  }
-
-
   onClose() {
     this.closeEvent.emit();
   }
@@ -64,14 +62,12 @@ export class RecordingActEditionComponent implements OnInit, OnChanges {
 
   onPanelEstateChange(state) {
     this.resetPanelState(state);
-    this.partySelected = EmptyRecordingActParty;
-    this.partySelected.party.fullName = '';
+    this.partySelected = EmptyParty;
   }
 
 
-  onPartySelectedChange(recordingActParty: RecordingActParty) {
-    this.partySelected = null;
-    setTimeout(() => this.partySelected = recordingActParty );
+  onPartySelectedChange(party: Party) {
+    this.partySelected = party;
   }
 
 
@@ -100,13 +96,7 @@ export class RecordingActEditionComponent implements OnInit, OnChanges {
 
         Assertion.assertValue(event.payload.partyUID, 'event.payload.partyUID');
 
-        const payload = {
-          instrumentRecordingUID: this.instrumentRecordingUID,
-          recordingActUID: this.recordingActUID,
-          partyUID: event.payload.partyUID,
-        };
-
-        console.log(payload);
+        this.removeRecordingActParty(event.payload.partyUID as string);
 
         return;
 
@@ -124,13 +114,7 @@ export class RecordingActEditionComponent implements OnInit, OnChanges {
 
         Assertion.assertValue(event.payload.party, 'event.payload.party');
 
-        const payload = {
-          instrumentRecordingUID: this.instrumentRecordingUID,
-          recordingActUID: this.recordingActUID,
-          party: event.payload.party,
-        };
-
-        console.log(payload);
+        this.appendRecordingActParty(event.payload.party as RecordingActPartyFields);
 
         return;
 
@@ -155,9 +139,15 @@ export class RecordingActEditionComponent implements OnInit, OnChanges {
       .toPromise()
       .then(x => {
         this.recordingAct = x;
+        this.setPrimaryPartyList();
         this.initTexts();
       })
       .finally(() => this.setSubmitted(false));
+  }
+
+
+  private setPrimaryPartyList() {
+    this.primaryPartyList = this.recordingAct.parties.filter(x => x.type === 'Primary').map(x => x.party);
   }
 
 
@@ -170,7 +160,40 @@ export class RecordingActEditionComponent implements OnInit, OnChanges {
       .toPromise()
       .then(x => {
         this.recordingAct = x;
+        this.setPrimaryPartyList();
         this.initTexts();
+      })
+      .finally(() => this.setSubmitted(false));
+  }
+
+
+  private appendRecordingActParty(recordingActPartyFields: RecordingActPartyFields) {
+    this.setSubmitted(true);
+
+    this.recordingData.appendRecordingActParty(this.instrumentRecordingUID,
+                                               this.recordingActUID,
+                                               recordingActPartyFields)
+      .toPromise()
+      .then(x => {
+        this.recordingAct = x;
+        this.setPrimaryPartyList();
+        this.resetPanelState(false);
+      })
+      .finally(() => this.setSubmitted(false));
+  }
+
+
+  private removeRecordingActParty(recordingActPartyUID: string) {
+    this.setSubmitted(true);
+
+    this.recordingData.removeRecordingActParty(this.instrumentRecordingUID,
+                                               this.recordingActUID,
+                                               recordingActPartyUID)
+      .toPromise()
+      .then(x => {
+        this.recordingAct = x;
+        this.setPrimaryPartyList();
+        this.resetPanelState(false);
       })
       .finally(() => this.setSubmitted(false));
   }
@@ -187,8 +210,8 @@ export class RecordingActEditionComponent implements OnInit, OnChanges {
     this.submitted = submitted;
   }
 
-  private resetPanelState(state) {
-    this.panelAddState = state;
+  private resetPanelState(open) {
+    this.panelAddState = open;
   }
 
 }
