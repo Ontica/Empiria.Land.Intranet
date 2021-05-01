@@ -13,8 +13,8 @@ import { Assertion, HttpService, Identifiable } from '@app/core';
 
 import { ManualBookEntryFields, InstrumentBookEntryFields, InstrumentFields, InstrumentRecording,
          RecordableSubjectFields, RecordingAct, RecordingActTypeGroup, RecordingBook,
-         RegistrationCommand,
-         RecordingActFields} from '@app/models';
+         RegistrationCommand, RecordingActFields, RecordingActPartyFields, PartyFilter,
+         Party} from '@app/models';
 
 
 @Injectable()
@@ -191,6 +191,48 @@ export class RecordingDataService {
       `/book-entries/${bookEntryUID}/recording-acts`;
 
     return this.http.post<InstrumentRecording>(path, registrationCommand);
+  }
+
+
+  appendRecordingActParty(instrumentRecordingUID: string,
+                          recordingActUID: string,
+                          recordingActPartyFields: RecordingActPartyFields): Observable<RecordingAct> {
+    Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
+    Assertion.assertValue(recordingActUID, 'recordingActUID');
+    Assertion.assertValue(recordingActPartyFields, 'recordingActPartyFields');
+
+    const path = `v5/land/registration/${instrumentRecordingUID}/recording-acts/${recordingActUID}/parties`;
+
+    return this.http.post<RecordingAct>(path, recordingActPartyFields);
+  }
+
+
+  removeRecordingActParty(instrumentRecordingUID: string,
+                          recordingActUID: string,
+                          recordingActPartyUID: string): Observable<RecordingAct> {
+    Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
+    Assertion.assertValue(recordingActUID, 'recordingActUID');
+    Assertion.assertValue(recordingActPartyUID, 'recordingActPartyUID');
+
+    const path = `v5/land/registration/${instrumentRecordingUID}/recording-acts/${recordingActUID}` +
+      `/parties/${recordingActPartyUID}`;
+
+    return this.http.delete<RecordingAct>(path);
+  }
+
+
+  searchParties(filter: PartyFilter): Observable<Party[]> {
+    Assertion.assertValue(filter.instrumentRecordingUID, 'filter.instrumentRecordingUID');
+    Assertion.assertValue(filter.recordingActUID, 'filter.recordingActUID');
+
+    let path = `v5/land/registration/${filter.instrumentRecordingUID}/recording-acts/` +
+      `${filter.recordingActUID}/parties`;
+
+    if (filter.keywords) {
+      path += `/?keywords=${filter.keywords}`;
+    }
+
+    return this.http.get<Party[]>(path);
   }
 
 

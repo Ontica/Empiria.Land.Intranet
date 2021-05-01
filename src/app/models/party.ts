@@ -83,6 +83,14 @@ export interface Party {
   notes: string;
 }
 
+
+export interface PartyFilter {
+  instrumentRecordingUID: string;
+  recordingActUID: string;
+  keywords: string;
+}
+
+
 export const EmptyParty: Party = {
   uid: 'Empty',
   type: 'Person',
