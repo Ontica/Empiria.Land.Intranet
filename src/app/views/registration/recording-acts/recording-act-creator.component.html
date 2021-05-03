@@ -4,7 +4,7 @@
 
     <div fxLayout="row">
 
-      <div fxFlex="270px">
+      <div [fxFlex]="widthFirstColumn">
         <label>Tipo de acto:</label>
         <emp-ng-select [formControlName]="controls.recordingActTypeGroup"
           [config]="{ clearable: false }"
@@ -35,7 +35,7 @@
     </div>
 
     <div fxLayout="row">
-      <div fxFlex="270px">
+      <div [fxFlex]="widthFirstColumn">
         <label>Sobre:</label>
         <emp-ng-select [formControlName]="controls.registrationCommand"
           [config]="{ clearable: false }"
@@ -98,7 +98,7 @@
 
     <div fxLayout="row" *ngIf="registrationCommandRules.selectTargetAct">
 
-      <div fxFlexOffset="270px" fxFlex class="resizable-field-width">
+      <div [fxFlexOffset]="widthFirstColumn" fxFlex class="resizable-field-width">
 
         <label class="ellipsis">Acto jurídico a cancelar o modificar:</label>
 
@@ -187,8 +187,8 @@
 
     <div fxLayout="row" *ngIf="registrationCommandRules.newPartition">
 
-      <div [fxFlex]="registrationCommandRules.selectBookEntry ? '270px' : '35%'"
-        [fxFlexOffset]="registrationCommandRules.selectBookEntry ? '0' : '270px'">
+      <div [fxFlex]="registrationCommandRules.selectBookEntry ? widthFirstColumn : '140px'"
+        [fxFlexOffset]="registrationCommandRules.selectBookEntry ? '0' : widthFirstColumn">
 
         <label class="ellipsis">Tipo de la nueva fracción:</label>
 
@@ -201,7 +201,7 @@
 
       </div>
 
-      <div [fxFlex]="registrationCommandRules.selectBookEntry ? '270px' : '35%'">
+      <div fxFlex="235px">
 
         <label class="ellipsis">Número o identificador de la nueva fracción:</label>
 
