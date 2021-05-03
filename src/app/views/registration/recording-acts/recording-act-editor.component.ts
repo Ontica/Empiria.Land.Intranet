@@ -9,13 +9,12 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { EventInfo, isEmpty } from '@app/core';
+import { EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { EmptyRecordingAct, RecordableObjectStatusItem, RecordableObjectStatusList,
-         RecordingAct,
-         RecordingActFields} from '@app/models';
+         RecordingAct, RecordingActFields} from '@app/models';
 
-import { FormatLibrary, FormHandler } from '@app/shared/utils';
+import { ArrayLibrary, FormatLibrary, FormHandler } from '@app/shared/utils';
 
 export enum RecordingActEditorEventType {
   UPDATE_RECORDING_ACT = 'RecordingActEditorEventType.Event.UpdateRecordingAct',
@@ -61,6 +60,7 @@ export class RecordingActEditorComponent implements OnInit, OnChanges {
   ngOnChanges() {
     if (!isEmpty(this.recordingAct)) {
       this.enableEditor(false);
+      this.insertRecordingActTypeToListIfNotExist();
     }
   }
 
@@ -68,7 +68,7 @@ export class RecordingActEditorComponent implements OnInit, OnChanges {
   enableEditor(enable: boolean) {
     this.editionMode = enable;
     this.setFormModel();
-    this.formHandler.disableForm(!this.editionMode);
+    this.disableForm(!this.editionMode);
   }
 
 
@@ -129,6 +129,17 @@ export class RecordingActEditorComponent implements OnInit, OnChanges {
   }
 
 
+  private insertRecordingActTypeToListIfNotExist() {
+    const type: Identifiable = {
+      uid: this.recordingAct.type,
+      name: this.recordingAct.name,
+    };
+
+    this.recordingAct.actions.editionValues.recordingActTypes = ArrayLibrary.insertIfNotExist(
+      this.recordingAct.actions.editionValues.recordingActTypes ?? [], type, 'uid');
+  }
+
+
   private setRequiredFormFields() {
     this.formHandler.clearControlValidators(this.controls.typeUID);
     this.formHandler.clearControlValidators(this.controls.kind);
@@ -150,6 +161,22 @@ export class RecordingActEditorComponent implements OnInit, OnChanges {
     if (this.recordingAct.actions.editableFields.includes('OperationAmount')) {
       this.formHandler.setControlValidators(this.controls.operationAmount, Validators.required);
       this.formHandler.setControlValidators(this.controls.currencyUID, Validators.required);
+    }
+  }
+
+
+  private disableForm(disable) {
+    this.formHandler.disableForm(disable);
+
+    if (!disable) {
+      const editableRecordingActType = this.recordingAct.actions.editableFields.includes('RecordingActType');
+      const editableKind = this.recordingAct.actions.editableFields.includes('Kinds');
+      const editableOperationAmount = this.recordingAct.actions.editableFields.includes('OperationAmount');
+
+      this.formHandler.disableControl(this.controls.typeUID, !editableRecordingActType);
+      this.formHandler.disableControl(this.controls.kind, !editableKind);
+      this.formHandler.disableControl(this.controls.operationAmount, !editableOperationAmount);
+      this.formHandler.disableControl(this.controls.currencyUID, !editableOperationAmount);
     }
   }
 

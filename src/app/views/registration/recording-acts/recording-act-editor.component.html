@@ -2,13 +2,9 @@
 
   <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
 
-    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between"
-      *ngIf="recordingAct.actions.editableFields.includes('RecordingActType') ||
-             recordingAct.actions.editableFields.includes('Kinds') ||
-             recordingAct.actions.editableFields.includes('OperationAmount')">
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between">
 
-      <div *ngIf="recordingAct.actions.editableFields.includes('RecordingActType')"
-        [fxFlex]="100/3" [fxFlex.lt-md]="100">
+      <div [fxFlex]="100/3" [fxFlex.lt-md]="100">
 
         <label>Tipo de acto jurídico:</label>
 
@@ -20,8 +16,7 @@
 
       </div>
 
-      <div *ngIf="recordingAct.actions.editableFields.includes('Kinds')"
-        [fxFlex]="100/3" [fxFlex.lt-md]="100">
+      <div [fxFlex]="100/3" [fxFlex.lt-md]="100">
 
         <label>Clasificación del acto jurídico:</label>
 
@@ -29,6 +24,8 @@
           [config]="{ bindByValue: false, clearable: false }"
           [bindLabel]="null"
           [items]="recordingAct.actions.editionValues.kinds"
+          [placeholder]="recordingAct.actions.editableFields.includes('Kinds') ?
+            'Seleccionar': 'No aplica'"
           [showError]="formHandler.showInvalidControl(controls.kind)"
           [style.width.%]="100">
         </emp-ng-select>
@@ -37,8 +34,7 @@
 
       <div fxFlex></div>
 
-      <div *ngIf="recordingAct.actions.editableFields.includes('OperationAmount')"
-        [fxFlex]="100/3">
+      <div [fxFlex]="100/3">
 
         <div fxLayout="row">
 
@@ -63,6 +59,8 @@
             <emp-ng-select [formControlName]="controls.currencyUID"
               [config]="{ clearable: false }"
               [items]="recordingAct.actions.editionValues.currencies"
+              [placeholder]="recordingAct.actions.editableFields.includes('OperationAmount') ?
+                'Seleccionar': 'No aplica'"
               [style.width.%]="100"
               [showError]="formHandler.showInvalidControl(controls.currencyUID)">
             </emp-ng-select>
