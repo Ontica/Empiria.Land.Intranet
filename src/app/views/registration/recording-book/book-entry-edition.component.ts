@@ -47,6 +47,8 @@ export class BookEntryEditionComponent implements OnChanges {
   cardHint =
     'Herramienta para buscar, y en su caso generar, folios reales en inscripciones en libros físicos';
 
+  recordingActListTitle = 'Predios y actos jurídicos registrados en esta inscripción';
+
   panelAddState = false;
 
   submitted = false;
@@ -233,12 +235,14 @@ export class BookEntryEditionComponent implements OnChanges {
 
   private initTexts(){
     this.cardTitle = `Inscripción ${this.bookEntry?.recordingNo},
-     Volumen ${this.bookEntry?.volumeNo},
-     ${this.bookEntry?.recordingSectionName},
-     ${this.bookEntry?.recorderOfficeName}`;
+      Volumen ${this.bookEntry?.volumeNo},
+      ${this.bookEntry?.recordingSectionName},
+      ${this.bookEntry?.recorderOfficeName}`;
 
     this.cardHint = `<strong>Estado: ${this.bookEntry?.status} </strong><br>
       Herramienta para buscar, y en su caso generar, folios reales en inscripciones en libros físicos`;
+
+    this.recordingActListTitle = `Predios y actos registrados en la <strong>${this.cardTitle}</strong>`;
   }
 
 
