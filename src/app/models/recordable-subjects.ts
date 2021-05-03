@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase, PartitionedType } from '@app/core';
+import { Assertion, DateString, Empty, EmptyMediaBase, Identifiable, MediaBase, PartitionedType } from '@app/core';
 
 
 export type RecordableSubjectType = 'None' | 'RealEstate' | 'Association' | 'NoProperty';
@@ -26,6 +26,22 @@ export const RecordableObjectStatusList: RecordableObjectStatusItem[] = [
   { status: 'NotLegible', statusName: 'No legible' },
   { status: 'Obsolete',   statusName: 'Obsoleto' },
 ];
+
+
+export function getRecordableObjectStatusName(status: RecordableObjectStatus): RecordableObjectStatusItem {
+    switch (status) {
+    case 'Registered':
+      return RecordableObjectStatusList[0];
+    case 'Incomplete':
+      return RecordableObjectStatusList[1];
+    case 'NotLegible':
+      return RecordableObjectStatusList[2];
+    case 'Obsolete':
+      return RecordableObjectStatusList[3];
+    default:
+      throw Assertion.assertNoReachThisCode(`Unhandled status name for status '${status}'.`);
+  }
+}
 
 
 export interface RecordableSubjectFilter {

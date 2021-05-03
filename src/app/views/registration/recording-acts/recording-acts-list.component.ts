@@ -12,7 +12,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo } from '@app/core';
 
-import { EmptyInstrumentRecording, InstrumentRecording, RecordingActEntry, SelectionAct } from '@app/models';
+import { EmptyInstrumentRecording, getRecordableObjectStatusName, InstrumentRecording, RecordableObjectStatus,
+         RecordingActEntry, SelectionAct } from '@app/models';
 
 import { AlertService } from '@app/shared/containers/alert/alert.service';
 
@@ -33,10 +34,6 @@ export class RecordingActsListComponent implements OnChanges {
   @Input() instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
 
   @Input() recordingActs: RecordingActEntry[] = [];
-
-  @Input() showCopyToClipboard = false;
-
-  @Input() showRecordingActLink = false;
 
   @Input() title = 'Actos jurídicos contenidos en el documento';
 
@@ -62,6 +59,12 @@ export class RecordingActsListComponent implements OnChanges {
 
     this.resetColumns();
   }
+
+
+  getRecordableObjectStatusName(status: RecordableObjectStatus) {
+    return getRecordableObjectStatusName(status).statusName;
+  }
+
 
   onOpenRecordableSubjactTabbedView(recordingAct: RecordingActEntry) {
     const selectionAct: SelectionAct =
@@ -104,10 +107,6 @@ export class RecordingActsListComponent implements OnChanges {
     this.displayedColumns = [];
 
     this.displayedColumns = [...this.displayedColumns, ...this.displayedColumnsDefault];
-
-    if (!this.showCopyToClipboard) {
-      this.displayedColumns.splice(3, 1);
-    }
 
     if (this.instrumentRecording.actions.can.editRecordingActs) {
       this.displayedColumns.push('actionDelete');
