@@ -120,6 +120,11 @@ export class HistoricRegistrationWorkspaceComponent {
   }
 
 
+  onRecordingActUpdated() {
+    this.refreshBookEntrySelected();
+  }
+
+
   unselectBookEntry(){
     this.selectedBookEntry = EmptyBookEntry;
     this.displayBookEntryEdition = false;
@@ -154,6 +159,11 @@ export class HistoricRegistrationWorkspaceComponent {
         this.unselectCurrentRecordingAct();
     }
 
+    this.refreshBookEntrySelected()
+  }
+
+
+  private refreshBookEntrySelected() {
     this.bookEntryEdition.ngOnChanges();
   }
 

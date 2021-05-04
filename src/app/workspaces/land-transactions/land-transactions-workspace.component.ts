@@ -168,6 +168,12 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
+  onRecordingActUpdated() {
+    this.uiLayer.dispatch(RegistrationAction.SELECT_TRANSACTION_INSTRUMENT_RECORDINGT,
+      {transactionUID: this.selectedTransaction.uid});
+  }
+
+
   onOptionModalClosed() {
     this.displayOptionModalSelected = null;
   }

@@ -32,6 +32,8 @@ export class RecordingActEditionComponent implements OnChanges {
 
   @Output() closeEvent = new EventEmitter<void>();
 
+  @Output() recordingActUpdated = new EventEmitter<void>();
+
   recordingAct: RecordingAct = EmptyRecordingAct;
 
   cardHint: string;
@@ -162,8 +164,16 @@ export class RecordingActEditionComponent implements OnChanges {
         this.recordingAct = x;
         this.setPrimaryPartyList();
         this.initTexts();
+        this.emitRecordingActUpdated();
       })
       .finally(() => this.setSubmitted(false));
+  }
+
+
+  private emitRecordingActUpdated() {
+    if (this.recordingAct.actions.editableFields.includes('RecordingActType')) {
+      this.recordingActUpdated.emit();
+    }
   }
 
 
