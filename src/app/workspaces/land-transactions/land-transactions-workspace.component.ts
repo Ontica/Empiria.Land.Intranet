@@ -50,7 +50,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   filter: TransactionFilter = EmptyTransactionFilter;
 
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
-  selectedRecordingAct: SelectionAct = EmptySelectionAct;
+  selectedRecordableSubject: SelectionAct = EmptySelectionAct;
   selectedTransaction: Transaction = EmptyTransaction;
 
   displayOptionModalSelected: TransactionModalOptions = null;
@@ -98,10 +98,10 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
     this.subscriptionHelper.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
       .subscribe(x => this.filter = x);
 
-    this.subscriptionHelper.select<SelectionAct>(RegistrationStateSelector.SELECTED_RECORDING_ACT)
+    this.subscriptionHelper.select<SelectionAct>(RegistrationStateSelector.SELECTED_RECORDABLE_SUBJECT)
       .subscribe(x => {
-        this.selectedRecordingAct = x;
-        this.displayRecordableSubjectTabbedView = !isEmpty(this.selectedRecordingAct?.recordingAct);
+        this.selectedRecordableSubject = x;
+        this.displayRecordableSubjectTabbedView = !isEmpty(this.selectedRecordableSubject?.recordingAct);
       });
 
     this.subscriptionHelper.select<FileViewerData>(TransactionStateSelector.SELECTED_FILE_LIST)
@@ -172,7 +172,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   onCloseFileViewer() {
     this.unselectCurrentFile();
-    this.unselectCurrentRecordingAct();
+    this.unselectCurrentRecordableSubject();
   }
 
 
@@ -183,12 +183,12 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   unselectCurrentSelections(){
     this.unselectCurrentFile();
-    this.unselectCurrentRecordingAct();
+    this.unselectCurrentRecordableSubject();
   }
 
 
-  unselectCurrentRecordingAct() {
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
+  unselectCurrentRecordableSubject() {
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDABLE_SUBJECT);
   }
 
   // private methods

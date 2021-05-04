@@ -147,7 +147,7 @@ export class RegistrationMainPageComponent implements OnInit, OnChanges, OnDestr
 
     switch (event.type as RecordingActsListEventType) {
       case RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT:
-        this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_ACT, event.payload );
+        this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDABLE_SUBJECT, event.payload );
 
         return;
 
