@@ -130,7 +130,6 @@ export class RegistrationMainPageComponent implements OnInit, OnChanges, OnDestr
       case RecordingActCreatorEventType.APPEND_RECORDING_ACT:
         Assertion.assertValue(event.payload.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
         Assertion.assertValue(event.payload.registrationCommand, 'event.payload.registrationCommand');
-
         this.executeCommand(RegistrationCommandType.APPEND_RECORDING_ACT, event.payload);
         return;
 
@@ -148,7 +147,10 @@ export class RegistrationMainPageComponent implements OnInit, OnChanges, OnDestr
     switch (event.type as RecordingActsListEventType) {
       case RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT:
         this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDABLE_SUBJECT, event.payload );
+        return;
 
+      case RecordingActsListEventType.SELECT_RECORDING_ACT:
+        this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDING_ACT, event.payload );
         return;
 
       case RecordingActsListEventType.REMOVE_RECORDING_ACT:

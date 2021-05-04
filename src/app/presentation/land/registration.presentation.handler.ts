@@ -22,18 +22,21 @@ import { RecordingDataService } from '@app/data-services';
 export enum ActionType {
   SELECT_TRANSACTION_INSTRUMENT_RECORDINGT =  'Land.Registration.Action.SelectTransactionInstrumentRecording',
   UNSELECT_TRANSACTION_INSTRUMENT_RECORDING = 'Land.Registration.Action.UnselectTransactionInstrumentRecording',
-  SELECT_RECORDABLE_SUBJECT =   'Land.Registration.Action.SelectRecordableSubject',
+  SELECT_RECORDABLE_SUBJECT   = 'Land.Registration.Action.SelectRecordableSubject',
   UNSELECT_RECORDABLE_SUBJECT = 'Land.Registration.Action.UnselectRecordableSubject',
-  SELECT_RECORDING_BOOK =       'Land.Registration.Action.SelectRecordingBook',
-  UNSELECT_RECORDING_BOOK =     'Land.Registration.Action.UnselectRecordingBook',
-  SELECT_BOOK_ENTRY =           'Land.Registration.Action.SelectBookEntry',
-  UNSELECT_BOOK_ENTRY =         'Land.Registration.Action.UnselectBookEntry',
+  SELECT_RECORDING_ACT        = 'Land.Registration.Action.SelectRecordingAct',
+  UNSELECT_RECORDING_ACT      = 'Land.Registration.Action.UnselectRecordingAct',
+  SELECT_RECORDING_BOOK       = 'Land.Registration.Action.SelectRecordingBook',
+  UNSELECT_RECORDING_BOOK     = 'Land.Registration.Action.UnselectRecordingBook',
+  SELECT_BOOK_ENTRY           = 'Land.Registration.Action.SelectBookEntry',
+  UNSELECT_BOOK_ENTRY         = 'Land.Registration.Action.UnselectBookEntry',
 }
 
 
 export enum SelectorType {
   TRANSACTION_INSTRUMENT_RECORDING = 'Land.Registration.Selector.TransactionInstrumentRecording',
   SELECTED_RECORDABLE_SUBJECT      = 'Land.Registration.Selector.SelectedRecordableSubject',
+  SELECTED_RECORDING_ACT           = 'Land.Registration.Selector.SelectedRecordingAct',
   SELECTED_RECORDING_BOOK          = 'Land.Registration.Selector.SelectedRecordingBook',
   SELECTED_BOOK_ENTRY              = 'Land.Registration.Selector.SelectedBookEntry',
   INSTRUMENT_RECORDING             = 'Land.Registration.Selector.InstrumentRecording',
@@ -70,6 +73,7 @@ export enum EffectType {
 const initialState: StateValues = [
   { key: SelectorType.TRANSACTION_INSTRUMENT_RECORDING, value: EmptyInstrumentRecording },
   { key: SelectorType.SELECTED_RECORDABLE_SUBJECT, value: EmptySelectionAct },
+  { key: SelectorType.SELECTED_RECORDING_ACT, value: EmptySelectionAct },
   { key: SelectorType.SELECTED_RECORDING_BOOK, value: EmptyRecordingBook },
   { key: SelectorType.SELECTED_BOOK_ENTRY, value: EmptyBookEntry },
 ];
@@ -216,6 +220,16 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
 
       case ActionType.UNSELECT_RECORDABLE_SUBJECT:
         this.setValue(SelectorType.SELECTED_RECORDABLE_SUBJECT, EmptySelectionAct);
+        return;
+
+      case ActionType.SELECT_RECORDING_ACT:
+        Assertion.assertValue(params.instrumentRecording, 'payload.instrumentRecording');
+        Assertion.assertValue(params.recordingAct, 'payload.recordingAct');
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, params);
+        return;
+
+      case ActionType.UNSELECT_RECORDING_ACT:
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptySelectionAct);
         return;
 
       case ActionType.SELECT_RECORDING_BOOK:

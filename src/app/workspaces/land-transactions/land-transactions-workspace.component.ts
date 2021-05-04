@@ -51,6 +51,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedRecordableSubject: SelectionAct = EmptySelectionAct;
+  selectedRecordingAct: SelectionAct = EmptySelectionAct;
   selectedTransaction: Transaction = EmptyTransaction;
 
   displayOptionModalSelected: TransactionModalOptions = null;
@@ -58,6 +59,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   displayFileViewer = false;
   displayRecordableSubjectTabbedView = false;
+  displayRecordingActEditor = false;
   displayTransactionTabbedView = false;
 
   isLoading = false;
@@ -104,6 +106,12 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
         this.displayRecordableSubjectTabbedView = !isEmpty(this.selectedRecordableSubject?.recordingAct);
       });
 
+    this.subscriptionHelper.select<SelectionAct>(RegistrationStateSelector.SELECTED_RECORDING_ACT)
+      .subscribe(x => {
+        this.selectedRecordingAct = x;
+        this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct?.recordingAct);
+      });
+
     this.subscriptionHelper.select<FileViewerData>(TransactionStateSelector.SELECTED_FILE_LIST)
       .subscribe(x => {
         this.selectedFileViewerData = x;
@@ -118,7 +126,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
 
   get secondaryEditorDisplayed(){
-    return this.displayRecordableSubjectTabbedView;
+    return this.displayRecordableSubjectTabbedView || this.displayRecordingActEditor;
   }
 
 
@@ -176,19 +184,20 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
-  onCloseSecondaryEditor() {
-    this.unselectCurrentSelections();
-  }
-
-
   unselectCurrentSelections(){
     this.unselectCurrentFile();
     this.unselectCurrentRecordableSubject();
+    this.unselectCurrentRecordingAct();
   }
 
 
   unselectCurrentRecordableSubject() {
     this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDABLE_SUBJECT);
+  }
+
+
+  unselectCurrentRecordingAct() {
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
   }
 
   // private methods
