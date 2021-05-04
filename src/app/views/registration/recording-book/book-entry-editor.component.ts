@@ -88,7 +88,7 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
 
       case InstrumentEditorEventType.UPDATE_INSTRUMENT:
 
-        if (!this.formHandler.isValid) {
+        if (this.formHandler.form.invalid) {
           return;
         }
 
