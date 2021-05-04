@@ -4,7 +4,7 @@
 
       <label fxFlex="60px">Buscar:</label>
 
-      <emp-ng-select fxFlex
+      <emp-ng-select
         [config]="{bindByValue: false,
                    addTag: true,
                    addTagText: 'Agregar Persona'}"
@@ -16,7 +16,8 @@
         [(ngModel)]="partySelected"
         (changes)="isNewParty($event) ?
           onNewPartySelectedChange($event) : onPartySelectedChange($event)"
-        (clear)="onNewPartySelectedChange(null)">
+        (clear)="onNewPartySelectedChange(null)"
+        style="width: calc(100% - 220px);">
 
         <ng-template #optionTemplate ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
           <div class="ellipsis" style="padding: 0.25rem 0;">
