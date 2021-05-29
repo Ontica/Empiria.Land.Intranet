@@ -52,7 +52,9 @@ export enum CommandType {
   REMOVE_RECORDING_ACT        = 'Land.Registration.Remove.RecordingAct',
   UPDATE_RECORDABLE_SUBJECT   = 'Land.Registration.Update.RecordableSubject',
   CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY = 'Land.Registration.Create.InstrumentRecordingBookEntry',
-  DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY = 'Land.Registration.Delete.InstrumentRecordingBookEntry'
+  DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY = 'Land.Registration.Delete.InstrumentRecordingBookEntry',
+  CLOSE_REGISTRATION = 'Land.Registration.CloseRegistration',
+  OPEN_REGISTRATION  = 'Land.Registration.OpenRegistration',
 }
 
 
@@ -67,6 +69,9 @@ export enum EffectType {
 
   CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY = CommandType.CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY,
   DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY = CommandType.DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY,
+
+  CLOSE_REGISTRATION = CommandType.CLOSE_REGISTRATION,
+  OPEN_REGISTRATION  = CommandType.OPEN_REGISTRATION
 }
 
 
@@ -122,6 +127,9 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
       case EffectType.REMOVE_RECORDING_ACT:
       case EffectType.CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY:
       case EffectType.DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY:
+      case EffectType.CLOSE_REGISTRATION:
+      case EffectType.OPEN_REGISTRATION:
+
         this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, params.result);
         return;
 
@@ -192,6 +200,17 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
                                             command.payload.recordingActUID,
                                             command.payload.recordableSubjectFields)
         );
+
+        case CommandType.CLOSE_REGISTRATION:
+          return toPromise<U>(
+            this.data.closeRegistration(command.payload.instrumentRecordingUID)
+          );
+
+
+        case CommandType.OPEN_REGISTRATION:
+          return toPromise<U>(
+            this.data.openRegistration(command.payload.instrumentRecordingUID)
+          );
 
       default:
         throw this.unhandledCommand(command);

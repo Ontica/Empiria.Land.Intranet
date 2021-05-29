@@ -20,7 +20,6 @@ import { ManualBookEntryFields, InstrumentBookEntryFields, InstrumentFields, Ins
 @Injectable()
 export class RecordingDataService {
 
-
   constructor(private http: HttpService) { }
 
   getInstrumentRecording(instrumentRecordingUID: string): Observable<InstrumentRecording> {
@@ -283,6 +282,24 @@ export class RecordingDataService {
       `${recordingActUID}/update-recordable-subject`;
 
     return this.http.put<InstrumentRecording>(path, recordableSubjectFields);
+  }
+
+
+  openRegistration(instrumentRecordingUID: string): Observable<InstrumentRecording> {
+    Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
+
+    const path = `v5/land/registration/${instrumentRecordingUID}/open-registration`;
+
+    return this.http.post<InstrumentRecording>(path);
+  }
+
+
+  closeRegistration(instrumentRecordingUID: string): Observable<InstrumentRecording> {
+    Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
+
+    const path = `v5/land/registration/${instrumentRecordingUID}/close-registration`;
+
+    return this.http.post<InstrumentRecording>(path);
   }
 
 }

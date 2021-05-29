@@ -230,6 +230,19 @@
           {{ submitButtonText }}
         </button>
 
+        <button *ngIf="actions.can.openInstrument"
+          (click)="openRegistration()"
+          class="btn-action">
+          Abrir registro
+        </button>
+
+        <button *ngIf="actions.can.closeInstrument"
+          (click)="closeRegistration()"
+          class="btn-action">
+          Cerrar registro
+        </button>
+
+
         <button *ngIf="!editionMode && actions.show.registrationStamps"
           (click)="submitPrintRegistrationStampMedia()"
           class="btn-action">

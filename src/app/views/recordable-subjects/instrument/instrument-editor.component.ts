@@ -30,6 +30,8 @@ export enum InstrumentEditorEventType {
   PRINT_REGISTRATION_STAMP_MEDIA = 'InstrumentEditorEventType.Event.PrintRegistrationStampMedia',
   UPDATE_INSTRUMENT = 'InstrumentEditorEventType.Event.UpdateInstrument',
   EDITION_MODE_CHANGED = 'InstrumentEditorEventType.Event.EditionModeChanged',
+  CLOSE_REGISTRATION = 'InstrumentEditorEventType.Event.CloseRegistration',
+  OPEN_REGISTRATION = 'InstrumentEditorEventType.Event.OpenRegistration'
 }
 
 enum InstrumentFormControls {
@@ -128,6 +130,15 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
     this.loadInstrumentKindList(change.type);
     this.resetForm(change.type === this.instrument.type);
     this.setFormValidatorsByType();
+  }
+
+
+  closeRegistration() {
+    this.sendEvent(InstrumentEditorEventType.CLOSE_REGISTRATION);
+  }
+
+  openRegistration() {
+    this.sendEvent(InstrumentEditorEventType.OPEN_REGISTRATION);
   }
 
 

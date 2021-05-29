@@ -111,6 +111,19 @@ export class RegistrationMainPageComponent implements OnInit, OnChanges, OnDestr
         this.executeCommand(commandType, payload);
         return;
 
+      case InstrumentEditorEventType.CLOSE_REGISTRATION:
+
+        this.executeCommand(RegistrationCommandType.CLOSE_REGISTRATION,
+                           { instrumentRecordingUID : this.instrumentRecording.uid });
+        return;
+
+      case InstrumentEditorEventType.OPEN_REGISTRATION:
+
+        this.executeCommand(RegistrationCommandType.OPEN_REGISTRATION,
+                           { instrumentRecordingUID : this.instrumentRecording.uid });
+        return;
+
+
       case InstrumentEditorEventType.EDITION_MODE_CHANGED:
 
         return;
