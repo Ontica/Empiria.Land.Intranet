@@ -19,12 +19,13 @@
       <br>
 
       <emp-land-party-list
+        [readonly]="!recordingAct.actions.isEditable"
         [partiesList]="recordingAct.parties"
         (partyListEvent)="onPartyListEvent($event)">
 
       </emp-land-party-list>
 
-      <emp-ng-expansion-button [panelState]="panelAddState" (panelStateChange)="onPanelEstateChange($event)"
+      <emp-ng-expansion-button *ngIf="recordingAct.actions.isEditable" [panelState]="panelAddState" (panelStateChange)="onPanelEstateChange($event)"
         [config]="{ textButtonOpen: 'Agregar una nueva persona u organización a este acto jurídico',
                     textButtonClose: 'Cancelar registro'}">
 

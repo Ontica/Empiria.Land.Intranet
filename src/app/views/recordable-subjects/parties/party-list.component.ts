@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -26,9 +26,11 @@ export enum PartyListEventType {
   selector: 'emp-land-party-list',
   templateUrl: './party-list.component.html',
 })
-export class PartyListComponent implements OnInit, OnChanges {
+export class PartyListComponent implements OnChanges {
 
   @Input() partiesList: RecordingActParty[] = [];
+
+  @Input() readonly = true;
 
   @Output() partyListEvent = new EventEmitter<EventInfo>();
 
@@ -41,11 +43,8 @@ export class PartyListComponent implements OnInit, OnChanges {
   constructor(private messageBox: MessageBoxService) { }
 
 
-  ngOnInit(): void { }
-
-
   ngOnChanges() {
-    this.dataSource = new MatTableDataSource(this.partiesList.filter( x =>  x.type === 'Primary'));
+    this.dataSource = new MatTableDataSource(this.partiesList.filter(x => x.type === 'Primary'));
     this.setSecondaryPartyGroupedList();
   }
 
@@ -73,7 +72,11 @@ export class PartyListComponent implements OnInit, OnChanges {
   }
 
 
-  removeParty(party: RecordingActParty){
+  removeParty(party: RecordingActParty) {
+    if (this.readonly) {
+      return;
+    }
+
     const message = this.getConfirmMessage(party);
 
     this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
@@ -91,7 +94,7 @@ export class PartyListComponent implements OnInit, OnChanges {
 
 
   private setSecondaryPartyGroupedList() {
-    const secondaryRoles = new Set(this.partiesList.filter( party => party.type === 'Secondary')
+    const secondaryRoles = new Set(this.partiesList.filter(party => party.type === 'Secondary')
                                                    .map(party => party.role));
 
     let secondaryRolesGrouped: Identifiable[] = [];
@@ -107,23 +110,23 @@ export class PartyListComponent implements OnInit, OnChanges {
         name: rol.name,
         parties: this.partiesList.filter(party => rol.uid === party.role.uid),
       }
-    ));
+      ));
   }
 
 
   private getConfirmMessage(party: RecordingActParty): string {
     return `
       <table style='margin: 0;'>
-        <tr><td>Nombre: </td><td><strong> ${ party.party.fullName } </strong></td></tr>
+        <tr><td>Nombre: </td><td><strong> ${party.party.fullName} </strong></td></tr>
 
-        <tr><td class='nowrap'>Participa como: </td><td><strong>${ party.role.name ?? '-' }</strong></td></tr>
+        <tr><td class='nowrap'>Participa como: </td><td><strong>${party.role.name ?? '-'}</strong></td></tr>
         ` + (
 
         party.type === 'Primary' ?
-        `<tr><td>Titularidad: </td><td><strong> ${ this.getPartAmountText(party) }</strong></td></tr>` :
-        ''
+          `<tr><td>Titularidad: </td><td><strong> ${this.getPartAmountText(party)}</strong></td></tr>` :
+          ''
 
-        ) + `
+      ) + `
       </table>
 
      <br>¿Elimino el registro?`;
