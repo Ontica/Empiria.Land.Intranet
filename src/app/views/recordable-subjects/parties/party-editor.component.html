@@ -20,14 +20,16 @@
         <label>CURP:</label>
         <input formControlName='curp'
           type="text"
-          class="text-box uppercase">
+          class="text-box uppercase"
+          [class.invalid-control]="curp.touched && curp.errors">
       </div>
 
       <div fxFlex="50">
         <label>RFC:</label>
         <input formControlName='rfc'
           type="text"
-          class="text-box uppercase">
+          class="text-box uppercase"
+          [class.invalid-control]="rfc.touched && rfc.errors">
       </div>
     </div>
 

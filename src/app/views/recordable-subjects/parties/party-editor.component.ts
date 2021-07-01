@@ -117,6 +117,7 @@ export class PartyEditorComponent implements OnInit, OnChanges {
   submit() {
     if (!this.form.valid) {
       this.invalidateForm();
+      return;
     }
 
     this.sendEvent(PartyEditorEventType.ADD_PARTY, { party: this.getFormData() });
@@ -126,7 +127,8 @@ export class PartyEditorComponent implements OnInit, OnChanges {
   private initFormControls = () => {
     this.form = new FormGroup({
       fullName: new FormControl({ value: '', disabled: false }, Validators.required),
-      curp: new FormControl({ value: '', disabled: false }),
+      curp: new FormControl({ value: '', disabled: false }, [Validators.minLength(18),
+                                                             Validators.maxLength(18)]),
       rfc: new FormControl({ value: '', disabled: false }),
       partyNotes: new FormControl(''),
       roleUID: new FormControl(null, Validators.required),
@@ -153,6 +155,7 @@ export class PartyEditorComponent implements OnInit, OnChanges {
       this.form.patchValue({ fullName: this.partySelected.fullName });
     }
 
+    this.setRfcValidators();
     this.disablePartyFields(!isEmpty(this.partySelected));
   }
 
@@ -180,6 +183,19 @@ export class PartyEditorComponent implements OnInit, OnChanges {
     if (this.secondaryPartyRoles && this.secondaryPartyRoles.length > 0){
       this.rolesList.push({uid: 'Secondary', name: 'Secundarios', items: this.secondaryPartyRoles});
     }
+  }
+
+
+  private setRfcValidators(){
+    this.rfc.clearValidators();
+
+    if (this.isPerson) {
+      this.rfc.setValidators([Validators.minLength(13), Validators.maxLength(13)]);
+    } else {
+      this.rfc.setValidators([Validators.minLength(12), Validators.maxLength(12)]);
+    }
+
+    this.rfc.updateValueAndValidity();
   }
 
 
