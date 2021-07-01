@@ -159,7 +159,7 @@ export class HistoricRegistrationWorkspaceComponent {
         this.unselectCurrentRecordingAct();
     }
 
-    this.refreshBookEntrySelected()
+    this.refreshBookEntrySelected();
   }
 
 
