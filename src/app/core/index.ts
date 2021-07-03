@@ -18,6 +18,6 @@ export { HttpService } from './http/http.service';
 export { LoggerService } from './general/logger.service';
 
 export { AuthenticationService } from './security/authentication.service';
-export { SecurityGuardService } from './security/security-guard.service';
+export { SecurityGuard } from './security/security.guard';
 
 export * from './localization';

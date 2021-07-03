@@ -6,21 +6,55 @@
  */
 
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
+
+import { RoutesLibrary } from '@app/models';
 
 import { LandSearchWorkspaceComponent } from './land-search-workspace.component';
 
-
 const routes: Routes = [
-  { path: 'all', component: LandSearchWorkspaceComponent },
-  { path: 'real-estate', component: LandSearchWorkspaceComponent },
-  { path: 'associations', component: LandSearchWorkspaceComponent },
-  { path: 'persons', component: LandSearchWorkspaceComponent },
-  { path: 'documents', component: LandSearchWorkspaceComponent },
-  { path: 'certificates', component: LandSearchWorkspaceComponent },
-  { path: 'transactions', component: LandSearchWorkspaceComponent },
-  { path: 'books', component: LandSearchWorkspaceComponent },
-  { path: '', redirectTo: 'all', pathMatch: 'full' }
+  {
+    data: { permission: RoutesLibrary.search_services_all.permission },
+    path: RoutesLibrary.search_services_all.path,
+    component: LandSearchWorkspaceComponent
+  },
+  {
+    data: { permission: RoutesLibrary.search_services_real_estate.permission },
+    path: RoutesLibrary.search_services_real_estate.path,
+    component: LandSearchWorkspaceComponent
+  },
+  {
+    data: { permission: RoutesLibrary.search_services_associations.permission },
+    path: RoutesLibrary.search_services_associations.path,
+    component: LandSearchWorkspaceComponent
+  },
+  {
+    data: { permission: RoutesLibrary.search_services_persons.permission },
+    path: RoutesLibrary.search_services_persons.path,
+    component: LandSearchWorkspaceComponent
+  },
+  {
+    data: { permission: RoutesLibrary.search_services_documents.permission },
+    path: RoutesLibrary.search_services_documents.path,
+    component: LandSearchWorkspaceComponent
+  },
+  {
+    data: { permission: RoutesLibrary.search_services_certificates.permission },
+    path: RoutesLibrary.search_services_certificates.path,
+    component: LandSearchWorkspaceComponent
+  },
+  {
+    data: { permission: RoutesLibrary.search_services_transactions.permission },
+    path: RoutesLibrary.search_services_transactions.path,
+    component: LandSearchWorkspaceComponent
+  },
+  {
+    data: { permission: RoutesLibrary.search_services_books.permission },
+    path: RoutesLibrary.search_services_books.path,
+    component: LandSearchWorkspaceComponent
+  },
+  { path: '', redirectTo: RoutesLibrary.search_services_all.path, pathMatch: 'full' }
 ];
 
 

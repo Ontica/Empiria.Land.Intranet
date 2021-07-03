@@ -23,6 +23,9 @@
     </div>
 
     <div class="card-header-options">
+
+      <ng-container *empNgHasPermission="'feature-transactions-add'">
+
         <div style="width:32px"></div>
 
         <button class="btn" (click)="onClickReceiveTransactionsOptions()">Paquetes</button>
@@ -33,9 +36,11 @@
 
         <div style="width:1rem"></div>
 
-        <input type="search" class="text-box" style="min-width:220px" fxHide.lt-sm="true"
-               placeholder="Buscar trámites"
-               (search)="onChangeFilter()" [(ngModel)]="keywords">
+      </ng-container>
+
+      <input type="search" class="text-box" style="min-width:220px" fxHide.lt-sm="true"
+              placeholder="Buscar trámites"
+              (search)="onChangeFilter()" [(ngModel)]="keywords">
 
     </div>
 

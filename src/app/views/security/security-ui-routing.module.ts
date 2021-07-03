@@ -6,13 +6,17 @@
  */
 
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
+
+import { RoutesLibrary } from '@app/models';
 
 import { UserLoginComponent } from './user-login/user-login.component';
 
 
 const routes: Routes = [
-  { path: 'login', component: UserLoginComponent }
+  { path: RoutesLibrary.security_login.path, component: UserLoginComponent },
+  { path: '', redirectTo: RoutesLibrary.security_login.path, pathMatch: 'full' }
 ];
 
 

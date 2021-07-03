@@ -21,6 +21,8 @@ import { MainMenuComponent } from './main-menu/main-menu.component';
 import { NavigationHeaderComponent } from './nav-header/nav-header.component';
 import { NavigationMenuComponent } from './nav-menu/nav-menu.component';
 import { NoContentComponent } from './no-content.component';
+import { NoPermissionComponent } from './no-permission.component';
+import { SharedDirectivesModule } from '@app/shared/directives/shared-directives.module';
 
 
 @NgModule({
@@ -32,8 +34,9 @@ import { NoContentComponent } from './no-content.component';
     AngularMaterialModule,
     AngularFlexLayoutModule,
 
+    SharedDirectivesModule,
+    SharedFormControlsModule,
     SharedIndicatorsModule,
-    SharedFormControlsModule
   ],
 
   declarations: [
@@ -41,12 +44,14 @@ import { NoContentComponent } from './no-content.component';
     MainMenuComponent,
     NavigationHeaderComponent,
     NavigationMenuComponent,
-    NoContentComponent
+    NoContentComponent,
+    NoPermissionComponent,
   ],
 
   exports: [
     MainLayoutComponent,
-    NoContentComponent
+    NoContentComponent,
+    NoPermissionComponent,
   ],
 
   providers: []

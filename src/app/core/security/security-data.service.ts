@@ -65,8 +65,15 @@ export class SecurityDataService {
 
   getPrincipalClaimsList(): Promise<ClaimsList> {
     const list = [
-      { type: 'token', value: 'abc' },
-      { type: 'phone', value: '567-890-1234' }
+      { type: 'permission', value: 'route-transactions' },
+      { type: 'permission', value: 'route-search-services' },
+      { type: 'permission', value: 'route-historic-registration' },
+
+      { type: 'permission', value: 'menu-transactions' },
+      { type: 'permission', value: 'menu-search-services' },
+      { type: 'permission', value: 'menu-historic-registration' },
+
+      { type: 'permission', value: 'feature-transactions-add' },
     ];
 
     const claims = new ClaimsList(list);

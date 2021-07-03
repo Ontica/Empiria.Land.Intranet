@@ -10,8 +10,11 @@ import { Injectable } from '@angular/core';
 import { Assertion } from '../general/assertion';
 
 import { ApplicationSettingsService } from './application-settings.service';
+
 import { ApplicationSettings } from './application-settings';
+
 import { Principal } from '../security/principal';
+
 import { KeyValue } from '../data-types/key-value';
 
 
@@ -19,6 +22,7 @@ import { KeyValue } from '../data-types/key-value';
 export class SessionService {
 
   private principal: Principal = Principal.empty;
+
   private data: KeyValue[] = [];
 
   constructor(private appSettingsService: ApplicationSettingsService) { }
@@ -66,5 +70,12 @@ export class SessionService {
       this.data.push({ key, value });
     }
   }
+
+
+  hasPermission(permission: string): boolean {
+    return this.principal.claims.claims
+      .filter(x => x.type === 'permission' &&  x.value === permission).length > 0;
+  }
+
 
 }

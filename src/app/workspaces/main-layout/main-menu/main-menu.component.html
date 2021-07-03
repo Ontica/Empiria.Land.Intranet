@@ -1,7 +1,19 @@
 <div class="nav-bar">
   <ul>
-    <li><a routerLink='/transactions' routerLinkActive='selected' [routerLinkActiveOptions]="{exact:false}">TRÁMITES</a></li>
-    <li>CONSULTAS</li>
-    <li><a routerLink='/historic-registration' routerLinkActive='selected' [routerLinkActiveOptions]="{exact:false}">CAPTURA HISTÓRICA</a></li>
+    <li *empNgHasPermission="'menu-transactions'">
+      <a routerLink='/transactions' routerLinkActive='selected' [routerLinkActiveOptions]="{exact:false}">
+        TRÁMITES
+      </a>
+    </li>
+    <li *empNgHasPermission="'menu-search-services'">
+      <a routerLink='/search-services' routerLinkActive='selected' [routerLinkActiveOptions]="{exact:false}">
+        CONSULTAS
+      </a>
+      </li>
+    <li *empNgHasPermission="'menu-historic-registration'">
+      <a routerLink='/historic-registration' routerLinkActive='selected' [routerLinkActiveOptions]="{exact:false}">
+        CAPTURA HISTÓRICA
+      </a>
+    </li>
   </ul>
 </div>

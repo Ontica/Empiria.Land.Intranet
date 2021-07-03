@@ -25,7 +25,7 @@ import { HttpErrorInterceptor } from './http/http-error-interceptor';
 
 import { SecurityDataService } from './security/security-data.service';
 import { AuthenticationService } from './security/authentication.service';
-import { SecurityGuardService } from './security/security-guard.service';
+import { SecurityGuard } from './security/security.guard';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 
@@ -55,7 +55,7 @@ import { ErrorMessageService } from './errors/error-message.service';
     LoggerService,
     SecurityDataService,
     AuthenticationService,
-    SecurityGuardService,
+    SecurityGuard,
     HttpHandler,
     HttpService,
     DirectoryService,

@@ -9,3 +9,4 @@ export * from './common-models/index';
 
 export { MainLayoutComponent } from './main-layout.component';
 export { NoContentComponent } from './no-content.component';
+export { NoPermissionComponent } from './no-permission.component';
