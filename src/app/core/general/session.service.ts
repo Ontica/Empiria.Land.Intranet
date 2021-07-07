@@ -97,8 +97,8 @@ export class SessionService {
 
 
   hasPermission(permission: string): boolean {
-    return this.principal.permissions
-      .filter(x =>  x === permission).length > 0;
+    return this.principal.permissions &&
+      this.principal.permissions.filter(x =>  x === permission).length > 0;
   }
 
 

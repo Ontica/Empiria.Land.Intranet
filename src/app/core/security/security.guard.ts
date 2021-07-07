@@ -55,7 +55,8 @@ export class SecurityGuard implements CanActivate, CanActivateChild {
 
 
   private getValitRoutes() {
-    return this.session.getPrincipal().permissions.filter(x => x.startsWith('route-'));
+    const principal = this.session.getPrincipal();
+    return principal.permissions ? principal.permissions.filter(x => x.startsWith('route-')) : [];
   }
 
 
