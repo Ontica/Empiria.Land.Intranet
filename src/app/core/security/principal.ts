@@ -24,7 +24,7 @@ export class Principal {
 
 
   get isAuthenticated(): boolean {
-    return (!!this.sessionToken && !!this.identity && !!this.claims && !!this.roles && !!this.permissions);
+    return (!!this.sessionToken);
   }
 
 }

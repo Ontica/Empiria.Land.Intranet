@@ -41,9 +41,7 @@ export class SessionService {
 
 
   getSessionToken(): SessionToken {
-    const sessionToken = this.localStorage.get<SessionToken>('sessionToken');
-
-    return sessionToken;
+    return this.localStorage.get<SessionToken>('sessionToken');
   }
 
 
