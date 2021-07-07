@@ -34,13 +34,13 @@ export class SecurityDataService {
   changePassword(event: EventInfo): Promise<boolean> {
     Assertion.assertValue(event, 'event');
 
-    return this.httpHandler.post<boolean>('v2/security/change-password', event)
+    return this.httpHandler.post<boolean>('v3/security/change-password', event)
                            .toPromise();
   }
 
 
   closeSession(): Promise<void> {
-    return this.httpHandler.post<void>('v1/security/logout')
+    return this.httpHandler.post<void>('v3/security/logout')
                .toPromise();
   }
 
