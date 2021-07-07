@@ -15,6 +15,7 @@ import { DataServicesModule } from '@app/data-services/data.services.module';
 import { PresentationModule } from './presentation/presentation.module';
 
 import { SessionService } from './general/session.service';
+import { LocalStorageService } from './general/local-storage.service';
 import { LoggerService } from './general/logger.service';
 import { ApplicationSettingsService } from './general/application-settings.service';
 
@@ -52,6 +53,7 @@ import { ErrorMessageService } from './errors/error-message.service';
     ErrorMessageService,
     SessionService,
     ApplicationSettingsService,
+    LocalStorageService,
     LoggerService,
     SecurityDataService,
     AuthenticationService,

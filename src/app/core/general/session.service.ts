@@ -17,6 +17,10 @@ import { Principal } from '../security/principal';
 
 import { KeyValue } from '../data-types/key-value';
 
+import { Claim, Identity, SessionToken } from '../security/security-types';
+
+import { LocalStorageService } from './local-storage.service';
+
 
 @Injectable()
 export class SessionService {
@@ -25,11 +29,26 @@ export class SessionService {
 
   private data: KeyValue[] = [];
 
-  constructor(private appSettingsService: ApplicationSettingsService) { }
+  constructor(private appSettingsService: ApplicationSettingsService,
+              private localStorage: LocalStorageService) {
+    this.setPrincipalFromLocalStorage();
+  }
 
 
   getSettings(): Promise<ApplicationSettings> {
     return this.appSettingsService.getApplicationSettings();
+  }
+
+
+  getSessionToken(): SessionToken {
+    const sessionToken = this.localStorage.get<SessionToken>('sessionToken');
+
+    return sessionToken;
+  }
+
+
+  setSessionToken(sessionToken: SessionToken) {
+    this.localStorage.set<SessionToken>('sessionToken', sessionToken);
   }
 
 
@@ -42,6 +61,13 @@ export class SessionService {
     Assertion.assertValue(principal, 'principal');
 
     this.principal = principal;
+    this.setPrincipalToLocalStorage();
+  }
+
+
+  clearSession() {
+    this.principal = Principal.empty;
+    this.localStorage.removeAll();
   }
 
 
@@ -73,9 +99,31 @@ export class SessionService {
 
 
   hasPermission(permission: string): boolean {
-    return this.principal.claims.claims
-      .filter(x => x.type === 'permission' &&  x.value === permission).length > 0;
+    return this.principal.permissions
+      .filter(x =>  x === permission).length > 0;
   }
 
+
+  private setPrincipalFromLocalStorage() {
+    const sessionToken = this.getSessionToken();
+
+    if (!!sessionToken && !!sessionToken.accessToken) {
+      const identity =  this.localStorage.get<Identity>('identity');
+      const claims = this.localStorage.get<Claim[]>('claims');
+      const roles = this.localStorage.get<string[]>('roles');
+      const permissions = this.localStorage.get<string[]>('permissions');
+
+      this.principal = new Principal(sessionToken, identity, claims, roles, permissions);
+    }
+  }
+
+
+  private setPrincipalToLocalStorage() {
+    this.localStorage.set<SessionToken>('sessionToken', this.principal.sessionToken);
+    this.localStorage.set<Identity>('identity', this.principal.identity);
+    this.localStorage.set<string[]>('permissions', this.principal.permissions);
+    this.localStorage.set<string[]>('roles', this.principal.roles);
+    this.localStorage.set<Claim[]>('claims', this.principal.claims);
+  }
 
 }

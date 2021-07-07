@@ -15,7 +15,7 @@ import { Assertion } from '../general/assertion';
 
 import { HttpHandler } from '../http/http-handler';
 
-import { SessionToken, Identity, ClaimsList } from './security-types';
+import { SessionToken, PrincipalData } from './security-types';
 
 
 interface ExternalSessionToken {
@@ -63,34 +63,11 @@ export class SecurityDataService {
   }
 
 
-  getPrincipalClaimsList(): Promise<ClaimsList> {
-    const list = [
-      { type: 'permission', value: 'route-transactions' },
-      { type: 'permission', value: 'route-search-services' },
-      { type: 'permission', value: 'route-historic-registration' },
-
-      { type: 'permission', value: 'menu-transactions' },
-      { type: 'permission', value: 'menu-search-services' },
-      { type: 'permission', value: 'menu-historic-registration' },
-
-      { type: 'permission', value: 'feature-transactions-add' },
-    ];
-
-    const claims = new ClaimsList(list);
-
-    return Promise.resolve(claims);
+  getPrincipal(): Promise<PrincipalData> {
+    return this.httpHandler.get<PrincipalData>('v3/security/principal')
+      .toPromise();
   }
 
-
-  getPrincipalIdentity(): Promise<Identity> {
-    const fakeIdentity = {
-      username: 'jrulfo',
-      email: 'jrulfo@escritores.com',
-      fullname: '{Nombre del usuario} || settings'
-    };
-
-    return Promise.resolve(fakeIdentity);
-  }
 
   private mapToSessionToken(source: ExternalSessionToken): SessionToken {
     return {

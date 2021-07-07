@@ -13,8 +13,6 @@ import { RoutesLibrary } from '../../models/permissions';
 
 import { SessionService } from '../general/session.service';
 
-import { Claim } from './security-types';
-
 
 @Injectable()
 export class SecurityGuard implements CanActivate, CanActivateChild {
@@ -34,7 +32,8 @@ export class SecurityGuard implements CanActivate, CanActivateChild {
     }
 
     if (!this.session.hasPermission(childRoute.data.permission)) {
-      const defaultRoute = this.getDefaultRoute(this.session.getPrincipal().claims.claims);
+      const routesValid = this.getValitRoutes();
+      const defaultRoute = this.getDefaultRoute(routesValid);
       this.router.navigateByUrl(defaultRoute ?? 'unauthorized');
       return false;
     }
@@ -47,8 +46,7 @@ export class SecurityGuard implements CanActivate, CanActivateChild {
     const principal = this.session.getPrincipal();
 
     if (!principal.isAuthenticated) {
-      this.router.navigateByUrl('/security/login');
-
+      this.router.navigateByUrl('security/login');
       return false;
     }
 
@@ -56,18 +54,20 @@ export class SecurityGuard implements CanActivate, CanActivateChild {
   }
 
 
-  private getDefaultRoute(routesValid: Claim[]) {
-    const validRoutesList =
-      routesValid.filter(x => x.type === 'permission' && x.value.startsWith('route-')).map(x => x.value);
+  private getValitRoutes() {
+    return this.session.getPrincipal().permissions.filter(x => x.startsWith('route-'));
+  }
+
+
+  private getDefaultRoute(routesValid: string[]) {
+
     let defaultRoute = null;
 
-    if (validRoutesList.length > 0) {
-      Object.keys(RoutesLibrary).forEach( key => {
-        if (RoutesLibrary[key].parent && RoutesLibrary[key].permission === validRoutesList[0]) {
-          defaultRoute = defaultRoute ?? RoutesLibrary[key].parent + '/' + RoutesLibrary[key].path;
-        }
-      });
-    }
+    Object.keys(RoutesLibrary).forEach( key => {
+      if (RoutesLibrary[key].parent && RoutesLibrary[key].permission === routesValid[0]) {
+        defaultRoute = defaultRoute ?? RoutesLibrary[key].parent + '/' + RoutesLibrary[key].path;
+      }
+    });
 
     return defaultRoute;
   }
