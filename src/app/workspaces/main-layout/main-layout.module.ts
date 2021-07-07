@@ -23,6 +23,7 @@ import { NavigationMenuComponent } from './nav-menu/nav-menu.component';
 import { NoContentComponent } from './no-content.component';
 import { NoPermissionComponent } from './no-permission.component';
 import { SharedDirectivesModule } from '@app/shared/directives/shared-directives.module';
+import { UserSessionuComponent } from './user-session/user-session.component';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { SharedDirectivesModule } from '@app/shared/directives/shared-directives
     NavigationMenuComponent,
     NoContentComponent,
     NoPermissionComponent,
+    UserSessionuComponent,
   ],
 
   exports: [

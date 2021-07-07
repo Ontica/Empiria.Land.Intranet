@@ -12,11 +12,11 @@
         <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
       </div> -->
 
-      <img class="logo" src="assets/img/customer/main-page.logo.png" alt="Registro Público de la Propiedad" />
+      <img class="logo" src="assets/img/customer/main-page.logo.png" alt="Registro Público de la Propiedad"/>
 
-      <div fxHide.lt-lg="true" style="margin-left:8px;margin-top:-6px">
-        <span style="text-transform: uppercase;">Registro Público de la Propiedad</span>
-        <div style="font-size:8pt;margin-top:4px">Secretaría de Finanzas &nbsp; &nbsp; | &nbsp; &nbsp; Gobierno del Estado de Zacatecas</div>
+      <div fxHide.lt-lg="true" class="header-container">
+        <span class="header">Registro Público de la Propiedad</span>
+        <div class="subheader">Secretaría de Finanzas &nbsp; &nbsp; | &nbsp; &nbsp; Gobierno del Estado de Zacatecas</div>
       </div>
 
     </div>
@@ -24,20 +24,23 @@
 
     <emp-ng-main-menu class="main-menu"></emp-ng-main-menu>
 
-
     <div class="search-and-settings">
 
-      <emp-ng-search-box fxHide.lt-md="true" (searchBoxChange)="search($event)" style="width:100%"></emp-ng-search-box>
+      <emp-ng-search-box fxHide.lt-md="true" (searchBoxChange)="search($event)" style="width:100%">
 
-      <!-- <div>
-        <i class="fa fa-bell disabled" aria-hidden="true"></i>
-      </div> -->
+      </emp-ng-search-box>
+
+      <!-- <mat-icon>
+        notifications
+      </mat-icon> -->
 
     </div>
 
-    <div></div>
+    <div> </div>
 
-    <div></div>
+    <emp-ng-user-session>
+
+    </emp-ng-user-session>
 
   </div>
 
