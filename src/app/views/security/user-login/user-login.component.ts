@@ -6,7 +6,9 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '@app/core';
@@ -25,6 +27,8 @@ export class UserLoginComponent implements OnInit {
 
   exceptionMsg: string;
 
+  submitted = false;
+
   constructor(private authenticationService: AuthenticationService,
               private router: Router) { }
 
@@ -34,20 +38,22 @@ export class UserLoginComponent implements OnInit {
         .then((x: boolean) => this.reloadPage(x));
   }
 
+
   login() {
-    if (this.form.valid) {
+    if (this.form.valid || !this.submitted) {
       this.authenticate();
     }
   }
 
   // private methods
 
-  private authenticate(): Promise<boolean> {
+  private authenticate() {
+    this.submitted = true;
+
     return this.authenticationService.login(this.form.value.userID, this.form.value.password)
-      .then(
-        () => this.router.navigate(['/transactions']),
-        err => this.exceptionMsg = err
-      );
+      .then(() => this.router.navigate(['/transactions']),
+        err => this.exceptionMsg = err)
+      .finally(() => this.submitted = false);
   }
 
 

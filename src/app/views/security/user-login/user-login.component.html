@@ -20,7 +20,11 @@
 
       <br>
 
-      <form autocomplete="off" [formGroup]="form">
+      <form autocomplete="off" [formGroup]="form" [empNgSpinnerHost]="spinner">
+
+        <emp-ng-spinner #spinner [visible]="submitted">
+
+        </emp-ng-spinner>
 
         <div class="authentication-section-form">
 
