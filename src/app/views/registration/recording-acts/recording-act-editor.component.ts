@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -36,7 +36,7 @@ enum RecordingActEditorControls {
   styles: [
   ]
 })
-export class RecordingActEditorComponent implements OnInit, OnChanges {
+export class RecordingActEditorComponent implements OnChanges {
 
   @Input() recordingAct: RecordingAct = EmptyRecordingAct;
 
@@ -50,10 +50,6 @@ export class RecordingActEditorComponent implements OnInit, OnChanges {
 
   constructor() {
     this.initForm();
-  }
-
-
-  ngOnInit(): void {
   }
 
 

@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 import { EventInfo } from '@app/core';
 
@@ -21,7 +21,7 @@ export enum TransactionListEditorEventType {
   selector: 'emp-land-transaction-list-editor',
   templateUrl: './transaction-list-editor.component.html',
 })
-export class TransactionListEditorComponent implements OnInit, OnChanges {
+export class TransactionListEditorComponent implements OnChanges {
 
   @Input() transactionList: TransactionShortModel[] = [];
 
@@ -35,15 +35,10 @@ export class TransactionListEditorComponent implements OnInit, OnChanges {
 
   searchUID = '';
 
-  constructor() { }
-
   ngOnChanges(changes): void {
     if (changes.canEdit && !this.canEdit) {
       this.listOptions = [];
     }
-  }
-
-  ngOnInit(): void {
   }
 
   removeTransactionFromList(row: TransactionShortModel) {

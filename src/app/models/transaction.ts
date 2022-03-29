@@ -44,7 +44,7 @@ export interface TransactionType extends Identifiable {
 }
 
 
-// tslint:disable-next-line: no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface TransactionSubtype extends Identifiable {
 
 }
@@ -80,7 +80,7 @@ export const EmptyRequester: Requester = {
 };
 
 
-// tslint:disable-next-line: no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Agency extends Identifiable {
 
 }

@@ -8,7 +8,7 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 
-/* tslint:disable:max-classes-per-file */
+/* eslint-disable max-classes-per-file */
 
 export class Exception extends Error {
 

@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { EventInfo } from '@app/core';
 
@@ -28,7 +28,7 @@ export enum InstrumentFilesEditorEventType {
   selector: 'emp-land-transaction-files-uploader',
   templateUrl: './transaction-files-uploader.component.html',
 })
-export class TransactionFilesUploaderComponent implements OnInit, OnChanges {
+export class TransactionFilesUploaderComponent {
 
   @Input() instrumentMainFile: FileData;
 
@@ -40,11 +40,6 @@ export class TransactionFilesUploaderComponent implements OnInit, OnChanges {
 
   @Output() instrumentFilesEditorEvent = new EventEmitter<EventInfo>();
 
-  constructor() { }
-
-  ngOnInit(): void { }
-
-  ngOnChanges() { }
 
   submitInstrumentFileEvent(event, mediaContent: InstrumentMediaContent) {
 

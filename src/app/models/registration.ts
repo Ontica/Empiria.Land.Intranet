@@ -16,7 +16,6 @@ import { RealEstate, RecordableSubjectType } from './recordable-subjects';
 import { RecordingActEntry } from './recording-act';
 
 
-// tslint:disable-next-line: no-empty-interface
 export interface RecorderOffice extends Identifiable {
   municipalities: Identifiable[];
   recordingSections: Identifiable[];
@@ -31,7 +30,7 @@ export const EmptyRecorderOffice: RecorderOffice = {
 };
 
 
-// tslint:disable-next-line: no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RecordingSection extends Identifiable {
 
 }

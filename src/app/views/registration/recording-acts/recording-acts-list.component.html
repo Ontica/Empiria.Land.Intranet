@@ -65,7 +65,7 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <div *ngIf="dataSource?.data.length == 0" class="text-not-found">
+  <div *ngIf="dataSource?.data.length === 0" class="text-not-found">
     <p>Todavía no se han registrado actos jurídicos en el documento.</p>
   </div>
 

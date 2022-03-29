@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -22,7 +22,7 @@ export enum PartyEditorEventType {
   selector: 'emp-land-party-editor',
   templateUrl: './party-editor.component.html'
 })
-export class PartyEditorComponent implements OnInit, OnChanges {
+export class PartyEditorComponent implements OnChanges {
 
   @Input() partySelected: Party = EmptyParty;
 
@@ -54,9 +54,6 @@ export class PartyEditorComponent implements OnInit, OnChanges {
 
     this.setRoleList();
   }
-
-
-  ngOnInit(): void { }
 
 
   get isPerson() { return this.partySelected?.type === 'Person'; }

@@ -94,7 +94,7 @@
             [disabled]="!isReadyToFilterRecordingBook"
             type="text" class="text-box" name="recordingNo"
             [(ngModel)]="bookEntryNo" [required]="fieldsRequired"
-            [class.invalid-control]="bookEntryNo == null || bookEntryNo == ''"
+            [class.invalid-control]="bookEntryNo === null || bookEntryNo === ''"
             (input)="onBookEntryNoChange(bookEntryNo)">
 
         </ng-container>

@@ -95,7 +95,7 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
   @Output() clear = new EventEmitter<boolean>();
   @Output() changes = new EventEmitter<any>();
   @Output() search = new EventEmitter<any>();
-  @Output() blur = new EventEmitter<any>();
+  @Output() onfocus = new EventEmitter<any>();
 
   selectBoxConfig = DefaultSelectBoxConfig;
 
@@ -164,7 +164,7 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
   }
 
   onBlur(event) {
-    this.blur.emit(event);
+    this.onfocus.emit(event);
   }
 
   selectItemIfUnique() {

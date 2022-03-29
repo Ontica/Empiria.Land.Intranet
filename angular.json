@@ -116,12 +116,22 @@
               "devServerTarget": "land-intranet:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
   "defaultProject": "land-intranet",
   "cli": {
-    "analytics": "f697c100-514b-4fcd-ab83-0fb8bbbf553d"
+    "analytics": "f697c100-514b-4fcd-ab83-0fb8bbbf553d",
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }

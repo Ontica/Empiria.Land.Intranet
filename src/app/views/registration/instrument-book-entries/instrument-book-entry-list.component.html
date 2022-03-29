@@ -54,7 +54,7 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <div *ngIf="dataSource?.data.length == 0" class="text-not-found">
+  <div *ngIf="dataSource?.data.length === 0" class="text-not-found">
     <p>No se encontraron registros.</p>
   </div>
 
