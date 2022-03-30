@@ -21,7 +21,6 @@ import { MainMenuComponent } from './main-menu/main-menu.component';
 import { NavigationHeaderComponent } from './nav-header/nav-header.component';
 import { NavigationMenuComponent } from './nav-menu/nav-menu.component';
 import { NoContentComponent } from './no-content.component';
-import { NoPermissionComponent } from './no-permission.component';
 import { SharedDirectivesModule } from '@app/shared/directives/shared-directives.module';
 import { UserSessionuComponent } from './user-session/user-session.component';
 
@@ -46,14 +45,12 @@ import { UserSessionuComponent } from './user-session/user-session.component';
     NavigationHeaderComponent,
     NavigationMenuComponent,
     NoContentComponent,
-    NoPermissionComponent,
     UserSessionuComponent,
   ],
 
   exports: [
     MainLayoutComponent,
     NoContentComponent,
-    NoPermissionComponent,
   ],
 
   providers: []

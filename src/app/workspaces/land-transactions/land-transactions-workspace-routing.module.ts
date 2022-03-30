@@ -9,39 +9,39 @@ import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
 
-import { RoutesLibrary } from '@app/models';
+import { ROUTES_LIBRARY } from '@app/workspaces/main-layout';
 
 import { LandTransactionsWorkspaceComponent } from './land-transactions-workspace.component';
 
 const routes: Routes = [
   {
-    data: { permission: RoutesLibrary.transactions_my_inbox.permission },
-    path: RoutesLibrary.transactions_my_inbox.path,
+    data: { permission: ROUTES_LIBRARY.transactions_my_inbox.permission },
+    path: ROUTES_LIBRARY.transactions_my_inbox.path,
     component: LandTransactionsWorkspaceComponent
   },
   {
-    data: { permission: RoutesLibrary.transactions_control_desk.permission },
-    path: RoutesLibrary.transactions_control_desk.path,
+    data: { permission: ROUTES_LIBRARY.transactions_control_desk.permission },
+    path: ROUTES_LIBRARY.transactions_control_desk.path,
     component: LandTransactionsWorkspaceComponent
   },
   {
-    data: { permission: RoutesLibrary.transactions_finished.permission },
-    path: RoutesLibrary.transactions_finished.path,
+    data: { permission: ROUTES_LIBRARY.transactions_finished.permission },
+    path: ROUTES_LIBRARY.transactions_finished.path,
     component: LandTransactionsWorkspaceComponent
   },
   {
-    data: { permission: RoutesLibrary.transactions_pending.permission },
-    path: RoutesLibrary.transactions_pending.path,
+    data: { permission: ROUTES_LIBRARY.transactions_pending.permission },
+    path: ROUTES_LIBRARY.transactions_pending.path,
     component: LandTransactionsWorkspaceComponent
   },
   {
-    data: { permission: RoutesLibrary.transactions_all.permission },
-    path: RoutesLibrary.transactions_all.path,
+    data: { permission: ROUTES_LIBRARY.transactions_all.permission },
+    path: ROUTES_LIBRARY.transactions_all.path,
     component: LandTransactionsWorkspaceComponent
   },
   {
     path: '',
-    redirectTo: RoutesLibrary.transactions_my_inbox.path,
+    redirectTo: ROUTES_LIBRARY.transactions_my_inbox.path,
     pathMatch: 'full'
   }
 ];

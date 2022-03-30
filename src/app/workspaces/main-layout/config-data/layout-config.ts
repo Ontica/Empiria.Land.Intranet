@@ -5,37 +5,52 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
+import { ROUTES_LIBRARY } from '../config-data';
+
 import { View, Layout } from '../common-models/common';
 
 import {
   TransactionViews,
   SearchViews,
-  HistoricRegistrationViews
-} from './views.config';
+  HistoricRegistrationViews,
+  UnauthorizedViews
+} from './views-config';
 
 
-export type LayoutType = 'Transactions' | 'Search' | 'HistoricRegistration';
-
-
-export const APP_VIEWS: View[] = TransactionViews.concat(HistoricRegistrationViews, SearchViews);
+export const APP_VIEWS: View[] = TransactionViews.concat(HistoricRegistrationViews,
+                                                         SearchViews,
+                                                         UnauthorizedViews);
 
 export const APP_LAYOUTS: Layout[] = [
   {
     name: 'Transactions',
     views: TransactionViews,
     hint: 'Registro de trámites',
-    defaultTitle: 'Trámites'
+    defaultTitle: 'Trámites',
+    url: ROUTES_LIBRARY.transactions.fullpath,
+    permission: ROUTES_LIBRARY.transactions.permission,
   },
   {
     name: 'Search',
     views: SearchViews,
     hint: 'Servicios de consulta en línea',
-    defaultTitle: 'Consulta'
+    defaultTitle: 'Consulta',
+    url: ROUTES_LIBRARY.search_services.fullpath,
+    permission: ROUTES_LIBRARY.search_services.permission,
   },
   {
     name: 'HistoricRegistration',
     views: HistoricRegistrationViews,
     hint: 'Registro histórico',
-    defaultTitle: 'Registro histórico de información'
-  }
+    defaultTitle: 'Registro histórico de información',
+    url: ROUTES_LIBRARY.historic_registration.fullpath,
+    permission: ROUTES_LIBRARY.historic_registration.permission,
+  },
+  {
+    name: 'Unauthorized',
+    views: UnauthorizedViews,
+    hint: '',
+    defaultTitle: '401: Unauthorized',
+    url: ROUTES_LIBRARY.unauthorized.fullpath,
+  },
 ];

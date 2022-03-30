@@ -6,7 +6,7 @@
  */
 
 export * from './common-models/index';
+export * from './config-data/index';
 
 export { MainLayoutComponent } from './main-layout.component';
 export { NoContentComponent } from './no-content.component';
-export { NoPermissionComponent } from './no-permission.component';

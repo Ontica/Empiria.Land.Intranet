@@ -9,18 +9,22 @@ import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
 
-import { RoutesLibrary } from '@app/models';
+import { ROUTES_LIBRARY } from '@app/workspaces/main-layout';
 
 import { HistoricRegistrationWorkspaceComponent } from './historic-registration-workspace.component';
 
 
 const routes: Routes = [
   {
-    data: { permission: RoutesLibrary.historic_registration_by_book.permission },
-    path: RoutesLibrary.historic_registration_by_book.path,
+    data: { permission: ROUTES_LIBRARY.historic_registration_by_book.permission },
+    path: ROUTES_LIBRARY.historic_registration_by_book.path,
     component: HistoricRegistrationWorkspaceComponent
   },
-  { path: '', redirectTo: RoutesLibrary.historic_registration_by_book.path, pathMatch: 'full' }
+  {
+    path: '',
+    redirectTo: ROUTES_LIBRARY.historic_registration_by_book.path,
+    pathMatch: 'full'
+  }
 ];
 
 

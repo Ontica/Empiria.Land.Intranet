@@ -21,6 +21,8 @@ import { Claim, Identity, SessionToken } from '../security/security-types';
 
 import { LocalStorageService } from './local-storage.service';
 
+import { ROUTES_LIST } from '@app/workspaces/main-layout';
+
 
 @Injectable()
 export class SessionService {
@@ -102,6 +104,19 @@ export class SessionService {
   }
 
 
+  getFirstValidRouteInModule(permission: string): string {
+    const route = ROUTES_LIST.find(x => x.permission === permission);
+    const routesInModule = ROUTES_LIST.filter(x => route.parent === x.parent);
+    const validRouteInModule = routesInModule.find(x => this.principal.permissions.includes(x.permission));
+
+    if (!!validRouteInModule) {
+      return validRouteInModule.parent +  '/' + validRouteInModule.path;
+    }
+
+    return null;
+  }
+
+
   private setPrincipalFromLocalStorage() {
     const sessionToken = this.getSessionToken();
 
@@ -110,8 +125,9 @@ export class SessionService {
       const claims = this.localStorage.get<Claim[]>('claims');
       const roles = this.localStorage.get<string[]>('roles');
       const permissions = this.localStorage.get<string[]>('permissions');
+      const defaultRoute = this.localStorage.get<string>('defaultRoute');
 
-      this.principal = new Principal(sessionToken, identity, claims, roles, permissions);
+      this.principal = new Principal(sessionToken, identity, claims, roles, permissions, defaultRoute);
     }
   }
 
@@ -122,6 +138,7 @@ export class SessionService {
     this.localStorage.set<string[]>('permissions', this.principal.permissions);
     this.localStorage.set<string[]>('roles', this.principal.roles);
     this.localStorage.set<Claim[]>('claims', this.principal.claims);
+    this.localStorage.set<string>('defaultRoute', this.principal.defaultRoute);
   }
 
 }

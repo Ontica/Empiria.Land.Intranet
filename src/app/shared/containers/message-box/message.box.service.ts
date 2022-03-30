@@ -6,6 +6,7 @@
  */
 
 import { Injectable } from '@angular/core';
+
 import { Observable, of } from 'rxjs';
 
 import { Exception } from '@app/core';
@@ -84,6 +85,19 @@ export class MessageBoxService {
     observable.subscribe( () => of<void>() );
 
     return observable;
+  }
+
+
+  showInDevelopment(title?: string, infoExtra?: any) {
+    this.show('Funcionalidad en proceso de desarrollo.', title ?? 'Tengo un problema');
+    if (infoExtra) {
+      console.log(infoExtra);
+    }
+  }
+
+
+  isOpen() {
+    return this.dialog.openDialogs.length > 0;
   }
 
 

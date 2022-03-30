@@ -7,9 +7,10 @@
 
 import { Injectable } from '@angular/core';
 
-import { Router, CanActivate, CanActivateChild, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, CanActivate, CanActivateChild, ActivatedRouteSnapshot,
+         NavigationEnd } from '@angular/router';
 
-import { RoutesLibrary } from '../../models/permissions';
+import { filter, take } from 'rxjs/operators';
 
 import { SessionService } from '../general/session.service';
 
@@ -17,8 +18,12 @@ import { SessionService } from '../general/session.service';
 @Injectable()
 export class SecurityGuard implements CanActivate, CanActivateChild {
 
+  isRoutingInitialized = false;
+
   constructor(private router: Router,
-              private session: SessionService) { }
+              private session: SessionService) {
+    this.initRouting();
+  }
 
 
   canActivate() {
@@ -31,10 +36,12 @@ export class SecurityGuard implements CanActivate, CanActivateChild {
       return false;
     }
 
-    if (!this.session.hasPermission(childRoute.data.permission)) {
-      const routesValid = this.getValitRoutes();
-      const defaultRoute = this.getDefaultRoute(routesValid);
-      this.router.navigateByUrl(defaultRoute ?? 'unauthorized');
+    if (!!childRoute.data.permission && !this.session.hasPermission(childRoute.data.permission)) {
+      const firstValidRouteInModule = this.isRoutingInitialized ?
+        this.session.getFirstValidRouteInModule(childRoute.data.permission) : null;
+
+      this.router.navigateByUrl(firstValidRouteInModule ?? 'unauthorized');
+
       return false;
     }
 
@@ -54,23 +61,10 @@ export class SecurityGuard implements CanActivate, CanActivateChild {
   }
 
 
-  private getValitRoutes() {
-    const principal = this.session.getPrincipal();
-    return principal.permissions ? principal.permissions.filter(x => x.startsWith('route-')) : [];
-  }
-
-
-  private getDefaultRoute(routesValid: string[]) {
-
-    let defaultRoute = null;
-
-    Object.keys(RoutesLibrary).forEach( key => {
-      if (RoutesLibrary[key].parent && RoutesLibrary[key].permission === routesValid[0]) {
-        defaultRoute = defaultRoute ?? RoutesLibrary[key].parent + '/' + RoutesLibrary[key].path;
-      }
-    });
-
-    return defaultRoute;
+  private initRouting() {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd), take(1))
+      .subscribe((events: NavigationEnd) => this.isRoutingInitialized = !!events.urlAfterRedirects);
   }
 
 }

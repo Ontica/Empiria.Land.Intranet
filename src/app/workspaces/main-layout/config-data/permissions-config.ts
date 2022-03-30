@@ -7,34 +7,49 @@
 
 
 export enum PermissionsLibrary {
+  MODULE_TRANSACTIONS = 'menu-transactions',
+  MODULE_SEARCH_SERVICES = 'menu-search-services',
+  MODULE_HISTORIC_REGISTRATION = 'menu-historic-registration',
+
   ROUTE_TRANSACTIONS = 'route-transactions',
   ROUTE_SEARCH_SERVICES = 'route-search-services',
   ROUTE_HISTORIC_REGISTRATION = 'route-historic-registration',
-  MENU_TRANSACTIONS = 'menu-transactions',
-  MENU_SEARCH_SERVICES = 'menu-search-services',
-  MENU_HISTORIC_REGISTRATION = 'menu-historic-registration',
+
   FEATURE_TRANSACTIONS_ADD = 'feature-transactions-add',
 }
 
 
-export const RoutesLibrary = {
+export const ROUTES_LIBRARY = {
 
   // #region app-routing module
 
   transactions: {
-    permission: PermissionsLibrary.ROUTE_TRANSACTIONS,
-    path: 'transactions'
+    permission: PermissionsLibrary.MODULE_TRANSACTIONS,
+    parent: '',
+    path: 'transactions',
+    fullpath: '/transactions',
   },
   search_services: {
-    permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
+    permission: PermissionsLibrary.MODULE_SEARCH_SERVICES,
+    parent: '',
     path: 'search-services',
+    fullpath: '/search-services',
   },
   historic_registration: {
-    permission: PermissionsLibrary.ROUTE_HISTORIC_REGISTRATION,
+    permission: PermissionsLibrary.MODULE_HISTORIC_REGISTRATION,
+    parent: '',
     path: 'historic-registration',
+    fullpath: '/historic-registration',
   },
   security: {
+    parent: '',
     path: 'security',
+    fullpath: '/security',
+  },
+  unauthorized: {
+    parent: '',
+    path: 'unauthorized',
+    fullpath: '/unauthorized',
   },
 
   // #endregion
@@ -43,28 +58,33 @@ export const RoutesLibrary = {
 
   transactions_my_inbox: {
     permission: PermissionsLibrary.ROUTE_TRANSACTIONS,
-    path: 'my-inbox',
     parent: 'transactions',
+    path: 'my-inbox',
+    fullpath: '/transactions/my-inbox',
   },
   transactions_control_desk: {
     permission: PermissionsLibrary.ROUTE_TRANSACTIONS,
-    path: 'control-desk',
     parent: 'transactions',
+    path: 'control-desk',
+    fullpath: '/transactions/control-desk',
   },
   transactions_finished: {
     permission: PermissionsLibrary.ROUTE_TRANSACTIONS,
-    path: 'finished',
     parent: 'transactions',
+    path: 'finished',
+    fullpath: '/transactions/finished',
   },
   transactions_pending: {
     permission: PermissionsLibrary.ROUTE_TRANSACTIONS,
-    path: 'pending',
     parent: 'transactions',
+    path: 'pending',
+    fullpath: '/transactions/pending',
   },
   transactions_all: {
     permission: PermissionsLibrary.ROUTE_TRANSACTIONS,
-    path: 'all',
     parent: 'transactions',
+    path: 'all',
+    fullpath: '/transactions/all',
   },
 
   // #endregion
@@ -73,43 +93,51 @@ export const RoutesLibrary = {
 
   search_services_all: {
     permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    path: 'all',
     parent: 'search-services',
+    path: 'all',
+    fullpath: '/search-services/all',
   },
   search_services_real_estate: {
     permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    path: 'real-estate',
     parent: 'search-services',
+    path: 'real-estate',
+    fullpath: '/search-services/real-estate',
   },
   search_services_associations: {
     permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    path: 'associations',
     parent: 'search-services',
+    path: 'associations',
+    fullpath: '/search-services/associations',
   },
   search_services_persons: {
     permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    path: 'persons',
     parent: 'search-services',
+    path: 'persons',
+    fullpath: '/search-services/persons',
   },
   search_services_documents: {
     permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    path: 'documents',
     parent: 'search-services',
+    path: 'documents',
+    fullpath: '/search-services/documents',
   },
   search_services_certificates: {
     permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    path: 'certificates',
     parent: 'search-services',
+    path: 'certificates',
+    fullpath: '/search-services/certificates',
   },
   search_services_transactions: {
     permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    path: 'transactions',
     parent: 'search-services',
+    path: 'transactions',
+    fullpath: '/search-services/transactions',
   },
   search_services_books: {
     permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    path: 'books',
     parent: 'search-services',
+    path: 'books',
+    fullpath: '/search-services/books',
   },
 
   // #endregion
@@ -118,8 +146,9 @@ export const RoutesLibrary = {
 
   historic_registration_by_book: {
     permission: PermissionsLibrary.ROUTE_HISTORIC_REGISTRATION,
-    path: 'by-book',
     parent: 'historic-registration',
+    path: 'by-book',
+    fullpath: '/historic-registration/by-book',
   },
 
   // #endregion
@@ -127,10 +156,30 @@ export const RoutesLibrary = {
   // #region security-routing module
 
   security_login: {
-    path: 'login',
     parent: 'security',
+    path: 'login',
+    fullpath: '/security/login'
   },
 
   // #endregion
 
 };
+
+
+export const DEFAULT_ROUTE = ROUTES_LIBRARY.transactions_my_inbox;
+
+
+export const DEFAULT_URL = ( DEFAULT_ROUTE.parent ? DEFAULT_ROUTE.parent + '/' : '' ) + DEFAULT_ROUTE.path;
+
+
+export const UNAUTHORIZED_ROUTE = ROUTES_LIBRARY.unauthorized.path;
+
+
+export const ROUTES_LIST = Object.keys(ROUTES_LIBRARY)
+                                 .map(key => ROUTES_LIBRARY[key])
+                                 .filter(x => x.parent && x.permission);
+
+export function getAllPermissions() {
+    return Object.keys(PermissionsLibrary)
+                 .map(key => PermissionsLibrary[key]);
+}

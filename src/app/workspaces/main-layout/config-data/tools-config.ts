@@ -1,3 +1,4 @@
+
 /**
  * @license
  * Copyright (c) La Vía Óntica SC, Ontica LLC and contributors. All rights reserved.
@@ -5,12 +6,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-export * from './permissions-config';
+export type TOOL = 'None' | 'Search';
 
-export * from './layout-config';
 
-export * from './tools-config';
-
-export * from './value-selectors';
-
-export * from './views-config';
+export const TOOLS_LIST: TOOL[] = ['None', 'Search'];
