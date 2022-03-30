@@ -11,27 +11,18 @@ import { EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import {
-  MainUIStateSelector, RegistrationAction, RegistrationStateSelector,
-  TransactionAction, TransactionStateSelector,
-} from '@app/core/presentation/presentation-types';
+import { MainUIStateSelector, RegistrationAction, RegistrationStateSelector, TransactionAction,
+         TransactionStateSelector} from '@app/core/presentation/presentation-types';
 
-import {
-  TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
-  mapTransactionStageFromViewName, mapTransactionStatusFromViewName
-} from '@app/models/transaction';
+import { View } from '@app/main-layout';
 
+import { TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
+         mapTransactionStageFromViewName, mapTransactionStatusFromViewName, EmptySelectionAct,
+         SelectionAct } from '@app/models';
 
-import {
-  TransactionListEventType
-} from '@app/views/transactions/transaction-list/transaction-list.component';
+import { TransactionListEventType} from '@app/views/transactions/transaction-list/transaction-list.component';
 
-import { EmptyFileViewerData,
-         FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
-
-import { View } from '../main-layout';
-
-import { EmptySelectionAct, SelectionAct } from '@app/models';
+import { EmptyFileViewerData, FileViewerData} from '@app/shared/form-controls/file-control/file-control-data';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |

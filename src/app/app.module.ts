@@ -6,15 +6,17 @@
  */
 
 import { BrowserModule } from '@angular/platform-browser';
+
 import { NgModule } from '@angular/core';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CoreModule } from './core/core.module';
 
-import { MainLayoutModule } from './workspaces/main-layout/main-layout.module';
+import { MainLayoutModule } from '@app/main-layout/main-layout.module';
 
 import { AppComponent } from './app.component';
+
 import { AppRoutingModule } from './app-routing.module';
 
 
