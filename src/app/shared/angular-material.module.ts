@@ -7,8 +7,11 @@
 
 import { NgModule } from '@angular/core';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
@@ -23,13 +26,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatRippleModule } from '@angular/material/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatStepperModule } from '@angular/material/stepper';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TableVirtualScrollModule } from 'ng-table-virtual-scroll';
 
 import {
   MomentDateAdapter,
@@ -46,11 +49,16 @@ import {
 
 import * as moment from 'moment';
 
-
 const APP_DEFAULT_DATE_LOCAL = 'es-MX';
 
 moment.updateLocale(APP_DEFAULT_DATE_LOCAL, {
+  months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'
+            .split('_'),
   monthsShort: 'Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic'.split('_'),
+  weekdays: 'Domingo_Lunes_Martes_Miércoles_Jueves_Viernes_Sábado'.split('_'),
+  weekdaysShort: 'Dom_Lun_Mar_Mié_Jue_Vie_Sáb'.split('_'),
+  weekdaysMin: 'Do_Lu_Ma_Mi_Ju_Vi_Sá'.split('_'),
+  weekdaysParseExact: true,
   longDateFormat: {
     LT: 'HH:mm',
     LTS: 'HH:mm:ss',
@@ -85,6 +93,8 @@ export const DATE_FORMATS = {
   imports: [
     ClipboardModule,
     MatButtonModule,
+    MatButtonToggleModule,
+    MatCheckboxModule,
     MatDatepickerModule,
     MatDialogModule,
     MatDividerModule,
@@ -95,23 +105,26 @@ export const DATE_FORMATS = {
     MatListModule,
     MatMenuModule,
     MatMomentDateModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
     MatRadioModule,
     MatRippleModule,
     MatSidenavModule,
-    MatStepperModule,
-    MatTabsModule,
-    MatTooltipModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatProgressBarModule,
     MatSliderModule,
     MatSnackBarModule,
+    MatStepperModule,
+    MatTableModule,
+    MatTabsModule,
+    MatTooltipModule,
+    ScrollingModule,
+    TableVirtualScrollModule,
   ],
 
   exports: [
     ClipboardModule,
     MatButtonModule,
+    MatButtonToggleModule,
+    MatCheckboxModule,
     MatDatepickerModule,
     MatDialogModule,
     MatDividerModule,
@@ -122,18 +135,19 @@ export const DATE_FORMATS = {
     MatListModule,
     MatMenuModule,
     MatMomentDateModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
     MatRadioModule,
     MatRippleModule,
     MatSidenavModule,
-    MatStepperModule,
-    MatTabsModule,
-    MatTooltipModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatProgressBarModule,
     MatSliderModule,
     MatSnackBarModule,
+    MatStepperModule,
+    MatTableModule,
+    MatTabsModule,
+    MatTooltipModule,
+    ScrollingModule,
+    TableVirtualScrollModule,
   ],
 
   providers: [

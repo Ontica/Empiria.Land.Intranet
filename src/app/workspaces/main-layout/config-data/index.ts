@@ -5,6 +5,9 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
+
+export * from './app-config';
+
 export * from './permissions-config';
 
 export * from './layout-config';

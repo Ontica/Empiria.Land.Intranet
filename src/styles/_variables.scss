@@ -5,20 +5,20 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-$white: #fff !default;
+$white: #fdfdfd !default;
 
-$primary-color: #2c3942 !default;
-$primary-color-light: rgb(67, 151, 147) !default;
-$primary-color-dark: rgb(18, 82, 55) !default;
+$primary-color: hsl(205, 20%, 30%) !default;
+$primary-color-light: hsl(205, 20%, 60%) !default;
+$primary-color-dark: hsl(205, 20%, 10%) !default;
 
-$secondary-color: #2c3942 !default;
-$secondary-color-light: rgb(67, 90, 107) !default;
-$secondary-color-semi-light: rgb(53, 68, 78) !default;
-$secondary-color-dark: rgb(24, 31, 36) !default;
+$secondary-color: hsl(205, 20%, 22%) !default;
+$secondary-color-light: hsl(205, 20%, 40%) !default;
+$secondary-color-semi-light: hsl(205, 20%, 30%) !default;
+$secondary-color-dark: hsl(205, 20%, 10%) !default;
 
-$warning-color: #a53434 !default;
-$warning-color-light: $warning-color;
-$warning-color-dark: #7a0a0a !default;
+$warning-color: hsl(0, 52%, 43%) !default;
+$warning-color-light: hsl(0, 52%, 70%);
+$warning-color-dark: hsl(0, 52%, 30%) !default;
 
 $title-color: $primary-color !default;
 $text-color: $secondary-color !default;
@@ -105,6 +105,8 @@ $button-selected-color: #e6e6e6;
 
 $button-border: 0 solid #cecece;
 $button-height: 28px;
+
+$checkbox-background-color: $primary-color-light;
 
 //
 // grid

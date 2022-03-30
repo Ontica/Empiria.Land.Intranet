@@ -1,71 +1,70 @@
 <div class="main-layout">
 
-  <emp-ng-spinner [service]="spinnerService" overlay='FullScreen'></emp-ng-spinner>
+  <emp-ng-spinner [service]="spinnerService" overlay='FullScreen'>
 
-  <div class="top-bar"></div>
+  </emp-ng-spinner>
 
-  <div class="nav-bar">
-
-    <div class="left-section">
-
-      <!-- <div class="sidenav-toggle">
-        <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
-      </div> -->
-
-      <img class="logo" src="assets/img/customer/main-page.logo.png" alt="Registro Público de la Propiedad"/>
-
-      <div fxHide.lt-lg="true" class="header-container">
-        <span class="header">Registro Público de la Propiedad</span>
-        <div class="subheader">Secretaría de Finanzas &nbsp; &nbsp; | &nbsp; &nbsp; Gobierno del Estado de Zacatecas</div>
-      </div>
-
-    </div>
-
-
-    <emp-ng-main-menu class="main-menu"></emp-ng-main-menu>
-
-    <div class="search-and-settings">
-
-      <emp-ng-search-box fxHide.lt-md="true" (searchBoxChange)="search($event)" style="width:100%">
-
-      </emp-ng-search-box>
-
-      <!-- <mat-icon>
-        notifications
-      </mat-icon> -->
-
-    </div>
-
-    <div> </div>
-
-    <emp-ng-user-session>
-
-    </emp-ng-user-session>
+  <div class="top-bar">
 
   </div>
 
   <mat-sidenav-container>
 
-    <mat-sidenav class="side-bar" mode="side" #sidenav disableClose="true">
+
+    <mat-sidenav #sidenavLeft class="sidenav-left" mode="side" disableClose="true"
+      [opened]="appLayoutConfig.displayAsideLeft">
+
     </mat-sidenav>
 
-    <mat-sidenav class="right-bar" mode="side" #rightSidenav position="end">
-    </mat-sidenav>
 
-    <mat-sidenav-content class="content">
-      <div [style.margin-left.px]="sidenav.opened ? 6 : 0">
-        <div>
-          <emp-ng-navigation-header (action)="onAction($event)"></emp-ng-navigation-header>
+    <mat-sidenav-content #sidenavContent class="content">
+
+      <div fxLayout="column" fxFlexFill>
+
+        <emp-ng-nav-bar fxFlex="none">
+
+        </emp-ng-nav-bar>
+
+        <emp-ng-header fxFlex="none" (action)="onAction($event)">
+
+        </emp-ng-header>
+
+        <div class="workarea" fxFlex>
+
+          <router-outlet>
+
+          </router-outlet>
+
         </div>
 
-        <div class="workarea">
-          <router-outlet></router-outlet>
-        </div>
+        <emp-ng-footer fxFlex="none" *ngIf="appLayoutConfig.displayFooter">
+
+        </emp-ng-footer>
+
       </div>
+
     </mat-sidenav-content>
 
-  </mat-sidenav-container>
 
-  <footer class="footer"></footer>
+    <mat-sidenav #sidenavRight class="sidenav-right" mode="over" position="end" disableClose="true"
+      [(opened)]="displayAsideRight">
+
+      <button class="toolbar-item btn-collapse-sidenav-right"
+        title="Cerrar herramienta"
+        (click)="onCloseAsideRight()">
+        <mat-icon>last_page</mat-icon>
+      </button>
+
+      <container-element [ngSwitch]="toolSelected">
+
+        <div [style.width.px]="500">
+
+        </div>
+
+      </container-element>
+
+    </mat-sidenav>
+
+  </mat-sidenav-container>
 
 </div>

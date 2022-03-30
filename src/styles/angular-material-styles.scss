@@ -372,3 +372,126 @@ table.mat-table {
     font-size: 8pt;
   }
 }
+
+
+//
+// checkbox
+//
+
+.mat-checkbox {
+  .mat-checkbox-frame {
+    background: $white !important;
+  }
+
+  .mat-checkbox-label {
+    font-size: 9pt;
+    margin-right: 8px;
+  }
+
+  &.no-label .mat-checkbox-label {
+    margin-right: 0;
+  }
+
+  &.mat-checkbox-checked,
+  &.mat-checkbox-indeterminate {
+    .mat-checkbox-background {
+      background-color: $checkbox-background-color !important;
+    }
+
+    &.mat-checkbox-disabled {
+      .mat-checkbox-background {
+        background-color: lighten($control-disabled-color, 20%) !important;
+      }
+
+      .mat-checkbox-label {
+        color: lighten($control-disabled-color, 20%) !important;
+      }
+    }
+  }
+
+  &:not(.mat-checkbox-login) .mat-checkbox-inner-container {
+    margin-top: -4px;
+  }
+}
+
+.mat-checkbox.mat-checkbox-login {
+  &.mat-checkbox-checked,
+  &.mat-checkbox-indeterminate {
+    .mat-checkbox-background {
+      background-color: $warning-color !important;
+    }
+  }
+
+  .mat-checkbox-label {
+    color: $white;
+  }
+}
+
+
+//
+// radio button
+//
+
+.mat-radio-group {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  margin: 2px 0;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 32px;
+}
+
+.mat-radio-label {
+  display: inline-flex !important;
+  font-size: 9pt !important;
+}
+
+.no-label .mat-radio-label-content {
+  padding-left: 0;
+}
+
+.mat-radio-button.mat-radio-checked .mat-radio-outer-circle {
+  border-color: $checkbox-background-color !important;
+}
+
+.mat-radio-button.mat-radio-disabled .mat-radio-label-content {
+  color: $control-color;
+}
+
+.mat-radio-button .mat-radio-inner-circle {
+  color: $checkbox-background-color !important;
+  background-color: $checkbox-background-color !important;
+}
+
+//
+// ripple
+//
+
+.mat-checkbox .mat-checkbox-ripple,
+.mat-checkbox .mat-ripple-element,
+.mat-radio-button .mat-radio-ripple,
+.mat-radio-button .mat-ripple-element {
+  left: calc(50% - 16px) !important;
+  top: calc(50% - 16px) !important;
+  height: 32px !important;
+  width: 32px !important;
+}
+
+.mat-checkbox-ripple .mat-ripple-element,
+.mat-radio-ripple .mat-ripple-element {
+  background: $checkbox-background-color !important;
+}
+
+.mat-checkbox.mat-checkbox-login .mat-checkbox-ripple > .mat-ripple-element {
+  background: $warning-color !important;
+}
+
+//
+// mat-drawer backdrop
+//
+
+.mat-drawer-backdrop.mat-drawer-shown {
+  background-color: rgba(100, 100, 100, 0.5);
+}

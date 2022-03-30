@@ -1,19 +1,52 @@
 <div class="nav-bar">
-  <ul>
-    <li *empNgHasPermission="'menu-transactions'">
-      <a routerLink='/transactions' routerLinkActive='selected' [routerLinkActiveOptions]="{exact:false}">
-        TRÁMITES
-      </a>
-    </li>
-    <li *empNgHasPermission="'menu-search-services'">
-      <a routerLink='/search-services' routerLinkActive='selected' [routerLinkActiveOptions]="{exact:false}">
-        CONSULTAS
-      </a>
+
+  <ul *ngIf="appLayoutConfig.displaySubMenu">
+
+    <ng-container *ngFor="let layout of layouts">
+
+      <li *empNgHasPermission="layout.permission"
+        routerLinkActive='selected'
+        [routerLinkActiveOptions]="{exact:false}">
+
+        <a [routerLink]='layout.url'>
+          {{ layout.defaultTitle | uppercase }}
+        </a>
+
       </li>
-    <li *empNgHasPermission="'menu-historic-registration'">
-      <a routerLink='/historic-registration' routerLinkActive='selected' [routerLinkActiveOptions]="{exact:false}">
-        CAPTURA HISTÓRICA
-      </a>
-    </li>
+
+    </ng-container>
+
   </ul>
+
+
+  <ul *ngIf="!appLayoutConfig.displaySubMenu">
+
+    <ng-container *ngFor="let layout of layouts">
+
+      <li *empNgHasPermission="layout.permission"
+        [matMenuTriggerFor]="items" #menuT="matMenuTrigger"
+        [ngClass]="{'active': menuT.menuOpen, 'selected': isLayoutSelected(layout)}">
+
+        <a> {{ layout.defaultTitle | uppercase }} </a>
+
+      </li>
+
+      <mat-menu #items="matMenu">
+
+        <ng-container *ngFor="let view of layout.views">
+
+          <button mat-menu-item *empNgHasPermission="view.permission"
+            [routerLink]='view.url'
+            routerLinkActive='selected'>
+            {{ view.title | uppercase }}
+          </button>
+
+        </ng-container>
+
+      </mat-menu>
+
+    </ng-container>
+
+  </ul>
+
 </div>

@@ -17,8 +17,12 @@
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
-  margin: 8px;
-  height: calc(100vh - 196px + 68px);
+  padding: 8px;
+  height: 100%;
+
+  > :not(:last-child) {
+    margin-right: 32px
+  }
 
   .primary {
     flex: 1 1 600px;
@@ -60,8 +64,24 @@
   }
 
   .secondary {
-    flex: 3 1 600px;
+    flex: 1 1 600px;
     min-width: 400px;
     max-width: 960px;
+  }
+
+  .priority {
+    flex: 3 1 600px;
+    max-width: 1085px;
+  }
+}
+
+.explorer.fluid {
+  height: 100%;
+  margin: 0;
+  background-color: #f4f6f6;
+
+  .primary,
+  .secondary {
+    width: 960px;
   }
 }

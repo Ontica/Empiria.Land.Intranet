@@ -6,12 +6,19 @@
  */
 
 .container {
-  min-width: 240px;
+  min-width: 200px;
+  height: 35px;
   position: relative;
 }
 
 .container input {
   padding-left: 8px;
   transition: 0.5s ease-out;
-  height: 30px;
+  height: 35px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.container .input-icon {
+  top: calc(50% - 0.45em);
 }

@@ -33,26 +33,14 @@
 </head>
 <body>
   <emp-ng-root>
-    <style>
-      emp-ng-root {
-        background-color: #ffffff;
-        color: rgb(52, 126, 122);
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        padding-top: 40vh;
-        text-align: center;
-        font: 16px "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        text-transform: uppercase;
-      }
-    </style>
-
-    <strong style='font-size: 20px'>Registro Público de la Propiedad</strong><br/><br/>
-    <strong>Gobierno del Estado de Zacatecas</strong>
-    <br/><br/>
-    <span>Cargando componentes ...</span>
+    <div id="emp-app-loading-components">
+      <img src="assets/img/customer/main-page.logo.png" alt="logo"/><br/>
+      <strong id="emp-app-loading-title">Registro Público de la Propiedad</strong><br/><br/>
+      <strong>
+        Secretaría de Finanzas &nbsp; &nbsp; | &nbsp; &nbsp; Gobierno del Estado de Zacatecas
+      </strong><br/><br/><br/>
+      <span id="emp-app-loading">Cargando componentes ...</span>
+    </div>
   </emp-ng-root>
 </body>
 </html>

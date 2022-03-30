@@ -44,3 +44,30 @@ export const DefaultView: View = {
   title: 'Default view',
   url: '/',
 };
+
+
+export interface AppData {
+  name: string;
+  organization: string;
+  hint: string;
+  description: string;
+}
+
+
+export interface AppLayout {
+  enablePermissions: boolean;
+  displayNavbarHeader: boolean;
+  displayMenuUser: boolean;
+  displayChangeLanguage: boolean;
+  displayChangePassword: boolean;
+  displayAsideLeft: boolean;
+  displaySubMenu: boolean;
+  displayHeader: boolean;
+  displayFooter: boolean;
+}
+
+
+export interface AppConfig {
+  data: AppData;
+  layout: AppLayout;
+}

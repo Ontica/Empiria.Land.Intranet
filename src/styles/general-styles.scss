@@ -356,21 +356,56 @@ i.disabled {
 
 // tags
 
-.tag {
+.tag-info {
   background-color: $primary-color-light;
-  border-radius: 8px;
+  border-radius: 10px;
   color: white;
-  padding: 4px 4px 4px 8px;
+  padding: 4px 8px;
+  width: fit-content;
+
+  &:hover {
+    background-color: darken($primary-color-light, 4%);
+  }
 }
 
-.tag i {
-  padding-left: 4px;
-  color: white;
-  padding-right: 4px;
+.tag-error {
+  background-color: $warning-color-light;
+  border-radius: 10px;
+  color: $white;
+  padding: 4px 8px;
+  width: fit-content;
+
+  &:hover {
+    background-color: darken($warning-color-light, 4%);
+  }
 }
 
-.tag i:hover {
-  color: $primary-color;
+.tag-warning {
+  background-color: $title-color;
+  border-radius: 10px;
+  color: $white;
+  padding: 4px 8px;
+  width: fit-content;
+
+  &:hover {
+    background-color: darken($title-color, 4%);
+  }
+}
+
+a.tag-info,
+a.tag-error,
+a.tag-warning {
+  text-decoration: underline;
+
+  &:hover {
+    color: $white;
+    cursor: pointer;
+  }
+}
+
+.tag-small {
+  font-size: 8px;
+  margin: 0 8px;
 }
 
 // blink

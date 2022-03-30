@@ -1,0 +1,25 @@
+<div class="nav-bar">
+
+  <div class="left-section">
+
+    <img class="logo" src="assets/img/customer/main-page.logo.png"
+      [alt]="appConfig.data.name"/>
+
+    <div *ngIf="appConfig.layout.displayNavbarHeader" class="header-container">
+      <span class="header">{{appConfig.data.name}}</span>
+      <div class="subheader">
+        {{appConfig.data.hint}} &nbsp; &nbsp; | &nbsp; &nbsp; {{appConfig.data.organization}}
+      </div>
+    </div>
+
+  </div>
+
+  <emp-ng-main-menu class="main-menu">
+
+  </emp-ng-main-menu>
+
+  <emp-ng-top-bar class="right-section">
+
+  </emp-ng-top-bar>
+
+</div>

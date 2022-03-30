@@ -16,7 +16,7 @@ import { MenuItem } from '../common-models';
 })
 export class NavigationMenuComponent implements OnChanges {
 
-  @Input() items: MenuItem[];
+  @Input() items: MenuItem[] = [];
 
   @Output() navMenuItemClick = new EventEmitter<MenuItem>();
 
