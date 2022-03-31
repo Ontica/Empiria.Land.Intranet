@@ -11,7 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { SecurityUIRoutingModule } from './security-ui-routing.module';
 import { UserLoginComponent } from './user-login/user-login.component';
-import { SharedIndicatorsModule } from '@app/shared/indicators/shared-indicators.module';
+import { AngularMaterialModule } from '@app/shared/angular-material.module';
 
 
 @NgModule({
@@ -21,7 +21,7 @@ import { SharedIndicatorsModule } from '@app/shared/indicators/shared-indicators
     ReactiveFormsModule,
 
     SecurityUIRoutingModule,
-    SharedIndicatorsModule,
+    AngularMaterialModule,
   ],
 
   declarations: [
