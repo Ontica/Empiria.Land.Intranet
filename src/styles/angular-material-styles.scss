@@ -418,7 +418,7 @@ table.mat-table {
   &.mat-checkbox-checked,
   &.mat-checkbox-indeterminate {
     .mat-checkbox-background {
-      background-color: $warning-color !important;
+      background-color: $primary-color !important;
     }
   }
 
@@ -485,7 +485,7 @@ table.mat-table {
 }
 
 .mat-checkbox.mat-checkbox-login .mat-checkbox-ripple > .mat-ripple-element {
-  background: $warning-color !important;
+  background: $primary-color !important;
 }
 
 //
