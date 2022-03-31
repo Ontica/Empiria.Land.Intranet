@@ -10,7 +10,7 @@
 
 .ql-toolbar.ql-snow {
   margin: 2px 8px 0 0;
-  padding: 2px 2px 2px 6px;
+  padding: $control-padding;
 }
 
 .ql-container {
@@ -24,7 +24,7 @@
   color: $control-color;
   font: $control-font;
   font-weight: normal;
-  border-radius: 2px;
+  border-radius: $control-border-radius;
   transition: 0.3s ease-out;
 }
 

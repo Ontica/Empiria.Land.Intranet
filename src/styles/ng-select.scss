@@ -22,9 +22,9 @@
 
 .ng-select .ng-select-container {
   min-height: $control-height !important;
-  margin: 2px 8px 2px 0;
-  padding: 2px 2px 2px 6px;
-  border-radius: 2px;
+  margin: $control-margin;
+  padding: $select-padding;
+  border-radius: $control-border-radius;
   font-family: $font-family;
   border: $control-border;
   outline: none;
