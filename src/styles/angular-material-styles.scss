@@ -315,12 +315,38 @@ table.mat-table {
   .mat-icon-button {
     width: 28px;
     height: 28px;
-    line-height: 24px;
+    line-height: 22px;
     border: $control-border;
-    border-radius: 2px;
-    background-color: #edeef0;
+    border-left: none;
+    border-radius: 0 2px 2px 0;
+    background-color: $button-color;
     margin: 2px 0;
+
+    .mat-datepicker-toggle-default-icon {
+      color: $icon-color;
+    }
   }
+
+  .mat-icon-button:hover {
+    background-color: $selected-control-background-color;
+    transition: 0.3s ease-out;
+
+    .mat-datepicker-toggle-default-icon {
+      color: $icon-color-dark;
+    }
+  }
+}
+
+.selection-type-picker .mat-calendar-period-button {
+  pointer-events: none;
+}
+
+.selection-type-picker .mat-calendar-arrow {
+  display: none;
+}
+
+.default-calendar-hidden {
+  display: none !important;
 }
 
 //
@@ -425,7 +451,6 @@ table.mat-table {
     color: $white;
   }
 }
-
 
 //
 // radio button

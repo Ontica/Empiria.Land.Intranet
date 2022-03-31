@@ -19,6 +19,26 @@ export const MINUTES_IN_DAY = 1440;
 
 export class DateStringLibrary {
 
+  static validateDateValue(obj: any): Date {
+    if (!obj) {
+      return null;
+    }
+
+    let date: Date;
+    if (moment.isMoment(obj)) {
+      date = this.toDate(obj.toDate());
+    } else {
+      date = this.toDate(obj);
+    }
+
+    if (date) {
+      return date;
+    } else {
+      return null;
+    }
+  }
+
+
   static compareDates(value1: DateString, value2: DateString): number {
     const date1 = this.datePart(value1);
     const date2 = this.datePart(value2);
@@ -51,7 +71,23 @@ export class DateStringLibrary {
 
 
   static today(): DateString {
-    return moment().format('YYYY-MM-DD');
+    return this.mapDateStringFromMoment(moment());
+  }
+
+
+  static getFirstDayOfMonthFromDateString(value: DateString): DateString {
+    if (!this.isDate(value)) {
+      return '';
+    }
+
+    const date = this.toDate(value);
+    const firstDate = moment().date(1).month(date.getMonth()).year(date.getFullYear());
+    return this.mapDateStringFromMoment(firstDate);
+  }
+
+
+  static mapDateStringFromMoment(date: moment.Moment): DateString {
+    return date.format('YYYY-MM-DD');
   }
 
 
@@ -284,7 +320,7 @@ export class DateStringLibrary {
     dateParts[yearIndex] = this.getYearAsString(+dateParts[yearIndex]);
 
 
-    let dayIndex = dateParts.findIndex(x => x.includes('T'));
+    let dayIndex = dateParts.findIndex(x => x && x.includes('T'));
     if (dayIndex !== -1) {
       dateParts[dayIndex] = dateParts[dayIndex].substr(0, 2);
     } else {
