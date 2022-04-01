@@ -158,7 +158,7 @@ export class MainLayoutPresentationHandler extends AbstractPresentationHandler {
     if (value && 'url' in value) {
       const layout = APP_LAYOUTS.find(x => x.name === this.state.layout.name);
 
-      const navHeader = !layout ? null :
+      const navHeader = !layout ? DefaultNavigationHeader :
         buildNavigationHeader(layout, this.session.getPrincipal().permissions, value);
 
       this.setValue(SelectorType.NAVIGATION_HEADER, navHeader);

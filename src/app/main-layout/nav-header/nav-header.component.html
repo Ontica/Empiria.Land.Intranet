@@ -21,10 +21,14 @@
   </div>
 
   <div class="action-buttons">
-    <button class="btn-header" *ngFor="let action of navigationHeader.actions"
-      (click)="onActionButtonClicked(action)">
-      {{action.name}}
-      <mat-icon *ngIf="action.icon">{{action.icon}}</mat-icon>
-    </button>
+    <ng-container *ngFor="let action of navigationHeader.actions">
+
+      <button class="btn-header" *empNgHasPermission="action.permission"
+        (click)="onActionButtonClicked(action)">
+        {{action.name}}
+        <mat-icon *ngIf="action.icon">{{action.icon}}</mat-icon>
+      </button>
+
+    </ng-container>
   </div>
 </div>

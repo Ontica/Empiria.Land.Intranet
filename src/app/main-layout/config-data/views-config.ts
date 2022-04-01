@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { ROUTES_LIBRARY } from './permissions-config';
+import { PermissionsLibrary as Permissions, ROUTES_LIBRARY } from './permissions-config';
 
 import { View } from '../common-models/common';
 
@@ -17,6 +17,10 @@ export const TransactionViews: View[] = [
     menuTitle: 'Mis trámites pendientes',
     url: ROUTES_LIBRARY.transactions_my_inbox.fullpath,
     permission: ROUTES_LIBRARY.transactions_my_inbox.permission,
+    actions: [
+      {action: 'ActionChangeStatus', name:'Paquetes', permission: Permissions.FEATURE_TRANSACTIONS_ADD},
+      {action: 'ActionCreate', name: 'Nuevo', permission: Permissions.FEATURE_TRANSACTIONS_ADD}
+    ]
   },
   {
     name: 'Transactions.ControlDesk',
@@ -24,6 +28,10 @@ export const TransactionViews: View[] = [
     menuTitle: 'Mesa de control',
     url: ROUTES_LIBRARY.transactions_control_desk.fullpath,
     permission: ROUTES_LIBRARY.transactions_control_desk.permission,
+    actions: [
+      {action: 'ActionChangeStatus', name:'Paquetes', permission: Permissions.FEATURE_TRANSACTIONS_ADD},
+      {action: 'ActionCreate', name: 'Nuevo', permission: Permissions.FEATURE_TRANSACTIONS_ADD}
+    ]
   },
   {
     name: 'Transactions.Finished',
@@ -31,6 +39,10 @@ export const TransactionViews: View[] = [
     menuTitle: 'Terminados',
     url: ROUTES_LIBRARY.transactions_finished.fullpath,
     permission: ROUTES_LIBRARY.transactions_finished.permission,
+    actions: [
+      {action: 'ActionChangeStatus', name:'Paquetes', permission: Permissions.FEATURE_TRANSACTIONS_ADD},
+      {action: 'ActionCreate', name: 'Nuevo', permission: Permissions.FEATURE_TRANSACTIONS_ADD}
+    ]
   },
   {
     name: 'Transactions.Pending',
@@ -38,6 +50,10 @@ export const TransactionViews: View[] = [
     menuTitle: 'Por ingresar',
     url: ROUTES_LIBRARY.transactions_pending.fullpath,
     permission: ROUTES_LIBRARY.transactions_pending.permission,
+    actions: [
+      {action: 'ActionChangeStatus', name:'Paquetes', permission: Permissions.FEATURE_TRANSACTIONS_ADD},
+      {action: 'ActionCreate', name: 'Nuevo', permission: Permissions.FEATURE_TRANSACTIONS_ADD}
+    ]
   },
   {
     name: 'Transactions.All',
@@ -45,6 +61,10 @@ export const TransactionViews: View[] = [
     menuTitle: 'Todos',
     url: ROUTES_LIBRARY.transactions_all.fullpath,
     permission: ROUTES_LIBRARY.transactions_all.permission,
+    actions: [
+      {action: 'ActionChangeStatus', name:'Paquetes', permission: Permissions.FEATURE_TRANSACTIONS_ADD},
+      {action: 'ActionCreate', name: 'Nuevo', permission: Permissions.FEATURE_TRANSACTIONS_ADD}
+    ]
   }
 ];
 

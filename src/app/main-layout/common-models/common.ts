@@ -18,7 +18,8 @@ export interface Layout {
 }
 
 
-export type ViewActionType = 'None' | 'ActionFilter' | 'ActionCreate' | 'ActionExport';
+export type ViewActionType = 'None' | 'ActionFilter' | 'ActionCreate' | 'ActionExport' | 'ActionImport' |
+                             'ActionChangeStatus';
 
 
 export interface View {
@@ -36,6 +37,7 @@ export interface ViewAction {
   action: ViewActionType;
   name: string;
   icon?: string;
+  permission?: string;
 }
 
 
