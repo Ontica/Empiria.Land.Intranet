@@ -19,13 +19,11 @@
 
   <mat-menu #menu="matMenu" [yPosition]>
 
-    <div class="menu-user-name-info" (click)="$event.stopPropagation();$event.preventDefault();">
-
-      <span>{{principal.identity ? principal.identity.name : ''}}</span>
-      <span class="tag-info tag-small" *ngIf="principal.identity">
-        {{principal.roles.length > 0 ? principal.roles[0] : 'Usuario'}}
+    <div class="menu-user-info-container"  (click)="$event.stopPropagation();$event.preventDefault();">
+      <span class="menu-user-name">{{principal.identity ? principal.identity.name : ''}}</span>
+      <span class="tag-info tag-small" [style.marginRight]="0" *ngIf="principal.identity" >
+        {{principal.roles.length > 0 ? principal.roles[0] : 'User'}}
       </span>
-
     </div>
 
     <mat-divider>
@@ -37,8 +35,8 @@
 
       Idioma
       <mat-button-toggle-group appearance="legacy" class="menu-user-toggle">
-        <mat-button-toggle value="eng" checked>Eng</mat-button-toggle>
-        <mat-button-toggle value="spa">Spa</mat-button-toggle>
+        <mat-button-toggle value="eng" checked>Ing</mat-button-toggle>
+        <mat-button-toggle value="spa">Esp</mat-button-toggle>
       </mat-button-toggle-group>
 
     </button>

@@ -31,6 +31,10 @@ $min-width-sides: 345px;
     margin: 0 $margin-size 0 $margin-size-border;
   }
 
+  .logo {
+    max-height: 46px;
+  }
+
   .header-container {
     padding-left: 8px;
   }
@@ -44,23 +48,19 @@ $min-width-sides: 345px;
     margin-top: 4px;
   }
 
+  .main-menu {
+    margin: 0 $margin-size;
+  }
+
   .right-section {
     min-width: $min-width-sides;
     margin: 0 $margin-size-border 0 $margin-size;
   }
 
-  .logo {
-    max-height: 46px;
-  }
-
-  .main-menu {
-    margin: 0 $margin-size;
-  }
-
   @media only screen and (max-width: 1140px) {
     .left-section {
       min-width: auto;
-      margin: 0 0 0 $margin-size-small;
+      margin: 0 $margin-size-small;
     }
 
     .header-container {
@@ -73,7 +73,7 @@ $min-width-sides: 345px;
 
     .right-section {
       min-width: auto;
-      margin: 0 $margin-size-small 0 0;
+      margin: 0 $margin-size-small;
     }
   }
 }

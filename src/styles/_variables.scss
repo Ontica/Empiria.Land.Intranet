@@ -61,6 +61,20 @@ $text-bold: lighten($text-color, 3%);
 $text-italic: italic;
 
 //
+// Layout
+//
+// $layout-gradient-initial-color: $primary-color-dark;
+// $layout-gradient-final-color: $primary-color;
+// $layout-secondary-color: $warning-color;
+// $layout-secondary-color-dark: $warning-color-dark;
+$layout-gradient-initial-color: $warning-color-dark;
+$layout-gradient-final-color: $warning-color;
+$layout-secondary-color: $secondary-color;
+$layout-secondary-color-dark: $secondary-color-dark;
+$toolbar-item-size: 35px;
+$toolbar-icon-size: 32px;
+
+//
 // Elements colors
 //
 $selected-item-text-color: $text-color;

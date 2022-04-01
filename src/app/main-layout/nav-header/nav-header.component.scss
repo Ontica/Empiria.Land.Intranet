@@ -7,13 +7,9 @@
 
 @import "../../../styles/general-styles";
 
-$header-color-gradient-initial: $warning-color-dark;
-$header-color-gradient-final: $warning-color;
-$menu-bar-color: $primary-color;
-
 .header {
-  background: -prefix-linear-gradient(top, $header-color-gradient-initial, $header-color-gradient-final);
-  background: linear-gradient(to top, $header-color-gradient-initial, $header-color-gradient-final);
+  background: -prefix-linear-gradient(top, $layout-gradient-initial-color, $layout-gradient-final-color);
+  background: linear-gradient(to top, $layout-gradient-initial-color, $layout-gradient-final-color);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
   min-height: 56px;
   display: flex;
@@ -60,7 +56,7 @@ $menu-bar-color: $primary-color;
 .menu-bar {
   @include row;
 
-  background: $menu-bar-color;
+  background: $layout-secondary-color;
   align-items: center;
   justify-content: space-between;
   padding: 8px 36px;
@@ -71,8 +67,8 @@ $menu-bar-color: $primary-color;
   }
 
   &.menu-bar-priority {
-    background: -prefix-linear-gradient(top, $header-color-gradient-initial, $header-color-gradient-final);
-    background: linear-gradient(to top, $header-color-gradient-initial, $header-color-gradient-final);
+    background: -prefix-linear-gradient(top, $layout-gradient-initial-color, $layout-gradient-final-color);
+    background: linear-gradient(to top, $layout-gradient-initial-color, $layout-gradient-final-color);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
   }
 }
@@ -99,15 +95,15 @@ a:hover {
 button.btn-header {
   @include input-button-settings;
 
-  text-transform: none;
-  background-color: rgba($secondary-color, 25%);
+  text-transform: uppercase;
+  background-color: rgba($layout-secondary-color, 25%);
   color: $white;
   min-width: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 16px;
-  height: 40px;
+  height: $toolbar-item-size;
   border-radius: 3px;
 
   .mat-icon {
@@ -121,7 +117,7 @@ button.btn-header:last-child {
 }
 
 button.btn-header:hover {
-  background-color: rgba($secondary-color, 55%);
+  background-color: rgba($layout-secondary-color, 55%);
   transition: 0.3s ease-out;
 }
 

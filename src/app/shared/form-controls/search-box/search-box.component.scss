@@ -5,20 +5,18 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
+@import '../../../../styles/variables';
+
 .container {
   min-width: 200px;
-  height: 35px;
+  height: $toolbar-item-size;
   position: relative;
 }
 
 .container input {
   padding-left: 8px;
   transition: 0.5s ease-out;
-  height: 35px;
+  height: $toolbar-item-size;
   margin-top: 0;
   margin-bottom: 0;
-}
-
-.container .input-icon {
-  top: calc(50% - 0.45em);
 }

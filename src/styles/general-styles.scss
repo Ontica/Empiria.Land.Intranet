@@ -42,6 +42,34 @@ table td:last-child {
   box-shadow: 1px 2px 2px $icon-color;
 }
 
+button {
+  @keyframes spinner {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  &.spinner {
+    filter: brightness(60%);
+  }
+
+  &.spinner::before {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    border-top-color: #000;
+    animation: spinner 0.8s linear infinite;
+  }
+}
+
 button:focus {
   outline: 0;
 }
@@ -100,15 +128,15 @@ button.btn-warning:hover {
   transition: 0.3s ease-out;
 }
 
-button.btn-secondary {
+button.btn-login {
   @include input-button-settings;
 
-  background-color: $secondary-color;
+  background-color: $layout-secondary-color;
   color: $white;
 }
 
-button.btn-secondary:hover {
-  background-color: $secondary-color-dark;
+button.btn-login:hover {
+  background-color: $layout-secondary-color-dark;
   transition: 0.3s ease-out;
 }
 
@@ -175,10 +203,23 @@ input:focus {
   border: $selected-control-border;
 }
 
+.input-icon-container {
+  position: relative;
+  height: $control-height;
+  width: 100%;
+
+  input {
+    padding-right: 30px;
+    margin: 0;
+  }
+}
+
 .input-icon {
   position: absolute;
+  top: 0;
   right: 14px;
-  top: calc(50% - 0.4em);
+  bottom: 0;
+  margin: auto;
   color: $icon-color;
 }
 

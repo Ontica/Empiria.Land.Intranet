@@ -26,8 +26,8 @@ $logo-padding: 20px;
   display: flex;
   align-items: center;
   height: 100%;
-  background: -prefix-linear-gradient(top, $warning-color-dark, $warning-color);
-  background: linear-gradient(to top, $warning-color-dark, $warning-color);
+  background: -prefix-linear-gradient(top, $layout-gradient-initial-color, $layout-gradient-final-color);
+  background: linear-gradient(to top, $layout-gradient-initial-color, $layout-gradient-final-color);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
 }
 
@@ -55,7 +55,7 @@ $logo-padding: 20px;
   padding: 30px $logo-padding;
   font-size: 14.5pt;
   text-transform: uppercase;
-  color: $secondary-color-dark;
+  color: $layout-secondary-color-dark;
   line-height: 16pt;
 }
 
@@ -104,14 +104,14 @@ label {
 }
 
 .inline-error {
-  width: $logo-width - 10px;
+  width: $logo-width;
   min-height: 30px;
-  color: $secondary-color-dark;
+  color: $layout-secondary-color-dark;
   font-size: 10pt;
   font-weight: 400;
   margin: 0 8px 12px 0;
   padding: 4px;
-  border: 1px solid $secondary-color-dark;
+  border: 1px solid $layout-secondary-color-dark;
   border-radius: 2px;
 }
 
