@@ -129,6 +129,7 @@ export class SessionService {
 
   private setPrincipalFromLocalStorage() {
     const sessionToken = this.getSessionToken();
+    Assertion.assertValue(sessionToken.accessToken, 'sessionToken.accessToken');
 
     if (!!sessionToken && !!sessionToken.accessToken) {
       const identity =  this.localStorage.get<Identity>('identity') ?? null;
