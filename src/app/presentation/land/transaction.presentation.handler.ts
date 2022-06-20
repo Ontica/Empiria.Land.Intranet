@@ -345,7 +345,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
       case CommandType.DOWNLOAD_INSTRUMENT_FILE:
         return toPromise<T>(
-          this.fileDownload.download(command.payload.file.url, command.payload.file.name)
+          this.fileDownload.downloadWithProgress(command.payload.file.url, command.payload.file.name)
         );
 
       case CommandType.EXECUTE_WORKFLOW_COMMAND:

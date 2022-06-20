@@ -12,7 +12,7 @@ import { Assertion, Exception, SessionService } from '@app/core';
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
 import { NavigationHeader, DefaultNavigationHeader, buildNavigationHeader, Layout, View, DefaultView,
-         ViewActionType} from '@app/main-layout/common-models';
+         ViewActionType } from '@app/main-layout/common-models';
 
 import { APP_LAYOUTS, APP_VIEWS, TOOL, TOOLS_LIST } from '@app/main-layout/config-data';
 
@@ -26,12 +26,12 @@ export enum ActionType {
 
 
 export enum SelectorType {
-  LAYOUT            = 'Empiria.UI-Item.MainUserInterface.Layout',
-  NAVIGATION_HEADER = 'Empiria.UI-Item.MainUserInterface.NavigationHeader',
-  CURRENT_VIEW      = 'Empiria.UI-Item.MainUserInterface.CurrentView',
-  VIEW_ACTION       = 'Empiria.UI-Item.MainUserInterface.ViewAction',
-  IS_PROCESSING     = 'Empiria.UI-Item.MainUserInterface.IsProcessing',
-  TOOL_SELECTED     = 'Empiria.UI-Item.MainUserInterface.ToolSelected',
+  LAYOUT              = 'Empiria.UI-Item.MainUserInterface.Layout',
+  NAVIGATION_HEADER   = 'Empiria.UI-Item.MainUserInterface.NavigationHeader',
+  CURRENT_VIEW        = 'Empiria.UI-Item.MainUserInterface.CurrentView',
+  VIEW_ACTION         = 'Empiria.UI-Item.MainUserInterface.ViewAction',
+  IS_PROCESSING       = 'Empiria.UI-Item.MainUserInterface.IsProcessing',
+  TOOL_SELECTED       = 'Empiria.UI-Item.MainUserInterface.ToolSelected',
 }
 
 
@@ -151,7 +151,6 @@ export class MainLayoutPresentationHandler extends AbstractPresentationHandler {
       this.setValue(SelectorType.LAYOUT, value);
     }
   }
-
 
 
   private setNavigationHeader(value: NavigationHeader | View) {
