@@ -8,7 +8,6 @@
 import { Identifiable } from './core-types';
 
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Contact extends Identifiable {
 
 }
