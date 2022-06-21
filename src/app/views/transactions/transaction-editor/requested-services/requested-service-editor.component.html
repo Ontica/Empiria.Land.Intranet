@@ -6,7 +6,6 @@
       <div [fxFlex]="100/4">
         <label>Tipo:</label>
         <emp-ng-select formControlName="serviceType"
-          [config]="{ clearable: false }"
           [items]="providedServiceTypeList"
           [showError]="getFormControl('serviceType').touched &&
             getFormControl('serviceType').invalid"
@@ -16,7 +15,6 @@
       <div [fxFlex]="100/2">
         <label>Concepto:</label>
         <emp-ng-select formControlName="service"
-          [config]="{ clearable: false }"
           [items]="providedServiceList"
           [placeholder]="getFormControl('serviceType').value === null ? 'Seleccione el tipo de concepto' : 'Seleccione'"
           [showError]="getFormControl('service').touched &&
@@ -28,7 +26,7 @@
         <label>Fundamento:</label>
         <emp-ng-select formControlName="feeConcept"
           [bindLabel]="'legalBasis'"
-          [config]="{ clearable: false, autoSelect: true }"
+          [config]="{ autoSelect: true }"
           [items]="serviceSelected.feeConcepts"
           [placeholder]="getFormControl('service').value === null ? 'Seleccione el concepto' : 'Seleccione'"
           [showError]="getFormControl('feeConcept').touched && getFormControl('feeConcept').invalid"

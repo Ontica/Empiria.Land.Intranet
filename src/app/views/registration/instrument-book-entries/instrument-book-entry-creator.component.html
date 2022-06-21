@@ -7,7 +7,6 @@
       <div [fxFlex]="100/3">
         <label>Registrar en:</label>
         <emp-ng-select [formControlName]="controls.recorderOffice"
-          [config]="{ clearable: false }"
           [items]="recorderOfficeList"
           [showError]="formHandler.showInvalidControl(controls.recorderOffice)">
         </emp-ng-select>
@@ -15,7 +14,6 @@
       <div [fxFlex]="100/3">
         <label>Sección/Libro:</label>
         <emp-ng-select [formControlName]="controls.recordingSection"
-          [config]="{ clearable: false }"
           [items]="recordingSectionList"
           [showError]="formHandler.showInvalidControl(controls.recordingSection)">
         </emp-ng-select>

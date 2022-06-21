@@ -7,7 +7,6 @@
       <div [fxFlex]="widthFirstColumn">
         <label>Tipo de acto:</label>
         <emp-ng-select [formControlName]="controls.recordingActTypeGroup"
-          [config]="{ clearable: false }"
           [items]="recordingActTypeGroupList"
           [showError]="formHandler.showInvalidControl(controls.recordingActTypeGroup)"
           (changes)="onRecordingActTypeGroupChange($event)">
@@ -17,7 +16,6 @@
       <div fxFlex class="resizable-field-width">
         <label class="ellipsis">Acto jurídico a registrar:</label>
         <emp-ng-select [formControlName]="controls.recordingActType"
-          [config]="{ clearable: false }"
           [items]="recordingActTypeList"
           [placeholder]="recordingActTypeList.length === 0 ? 'Seleccione el tipo de acto' : 'Seleccione'"
           [showError]="formHandler.showInvalidControl(controls.recordingActType)" [style.width.%]="100"
@@ -38,7 +36,6 @@
       <div [fxFlex]="widthFirstColumn">
         <label>Sobre:</label>
         <emp-ng-select [formControlName]="controls.registrationCommand"
-          [config]="{ clearable: false }"
           [items]="registrationCommands"
           [placeholder]="registrationCommands.length === 0 ? 'Seleccione el acto jurídico a registrar' : 'Seleccione'"
           [showError]="formHandler.showInvalidControl(controls.registrationCommand)"
@@ -57,7 +54,8 @@
               del cual se va a desprender la fracción</ng-container>:
           </label>
           <emp-ng-select [formControlName]="controls.recordableSubject"
-            [config]="{ hideSelected: true,
+            [config]="{ clearable: true,
+                        hideSelected: true,
                         minTermLength: recordableSubjectMinTermLength,
                         dropdownPosition: 'top'  }"
             [items]="recordableSubjectList$ | async"
@@ -103,11 +101,12 @@
         <label class="ellipsis">Acto jurídico a cancelar o modificar:</label>
 
         <emp-ng-select [formControlName]="controls.amendmentRecordingActUID"
-          bindValue="recordingActUID"
+          [items]="tractIndexSelected.tractIndex"
+          [config]="{clearable: true}"
           [placeholder]="formHandler.showInvalidControl(controls.recordableSubject) ?
             'Seleccione el folio real' : 'Seleccione'"
-          [items]="tractIndexSelected.tractIndex"
-          [showError]="formHandler.showInvalidControl(controls.amendmentRecordingActUID)">
+          [showError]="formHandler.showInvalidControl(controls.amendmentRecordingActUID)"
+          bindValue="recordingActUID">
 
             <ng-template #labelTemplate let-item="item">
               {{item.recordingActName}}
@@ -194,7 +193,6 @@
 
         <emp-ng-select [formControlName]="controls.partitionType"
           bindValue="name"
-          [config]="{ clearable: false }"
           [items]="partitionKindList"
           [showError]="formHandler.showInvalidControl(controls.partitionType)">
         </emp-ng-select>

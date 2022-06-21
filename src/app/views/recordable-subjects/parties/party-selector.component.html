@@ -5,7 +5,8 @@
       <label fxFlex="60px">Buscar:</label>
 
       <emp-ng-select
-        [config]="{bindByValue: false,
+        [config]="{clearable: true,
+                   bindByValue: false,
                    addTag: true,
                    addTagText: 'Agregar Persona'}"
         [bindLabel]="'fullName'"
@@ -35,7 +36,7 @@
       </emp-ng-select>
 
       <emp-ng-select
-        [config]="{bindByValue: false}"
+        [config]="{clearable: true, bindByValue: false}"
         [items]="typesList"
         bindLabel="typeName"
         bindValue="type"

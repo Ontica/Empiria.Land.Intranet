@@ -7,9 +7,8 @@
       <div [fxFlex]="100/3">
         <label>Operación:</label>
         <emp-ng-select [formControlName]="controls.command"
-          [bindValue]="'type'"
-          [config]="{ clearable: false }"
           [items]="applicableCommandsList"
+          [bindValue]="'type'"
           [showError]="formHandler.showInvalidControl(controls.command)"
           (changes)="commandChange($event)">
         </emp-ng-select>
@@ -17,15 +16,17 @@
 
       <div *ngIf="requiredNextStatusField" [fxFlex]="100/3">
         <label>Nuevo estado:</label>
-        <emp-ng-select [formControlName]="controls.nextStatus" [bindValue]="'type'" [config]="{ clearable: false }"
+        <emp-ng-select [formControlName]="controls.nextStatus"
           [items]="commandSelected.nextStatus" [showError]="formHandler.showInvalidControl(controls.nextStatus)"
+          [bindValue]="'type'"
           (changes)="statusChange($event)">
         </emp-ng-select>
       </div>
 
       <div *ngIf="requiredNextUserField" [fxFlex]="100/3">
         <label>{{labelNextUser}}</label>
-        <emp-ng-select [formControlName]="controls.nextUser" [config]="{ clearable: false }" [items]="statusSelected.users"
+        <emp-ng-select [formControlName]="controls.nextUser"
+          [items]="statusSelected.users"
           [placeholder]="statusSelected.type === 'None' ? 'Seleccione el nuevo estado' : 'Seleccione'"
           [showError]="formHandler.showInvalidControl(controls.nextUser)">
         </emp-ng-select>

@@ -9,7 +9,6 @@
         <label>Tipo de acto jurídico:</label>
 
         <emp-ng-select [formControlName]="controls.typeUID"
-          [config]="{ clearable: false }"
           [items]="recordingAct.actions.editionValues.recordingActTypes"
           [showError]="formHandler.showInvalidControl(controls.typeUID)">
         </emp-ng-select>
@@ -21,7 +20,7 @@
         <label>Clasificación del acto jurídico:</label>
 
         <emp-ng-select [formControlName]="controls.kind"
-          [config]="{ bindByValue: false, clearable: false }"
+          [config]="{ bindByValue: false }"
           [bindLabel]="null"
           [items]="recordingAct.actions.editionValues.kinds"
           [placeholder]="recordingAct.actions.editableFields.includes('Kinds') ?
@@ -57,7 +56,6 @@
           <div [fxFlex]="60" [fxFlex.lt-md]="100" fxLayoutAlign="start end">
 
             <emp-ng-select [formControlName]="controls.currencyUID"
-              [config]="{ clearable: false }"
               [items]="recordingAct.actions.editionValues.currencies"
               [placeholder]="recordingAct.actions.editableFields.includes('OperationAmount') ?
                 'Seleccionar': 'No aplica'"
@@ -115,7 +113,6 @@
             [formControlName]="controls.status"
             bindLabel="statusName"
             bindValue="status"
-            [config]="{ clearable: false }"
             [items]="statusList"
             [showError]="formHandler.showInvalidControl(controls.status)"
             [style.width.px]="125"

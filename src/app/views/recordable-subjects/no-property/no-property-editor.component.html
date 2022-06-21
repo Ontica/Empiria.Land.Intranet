@@ -19,7 +19,6 @@
       <div fxFlex="290px">
         <label>Distrito:</label>
         <emp-ng-select [formControlName]="controls.recorderOfficeUID"
-          [config]="{ clearable: false }"
           [items]="recorderOfficeList"
           [showError]="formHandler.showInvalidControl(controls.recorderOfficeUID)">
         </emp-ng-select>
@@ -33,7 +32,6 @@
         <label>Tipo:</label>
         <emp-ng-select
           [formControlName]="controls.kind"
-          [config]="{ clearable: false }"
           [bindValue]="'name'"
           [items]="kindsList"
           [showError]="formHandler.showInvalidControl(controls.kind)">
@@ -81,7 +79,6 @@
             [formControlName]="controls.status"
             bindLabel="statusName"
             bindValue="status"
-            [config]="{ clearable: false }"
             [items]="statusList"
             [showError]="formHandler.showInvalidControl(controls.status)"
             (changes)="onStatusChange($event)"

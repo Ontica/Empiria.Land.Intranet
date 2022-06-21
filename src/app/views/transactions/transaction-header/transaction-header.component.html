@@ -29,7 +29,6 @@
       <div [fxFlex]="100/3">
         <label>Tipo de trámite:</label>
         <emp-ng-select formControlName="type"
-          [config]="{ clearable: false }"
           [items]="transactionTypeList"
           [showError]="getFormControl('type').touched && getFormControl('type').invalid"
           (changes)="transactionTypeChange($event)">
@@ -38,7 +37,6 @@
       <div [fxFlex]="100/3">
         <label>Tipo de documento:</label>
         <emp-ng-select formControlName="subtype"
-          [config]="{ clearable: false }"
           [placeholder]="getFormControl('type').value === null ? 'Seleccione el tipo de trámite' : 'Seleccione'"
           [showError]="getFormControl('subtype').touched && getFormControl('subtype').invalid"
           [items]="transactionSubtypeList">
@@ -56,6 +54,7 @@
       <div fxFlex>
         <label>Tramitado por:</label>
         <emp-ng-select formControlName="agency"
+          [config]="{clearable: true}"
           [showError]="getFormControl('agency').touched && getFormControl('agency').invalid"
           [items]="agencyList">
         </emp-ng-select>
@@ -63,7 +62,6 @@
       <div [fxFlex]="100/3">
         <label>Distrito:</label>
         <emp-ng-select formControlName="filingOffice"
-          [config]="{ clearable: false }"
           [items]="filingOfficeList"
           [showError]="getFormControl('filingOffice').touched && getFormControl('filingOffice').invalid">
         </emp-ng-select>

@@ -9,7 +9,6 @@
       <div [fxFlex]="100/3">
         <label>Tipo de instrumento:</label>
         <emp-ng-select [formControlName]="controls.type"
-          [config]="{ clearable: false }"
           [bindLabel]="'typeName'"
           [bindValue]="'type'"
           [items]="instrumentTypesList"
@@ -48,7 +47,7 @@
             <label *ngSwitchDefault>Notaría:</label>
           </ng-container>
           <emp-ng-select [formControlName]="controls.issuer"
-            [config]="{ hideSelected: true, minTermLength: issuerMinTermLength }"
+            [config]="{ clearable: true, hideSelected: true, minTermLength: issuerMinTermLength }"
             [items]="issuerList$ | async"
             [typeahead]="issuerInput$"
             [loading]="issuerLoading">
@@ -122,8 +121,9 @@
           </ng-container>
 
           <emp-ng-select [formControlName]="controls.kind"
-            [bindValue]="'name'"
             [items]="instrumentKindsList"
+            [config]="{clearable: true}"
+            [bindValue]="'name'"
             [showError]="formHandler.showInvalidControl(controls.kind)">
           </emp-ng-select>
         </div>
@@ -215,7 +215,6 @@
 
           <emp-ng-select
             [formControlName]="controls.status"
-            [config]="{ clearable: false }"
             [items]="statusList"
             [showError]="formHandler.showInvalidControl(controls.status)">
           </emp-ng-select>

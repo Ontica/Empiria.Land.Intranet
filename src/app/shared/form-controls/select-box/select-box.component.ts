@@ -24,16 +24,20 @@ export interface SelectBoxConfig {
   autoSelect?: boolean;
   bindByValue?: boolean;
   clearable?: boolean;
+  clearAllText?: string;
   closeOnSelect?: boolean;
   dropdownPosition?: DropdownPosition;
   groupBy?: string;
   hideSelected?: boolean;
+  loadingText?: string;
   minTermLength?: number;
   multiple?: boolean;
   notFoundText?: string;
   searchable?: boolean;
+  selectFirst?: boolean;
   typeToSearchText?: string;
   virtualScroll?: boolean;
+  searchableFields?: string[];
 }
 
 
@@ -43,17 +47,21 @@ const DefaultSelectBoxConfig: SelectBoxConfig = {
   appendTo: 'body',
   autoSelect: false,
   bindByValue: true,
-  clearable: true,
+  clearable: false,
+  clearAllText: 'Limpiar todo',
   closeOnSelect: true,
   dropdownPosition: 'auto',
   groupBy: null,
   hideSelected: false,
+  loadingText: 'Cargando',
   minTermLength: 5,
   multiple: false,
   notFoundText: 'No se encontraron registros',
   searchable: true,
-  typeToSearchText: 'Por favor ingrese 5 o mas caracteres',
+  selectFirst: false,
+  typeToSearchText: 'Favor de ingresar 5 o más caracteres',
   virtualScroll: false,
+  searchableFields: ['name']
 };
 
 
@@ -74,6 +82,8 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
   @ContentChild('labelTemplate', { read: TemplateRef }) labelTemplate: TemplateRef<any>;
   @ContentChild('groupTemplate', { read: TemplateRef }) groupTemplate: TemplateRef<any>;
   @ContentChild('optionTemplate', { read: TemplateRef }) optionTemplate: TemplateRef<any>;
+  @ContentChild('headerTemplate', { read: TemplateRef }) headerTemplate: TemplateRef<any>;
+  @ContentChild('footerTemplate', { read: TemplateRef }) footerTemplate: TemplateRef<any>;
 
   @Input() items: any[];
   @Input() bindLabel = 'name';
@@ -95,7 +105,7 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
   @Output() clear = new EventEmitter<boolean>();
   @Output() changes = new EventEmitter<any>();
   @Output() search = new EventEmitter<any>();
-  @Output() onfocus = new EventEmitter<any>();
+  @Output() unfocus = new EventEmitter<any>();
 
   selectBoxConfig = DefaultSelectBoxConfig;
 
@@ -104,6 +114,7 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
 
   disabled: boolean;
   value: any = null;
+  useCustomSearchFn = false;
 
   ngOnInit() {
     window.addEventListener('scroll', this.onScroll, true);
@@ -111,8 +122,14 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.items && this.selectBoxConfig.autoSelect) {
-      this.selectItemIfUnique();
+    if (changes.items) {
+      if (this.selectBoxConfig.autoSelect) {
+        this.selectItemIfUnique();
+      }
+      if (this.selectBoxConfig.selectFirst) {
+        this.selectFirstItem();
+      }
+      this.setSearchField();
     }
   }
 
@@ -142,7 +159,8 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
 
     if (Array.isArray(event)) {
       value = event.map(item => this.selectBoxConfig.bindByValue && this.bindValue ?
-                                item[this.bindValue] : item);
+                                item[this.bindValue] :
+                                item);
     } else if (event) {
       value = this.selectBoxConfig.bindByValue && this.bindValue ? event[this.bindValue] : event;
     }
@@ -164,28 +182,36 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
   }
 
   onBlur(event) {
-    this.onfocus.emit(event);
+    this.unfocus.emit(event);
   }
 
-  selectItemIfUnique() {
+  customSearchFn(term: string, item: any) {
+    return item?.search_field?.toLowerCase().includes(term.toLowerCase());
+  }
+
+  private selectItemIfUnique() {
     if (this.items.length !== 1 || this.value !== null) {
       return;
     }
 
-    setTimeout(() => {
-      this.onChangedEvent(this.items[0]);
-      this.writeValue(this.selectBoxConfig.bindByValue && this.bindValue ?
-                      this.items[0][this.bindValue] : this.items[0]);
-    }, 100);
+    this.selectFirstItem();
   }
 
+  private selectFirstItem() {
+    setTimeout(() => {
+      if (this.items.length > 0) {
+        this.onChangedEvent(this.items[0]);
+        this.writeValue(this.selectBoxConfig.bindByValue && this.bindValue ?
+                        this.items[0][this.bindValue] : this.items[0]);
+      }
+    }, 100);
+  }
 
   private onResize = (event: any) => {
     if (this.select && this.select.isOpen) {
       this.select.close();
     }
-  }
-
+  };
 
   private onScroll = (event: any) => {
     const autoscroll = event.srcElement.classList.contains('ng-dropdown-panel-items');
@@ -194,6 +220,18 @@ export class SelectBoxComponent implements OnInit, OnChanges, OnDestroy, Control
 
     if (this.select && this.select.isOpen && !autoscroll && !inputOverflow) {
       this.select.close();
+    }
+  };
+
+  private setSearchField() {
+    this.useCustomSearchFn = this.selectBoxConfig.searchableFields.length > 1 && this.items?.length > 0;
+    if (this.useCustomSearchFn) {
+      this.items = this.items.map(item => {
+        item.search_field = '';
+        this.selectBoxConfig.searchableFields.forEach(field => item.search_field += item[field] + ' ');
+        item.search_field = item.search_field.trimEnd();
+        return item;
+      });
     }
   }
 

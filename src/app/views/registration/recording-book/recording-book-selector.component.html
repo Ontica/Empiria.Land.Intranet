@@ -12,7 +12,6 @@
         <emp-ng-select
           [(ngModel)]="recorderOfficeSelected" name="recorderOffice"
           [config]="{ bindByValue: false,
-                      clearable: false,
                       dropdownPosition: selectorPosition }"
           [items]="recorderOfficeList"
           [required]="fieldsRequired"
@@ -28,7 +27,6 @@
 
         <emp-ng-select [(ngModel)]="recordingSectionSelected" name="recordingSection"
           [config]="{ bindByValue: false,
-                      clearable: false,
                       dropdownPosition: selectorPosition }"
           [items]="recordingSectionList"
           [required]="fieldsRequired"
@@ -44,7 +42,8 @@
         <label>Volumen:</label>
 
         <emp-ng-select [(ngModel)]="recordingBookSelected" name="recordingBook"
-          [config]="{ bindByValue: false,
+          [config]="{ clearable: true,
+                      bindByValue: false,
                       dropdownPosition: selectorPosition,
                       hideSelected: true,
                       minTermLength: recordingBookMinTermLength }"
@@ -79,7 +78,8 @@
 
           <emp-ng-select name="recordingBookEntry" *ngIf="!bookEntryInput"
             [(ngModel)]="recordingBookEntrySelected"
-            [config]="{ bindByValue: false,
+            [config]="{ clearable: true,
+                        bindByValue: false,
                         dropdownPosition: selectorPosition }"
             bindLabel="recordingNo"
             [disabled]="!isReadyToFilterRecordingBook"

@@ -44,7 +44,6 @@
       <div fxFlex="290px">
         <label>Distrito:</label>
         <emp-ng-select #districtControl [formControlName]="controls.recorderOfficeUID"
-          [config]="{ clearable: false }"
           [items]="recorderOfficeList"
           [showError]="formHandler.showInvalidControl(controls.recorderOfficeUID)"
           (changes)="onRecorderOfficeChange($event)">
@@ -54,7 +53,6 @@
       <div fxFlex="70">
         <label>Municipio:</label>
         <emp-ng-select [formControlName]="controls.municipalityUID"
-          [config]="{ clearable: false }"
           [items]="municipalityList"
           [placeholder]="municipalityList.length === 0 ? 'Seleccione el distrito' : 'Seleccione'"
           [showError]="formHandler.showInvalidControl(controls.municipalityUID)">
@@ -68,7 +66,6 @@
       <div fxFlex="290px">
         <label>Tipo de predio:</label>
         <emp-ng-select [formControlName]="controls.kind"
-          [config]="{ clearable: false }"
           [bindValue]="'name'"
           [items]="realEstateKindList"
           [showError]="formHandler.showInvalidControl(controls.kind)">
@@ -83,7 +80,6 @@
 
       <div fxFlex="175px" fxLayoutAlign="start end">
         <emp-ng-select [formControlName]="controls.lotSizeUnitUID"
-          [config]="{ clearable: false }"
           [items]="lotSizeUnitList"
           [showError]="formHandler.showInvalidControl(controls.lotSizeUnitUID)"
           [style.width.%]="100">
@@ -138,7 +134,6 @@
             [formControlName]="controls.status"
             bindLabel="statusName"
             bindValue="status"
-            [config]="{ clearable: false }"
             [items]="statusList"
             [showError]="formHandler.showInvalidControl(controls.status)"
             (changes)="onStatusChange($event)"
