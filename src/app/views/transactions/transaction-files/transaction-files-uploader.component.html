@@ -13,7 +13,7 @@
           [readonly]="!canEdit"
           (fileControlEvent)="submitInstrumentFileEvent($event, 'InstrumentMainFile')"
           [config]="{textAccion: 'Agregar archivo PDF con el instrumento',
-                     fileTypes: 'pdf' }">
+                     filesTypes: ['pdf']}">
 
         </emp-ng-file-control>
       </div>
@@ -25,7 +25,7 @@
           [readonly]="!canEdit"
           (fileControlEvent)="submitInstrumentFileEvent($event, 'InstrumentAuxiliaryFile')"
           [config]="{textAccion: 'Agregar archivo PDF con el anexo',
-                     fileTypes: 'pdf'}">
+                     filesTypes: ['pdf']}">
 
         </emp-ng-file-control>
 

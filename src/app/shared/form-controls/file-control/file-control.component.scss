@@ -7,14 +7,23 @@
 
 @import "../../../../styles/general-styles";
 
-$area-height: 36px;
-$area-width: 36px;
+$area-height: 30px;
+$area-width: 30px;
+$tag-area-width: 225px;
 $line-height: 24px;
-$space: 5px;
+$space: 4px;
 $border-radius: 3px;
 
-input[type=file] {
+input[type="file"] {
   display: none;
+}
+
+.mat-icon {
+  cursor: pointer;
+}
+
+.mat-icon:hover {
+  color: $icon-color-dark;
 }
 
 .overlay-menu {
@@ -49,16 +58,20 @@ input[type=file] {
 .file-menu-btn {
   width: $area-width;
   height: $area-height;
-  padding: calc(( #{$area-width} - #{$line-height} ) / 2);
+  padding: calc((#{$area-width} - #{$line-height}) / 2);
+}
+
+.file-menu-btn-right {
+  margin-right: 8px;
 }
 
 .file-drop-area {
   display: flex;
   flex-wrap: wrap;
-  padding: $space 10px !important;
+  padding: $space $space * 2;
   border-radius: $border-radius;
-  margin-right: 8px;
-  border: dashed 1px $border-color-dark !important;
+  margin: $control-margin;
+  border: dashed 1px $border-color-dark;
   min-height: $area-height + 4 * $space + 2;
 
   .file-area {
@@ -70,7 +83,7 @@ input[type=file] {
     &.show-info {
       width: 100%;
 
-      &.multiple {
+      &.multiple:not(.tag-required) {
         width: calc(100% / 3);
       }
     }
@@ -94,7 +107,7 @@ input[type=file] {
 
     .file-info {
       margin: auto 0;
-      width: calc(100% - 2 * #{$area-width} - #{$space});
+      width: calc(100% - 2 * #{$area-width} - 3 * #{$space});
 
       p {
         width: auto;
@@ -109,28 +122,66 @@ input[type=file] {
     .file-download-progress {
       padding-top: $space;
     }
-  }
 
-  .file-add {
-    border: solid 1px $border-color-dark !important;
-    border-radius: $border-radius;
-    width: $area-width;
-    height: $area-height;
-    padding: calc(( #{$area-width} - #{$line-height} ) / 2 - 1px);
-    margin: $space 0;
+    &.tag-required:not(:last-child) {
+      border-bottom: dashed 1px $border-color-dark;
+      border-radius: 0;
+    }
 
-    label {
-      display: flex;
-      font-size: $line-height;
-      line-height: $line-height;
+    &.tag-required .file-info {
+      width: calc(100% - 2 * #{$area-width} - #{$tag-area-width} - 3 * #{$space});
     }
   }
 
-  .placeholder {
-    color: $border-color-dark;
-    font-size: 9pt;
-    margin: auto 0;
-    padding-left: $space;
+  .file-add-section {
+    display: flex;
+    width: 100%;
+
+    .file-add {
+      border: solid 1px $border-color-dark;
+      border-radius: $border-radius;
+      width: $area-width;
+      height: $area-height;
+      padding: calc((#{$area-width} - #{$line-height}) / 2 - 1px);
+      margin: $space 0;
+
+      label {
+        display: flex;
+        font-size: $line-height;
+        line-height: $line-height;
+      }
+    }
+
+    .placeholder {
+      color: $border-color-dark;
+      width: calc(100% - #{$area-width});
+      font-size: 9pt;
+      margin: auto 0;
+      padding-left: $space;
+    }
+
+    .placeholder-tag-required {
+      width: calc(100% - #{$area-width} - #{$tag-area-width});
+    }
+
+    &.multiple:not(.tag-required) {
+      width: calc(100% / 3);
+
+      .placeholder {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.file-tag-container {
+  width: $tag-area-width;
+  min-height: 18px;
+  align-self: center;
+
+  .tag-info {
+    text-align: center;
+    margin: 0 0 0 auto;
   }
 }
 
