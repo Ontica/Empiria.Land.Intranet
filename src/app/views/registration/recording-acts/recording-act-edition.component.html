@@ -25,9 +25,11 @@
 
       </emp-land-party-list>
 
-      <emp-ng-expansion-button *ngIf="recordingAct.actions.isEditable" [panelState]="panelAddState" (panelStateChange)="onPanelEstateChange($event)"
+      <emp-ng-expansion-button *ngIf="recordingAct.actions.isEditable"
+        [panelState]="panelAddState"
         [config]="{ textButtonOpen: 'Agregar una nueva persona u organización a este acto jurídico',
-                    textButtonClose: 'Cancelar registro'}">
+                    textButtonClose: 'Cancelar registro'}"
+        (panelStateChange)="onPanelEstateChange($event)">
 
 
         <ng-container *ngIf="panelAddState">
@@ -52,8 +54,6 @@
         </ng-container>
 
       </emp-ng-expansion-button>
-
-      <br>
 
     </ng-container>
 

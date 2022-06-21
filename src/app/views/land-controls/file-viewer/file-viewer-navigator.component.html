@@ -8,8 +8,10 @@
         Ir al archivo:
       </div>
 
-      <emp-ng-select [(ngModel)]="selectedIndex" fxFlex="100px" bindValue="value" bindLabel="value"
-        [config]="{ clearable: false }" [items]="pagesList" (changes)="selectFileByIndex($event.value)">
+      <emp-ng-select fxFlex="100px" bindValue="value" bindLabel="value"
+        [(ngModel)]="selectedIndex"
+        [items]="pagesList"
+        (changes)="selectFileByIndex($event.value)">
 
       </emp-ng-select>
 

@@ -29,15 +29,13 @@
       [config]="{textButtonOpen: 'Registrar un acto jurídico',
                  textButtonClose: 'Cancelar registro'}">
 
-    <emp-land-recording-act-creator *ngIf="panelAddState"
-      [instrumentRecording]="instrumentRecording"
-      [recordingActTypeGroupList]="recordingActTypeGroupList"
-      (recordingActCreatorEvent)="onRecordingActCreatorEvent($event)">
-    </emp-land-recording-act-creator>
+      <emp-land-recording-act-creator *ngIf="panelAddState"
+        [instrumentRecording]="instrumentRecording"
+        [recordingActTypeGroupList]="recordingActTypeGroupList"
+        (recordingActCreatorEvent)="onRecordingActCreatorEvent($event)">
+      </emp-land-recording-act-creator>
 
     </emp-ng-expansion-button>
-
-    <br>
 
   </div>
 

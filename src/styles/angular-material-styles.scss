@@ -9,18 +9,43 @@
 
 .mat-icon {
   color: $icon-color;
-  cursor: pointer;
   font-family: "Material Icons" !important;
+
+  &.icon-success {
+    color: $icon-color-success;
+  }
+
+  &.icon-success:hover {
+    color: $icon-color-success;
+  }
+
+  &.icon-warning {
+    color: $icon-color-warning;
+  }
+
+  &.icon-warning:hover {
+    color: $icon-color-warning;
+  }
+
+  &.icon-error {
+    color: $icon-color-error;
+  }
+
+  &.icon-error:hover {
+    color: $icon-color-error;
+  }
 }
 
-button .mat-icon {
-  color: $icon-color-light;
-  cursor: pointer;
-  font-family: "Material Icons" !important;
-}
+a,
+.mat-icon-button,
+.column-action {
+  .mat-icon {
+    cursor: pointer;
+  }
 
-a > .mat-icon:hover {
-  color: $icon-color-dark;
+  .mat-icon:hover {
+    color: $icon-color-dark;
+  }
 }
 
 .material-icons-outlined,
@@ -32,11 +57,16 @@ a > .mat-icon:hover {
 // tabs component
 //
 
+.tab-container {
+  margin: auto 8px 8px auto;
+  width: calc(100% - 9px);
+}
+
 .mat-tab-label {
   height: 42px !important;
   min-width: 120px !important;
   padding: 0 20px !important;
-  color: $secondary-color;
+  color: $secondary-color-dark;
   font-size: 10pt;
   text-transform: uppercase;
   opacity: 1 !important;
@@ -47,7 +77,12 @@ a > .mat-icon:hover {
 }
 
 .mat-tab-label-active {
+  color: $primary-color-dark;
   font-weight: 600 !important;
+}
+
+.mat-tab-header-pagination {
+  z-index: 1 !important;
 }
 
 .mat-tab-group {
@@ -59,19 +94,54 @@ a > .mat-icon:hover {
 }
 
 .mat-ink-bar {
-  background-color: $secondary-color !important;
+  background-color: $title-color  !important;
 }
 
 .mat-tab-group .mat-tab-body {
-  padding: 16px 24px 16px !important;
+  padding: 0;
+}
+
+.mat-tab-body-content {
+  padding: 16px 20px;
 }
 
 //
 // stepper
 //
 
-.mat-step-header .mat-step-icon-selected {
-  background-color: $secondary-color-light;
+.mat-stepper-horizontal, .mat-stepper-vertical {
+  background-color: $white;
+}
+
+.mat-step-icon .mat-icon,
+.mat-step-header .mat-step-icon {
+  color: $white;
+}
+
+.mat-step-header .mat-step-icon-selected,
+.mat-step-header .mat-step-icon-state-done,
+.mat-step-header .mat-step-icon-state-edit {
+  background-color: $primary-color;
+  color: $white;
+}
+
+.mat-step-header .mat-step-label.mat-step-label-active {
+  color: $primary-color-dark;
+}
+
+.mat-step-label-selected {
+  font-weight: 600;
+}
+
+.mat-stepper-horizontal-line {
+  margin: 0 !important;
+}
+
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before,
+[dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::before,
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after,
+[dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::after {
+  display: none !important;
 }
 
 //
@@ -107,6 +177,11 @@ a > .mat-icon:hover {
 //
 // sidebar components
 //
+
+.mat-drawer-container {
+  color: $selected-control-color;
+  background: $background-color-work-area;
+}
 
 .mat-drawer-inner-container::-webkit-scrollbar {
   height: 6px;
@@ -144,18 +219,33 @@ a > .mat-icon:hover {
 //
 
 table.mat-table {
+  background: $white;
   width: 100%;
   margin: 0.5rem 0;
-  font-family: $font-family;
-  font-size: $font-size-hint !important;
+  font-family: $font-family-secondary;
 
   th {
     font-weight: 500;
     padding: 10px 10px 10px 0;
 
+    &.mat-header-cell {
+      border-bottom: 2pt solid $title-color;
+      font-size: $font-size-grid-header;
+      font-family: $font-family;
+    }
+
     &.text-align-right {
       text-align: right;
       justify-content: flex-end;
+    }
+
+    &.text-align-center {
+      text-align: center;
+      justify-content: center;
+    }
+
+    &.column-action-check {
+      width: $grid-row-height;
     }
 
     &:first-of-type {
@@ -170,22 +260,12 @@ table.mat-table {
   td {
     vertical-align: top;
     padding: 10px 10px 10px 0;
+    font-size: $font-size-grid;
 
-    .mat-icon {
-      cursor: pointer;
-    }
-
-    .mat-icon:hover {
-      color: $icon-color-dark;
-    }
-
-    .mat-icon-disabled {
-      color: $icon-color-light;
-      cursor: auto;
-    }
-
-    .mat-icon-disabled:hover {
-      color: $icon-color-light;
+    .mat-icon-button {
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
     }
 
     &:first-of-type {
@@ -205,21 +285,36 @@ table.mat-table {
       padding-bottom: 4px;
     }
 
-    &.padding-icon {
-      padding-top: 4px;
-      padding-bottom: 4px;
+    &.column-action-check {
+      padding: 0;
+      width: $grid-row-height;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    &.column-no-padding {
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
+
+    a.item-link {
+      color: $primary-color-dark;
+    }
+
+    a.item-link:hover {
+      text-decoration: underline;
     }
   }
 
   tr {
-    height: 35px;
+    height: $grid-row-height;
 
     &.mat-header-row,
     &.mat-footer-row {
       height: 30px;
 
       th {
-        color: $secondary-text-color;
+        color: $grid-header-color;
       }
 
       td {
@@ -228,34 +323,34 @@ table.mat-table {
     }
 
     &.mat-header-row {
-      background-color: $primary-color;
+      background-color: $grid-header-background-color;
     }
 
     &.mat-footer-row {
-      background-color: $disabled-color;
+
+      &.text-not-found > td {
+        padding: 1rem;
+      }
+
+      &:not(.text-not-found) {
+        background-color: $grid-footer-background-color;
+      }
     }
 
     &.mat-row {
       background-color: $white;
-
-      &.row-selected {
-        background-color: $selected-control-background-color;
-      }
-    }
-
-    &:hover .mat-cell {
-      background: $selected-control-background-color;
-    }
-
-    &.selectable-row:hover {
-      cursor: pointer;
     }
   }
 }
 
+.mat-table-sticky {
+  transform: translateZ(0);
+}
+
 .scrollable-container {
   overflow-y: auto;
-  max-height: 25%;
+  max-height: calc(100% - 2px);
+  margin: 1px 1px 8px 1px;
 
   table.mat-table {
     margin: 0;
@@ -264,12 +359,45 @@ table.mat-table {
   }
 }
 
+.fill-table-container {
+  overflow: auto;
+  contain: strict;
+  height: calc(100% - 2px);
+  width: calc(100% - 8px);
+
+  table.mat-table {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.cdk-virtual-scroll-viewport {
+  height: 100%;
+  width: 100%;
+}
+
 //
 // mat-divider
 //
 
-.mat-divider.divider-padding {
-  margin: 0.5rem 0.5rem 0.5rem 0;
+.mat-divider {
+  &.divider-padding {
+    margin: 0.5rem 0.5rem 0.5rem 0;
+  }
+
+  &.horizontal {
+    margin: 8px 8px 8px 0;
+  }
+
+  &.horizontal-slim {
+    margin: 0 8px 8px 0;
+  }
+
+  &.vertical {
+    margin: 12px 8px 0 0;
+    height: $control-height;
+  }
 }
 
 //
@@ -350,6 +478,77 @@ table.mat-table {
 }
 
 //
+// mat date range picker
+//
+
+.mat-date-range-input-container {
+  background-color: $control-background-color;
+  border: $control-border;
+  margin: 2px 0;
+  padding: 0;
+  vertical-align: middle;
+  height: $control-height;
+  border-radius: 2px 0 0 2px !important;
+  transition: 0.3s ease-out;
+
+  &.cdk-focused {
+    outline: none;
+    background-color: $selected-control-background-color;
+    border: $selected-control-border;
+
+    input {
+      color: $selected-control-color;
+    }
+  }
+
+  .mat-date-range-input-start-wrapper,
+  .mat-date-range-input-end-wrapper {
+    width: 84px !important;
+    height: 24px !important;
+    margin: auto;
+
+    .mat-date-range-input-inner {
+      position: relative !important;
+    }
+
+    input {
+      color: $control-color;
+      font: $control-font;
+      font-weight: normal;
+      vertical-align: middle;
+      margin: auto;
+      height: 24px !important;
+      padding: 0 6px;
+    }
+
+    input:focus {
+      border: none !important;
+    }
+
+    input::placeholder {
+      font-size: 8.5pt;
+    }
+  }
+
+  .mat-date-range-input-start-wrapper {
+    text-align: right;
+  }
+
+  .mat-date-range-input-separator-hidden {
+    opacity: 0.7;
+  }
+}
+
+.disabled-date-picker .mat-date-range-input-container {
+  color: $control-disabled-color;
+  background: $control-disabled-background;
+}
+
+.invalid-date-picker .mat-date-range-input-container {
+  border-left: 5px solid $warning-color  !important;
+}
+
+//
 // mat menu item
 //
 
@@ -373,7 +572,7 @@ table.mat-table {
 }
 
 .mat-progress-bar-fill::after {
-  background-color: $primary-color-light !important;
+  background-color: $primary-color-light  !important;
 }
 
 //
@@ -405,7 +604,7 @@ table.mat-table {
 
 .mat-checkbox {
   .mat-checkbox-frame {
-    background: $white !important;
+    background: $white  !important;
   }
 
   .mat-checkbox-label {
@@ -420,7 +619,7 @@ table.mat-table {
   &.mat-checkbox-checked,
   &.mat-checkbox-indeterminate {
     .mat-checkbox-background {
-      background-color: $checkbox-background-color !important;
+      background-color: $checkbox-background-color  !important;
     }
 
     &.mat-checkbox-disabled {
@@ -434,16 +633,17 @@ table.mat-table {
     }
   }
 
-  &:not(.mat-checkbox-login) .mat-checkbox-inner-container {
+  &:not(.mat-checkbox-warning) .mat-checkbox-inner-container {
     margin-top: -4px;
   }
 }
 
-.mat-checkbox.mat-checkbox-login {
+.mat-checkbox.mat-checkbox-warning {
+
   &.mat-checkbox-checked,
   &.mat-checkbox-indeterminate {
     .mat-checkbox-background {
-      background-color: $layout-secondary-color !important;
+      background-color: $checkbox-warning-background-color  !important;
     }
   }
 
@@ -477,7 +677,7 @@ table.mat-table {
 }
 
 .mat-radio-button.mat-radio-checked .mat-radio-outer-circle {
-  border-color: $checkbox-background-color !important;
+  border-color: $checkbox-background-color  !important;
 }
 
 .mat-radio-button.mat-radio-disabled .mat-radio-label-content {
@@ -485,8 +685,8 @@ table.mat-table {
 }
 
 .mat-radio-button .mat-radio-inner-circle {
-  color: $checkbox-background-color !important;
-  background-color: $checkbox-background-color !important;
+  color: $checkbox-background-color  !important;
+  background-color: $checkbox-background-color  !important;
 }
 
 //
@@ -505,11 +705,11 @@ table.mat-table {
 
 .mat-checkbox-ripple .mat-ripple-element,
 .mat-radio-ripple .mat-ripple-element {
-  background: $checkbox-background-color !important;
+  background: $checkbox-background-color  !important;
 }
 
-.mat-checkbox.mat-checkbox-login .mat-checkbox-ripple > .mat-ripple-element {
-  background: $layout-secondary-color !important;
+.mat-checkbox.mat-checkbox-warning .mat-checkbox-ripple > .mat-ripple-element {
+  background: $checkbox-warning-background-color  !important;
 }
 
 //

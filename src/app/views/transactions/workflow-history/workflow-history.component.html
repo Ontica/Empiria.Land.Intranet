@@ -1,7 +1,8 @@
 <div class="section-title">Historia del trámite</div>
 
-<div class="tab-container">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+<div class="tab-container mat-elevation-z1">
+
+  <table mat-table [dataSource]="dataSource">
 
     <ng-container matColumnDef="taskName">
       <th mat-header-cell *matHeaderCellDef> Tipo de movimiento </th>
@@ -60,7 +61,7 @@
     <tr mat-footer-row *matFooterRowDef="displayedFooterColumns" [hidden]="dataSource.data.length === 0"></tr>
   </table>
 
-  <div *ngIf="dataSource.data.length === 0" class="text-not-found">
+  <div *ngIf="dataSource.data.length === 0" class="text-not-found" [style.paddingTop.rem]="0.5">
     <p>No se han encontrado registros.</p>
   </div>
 

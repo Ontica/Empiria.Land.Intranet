@@ -39,7 +39,8 @@
     [config]="{textButtonOpen: 'Agregar concepto',
                textButtonClose: 'Cancelar agregar concepto'}">
 
-    <emp-land-requested-service-editor *ngIf="panelAddServiceOpenState" [providedServiceTypeList]="providedServiceTypeList"
+    <emp-land-requested-service-editor *ngIf="panelAddServiceOpenState"
+      [providedServiceTypeList]="providedServiceTypeList"
       (requestedServiceEditorEvent)="onRequestedServiceEditorEvent($event)">
 
     </emp-land-requested-service-editor>

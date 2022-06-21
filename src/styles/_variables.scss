@@ -20,11 +20,14 @@ $warning-color: hsl(357, 47%, 51%) !default;
 $warning-color-light: hsl(357, 47%, 65%);
 $warning-color-dark: hsl(357, 47%, 35%) !default;
 
-$title-color: $primary-color !default;
-$text-color: $secondary-color !default;
-$text-color-light: $secondary-color-light !default;
-$text-color-dark: $secondary-color-dark !default;
+$title-color: $primary-color  !default;
+$title-border-color: $primary-color  !default;
 
+$text-color: $secondary-color  !default;
+$text-color-light: $secondary-color-light  !default;
+$text-color-dark: $secondary-color-dark  !default;
+
+$background-color-work-area: #f4f6f6 !default;
 $background-color: #fff !default;
 
 $border-color: #e8e8e8 !default;
@@ -33,18 +36,15 @@ $border-color-dark: #909090 !default;
 
 $disabled-color: #edeef0 !default;
 
-$secondary-text-color: $white !default;
+$secondary-text-color: $white  !default;
 $action-color: $primary-color;
 $action-selected-color: $primary-color-dark;
-
-$icon-color: #909090 !default;
-$icon-color-light: #e8e8e8 !default;
-$icon-color-dark: #606060 !default;
 
 //
 // Typography
 //
 $font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-secondary: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 $font-size-root: 10pt !default;
 $font-size-base: 1rem !default;
 $font-weight-base: 200 !default;
@@ -59,6 +59,9 @@ $font-size-hint: $font-size-base * 0.75;
 $font-weight-hint: 300;
 $text-bold: lighten($text-color, 3%);
 $text-italic: italic;
+//
+$font-size-grid-header: $font-size-base * 0.75;
+$font-size-grid: 9.5pt;
 
 //
 // Layout
@@ -85,6 +88,14 @@ $link-color: $text-color;
 //
 $primary-icon-size: 16pt;
 
+$icon-color: #909090 !default;
+$icon-color-light: #e8e8e8 !default;
+$icon-color-dark: #606060 !default;
+
+$icon-color-success: #65a596 !default;
+$icon-color-warning: #f3d08f !default;
+$icon-color-error: #df879d !default;
+
 //
 // form
 //
@@ -101,8 +112,10 @@ $control-font: 9.5pt $font-family;
 $control-small-font: 8.5pt $font-family;
 
 $control-color: $secondary-color;
+$control-label-color: $secondary-color-dark;
 $control-background-color: #fdfdfd;
 $control-border: 1px solid #dfdfdf;
+$control-border-radius: 2px;
 
 $selected-control-background-color: #fafafa;
 $selected-control-color: $secondary-color;
@@ -117,8 +130,8 @@ $control-height: 28px;
 $control-margin: 2px 8px 2px 0;
 $control-padding: 2px 6px;
 $select-padding: 2px 2px 2px 6px;
-$control-border-radius: 2px;
 
+$button-font: 9.5pt $font-family;
 $button-color: #f8f8f8;
 $button-selected-color: #e6e6e6;
 
@@ -126,12 +139,33 @@ $button-border: 0 solid #cecece;
 $button-height: 28px;
 
 $checkbox-background-color: $primary-color-light;
+$checkbox-warning-background-color: $layout-secondary-color;
+$date-picker-width: 90px;
 
 //
 // grid
 //
+$grid-header-background-color: $primary-color  !default;
+$grid-header-color: $secondary-text-color  !default;
+$grid-footer-background-color: $disabled-color;
 $grid-border: 0;
 $grid-even-background-color: $white;
 $grid-odd-background-color: #f4f4f4 !default;
-$grid-selected-background-color: $disabled-color;
-$grid-hover-background-color: $disabled-color;
+$grid-hover-background-color: $selected-control-background-color;
+$grid-selected-background-color: $selected-control-background-color;
+$grid-selected-hover-background-color: $selected-control-background-color;
+$grid-row-height: 35px;
+
+//
+// Designer
+//
+$designer-bar-background: #f0f0f0 !default;
+$designer-border-color: #d2d2d2 !default;
+$designer-row-selected-border-color: $primary-color  !default;
+
+$designer-primary-color: #e5f6ff !default;
+$designer-secondary-color: #fff8dd !default;
+$designer-tertiary-color: #ffe5ed !default;
+$designer-quaternary-color: #f3eeff !default;
+$designer-gray-color: #f7f7f7 !default;
+$designer-green-color: #e8fff3 !default;

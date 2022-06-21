@@ -6,6 +6,12 @@
  */
 
 @import "~@ng-select/ng-select/themes/default.theme.css";
+@import "variables";
+
+$primary-font-family: $font-family-secondary;
+$font-size: 11pt;
+$font-size-small: 10pt;
+$font-size-xsmall: 9pt;
 
 .ng-select {
   margin-right: 8px;
@@ -14,22 +20,38 @@
 
 .ng-dropdown-panel-items,
 .ng-select-container {
+  .item {
+    padding: 0.25rem 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .item-highlight {
+    color: $selected-control-color;
+  }
+
   .item-text-sm {
-    font-size: 0.75rem;
+    font-size: $font-size-small;
+    text-overflow: ellipsis;
+  }
+
+  .item-text-xs {
+    font-size: $font-size-xsmall;
     text-overflow: ellipsis;
   }
 }
 
 .ng-select .ng-select-container {
-  min-height: $control-height !important;
+  min-height: $control-height;
   margin: $control-margin;
   padding: $select-padding;
-  border-radius: $control-border-radius;
-  font-family: $font-family;
+  border-radius: 2px;
+  font-family: $primary-font-family;
   border: $control-border;
   outline: none;
-  color: $selected-control-color;
-  background-color: $selected-control-background-color;
+  color: $control-color;
+  background-color: $control-background-color;
 }
 
 .ng-select .ng-select-container .ng-value-container {
@@ -51,22 +73,40 @@
 
 .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-placeholder {
   padding-bottom: 0;
+  top: auto;
 }
 
 .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
-  font-size: 0.9em;
-  margin-bottom: 0 !important;
-  background-color: $control-disabled-background;
-  height: $control-height - 5px;
+  font-size: $font-size-small;
+  margin-bottom: 1px;
+  background-color: rgba($primary-color-light, 0.15);
+  height: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon.left {
+  border-right: 1px solid $primary-color;
+}
+
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon.left:hover {
+  background-color: rgba($primary-color, 0.2);
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  color: $control-color;
+  font-family: $primary-font-family;
+  font-size: $font-size;
   padding: $select-padding;
-  font-size: 0.9em;
+
+  &.inner-message {
+    padding: 6px;
+  }
 }
 
 .ng-select.ng-select-disabled > .ng-select-container {
   background-color: $control-disabled-background;
+  color: $control-disabled-color;
 }
 
 .ng-select.ng-select-focused:not(.ng-select-open) > .ng-select-container {
@@ -74,24 +114,18 @@
   color: $selected-control-color;
   background-color: $selected-control-background-color;
   border: $selected-control-border;
-  box-shadow:
-    inset 0 1px 1px rgba(0, 0, 0, 0.075),
-    0 0 0 3px rgba(186, 186, 186, 0.1);
-}
-
-.ng-select .ng-clear-wrapper .ng-clear {
-  line-height: 1rem !important;
+  box-shadow: none;
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected,
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected.ng-option-marked {
-  color: #333;
-  background-color: #f0f0f0;
+  color: $text-color-dark;
+  background-color: $control-disabled-background;
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
-  color: #333;
-  background-color: #fafafa;
+  color: $text-color-dark;
+  background-color: $selected-control-background-color;
 
   .item-template {
     background-color: inherit;
