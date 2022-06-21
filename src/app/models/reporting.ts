@@ -5,10 +5,16 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-export * from './array-library';
+export interface FileReport {
+  url: string;
+  type?: FileType;
+}
 
-export * from './event-emission';
 
-export * from './form-handler';
-
-export * from './format-library';
+export enum FileType {
+  Excel = 'Excel',
+  Csv = 'Csv',
+  PDF = 'PDF',
+  Xml = 'Xml',
+  HTML = 'HTML',
+}

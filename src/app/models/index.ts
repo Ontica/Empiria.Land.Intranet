@@ -30,6 +30,8 @@ export * from './recording-act';
 
 export * from './registration';
 
+export * from './reporting';
+
 export * from './transaction';
 
 export * from './workflow';
