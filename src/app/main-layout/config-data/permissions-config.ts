@@ -10,6 +10,7 @@ export enum PermissionsLibrary {
   MODULE_TRANSACTIONS = 'menu-transactions',
   MODULE_SEARCH_SERVICES = 'menu-search-services',
   MODULE_HISTORIC_REGISTRATION = 'menu-historic-registration',
+  MODULE_SEARCH_RECORDABLE_SUBJECTS = 'menu-search-recordable-subjects',
 
   ROUTE_TRANSACTIONS = 'route-transactions',
   ROUTE_SEARCH_SERVICES = 'route-search-services',
