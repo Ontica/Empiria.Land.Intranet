@@ -6,7 +6,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-export type TOOL = 'None' | 'Search';
+export type TOOL = 'None' | 'Search' | 'SearchRecordableSubject';
 
 
-export const TOOLS_LIST: TOOL[] = ['None', 'Search'];
+export const TOOLS_LIST: TOOL[] = ['None', 'Search', 'SearchRecordableSubject'];

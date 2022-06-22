@@ -32,17 +32,17 @@
     width: $toolbar-icon-size;
     height: $toolbar-icon-size;
     font-size: $toolbar-icon-size;
-    color: $primary-color;
-    margin-top: calc(($toolbar-item-size - $toolbar-icon-size) / 2);
+    color: $toolbar-icon-color;
+    margin: calc(($toolbar-item-size - $toolbar-icon-size) / 2);
   }
 }
 
 .toolbar-item.activate,
 .toolbar-item:hover {
-  background-color: lighten($primary-color, 60);
+  background-color: lighten($toolbar-icon-color, 60);
   transition: 0.3s ease-out;
 
   .mat-icon {
-    color: darken($primary-color, 5);
+    color: darken($toolbar-icon-color, 5);
   }
 }

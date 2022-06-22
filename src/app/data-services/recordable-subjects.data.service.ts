@@ -132,7 +132,8 @@ export class RecordableSubjectsDataService {
     }
 
     if (filter.keywords) {
-      path += `&keywords=${filter.keywords}`;
+      path += filter.type ? '&' : '/?';
+      path += `keywords=${filter.keywords}`;
     }
 
     return this.http.get<RecordableSubjectShortModel[]>(path);

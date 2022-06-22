@@ -18,8 +18,8 @@ import { Assertion, EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { EmptyInstrumentRecording, EmptyRegistrationCommandRule, EmptyTractIndex, InstrumentRecording,
-         RecordableSubjectFilter, RecordableSubjectShortModel, RecordingActType, RecordingActTypeGroup,
-         RegistrationCommand, RegistrationCommandConfig, RegistrationCommandPayload,
+         RecordableSubjectFilter, RecordableSubjectShortModel, RecordableSubjectType, RecordingActType,
+         RecordingActTypeGroup, RegistrationCommand, RegistrationCommandConfig, RegistrationCommandPayload,
          RegistrationCommandRule, TractIndex} from '@app/models';
 
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
@@ -100,17 +100,17 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   get isRealEstate() {
-    return this.registrationCommandRules.subjectType === 'RealEstate';
+    return this.registrationCommandRules.subjectType === RecordableSubjectType.RealEstate;
   }
 
 
   get isAssociation() {
-    return this.registrationCommandRules.subjectType === 'Association';
+    return this.registrationCommandRules.subjectType === RecordableSubjectType.Association;
   }
 
 
   get isNoProperty() {
-    return this.registrationCommandRules.subjectType === 'NoProperty';
+    return this.registrationCommandRules.subjectType === RecordableSubjectType.NoProperty;
   }
 
 
@@ -245,7 +245,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     this.recordableSubjectList$ = concat(
       of([]),
       this.recordableSubjectInput$.pipe(
-          filter(keyword => keyword !== null && keyword.length >= this.recordableSubjectMinTermLength),
+          filter(keyword => this.validRecordableSubjectFilter(keyword)),
           distinctUntilChanged(),
           debounceTime(800),
           tap(() => this.recordableSubjectLoading = true),
@@ -258,6 +258,12 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
           ))
       )
     );
+  }
+
+
+  private validRecordableSubjectFilter(keyword: string): boolean {
+    return !!this.registrationCommandRules.subjectType &&
+      keyword !== null && keyword.length >= this.recordableSubjectMinTermLength
   }
 
 

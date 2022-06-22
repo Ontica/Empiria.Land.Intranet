@@ -8,13 +8,17 @@
 
 /* Actions */
 
+import { ActionType as RecordableSubjectsAction } from './recordable-subjects.presentation.handler';
+export { ActionType as RecordableSubjectsAction } from './recordable-subjects.presentation.handler';
+
 import { ActionType as RegistrationAction } from './registration.presentation.handler';
 export { ActionType as RegistrationAction } from './registration.presentation.handler';
 
 import { ActionType as TransactionAction } from './transaction.presentation.handler';
 export { ActionType as TransactionAction } from './transaction.presentation.handler';
 
-export type LandActions = RegistrationAction |
+export type LandActions = RecordableSubjectsAction |
+                          RegistrationAction |
                           TransactionAction;
 
 

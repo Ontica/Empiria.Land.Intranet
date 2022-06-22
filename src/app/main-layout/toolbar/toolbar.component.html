@@ -1,21 +1,20 @@
 <div class="toolbar-container">
 
-  <div class="search-and-settings">
+  <emp-ng-search-box *empNgHasPermission="permissions.MODULE_SEARCH_SERVICES"
+    class="search-and-settings"
+    (searchBoxChange)="onSearchClicked($event)">
 
-    <emp-ng-search-box (searchBoxChange)="onSearchClicked($event)">
+  </emp-ng-search-box>
 
-    </emp-ng-search-box>
 
-  </div>
-
-  <!-- <button *empNgHasPermission="permissions.MODULE_SEARCH_SERVICES"
+  <button *empNgHasPermission="permissions.MODULE_SEARCH_SERVICES"
     class="toolbar-item"
-    title="Alerts"
-    [ngClass]="{'activate': toolSelected === 'Search'}"
-    (click)="onToolClicked('Search')">
+    title="Explorador de folios electrónicos"
+    [ngClass]="{'activate': toolSelected === 'SearchRecordableSubject'}"
+    (click)="onToolClicked('SearchRecordableSubject')">
 
-    <mat-icon>notifications</mat-icon>
+    <mat-icon>menu_book</mat-icon>
 
-  </button> -->
+  </button>
 
 </div>

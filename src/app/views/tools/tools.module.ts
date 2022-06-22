@@ -13,18 +13,24 @@ import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module'
 
 import { SharedModule } from '@app/shared/shared.module';
 
+import { RegistrationModule } from '../registration/registration.module';
+
+import { RecordableSubjectsToolComponent } from './recordable-subjects-tool.component';
+
 
 @NgModule({
   declarations: [
-
+    RecordableSubjectsToolComponent,
   ],
   imports: [
     CommonModule,
     AngularFlexLayoutModule,
     SharedModule,
+
+    RegistrationModule,
   ],
   exports: [
-
+    RecordableSubjectsToolComponent,
   ],
 })
 export class ToolsModule { }

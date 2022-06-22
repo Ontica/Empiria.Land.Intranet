@@ -17,8 +17,8 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 import { EmptyRealEstate, InstrumentRecording, RealEstate, RecorderOffice,
          RecordingActEntry } from '@app/models';
 
-import { RealEstateFields, RecordableObjectStatusItem,
-         RecordableObjectStatusList } from '@app/models/recordable-subjects';
+import { RealEstateFields, RecordableObjectStatusItem, RecordableObjectStatusList,
+         RecordableSubjectType} from '@app/models/recordable-subjects';
 
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
@@ -297,7 +297,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
     const data: RealEstateFields = {
       uid: this.realEstate.uid,
-      type: 'RealEstate',
+      type: RecordableSubjectType.RealEstate,
       electronicID: formModel.electronicID ?? '',
       cadastralID: formModel.cadastralID ?? '',
       recorderOfficeUID: formModel.recorderOfficeUID ?? '',

@@ -11,7 +11,7 @@ import { Assertion, Command, EventInfo } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { InstrumentRecording, RealEstate, RecordingActEntry } from '@app/models';
+import { InstrumentRecording, RealEstate, RecordableSubjectType, RecordingActEntry } from '@app/models';
 
 import { RegistrationCommandType } from '@app/presentation/exported.presentation.types';
 
@@ -73,17 +73,17 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
 
   get isRealEstate() {
-    return this.recordingAct.recordableSubject.type === 'RealEstate';
+    return this.recordingAct.recordableSubject.type === RecordableSubjectType.RealEstate;
   }
 
 
   get isAssociation() {
-    return this.recordingAct.recordableSubject.type === 'Association';
+    return this.recordingAct.recordableSubject.type === RecordableSubjectType.Association;
   }
 
 
   get isNoProperty() {
-    return this.recordingAct.recordableSubject.type === 'NoProperty';
+    return this.recordingAct.recordableSubject.type === RecordableSubjectType.NoProperty;
   }
 
 

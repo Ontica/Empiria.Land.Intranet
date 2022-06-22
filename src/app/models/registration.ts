@@ -149,7 +149,7 @@ export interface RegistrationCommandRule {
 
 
 export const EmptyRegistrationCommandRule: RegistrationCommandRule = {
-  subjectType: 'None',
+  subjectType: RecordableSubjectType.None,
   selectSubject: false,
   selectBookEntry: false,
   selectTargetAct: false,

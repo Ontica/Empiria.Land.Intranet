@@ -8,7 +8,12 @@
 import { Assertion, DateString, Empty, EmptyMediaBase, Identifiable, MediaBase, PartitionedType } from '@app/core';
 
 
-export type RecordableSubjectType = 'None' | 'RealEstate' | 'Association' | 'NoProperty';
+export enum RecordableSubjectType {
+  None        = 'None',
+  RealEstate  = 'RealEstate',
+  Association = 'Association',
+  NoProperty  = 'NoProperty',
+}
 
 
 export type RecordableObjectStatus = 'Registered' | 'Incomplete' | 'NotLegible' | 'Obsolete';
@@ -27,6 +32,12 @@ export const RecordableObjectStatusList: RecordableObjectStatusItem[] = [
   { status: 'Obsolete',   statusName: 'Obsoleto' },
 ];
 
+
+export const RecordableSubjectTypeList: Identifiable[] = [
+  {uid: RecordableSubjectType.RealEstate,  name: 'Predios'},
+  {uid: RecordableSubjectType.Association, name: 'Asociaciones'},
+  {uid: RecordableSubjectType.NoProperty,  name: 'Documentos'},
+];
 
 export function getRecordableObjectStatusName(status: RecordableObjectStatus): RecordableObjectStatusItem {
     switch (status) {
@@ -48,6 +59,12 @@ export interface RecordableSubjectFilter {
   type: RecordableSubjectType;
   keywords: string;
 }
+
+
+export const EmptyRecordableSubjectFilter: RecordableSubjectFilter = {
+  type: null,
+  keywords: '',
+};
 
 
 export interface RecordableSubjectFields {
@@ -110,6 +127,20 @@ export const EmptyRecordableSubject: RecordableSubject = {
 export interface RecordableSubjectShortModel extends Identifiable, PartitionedType {
   electronicID: string;
   kind: string;
+}
+
+
+export interface RecordableSubjectData {
+  queryExecuted: boolean;
+  recordableSubjectFilter: RecordableSubjectFilter;
+  recordableSubjects: RecordableSubjectShortModel[];
+}
+
+
+export const EmptyRecordableSubjectData: RecordableSubjectData = {
+  queryExecuted: false,
+  recordableSubjectFilter: EmptyRecordableSubjectFilter,
+  recordableSubjects: [],
 }
 
 
@@ -177,7 +208,7 @@ export const EmptyTractIndex: TractIndex = {
 
 export const EmptyRecordableSubjectFields: RecordableSubjectFields = {
   uid: '',
-  type: 'None',
+  type: RecordableSubjectType.None,
   electronicID: '',
   recorderOfficeUID: '',
   kind: '',
@@ -187,7 +218,7 @@ export const EmptyRecordableSubjectFields: RecordableSubjectFields = {
 
 export const EmptyAssociationFields: AssociationFields = {
   uid: '',
-  type: 'None',
+  type: RecordableSubjectType.None,
   electronicID: '',
   recorderOfficeUID: '',
   kind: '',
@@ -199,7 +230,7 @@ export const EmptyAssociationFields: AssociationFields = {
 
 export const EmptyNoPropertyFields: NoPropertyFields = {
   uid: '',
-  type: 'None',
+  type: RecordableSubjectType.None,
   electronicID: '',
   recorderOfficeUID: '',
   kind: '',
@@ -211,7 +242,7 @@ export const EmptyNoPropertyFields: NoPropertyFields = {
 
 export const EmptyRealEstateFields: RealEstateFields = {
   uid: '',
-  type: 'RealEstate',
+  type: RecordableSubjectType.RealEstate,
   electronicID: '',
   recorderOfficeUID: '',
   kind: '',

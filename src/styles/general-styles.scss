@@ -528,12 +528,17 @@ i.disabled {
 
 // tags
 
-.tag-info {
-  background-color: $primary-color-light;
+@mixin tag {
+  font-size: 8pt;
   border-radius: 10px;
   color: white;
   padding: 4px 8px;
   width: fit-content;
+}
+
+.tag-info {
+  @include tag;
+  background-color: $primary-color-light;
 
   &:hover {
     background-color: darken($primary-color-light, 4%);
@@ -541,11 +546,8 @@ i.disabled {
 }
 
 .tag-error {
+  @include tag;
   background-color: $warning-color-light;
-  border-radius: 10px;
-  color: $white;
-  padding: 4px 8px;
-  width: fit-content;
 
   &:hover {
     background-color: darken($warning-color-light, 4%);
@@ -553,11 +555,8 @@ i.disabled {
 }
 
 .tag-warning {
+  @include tag;
   background-color: $title-color;
-  border-radius: 10px;
-  color: $white;
-  padding: 4px 8px;
-  width: fit-content;
 
   &:hover {
     background-color: darken($title-color, 4%);
@@ -577,7 +576,6 @@ a.tag-warning {
 
 .tag-small {
   font-size: 8px;
-  margin: 0 8px;
 }
 
 // blink
