@@ -29,11 +29,7 @@
 
   <br>
 
-  <emp-land-recording-acts-list
-    [instrumentRecording]="instrumentRecording"
-    [recordingActs]="instrumentRecording.recordingActs"
-    (recordingActsListEvent)="onRecordingActsListEvent($event)">
-  </emp-land-recording-acts-list>
+  <div class="section-title">Actos jurídicos contenidos en el documento</div>
 
   <emp-ng-expansion-button *ngIf="actions.can.editRecordingActs"
     [(panelState)]="panelAddState"
@@ -47,6 +43,12 @@
     </emp-land-recording-act-creator>
 
   </emp-ng-expansion-button>
+
+  <emp-land-recording-acts-list
+    [instrumentRecording]="instrumentRecording"
+    [recordingActs]="instrumentRecording.recordingActs"
+    (recordingActsListEvent)="onRecordingActsListEvent($event)">
+  </emp-land-recording-acts-list>
 
 </ng-container>
 

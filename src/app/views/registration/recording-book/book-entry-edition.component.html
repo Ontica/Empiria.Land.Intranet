@@ -17,13 +17,7 @@
 
     <br>
 
-    <emp-land-recording-acts-list
-      [instrumentRecording]="instrumentRecording"
-      [recordingActs]="recordingActs"
-      [title]="recordingActListTitle"
-      (recordingActsListEvent)="onRecordingActsListEvent($event)">
-
-    </emp-land-recording-acts-list>
+    <div class="section-title" *ngIf="recordingActListTitle" [innerHTML]="recordingActListTitle"></div>
 
     <emp-ng-expansion-button [(panelState)]="panelAddState"
       [config]="{textButtonOpen: 'Registrar un acto jurídico',
@@ -36,6 +30,15 @@
       </emp-land-recording-act-creator>
 
     </emp-ng-expansion-button>
+
+    <emp-land-recording-acts-list
+      [instrumentRecording]="instrumentRecording"
+      [recordingActs]="recordingActs"
+      (recordingActsListEvent)="onRecordingActsListEvent($event)">
+
+    </emp-land-recording-acts-list>
+
+    <br>
 
   </div>
 

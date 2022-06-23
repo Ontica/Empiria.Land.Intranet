@@ -35,8 +35,6 @@ export class RecordingActsListComponent implements OnChanges {
 
   @Input() recordingActs: RecordingActEntry[] = [];
 
-  @Input() title = 'Actos jurídicos contenidos en el documento';
-
   @Output() recordingActsListEvent = new EventEmitter<EventInfo>();
 
   dataSource: MatTableDataSource<RecordingActEntry>;

@@ -49,7 +49,7 @@ enum RecordingActCreatorFormControls {
   selector: 'emp-land-recording-act-creator',
   templateUrl: './recording-act-creator.component.html',
   styles: [`.resizable-field-width {
-    width: calc(100% - 490px); /* widthFirstColumn + 150px */
+    width: calc(100% - 470px); /* widthFirstColumn + 150px */
   }`]
 })
 export class RecordingActCreatorComponent implements OnInit, OnDestroy {
@@ -80,7 +80,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   checkBookEntryInput = false;
 
-  widthFirstColumn = '340px';
+  widthFirstColumn = '320px';
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
