@@ -192,11 +192,14 @@ export interface TractIndex {
 
 
 export interface TractIndexEntry {
-  recordingActUID: string;
-  recordingActName: string;
-  antecedent: string;
+  uid: string;
+  type: 'RecordingAct' | 'Certificate';
+  name: string;
+  documentID: string;
+  transactionID: string;
   presentationTime: DateString;
-  recordingDate: DateString;
+  recordingTime: DateString;
+  status: string;
 }
 
 

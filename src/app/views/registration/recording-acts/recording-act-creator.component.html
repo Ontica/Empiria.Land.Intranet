@@ -99,18 +99,18 @@
           [placeholder]="formHandler.showInvalidControl(controls.recordableSubject) ?
             'Seleccione el folio real' : 'Seleccione'"
           [showError]="formHandler.showInvalidControl(controls.amendmentRecordingActUID)"
-          bindValue="recordingActUID">
+          bindValue="uid">
 
             <ng-template #labelTemplate let-item="item">
-              {{item.recordingActName}}
+              {{item.name}}
               {{item.presentationTime ? ', ' + ( item.presentationTime | dateTimeFormat ) : ''}}
-              {{item.antecedent ? ', ' + item.antecedent : ''}}
+              {{item.documentID ? ', ' + item.documentID : ''}}
             </ng-template>
 
             <ng-template #optionTemplate let-item="item">
-              {{item.recordingActName}}
+              {{item.name}}
               {{item.presentationTime ? ', ' + ( item.presentationTime | dateTimeFormat ) : ''}}
-              {{item.antecedent ? ', ' + item.antecedent : ''}}
+              {{item.documentID ? ', ' + item.documentID : ''}}
             </ng-template>
 
         </emp-ng-select>
