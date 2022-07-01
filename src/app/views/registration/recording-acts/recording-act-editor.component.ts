@@ -33,13 +33,11 @@ enum RecordingActEditorControls {
 @Component({
   selector: 'emp-land-recording-act-editor',
   templateUrl: './recording-act-editor.component.html',
-  styles: [
-  ]
 })
 export class RecordingActEditorComponent implements OnChanges {
 
   @Input() recordingAct: RecordingAct = EmptyRecordingAct;
-
+  @Input() readonly = false;
   @Output() recordingActEditorEvent = new EventEmitter<EventInfo>();
 
   formHandler: FormHandler;

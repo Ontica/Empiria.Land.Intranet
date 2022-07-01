@@ -14,7 +14,8 @@
             <ng-container *ngFor="let party of group.parties">
               <ng-container *ngIf="row.party.uid === party.associatedWith.uid">
                 <strong>{{party.party.fullName}}</strong>
-                <a class="link pl-1" (click)="removeParty(party)">Remover</a>
+                <a class="link pl-1" *ngIf="!readonly"
+                  (click)="removeParty(party)">Remover</a>
                 <br>
               </ng-container>
             </ng-container>

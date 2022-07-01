@@ -96,7 +96,7 @@
 
       <div fxFlex="100">
         <label>Descripción del predio (denominación y ubicación):</label>
-        <textarea class="text-area" empNgTextareaAutoresize rows="1"
+        <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
           [formControlName]="controls.description"
           [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
 
@@ -109,7 +109,7 @@
 
       <div fxFlex="100">
         <label>Medidas y colindancias:</label>
-        <textarea class="text-area" empNgTextareaAutoresize rows="1"
+        <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
           [formControlName]="controls.metesAndBounds"
           [class.invalid-control]="formHandler.showInvalidControl(controls.metesAndBounds)">
 

@@ -5,10 +5,10 @@
 </emp-land-instrument-editor>
 
 <ng-container *ngIf="actions.show.recordingBookEntries">
+
   <br>
-  <emp-land-instrument-book-entry-list
-    [instrumentRecording]="instrumentRecording">
-  </emp-land-instrument-book-entry-list>
+
+  <div class="section-title">Registro del documento en libros</div>
 
   <emp-ng-expansion-button *ngIf="actions.can.createNextRecordingBookEntries"
     [(panelState)]="panelAddState"
@@ -21,6 +21,10 @@
     </emp-land-instrument-land-book-entry-creator>
 
   </emp-ng-expansion-button>
+
+  <emp-land-instrument-book-entry-list
+    [instrumentRecording]="instrumentRecording">
+  </emp-land-instrument-book-entry-list>
 
 </ng-container>
 

@@ -65,8 +65,7 @@
     <emp-land-recording-act-edition
       [instrumentRecordingUID]="selectedRecordingAct.instrumentRecording.uid"
       [recordingActUID]="selectedRecordingAct.recordingAct.uid"
-      (closeEvent)="unselectCurrentRecordingAct()"
-      (recordingActUpdated)="onRecordingActUpdated()">
+      (recordingActEditionEventType)="onRecordingActEditionEventType($event)">
 
     </emp-land-recording-act-edition>
 

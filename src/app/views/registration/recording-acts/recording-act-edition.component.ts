@@ -7,9 +7,11 @@
 
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
-import { Assertion } from '@app/core';
+import { Assertion, EventInfo } from '@app/core';
 
 import { RecordingDataService } from '@app/data-services';
+
+import { sendEvent } from '@app/shared/utils';
 
 import { EmptyParty, EmptyRecordingAct, Party, RecordingAct, RecordingActFields,
          RecordingActPartyFields} from '@app/models';
@@ -19,6 +21,11 @@ import { PartyEditorEventType } from '@app/views/recordable-subjects/parties/par
 import { PartyListEventType } from '@app/views/recordable-subjects/parties/party-list.component';
 
 import { RecordingActEditorEventType } from './recording-act-editor.component';
+
+export enum RecordingActEditionEventType {
+  CLOSE_BUTTON_CLICKED  = 'RecordingActEditionComponent.Event.CloseButtonClicked',
+  RECORDING_ACT_UPDATED = 'RecordingActEditionComponent.Event.RecordingActUpdated',
+}
 
 @Component({
   selector: 'emp-land-recording-act-edition',
@@ -30,9 +37,11 @@ export class RecordingActEditionComponent implements OnChanges {
 
   @Input() recordingActUID: string;
 
-  @Output() closeEvent = new EventEmitter<void>();
+  @Input() readonly = false;
 
-  @Output() recordingActUpdated = new EventEmitter<void>();
+  @Input() displayFlat = false;
+
+  @Output() recordingActEditionEventType = new EventEmitter<EventInfo>();
 
   recordingAct: RecordingAct = EmptyRecordingAct;
 
@@ -52,13 +61,13 @@ export class RecordingActEditionComponent implements OnChanges {
   constructor(private recordingData: RecordingDataService) { }
 
   ngOnChanges() {
-    this.loadRecordingAct();
+    this.getRecordingAct();
     this.resetPanelState(false);
   }
 
 
   onClose() {
-    this.closeEvent.emit();
+    sendEvent(this.recordingActEditionEventType, RecordingActEditionEventType.CLOSE_BUTTON_CLICKED);
   }
 
 
@@ -127,7 +136,7 @@ export class RecordingActEditionComponent implements OnChanges {
   }
 
 
-  private loadRecordingAct() {
+  private getRecordingAct() {
     if (!this.instrumentRecordingUID || !this.recordingActUID) {
       this.recordingAct = EmptyRecordingAct;
       this.initTexts();
@@ -172,7 +181,7 @@ export class RecordingActEditionComponent implements OnChanges {
 
   private emitRecordingActUpdated() {
     if (this.recordingAct.actions.editableFields.includes('RecordingActType')) {
-      this.recordingActUpdated.emit();
+      sendEvent(this.recordingActEditionEventType, RecordingActEditionEventType.RECORDING_ACT_UPDATED);
     }
   }
 

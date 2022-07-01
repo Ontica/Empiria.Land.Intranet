@@ -28,6 +28,10 @@ import {
   RecordableSubjectTabbedViewEventType
 } from '@app/views/registration/recordable-subject-tabbed-view/recordable-subject-tabbed-view.component';
 
+import {
+  RecordingActEditionEventType
+} from '@app/views/registration/recording-acts/recording-act-edition.component';
+
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
                                'ReceiveTransactions';
@@ -163,7 +167,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
-  onRecordableSubjectTabbedViewEvent(event) {
+  onRecordableSubjectTabbedViewEvent(event: EventInfo) {
     switch (event.type as RecordableSubjectTabbedViewEventType) {
 
       case RecordableSubjectTabbedViewEventType.CLOSE_BUTTON_CLICKED:
@@ -177,9 +181,23 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
-  onRecordingActUpdated() {
-    this.uiLayer.dispatch(RegistrationAction.SELECT_TRANSACTION_INSTRUMENT_RECORDINGT,
-      {transactionUID: this.selectedTransaction.uid});
+  onRecordingActEditionEventType(event: EventInfo) {
+    switch (event.type as RecordingActEditionEventType) {
+
+      case RecordingActEditionEventType.CLOSE_BUTTON_CLICKED:
+        this.unselectCurrentRecordingAct();
+
+        return;
+
+      case RecordingActEditionEventType.RECORDING_ACT_UPDATED:
+        this.uiLayer.dispatch(RegistrationAction.SELECT_TRANSACTION_INSTRUMENT_RECORDINGT,
+          {transactionUID: this.selectedTransaction.uid});
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
   }
 
 

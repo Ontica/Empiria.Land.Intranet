@@ -7,7 +7,7 @@
 
 import { Component, ViewChild } from '@angular/core';
 
-import { Assertion, isEmpty } from '@app/core';
+import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { BookEntry, EmptyBookEntry, EmptySelectionAct, InstrumentRecording, SelectionAct } from '@app/models';
 
@@ -17,6 +17,10 @@ import { EmptyFileViewerData,
 import {
   RecordableSubjectTabbedViewEventType
 } from '@app/views/registration/recordable-subject-tabbed-view/recordable-subject-tabbed-view.component';
+
+import {
+  RecordingActEditionEventType
+} from '@app/views/registration/recording-acts/recording-act-edition.component';
 
 import {
   BookEntryEditionComponent,
@@ -45,10 +49,8 @@ export class HistoricRegistrationWorkspaceComponent {
   displayRecordingActEditor = false;
   displayRecordableSubjectTabbedView = false;
 
-  constructor() {}
 
-
-  onRecordingBookEditionEvent(event) {
+  onRecordingBookEditionEvent(event: EventInfo) {
     switch (event.type as RecordingBookEditionEventType) {
 
       case RecordingBookEditionEventType.BOOK_ENTRY_SELECTED:
@@ -76,7 +78,7 @@ export class HistoricRegistrationWorkspaceComponent {
   }
 
 
-  onBookEntryEditionEvent(event) {
+  onBookEntryEditionEvent(event: EventInfo) {
     switch (event.type as BookEntryEditionEventType) {
 
       case BookEntryEditionEventType.RECORDING_ACT_SELECTED:
@@ -102,7 +104,7 @@ export class HistoricRegistrationWorkspaceComponent {
   }
 
 
-  onRecordableSubjectTabbedViewEvent(event) {
+  onRecordableSubjectTabbedViewEvent(event: EventInfo) {
     switch (event.type as RecordableSubjectTabbedViewEventType) {
 
       case RecordableSubjectTabbedViewEventType.CLOSE_BUTTON_CLICKED:
@@ -125,8 +127,22 @@ export class HistoricRegistrationWorkspaceComponent {
   }
 
 
-  onRecordingActUpdated() {
-    this.refreshBookEntrySelected();
+  onRecordingActEditionEventType(event: EventInfo) {
+    switch (event.type as RecordingActEditionEventType) {
+
+      case RecordingActEditionEventType.CLOSE_BUTTON_CLICKED:
+        this.unselectCurrentRecordingAct();
+
+        return;
+
+      case RecordingActEditionEventType.RECORDING_ACT_UPDATED:
+        this.refreshBookEntrySelected();
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
   }
 
 

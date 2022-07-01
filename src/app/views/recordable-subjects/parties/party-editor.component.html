@@ -36,8 +36,8 @@
     <div fxLayout="row" fxLayout.lt-md="column">
       <div fxFlex="100">
         <label>Otra información:</label>
-        <textarea formControlName="partyNotes"
-          class="text-area uppercase" empNgTextareaAutoresize rows="1">
+        <textarea class="text-area uppercase" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
+          formControlName="partyNotes">
 
         </textarea>
       </div>
@@ -101,8 +101,8 @@
     <div fxLayout="row" fxLayout.lt-md="column">
       <div fxFlex="100">
         <label>Observaciones:</label>
-        <textarea formControlName="notes"
-          class="text-area uppercase" empNgTextareaAutoresize rows="1">
+        <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
+          formControlName="notes">
 
         </textarea>
       </div>

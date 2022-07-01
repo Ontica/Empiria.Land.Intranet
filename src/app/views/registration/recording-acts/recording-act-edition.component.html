@@ -1,62 +1,87 @@
 
-<emp-ng-card
+<emp-ng-card *ngIf="!displayFlat"
   title="Editor del acto jurídico"
   [hint]="cardHint"
   (cardClose)="onClose()">
 
-  <div class="card-body-padding"  [style.height.%]="100" [empNgSpinnerHost]="spinner">
+  <div class="card-body-padding" [style.height.%]="100" [empNgSpinnerHost]="spinner">
 
-    <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+    <emp-ng-spinner #spinner [visible]="isLoading">
 
-    <emp-land-recording-act-editor
-      [recordingAct]="recordingAct"
-      (recordingActEditorEvent)="onRecordingActEditorEvent($event)">
+    </emp-ng-spinner>
 
-    </emp-land-recording-act-editor>
-
-    <ng-container *ngIf="recordingAct.actions.editableFields.includes('Participants')">
-
-      <br>
-
-      <emp-land-party-list
-        [readonly]="!recordingAct.actions.isEditable"
-        [partiesList]="recordingAct.parties"
-        (partyListEvent)="onPartyListEvent($event)">
-
-      </emp-land-party-list>
-
-      <emp-ng-expansion-button *ngIf="recordingAct.actions.isEditable"
-        [panelState]="panelAddState"
-        [config]="{ textButtonOpen: 'Agregar una nueva persona u organización a este acto jurídico',
-                    textButtonClose: 'Cancelar registro'}"
-        (panelStateChange)="onPanelEstateChange($event)">
-
-
-        <ng-container *ngIf="panelAddState">
-
-          <emp-land-party-selector
-            [instrumentRecordingUID]="instrumentRecordingUID"
-            [recordingActUID]="recordingActUID"
-            (partySelectedChange)="onPartySelectedChange($event)">
-
-          </emp-land-party-selector>
-
-          <emp-land-party-editor *ngIf="partySelected"
-            [partySelected]="partySelected"
-            [partUnits]="recordingAct.actions.editionValues.partUnits"
-            [primaryPartyRoles]="recordingAct.actions.editionValues.primaryPartyRoles"
-            [secondaryPartyRoles]="recordingAct.actions.editionValues.secondaryPartyRoles"
-            [partiesInRecordingActList]="primaryPartyList"
-            (partyEditorEvent)="onPartyEditorEvent($event)">
-
-          </emp-land-party-editor>
-
-        </ng-container>
-
-      </emp-ng-expansion-button>
+    <ng-container *ngTemplateOutlet="recordingActTemplate">
 
     </ng-container>
 
   </div>
 
 </emp-ng-card>
+
+
+<div *ngIf="displayFlat" [empNgSpinnerHost]="spinner">
+
+  <emp-ng-spinner #spinner [visible]="isLoading">
+
+  </emp-ng-spinner>
+
+  <ng-container *ngTemplateOutlet="recordingActTemplate">
+
+  </ng-container>
+
+</div>
+
+
+<ng-template #recordingActTemplate>
+
+  <emp-land-recording-act-editor
+    [recordingAct]="recordingAct"
+    [readonly]="readonly"
+    (recordingActEditorEvent)="onRecordingActEditorEvent($event)">
+
+  </emp-land-recording-act-editor>
+
+  <ng-container *ngIf="recordingAct.actions.editableFields.includes('Participants')">
+
+    <br>
+
+    <emp-land-party-list
+      [readonly]="!recordingAct.actions.isEditable || readonly"
+      [partiesList]="recordingAct.parties"
+      (partyListEvent)="onPartyListEvent($event)">
+
+    </emp-land-party-list>
+
+    <emp-ng-expansion-button *ngIf="recordingAct.actions.isEditable && !readonly"
+      [panelState]="panelAddState"
+      [config]="{ textButtonOpen: 'Agregar una nueva persona u organización a este acto jurídico',
+                  textButtonClose: 'Cancelar registro'}"
+      (panelStateChange)="onPanelEstateChange($event)">
+
+
+      <ng-container *ngIf="panelAddState">
+
+        <emp-land-party-selector
+          [instrumentRecordingUID]="instrumentRecordingUID"
+          [recordingActUID]="recordingActUID"
+          (partySelectedChange)="onPartySelectedChange($event)">
+
+        </emp-land-party-selector>
+
+        <emp-land-party-editor *ngIf="partySelected"
+          [partySelected]="partySelected"
+          [partUnits]="recordingAct.actions.editionValues.partUnits"
+          [primaryPartyRoles]="recordingAct.actions.editionValues.primaryPartyRoles"
+          [secondaryPartyRoles]="recordingAct.actions.editionValues.secondaryPartyRoles"
+          [partiesInRecordingActList]="primaryPartyList"
+          (partyEditorEvent)="onPartyEditorEvent($event)">
+
+        </emp-land-party-editor>
+
+      </ng-container>
+
+    </emp-ng-expansion-button>
+
+  </ng-container>
+
+</ng-template>

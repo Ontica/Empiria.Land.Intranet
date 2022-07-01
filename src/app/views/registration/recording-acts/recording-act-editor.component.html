@@ -77,7 +77,7 @@
 
         <label>Descripción del acto jurídico:</label>
 
-        <textarea class="text-area" empNgTextareaAutoresize rows="1"
+        <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
           [formControlName]="controls.description"
           [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
         </textarea>
@@ -97,7 +97,7 @@
 
         <div [fxFlex]="100/3" fxLayoutAlign="start">
 
-          <button *ngIf="recordingAct.actions.isEditable"
+          <button *ngIf="recordingAct.actions.isEditable && !readonly"
             (click)="enableEditor(!editionMode)"
             [ngClass]="editionMode ? 'btn' : 'btn-action'">
             {{ editionMode ? 'Descartar Cambios' : 'Editar Documento' }}

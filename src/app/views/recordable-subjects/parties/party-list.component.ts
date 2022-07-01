@@ -30,13 +30,15 @@ export class PartyListComponent implements OnChanges {
 
   @Input() partiesList: RecordingActParty[] = [];
 
-  @Input() readonly = true;
+  @Input() readonly = false;
 
   @Output() partyListEvent = new EventEmitter<EventInfo>();
 
   dataSource: MatTableDataSource<RecordingActParty>;
 
-  displayedColumns = ['name', 'identification', 'role', 'partAmount', 'action'];
+  private displayedColumnsDefault = ['name', 'identification', 'role', 'partAmount'];
+
+  displayedColumns = [...this.displayedColumnsDefault];
 
   secondaryPartiesGroupedByRoleList: any[] = [];
 
@@ -45,6 +47,7 @@ export class PartyListComponent implements OnChanges {
 
   ngOnChanges() {
     this.dataSource = new MatTableDataSource(this.partiesList.filter(x => x.type === 'Primary'));
+    this.resetColumns();
     this.setSecondaryPartyGroupedList();
   }
 
@@ -111,6 +114,15 @@ export class PartyListComponent implements OnChanges {
         parties: this.partiesList.filter(party => rol.uid === party.role.uid),
       }
       ));
+  }
+
+
+  private resetColumns() {
+    this.displayedColumns = [...this.displayedColumnsDefault]
+
+    if (!this.readonly) {
+      this.displayedColumns.push('action');
+    }
   }
 
 
