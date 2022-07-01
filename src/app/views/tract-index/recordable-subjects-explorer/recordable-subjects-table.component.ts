@@ -11,7 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo, Identifiable, isEmpty } from '@app/core';
 
-import { EmptyRecordableSubject, RecordableSubject, RecordableSubjectShortModel, RecordableSubjectType,
+import { EmptyRecordableSubject, getRecordableSubjectTypeName, RecordableSubject, RecordableSubjectShortModel, RecordableSubjectType,
          RecordableSubjectTypeList } from '@app/models';
 
 import { sendEvent } from '@app/shared/utils';
@@ -49,8 +49,7 @@ export class RecordableSubjectsTableComponent implements OnChanges  {
 
 
   getRecordableSubjectTypeName(type: RecordableSubjectType): string {
-    const recordableSubjectType: Identifiable = RecordableSubjectTypeList.find(x => x.uid === type);
-    return isEmpty(recordableSubjectType) ? type : recordableSubjectType.name;
+    return getRecordableSubjectTypeName(type);
   }
 
 

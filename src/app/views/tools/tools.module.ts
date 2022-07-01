@@ -13,9 +13,9 @@ import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module'
 
 import { SharedModule } from '@app/shared/shared.module';
 
-import { RegistrationModule } from '../registration/registration.module';
-
 import { RecordableSubjectsToolComponent } from './recordable-subjects-tool.component';
+
+import { TractIndexModule } from '../tract-index/tract-index.module';
 
 
 @NgModule({
@@ -27,7 +27,7 @@ import { RecordableSubjectsToolComponent } from './recordable-subjects-tool.comp
     AngularFlexLayoutModule,
     SharedModule,
 
-    RegistrationModule,
+    TractIndexModule,
   ],
   exports: [
     RecordableSubjectsToolComponent,
