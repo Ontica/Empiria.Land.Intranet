@@ -13,7 +13,7 @@ import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { InstrumentRecording, RecorderOffice, RecordingActEntry } from '@app/models';
+import { RecorderOffice } from '@app/models';
 
 import { RecordableObjectStatusItem, RecordableObjectStatusList,
          RecordableSubject  } from '@app/models/recordable-subjects';
@@ -42,11 +42,12 @@ enum NoPropertyEditorFormControls {
 })
 export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() instrumentRecording: InstrumentRecording;
-  @Input() recordingAct: RecordingActEntry;
+  @Input() instrumentRecordingUID = '';
+  @Input() recordingActUID = '';
   @Input() recordableSubject: RecordableSubject;
   @Input() isAssociation: boolean;
   @Input() readonly = false;
+  @Input() showElectronicHistoryButton = true;
   @Output() noPropertyEditorEvent = new EventEmitter<EventInfo>();
 
   noProperty: any = {};
@@ -116,8 +117,8 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     const payload = {
-      instrumentRecordingUID: this.instrumentRecording.uid,
-      recordingActUID: this.recordingAct.uid,
+      instrumentRecordingUID: this.instrumentRecordingUID,
+      recordingActUID: this.recordingActUID,
       recordableSubjectFields: this.getFormData()
     };
 

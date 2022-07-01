@@ -99,7 +99,7 @@
 
           <button *ngIf="recordingAct.actions.isEditable"
             (click)="enableEditor(!editionMode)"
-            [ngClass]="editionMode ? 'btn-warning' : 'btn-action'">
+            [ngClass]="editionMode ? 'btn' : 'btn-action'">
             {{ editionMode ? 'Descartar Cambios' : 'Editar Documento' }}
           </button>
 

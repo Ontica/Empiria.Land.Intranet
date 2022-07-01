@@ -203,7 +203,7 @@
 
         <button *ngIf="actions.can.editInstrument && !addMode"
           (click)="enableEditor(!editionMode)"
-          [ngClass]="editionMode ? 'btn-warning' : 'btn-action'">
+          [ngClass]="editionMode ? 'btn' : 'btn-action'">
           {{editionMode ? 'Descartar Cambios' : 'Editar Documento'}}
         </button>
 

@@ -10,9 +10,10 @@
         <label>Folio electrónico:</label>
 
         <div fxLayout="row">
-          <input type="text" class="text-box" fxFlex [formControlName]="controls.electronicID">
-          <button type="button" class="btn" fxFlex="82px" [style.marginTop.px]="2"
-            (click)="onElectronicHistoryClicked()">Historia</button>
+          <input type="text" class="text-box"  [fxFlex]="showElectronicHistoryButton ? '182px' : '282px'"
+            [formControlName]="controls.electronicID">
+          <button type="button" class="btn" fxFlex="92px" *ngIf="showElectronicHistoryButton"
+            [style.marginTop.px]="2" (click)="onElectronicHistoryClicked()">Historia</button>
         </div>
       </div>
 
@@ -41,7 +42,8 @@
       <div fxFlex="100">
         <label>Nombre o denominación:</label>
 
-        <textarea class="text-area" empNgTextareaAutoresize rows="1" [formControlName]="controls.name"
+        <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
+          [formControlName]="controls.name"
           [class.invalid-control]="formHandler.showInvalidControl(controls.name)">
         </textarea>
       </div>
@@ -52,7 +54,8 @@
       <div fxFlex="100%">
         <label *ngIf="!isAssociation">Descripción (opcional):</label>
 
-        <textarea class="text-area" empNgTextareaAutoresize rows="4" [formControlName]="controls.description"
+        <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
+          [formControlName]="controls.description"
           [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
         </textarea>
 
@@ -63,8 +66,8 @@
 
       <div fxFlex fxLayoutAlign="start center">
 
-        <button *ngIf="editionMode" (click)="enableEditor(false)" class="btn-warning">
-          Cancelar edición
+        <button *ngIf="editionMode" (click)="enableEditor(false)" class="btn">
+          Descartar Cambios
         </button>
 
       </div>

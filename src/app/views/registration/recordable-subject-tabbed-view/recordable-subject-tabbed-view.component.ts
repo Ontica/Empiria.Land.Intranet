@@ -7,24 +7,19 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 
-import { Assertion, Command, EventInfo } from '@app/core';
+import { Assertion, EventInfo } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
+import { sendEvent } from '@app/shared/utils';
+
 import { InstrumentRecording, RealEstate, RecordableSubjectType, RecordingActEntry } from '@app/models';
 
-import { RegistrationCommandType } from '@app/presentation/exported.presentation.types';
-
-import {
-  NoPropertyEditorComponentEventType
-} from '@app/views/recordable-subjects/no-property/no-property-editor.component';
-
-import {
-  RealEstateEditorComponentEventType
-} from '@app/views/recordable-subjects/real-estate/real-estate-editor.component';
+import { RecordableSubjectEditorEventType } from '../recordable-subject-editor/recordable-subject-editor.component';
 
 export enum RecordableSubjectTabbedViewEventType {
-  UPDATED_RECORDABLE_SUBJECT = 'RecordableSubjectTabbedViewComponent.Event.UpdatedRecordableSubject',
+  RECORDABLE_SUBJECT_UPDATED = 'RecordableSubjectTabbedViewComponent.Event.RecordableSubjectUpdated',
+  CLOSE_BUTTON_CLICKED       = 'RecordableSubjectTabbedViewComponent.Event.CloseButtonClicked',
 }
 
 
@@ -38,8 +33,6 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
   @Input() recordingAct: RecordingActEntry;
 
-  @Output() closeEvent = new EventEmitter<void>();
-
   @Output() recordableSubjectTabbedViewEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;
@@ -49,8 +42,6 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
   cardHint: string;
 
   tabEditorLabel = 'Datos del predio';
-
-  submitted = false;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
@@ -64,11 +55,6 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
   ngOnDestroy() {
     this.helper.destroy();
-  }
-
-
-  onClose() {
-    this.closeEvent.emit();
   }
 
 
@@ -92,47 +78,23 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
   }
 
 
-  onRealEstateEditorEvent(event) {
-    if (this.submitted) {
-      return;
-    }
+  onClose() {
+    sendEvent(this.recordableSubjectTabbedViewEvent,
+      RecordableSubjectTabbedViewEventType.CLOSE_BUTTON_CLICKED);
+  }
 
-    switch (event.type as RealEstateEditorComponentEventType) {
-      case RealEstateEditorComponentEventType.UPDATE_REAL_ESTATE:
-        this.updateRecordableSubject(event.payload);
+
+  onRecordableSubjectEditorEvent(event: EventInfo) {
+    switch (event.type as RecordableSubjectEditorEventType) {
+      case RecordableSubjectEditorEventType.RECORDABLE_SUBJECT_UPDATED:
+        Assertion.assertValue(event.payload.instrumentRecording, 'event.payload.instrumentRecording');
+        sendEvent(this.recordableSubjectTabbedViewEvent,
+          RecordableSubjectTabbedViewEventType.RECORDABLE_SUBJECT_UPDATED, event.payload)
         return;
 
       default:
         throw Assertion.assertNoReachThisCode(`Unrecoginzed event ${event.type}.`);
     }
-  }
-
-
-  onNoPropertyEditorEvent(event) {
-    if (this.submitted) {
-      return;
-    }
-
-    switch (event.type as NoPropertyEditorComponentEventType) {
-      case NoPropertyEditorComponentEventType.UPDATE_NO_PROPERTY:
-        this.updateRecordableSubject(event.payload);
-        return;
-
-      default:
-        throw Assertion.assertNoReachThisCode(`Unrecoginzed event ${event.type}.`);
-    }
-  }
-
-
-  private updateRecordableSubject(data: any) {
-    Assertion.assertValue(data.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
-    Assertion.assertValue(data.recordingActUID, 'event.payload.recordingActUID');
-    Assertion.assertValue(data.recordableSubjectFields, 'event.payload.recordableSubjectFields');
-
-    this.executeCommand(RegistrationCommandType.UPDATE_RECORDABLE_SUBJECT, data)
-      .then(instrumentRecording =>
-        this.sendEvent(RecordableSubjectTabbedViewEventType.UPDATED_RECORDABLE_SUBJECT, {instrumentRecording})
-      );
   }
 
 
@@ -176,29 +138,6 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
     }
 
     this.tabEditorLabel = 'Información';
-  }
-
-
-  private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
-    this.submitted = true;
-
-    const command: Command = {
-      type: commandType,
-      payload
-    };
-
-    return this.uiLayer.execute<T>(command)
-      .finally(() => this.submitted = false);
-  }
-
-
-  private sendEvent(eventType: RecordableSubjectTabbedViewEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.recordableSubjectTabbedViewEvent.emit(event);
   }
 
 }

@@ -20,9 +20,13 @@ import { TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter
          mapTransactionStageFromViewName, mapTransactionStatusFromViewName, EmptySelectionAct,
          SelectionAct } from '@app/models';
 
+import { EmptyFileViewerData, FileViewerData} from '@app/shared/form-controls/file-control/file-control-data';
+
 import { TransactionListEventType} from '@app/views/transactions/transaction-list/transaction-list.component';
 
-import { EmptyFileViewerData, FileViewerData} from '@app/shared/form-controls/file-control/file-control-data';
+import {
+  RecordableSubjectTabbedViewEventType
+} from '@app/views/registration/recordable-subject-tabbed-view/recordable-subject-tabbed-view.component';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
@@ -150,6 +154,20 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
       case TransactionListEventType.RECEIVE_TRANSACTIONS_CLICKED:
         this.displayOptionModalSelected = 'ReceiveTransactions';
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
+  }
+
+
+  onRecordableSubjectTabbedViewEvent(event) {
+    switch (event.type as RecordableSubjectTabbedViewEventType) {
+
+      case RecordableSubjectTabbedViewEventType.CLOSE_BUTTON_CLICKED:
+        this.unselectCurrentRecordableSubject();
         return;
 
       default:

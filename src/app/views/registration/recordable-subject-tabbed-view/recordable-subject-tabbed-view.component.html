@@ -8,23 +8,14 @@
 
     <mat-tab [label]="tabEditorLabel">
 
-      <emp-land-real-estate-editor *ngIf="isRealEstate"
-        [instrumentRecording]="instrumentRecording"
-        [recordingAct]="recordingAct"
-        [realEstate]="realEstate"
-        [readonly]="instrumentRecording.actions.can.openInstrument"
-        (realEstateEditorEvent)="onRealEstateEditorEvent($event)">
-      </emp-land-real-estate-editor>
+      <emp-land-recordable-subject-editor
+       [instrumentRecordingUID]="instrumentRecording.uid"
+       [recordingActUID]="recordingAct.uid"
+       [recordableSubject]="recordingAct.recordableSubject"
+       [readonly]="instrumentRecording.actions.can.openInstrument"
+       (recordableSubjectEditorEvent)="onRecordableSubjectEditorEvent($event)">
 
-      <emp-land-no-property-editor *ngIf="isAssociation || isNoProperty"
-        [instrumentRecording]="instrumentRecording"
-        [recordingAct]="recordingAct"
-        [recordableSubject]="recordingAct.recordableSubject"
-        [isAssociation]="isAssociation"
-        [readonly]="instrumentRecording.actions.can.openInstrument"
-        (noPropertyEditorEvent)="onNoPropertyEditorEvent($event)">
-
-      </emp-land-no-property-editor>
+      </emp-land-recordable-subject-editor>
 
     </mat-tab>
 

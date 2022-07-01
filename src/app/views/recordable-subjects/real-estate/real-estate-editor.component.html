@@ -10,9 +10,10 @@
         <label>Folio real:</label>
 
         <div fxLayout="row">
-          <input type="text" class="text-box" fxFlex [formControlName]="controls.electronicID">
-          <button type="button" class="btn" fxFlex="82px" [style.marginTop.px]="2"
-            (click)="onElectronicHistoryClicked()">Historia</button>
+          <input type="text" class="text-box" [fxFlex]="showElectronicHistoryButton ? '182px' : '282px'"
+            [formControlName]="controls.electronicID">
+          <button type="button" class="btn" fxFlex="92px" *ngIf="showElectronicHistoryButton"
+            [style.marginTop.px]="2" (click)="onElectronicHistoryClicked()">Historia</button>
         </div>
       </div>
 
@@ -22,19 +23,22 @@
           [class.invalid-control]="formHandler.showInvalidControl(controls.cadastralID)">
       </div>
 
-      <div fxFlex="92px">
+      <div [fxFlex]="readonly ? '175px' : '92px'">
         <label>Vinculado el:</label>
         <input type="text" class="text-box" [formControlName]="controls.cadastreLinkingDate">
       </div>
 
-      <div fxFlex="119px">
-        <label>
-          <a class="link" (click)="onCadastralCertificateClicked()">Cédula catastral</a>
-        </label>
-        <button type="button" class="btn" [style.marginTop.px]="2" [style.width.px]="111" [disabled]=""
-          (click)="onCadastralClicked()">
-          {{realEstate.cadastralID ? 'Desvincular' : 'Vincular'}}
-        </button>
+      <div fxFlex="119px" *ngIf="!readonly">
+        <ng-container >
+          <label>
+            <a class="link" (click)="onCadastralCertificateClicked()">Cédula catastral</a>
+          </label>
+          <button type="button" class="btn" disabled
+            [style.marginTop.px]="2" [style.width.px]="111"
+            (click)="onCadastralClicked()">
+            {{realEstate.cadastralID ? 'Desvincular' : 'Vincular'}}
+          </button>
+        </ng-container>
       </div>
 
     </div>
@@ -118,8 +122,8 @@
 
       <div fxFlex fxLayoutAlign="start center">
 
-        <button *ngIf="editionMode" (click)="enableEditor(false)" class="btn-warning">
-          Cancelar edición
+        <button *ngIf="editionMode" (click)="enableEditor(false)" class="btn">
+          Descartar Cambios
         </button>
 
       </div>

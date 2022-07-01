@@ -105,7 +105,12 @@ export class HistoricRegistrationWorkspaceComponent {
   onRecordableSubjectTabbedViewEvent(event) {
     switch (event.type as RecordableSubjectTabbedViewEventType) {
 
-      case RecordableSubjectTabbedViewEventType.UPDATED_RECORDABLE_SUBJECT:
+      case RecordableSubjectTabbedViewEventType.CLOSE_BUTTON_CLICKED:
+        this.unselectCurrentRecordingAct();
+
+        return;
+
+      case RecordableSubjectTabbedViewEventType.RECORDABLE_SUBJECT_UPDATED:
         Assertion.assertValue(event.payload.instrumentRecording, 'event.payload.instrumentRecording');
 
         this.refreshInstrumentRecordingAndSelectionAct(

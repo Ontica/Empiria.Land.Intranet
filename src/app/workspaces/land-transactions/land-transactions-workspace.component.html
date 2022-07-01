@@ -52,7 +52,7 @@
     <emp-land-recordable-subject-tabbed-view
       [instrumentRecording]="selectedRecordableSubject.instrumentRecording"
       [recordingAct]="selectedRecordableSubject.recordingAct"
-      (closeEvent)="unselectCurrentRecordableSubject()">
+      (recordableSubjectTabbedViewEvent)="onRecordableSubjectTabbedViewEvent($event)">
 
     </emp-land-recordable-subject-tabbed-view>
 

@@ -14,8 +14,7 @@ import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { EmptyRealEstate, InstrumentRecording, RealEstate, RecorderOffice,
-         RecordingActEntry } from '@app/models';
+import { EmptyRealEstate, RealEstate, RecorderOffice } from '@app/models';
 
 import { RealEstateFields, RecordableObjectStatusItem, RecordableObjectStatusList,
          RecordableSubjectType} from '@app/models/recordable-subjects';
@@ -51,10 +50,11 @@ enum RealEstateEditorFormControls {
 })
 export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() instrumentRecording: InstrumentRecording;
-  @Input() recordingAct: RecordingActEntry;
+  @Input() instrumentRecordingUID = '';
+  @Input() recordingActUID = '';
   @Input() realEstate: RealEstate = EmptyRealEstate;
   @Input() readonly = false;
+  @Input() showElectronicHistoryButton = true;
   @Output() realEstateEditorEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;
@@ -149,8 +149,8 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     const payload = {
-      instrumentRecordingUID: this.instrumentRecording.uid,
-      recordingActUID: this.recordingAct.uid,
+      instrumentRecordingUID: this.instrumentRecordingUID,
+      recordingActUID: this.recordingActUID,
       recordableSubjectFields: this.getFormData()
     };
 
