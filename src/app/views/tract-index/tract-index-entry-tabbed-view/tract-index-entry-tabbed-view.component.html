@@ -31,11 +31,24 @@
 
       </mat-tab>
 
-      <mat-tab label="Acto jurídico" disabled>
+      <mat-tab label="Acto jurídico">
+
+        <ng-template matTabContent>
+
+          <emp-land-recording-act-edition
+            [instrumentRecordingUID]="tractIndexEntry.instrumentRecordingUID"
+            [recordingActUID]="tractIndexEntry.uid"
+            [readonly]="true"
+            [displayFlat]="true"
+            (recordingActEditionEventType)="onRecordingActEditionEventType($event)">
+
+          </emp-land-recording-act-edition>
+
+        </ng-template>
 
       </mat-tab>
 
-      <mat-tab label="Predio">
+      <mat-tab [label]="recordableSubjectTabName">
 
         <ng-template matTabContent>
 

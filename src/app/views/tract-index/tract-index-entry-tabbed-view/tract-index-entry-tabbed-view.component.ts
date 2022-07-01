@@ -7,11 +7,11 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 
-import { DateStringLibrary } from '@app/core';
+import { DateStringLibrary, EventInfo } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { EmptyTractIndexEntry, TractIndexEntry } from '@app/models';
+import { EmptyTractIndexEntry, RecordableSubjectType, TractIndexEntry } from '@app/models';
 
 
 @Component({
@@ -54,8 +54,30 @@ export class TractIndexEntryTabbedViewComponent implements OnChanges, OnDestroy 
   }
 
 
+  get recordableSubjectTabName(){
+    if (this.tractIndexEntry.recordableSubject.type === RecordableSubjectType.RealEstate) {
+      return 'Predio';
+    }
+
+    if (this.tractIndexEntry.recordableSubject.type === RecordableSubjectType.Association) {
+      return 'Asociación';
+    }
+
+    if (this.tractIndexEntry.recordableSubject.type === RecordableSubjectType.NoProperty) {
+      return 'Documento';
+    }
+
+    return 'Información';
+  }
+
+
   onClose() {
     this.closeEvent.emit();
+  }
+
+
+  onRecordingActEditionEventType(event: EventInfo) {
+    console.log(`Unhandled user interface event ${event.type}`);
   }
 
 
