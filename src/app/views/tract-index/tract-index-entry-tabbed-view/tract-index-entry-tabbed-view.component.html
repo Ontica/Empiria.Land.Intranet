@@ -1,0 +1,58 @@
+<div class="card card-border">
+
+  <div class="card-header" [style.minHeight.px]="22">
+
+    <div class="card-title">
+      <span>{{cardTitle}}</span>
+      <div class="card-hint" [innerHTML]="cardHint | safeHtml"></div>
+    </div>
+
+    <div class="card-header-options" [style.paddingTop]="0">
+      <mat-icon class="card-icon" (click)="onClose()">close</mat-icon>
+    </div>
+
+  </div>
+
+  <div class="card-body">
+
+    <mat-tab-group>
+
+      <mat-tab label="Sello" *ngIf="displayStampMediaTab">
+
+        <ng-template matTabContent>
+
+          <emp-land-tract-index-entry-printable-viewer
+            [documentID]="tractIndexEntry.documentID"
+            [stampMedia]="tractIndexEntry.stampMedia">
+
+          </emp-land-tract-index-entry-printable-viewer>
+
+        </ng-template>
+
+      </mat-tab>
+
+      <mat-tab label="Acto jurídico">
+
+        <ng-template matTabContent>
+
+          <emp-land-recordable-subject-editor
+            [instrumentRecordingUID]="tractIndexEntry.instrumentRecordingUID"
+            [recordingActUID]="tractIndexEntry.uid"
+            [recordableSubject]="tractIndexEntry.recordableSubject"
+            [readonly]="true">
+
+          </emp-land-recordable-subject-editor>
+
+        </ng-template>
+
+      </mat-tab>
+
+      <mat-tab label="Predio" disabled>
+
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </div>
+
+</div>

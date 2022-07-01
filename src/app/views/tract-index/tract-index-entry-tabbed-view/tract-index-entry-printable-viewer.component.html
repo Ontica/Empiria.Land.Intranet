@@ -1,0 +1,33 @@
+<div fxLayout="column" fxFlexFill>
+
+  <ng-container *ngIf="!stampMediaError">
+
+    <div fxLayout="row" fxLayoutAlign="end" [style.paddingBottom.px]="8">
+
+      <button class="btn" (click)="onPrintStamp()">
+        Imprimir
+      </button>
+
+    </div>
+
+    <div class="preview-container" fxFlex *ngIf="displayStampMedia">
+
+      <div class="object-preview-container">
+
+        <object class="object-preview mat-elevation-z1"
+          [data]="stampMedia.url | safeUrl"
+          (error)="onStampMediaError()">
+
+        </object>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+  <div *ngIf="stampMediaError" class="text-not-found">
+    Error al cargar el sello.
+  </div>
+
+</div>

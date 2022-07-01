@@ -1,0 +1,45 @@
+<form #form="ngForm" autocomplete="off" class="form-section form-container"
+  [style.padding.px]="0" [style.margin.px]="0" (keydown.enter)="$event.preventDefault()">
+
+  <div fxLayout="column" fxLayoutGap="0.5rem" fxLayoutGap.lt-sm="0.5rem">
+
+      <div fxLayout="row" fxLayout.lt-sm="column">
+
+        <div fxFlex="50">
+
+          <label>Tipo:</label>
+
+          <emp-ng-select name="type"
+            [(ngModel)]="formData.type"
+            [items]="tractIndexEntryTypeList"
+            [config]="{clearable: true}"
+            placeholder="Todos"
+            (changes)="onFilterChanges()">
+          </emp-ng-select>
+
+        </div>
+
+        <div fxFlex="50" fxLayoutAlign="start end">
+
+        <div class="input-search-container">
+
+          <input type="text" class="text-box" name="keywords" #keywords="ngModel"
+            placeholder="Buscar..."
+            [(ngModel)]="formData.keywords"
+            [style.marginRight]="0" [style.width.%]="100"
+            (keyup.enter)="onFilterChanges()"
+            (keyup.escape)="onClearKeywords()">
+
+        </div>
+
+      </div>
+
+      </div>
+
+  </div>
+
+</form>
+
+<mat-divider [style.margin]="'8px -8px'">
+
+</mat-divider>

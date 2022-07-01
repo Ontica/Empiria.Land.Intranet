@@ -139,4 +139,13 @@ export class RecordableSubjectsDataService {
     return this.http.get<RecordableSubjectShortModel[]>(path);
   }
 
+
+  getFullTractIndex(recordableSubjectUID: string): Observable<TractIndex> {
+    Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
+
+    const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}/tract-index`;
+
+    return this.http.get<TractIndex>(path);
+  }
+
 }

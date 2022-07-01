@@ -1,0 +1,17 @@
+<div fxLayout="column" fxFlexFill [style.padding]="'8px 8px 0 8px'">
+
+  <emp-land-tract-index-entries-filter fxFlex="none"
+    [tractIndexEntryType]="tractIndexEntryType"
+    (tractIndexEntriesFilterEvent)="onTractIndexEntriesFilterEvent($event)">
+
+  </emp-land-tract-index-entries-filter>
+
+  <emp-land-tract-index-entries-table fxFlex
+    [tractIndexEntriesList]="tractIndex.tractIndex"
+    [filter]="filter"
+    [selectedTractIndexEntry]="selectedTractIndexEntry"
+    (tractIndexEntriesTableEvent)="onTractIndexEntriesTableEvent($event)">
+
+  </emp-land-tract-index-entries-table>
+
+</div>

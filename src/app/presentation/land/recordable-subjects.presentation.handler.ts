@@ -37,6 +37,7 @@ export enum SelectorType {
   RECORDING_BOOK_ENTRIES_LIST       = 'Land.RecordableSubjects.Selector.RecordingBookEntries.List',
   RECORDABLE_SUBJECTS_LIST          = 'Land.RecordableSubjects.Selector.RecordableSubjects.List',
   RECORDABLE_SUBJECTS_EXPLORER_DATA = 'Land.RecordableSubjects.Selector.RecordableSubjectsExplorerData.Data',
+  TRACT_INDEX                       = 'Land.RecordableSubjects.Selector.TractIndex',
 }
 
 
@@ -147,6 +148,11 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
 
       case SelectorType.RECORDABLE_SUBJECTS_LIST:
         return toObservable<U>(this.data.searchRecordableSubject(params as RecordableSubjectFilter));
+
+      case SelectorType.TRACT_INDEX:
+        Assertion.assertValue(params.recordableSubjectUID, 'params.recordableSubjectUID');
+
+        return toObservable<U>(this.data.getFullTractIndex(params.recordableSubjectUID));
 
       default:
         return super.select<U>(selectorType, params);

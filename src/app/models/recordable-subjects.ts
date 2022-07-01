@@ -16,6 +16,30 @@ export enum RecordableSubjectType {
 }
 
 
+
+export const RecordableSubjectTypeList: Identifiable[] = [
+  {uid: RecordableSubjectType.RealEstate,  name: 'Predios'},
+  {uid: RecordableSubjectType.Association, name: 'Asociaciones'},
+  {uid: RecordableSubjectType.NoProperty,  name: 'Documentos'},
+];
+
+
+export function getRecordableSubjectTypeName(type: RecordableSubjectType): string {
+    switch (type) {
+    case RecordableSubjectType.RealEstate:
+      return 'Predio';
+    case RecordableSubjectType.Association:
+      return 'Asociacion';
+    case RecordableSubjectType.NoProperty:
+      return 'Documento';
+    case RecordableSubjectType.None:
+      return 'Ninguno';
+    default:
+      throw Assertion.assertNoReachThisCode(`Unhandled type name for type '${status}'.`);
+  }
+}
+
+
 export type RecordableObjectStatus = 'Registered' | 'Incomplete' | 'NotLegible' | 'Obsolete';
 
 
@@ -32,12 +56,6 @@ export const RecordableObjectStatusList: RecordableObjectStatusItem[] = [
   { status: 'Obsolete',   statusName: 'Obsoleto' },
 ];
 
-
-export const RecordableSubjectTypeList: Identifiable[] = [
-  {uid: RecordableSubjectType.RealEstate,  name: 'Predios'},
-  {uid: RecordableSubjectType.Association, name: 'Asociaciones'},
-  {uid: RecordableSubjectType.NoProperty,  name: 'Documentos'},
-];
 
 export function getRecordableObjectStatusName(status: RecordableObjectStatus): RecordableObjectStatusItem {
     switch (status) {
@@ -101,8 +119,9 @@ export const EmptyRecordingContext: RecordingContext = {
 };
 
 
-export interface RecordableSubject extends Identifiable, PartitionedType {
+export interface RecordableSubject extends Identifiable {
   electronicID: string;
+  type: RecordableSubjectType;
   recorderOffice: Identifiable;
   kind: string;
   description: string;
@@ -113,7 +132,7 @@ export interface RecordableSubject extends Identifiable, PartitionedType {
 
 export const EmptyRecordableSubject: RecordableSubject = {
   uid: '',
-  type: '',
+  type: RecordableSubjectType.None,
   electronicID: '',
   recorderOffice: Empty,
   kind: '',
@@ -157,7 +176,7 @@ export interface RealEstate extends RecordableSubject {
 
 export const EmptyRealEstate: RealEstate = {
   uid: '',
-  type: '',
+  type: RecordableSubjectType.None,
   name: '',
   electronicID: '',
   kind: '',
@@ -191,14 +210,29 @@ export interface TractIndex {
 }
 
 
+export enum TractIndexEntryType {
+  RecordingAct = 'RecordingAct',
+  Certificate = 'Certificate',
+}
+
+
+export const TractIndexEntryTypeList: Identifiable[] = [
+  { uid: TractIndexEntryType.RecordingAct, name: 'Acto Jurídico' },
+  { uid: TractIndexEntryType.Certificate, name: 'Certificado' },
+];
+
+
 export interface TractIndexEntry {
   uid: string;
-  type: 'RecordingAct' | 'Certificate';
+  type: TractIndexEntryType;
   name: string;
   documentID: string;
   transactionID: string;
   presentationTime: DateString;
   recordingTime: DateString;
+  stampMedia: MediaBase;
+  instrumentRecordingUID: string;
+  recordableSubject: RecordableSubject;
   status: string;
 }
 
@@ -206,6 +240,21 @@ export interface TractIndexEntry {
 export const EmptyTractIndex: TractIndex = {
   recordableSubject: EmptyRecordableSubject,
   tractIndex: [],
+};
+
+
+export const EmptyTractIndexEntry: TractIndexEntry = {
+  uid: '',
+  type: TractIndexEntryType.RecordingAct,
+  name: '',
+  documentID: '',
+  transactionID: '',
+  presentationTime: '',
+  recordingTime: '',
+  stampMedia: EmptyMediaBase,
+  instrumentRecordingUID: '',
+  recordableSubject: EmptyRecordableSubject,
+  status: '',
 };
 
 

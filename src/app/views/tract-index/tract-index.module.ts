@@ -19,6 +19,12 @@ import { RecordableSubjectsExplorerComponent } from './recordable-subjects-explo
 import { RecordableSubjectsFilterComponent } from './recordable-subjects-explorer/recordable-subjects-filter.component';
 import { RecordableSubjectsTableComponent } from './recordable-subjects-explorer/recordable-subjects-table.component';
 import { RecordableSubjectsViewerComponent } from './recordable-subjects-explorer/recordable-subjects-viewer.component';
+import { TractIndexEntriesFilterComponent } from './tract-index-explorer/tract-index-entries-filter.component';
+import { TractIndexEntriesTableComponent } from './tract-index-explorer/tract-index-entries-table.component';
+import { TractIndexEntriesViewerComponent } from './tract-index-explorer/tract-index-entries-viewer.component';
+import { TractIndexExplorerComponent } from './tract-index-explorer/tract-index-explorer.component';
+import { TractIndexEntryPrintableViewerComponent } from './tract-index-entry-tabbed-view/tract-index-entry-printable-viewer.component';
+import { TractIndexEntryTabbedViewComponent } from './tract-index-entry-tabbed-view/tract-index-entry-tabbed-view.component';
 
 
 @NgModule({
@@ -37,6 +43,12 @@ import { RecordableSubjectsViewerComponent } from './recordable-subjects-explore
     RecordableSubjectsFilterComponent,
     RecordableSubjectsTableComponent,
     RecordableSubjectsViewerComponent,
+    TractIndexEntriesFilterComponent,
+    TractIndexEntriesTableComponent,
+    TractIndexEntriesViewerComponent,
+    TractIndexExplorerComponent,
+    TractIndexEntryPrintableViewerComponent,
+    TractIndexEntryTabbedViewComponent,
   ],
   exports: [
     RecordableSubjectsExplorerComponent,
