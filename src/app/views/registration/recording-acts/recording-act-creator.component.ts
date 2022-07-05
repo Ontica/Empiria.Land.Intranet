@@ -89,7 +89,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
-    this.initLoad();
+    this.loadDataLists();
     this.subscribeRecordableSubjectList();
   }
 
@@ -233,11 +233,9 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private initLoad() {
+  private loadDataLists() {
     this.helper.select<string[]>(RecordableSubjectsStateSelector.REAL_ESTATE_PARTITION_KIND_LIST)
-      .subscribe(x => {
-        this.partitionKindList = x.map(item => Object.create({ name: item }));
-      });
+      .subscribe(x => this.partitionKindList = x.map(item => Object.create({ name: item })));
   }
 
 
@@ -285,9 +283,8 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     };
 
     this.helper.select<TractIndex>(RecordableSubjectsStateSelector.AMENDABLE_RECORDING_ACTS, payload)
-      .subscribe(x => {
-        this.tractIndexSelected = x;
-      });
+      .toPromise()
+      .then(x => this.tractIndexSelected = x);
   }
 
 

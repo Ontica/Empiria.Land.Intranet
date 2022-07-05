@@ -8,6 +8,10 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,
          SimpleChanges } from '@angular/core';
 
+import { combineLatest, concat, Observable, of, Subject } from 'rxjs';
+
+import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+
 import { Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
@@ -17,9 +21,7 @@ import { BookEntryShortModel, EmptyBookEntryShortModel, RecorderOffice } from '@
 import { RecordableSubjectsStateSelector,
          TransactionStateSelector } from '@app/presentation/exported.presentation.types';
 
-import { concat, Observable, of, Subject } from 'rxjs';
 
-import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
 export enum RecordingBookSelectorEventType {
   RECORDING_BOOK_CLICKED = 'RecordingBookSelectorComponent.Event.RecordingBookClicked',
@@ -80,7 +82,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
   ngOnInit(): void {
     this.initForm();
-    this.initLoad();
+    this.loadDataLists();
     this.resetRecordingBookField();
     this.recorderOfficeSelected = null;
     this.recordingSectionSelected = null;
@@ -171,19 +173,18 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
   }
 
 
-  private initLoad() {
+  private loadDataLists() {
     this.isLoading = true;
 
-    this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST)
-      .subscribe(x => {
-        this.recorderOfficeList = x;
-      });
-
-    this.helper.select<Identifiable[]>(TransactionStateSelector.RECORDING_SECTION_LIST)
-      .subscribe(x => {
-        this.recordingSectionList = x;
+    combineLatest([
+      this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST),
+      this.helper.select<Identifiable[]>(TransactionStateSelector.RECORDING_SECTION_LIST),
+    ])
+    .subscribe(([a, b]) => {
+        this.recorderOfficeList = a;
+        this.recordingSectionList = b;
         this.isLoading = false;
-      });
+    });
   }
 
 

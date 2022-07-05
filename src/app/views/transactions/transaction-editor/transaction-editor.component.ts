@@ -7,6 +7,8 @@
 
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
+import { combineLatest } from 'rxjs';
+
 import { Command, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
@@ -15,8 +17,9 @@ import { TransactionCommandType, TransactionStateSelector } from '@app/core/pres
 
 import { Agency, Transaction, EmptyTransaction, TransactionType, ProvidedServiceType } from '@app/models';
 
-import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 import { ArrayLibrary } from '@app/shared/utils';
+
+import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
 import { TransactionSubmitterEventType } from './transaction-submitter/transaction-submitter.component';
@@ -36,7 +39,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
   transactionTypeList: TransactionType[] = [];
 
-  agencyList: Identifiable[] = [];
+  agencyList: Agency[] = [];
 
   filingOfficeList: Identifiable[] = [];
 
@@ -54,12 +57,8 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.helper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
-      .subscribe(x => {
-        this.transaction = x;
-        this.resetPanelState();
-        this.loadDataLists();
-      });
+    this.loadTransactionData();
+    this.loadDataLists();
   }
 
 
@@ -70,31 +69,6 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.helper.destroy();
-  }
-
-
-  loadDataLists() {
-    this.helper.select<TransactionType[]>(TransactionStateSelector.TRANSACTION_TYPE_LIST, {})
-      .subscribe(x => {
-        this.transactionTypeList = x;
-      });
-
-    this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST, {})
-      .subscribe(x => {
-        this.filingOfficeList = isEmpty(this.transaction.filingOffice) ? x :
-          ArrayLibrary.insertIfNotExist(x, this.transaction.filingOffice, 'uid');
-      });
-
-    this.helper.select<Agency[]>(TransactionStateSelector.AGENCY_LIST, {})
-      .subscribe(x => {
-        this.agencyList = isEmpty(this.transaction.agency) ?
-          x : ArrayLibrary.insertIfNotExist(x, this.transaction.agency, 'uid');
-      });
-
-    this.helper.select<ProvidedServiceType[]>(TransactionStateSelector.PROVIDED_SERVICE_LIST, {})
-      .subscribe(x => {
-        this.providedServiceTypeList = x;
-      });
   }
 
 
@@ -258,6 +232,43 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  private loadTransactionData() {
+    this.helper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
+      .subscribe(x => {
+        this.transaction = x;
+        this.resetPanelState();
+        this.insertTransactionDataIfNotExist();
+      });
+  }
+
+
+  private loadDataLists() {
+    combineLatest([
+      this.helper.select<TransactionType[]>(TransactionStateSelector.TRANSACTION_TYPE_LIST),
+      this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST),
+      this.helper.select<Agency[]>(TransactionStateSelector.AGENCY_LIST),
+      this.helper.select<ProvidedServiceType[]>(TransactionStateSelector.PROVIDED_SERVICE_LIST)
+    ])
+    .subscribe(([a, b, c, d]) => {
+       this.transactionTypeList = a;
+       this.filingOfficeList = b;
+       this.agencyList = c;
+       this.providedServiceTypeList = d;
+       this.insertTransactionDataIfNotExist();
+    });
+  }
+
+
+  private insertTransactionDataIfNotExist() {
+    this.filingOfficeList = isEmpty(this.transaction.filingOffice) ? this.filingOfficeList :
+      ArrayLibrary.insertIfNotExist(this.filingOfficeList, this.transaction.filingOffice, 'uid');
+
+    this.agencyList = isEmpty(this.transaction.agency) ? this.agencyList :
+      ArrayLibrary.insertIfNotExist(this.agencyList, this.transaction.agency, 'uid');
+  }
+
+
   private executeCommand<T>(commandType: TransactionCommandType, payload?: any): Promise<T> {
     this.submitted = true;
 
@@ -270,22 +281,22 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
       .finally(() => this.submitted = false);
   }
 
-  printControlVoucher() {
+  private printControlVoucher() {
     this.openPrintViewer(this.transaction.controlVoucher.url,
                          this.transaction.controlVoucher.mediaType);
   }
 
-  printPaymentOrder() {
+  private printPaymentOrder() {
     this.openPrintViewer(this.transaction.paymentOrder.media.url,
                          this.transaction.paymentOrder.media.mediaType);
   }
 
-  printSubmissionReceipt() {
+  private printSubmissionReceipt() {
     this.openPrintViewer(this.transaction.submissionReceipt.url,
                         this.transaction.submissionReceipt.mediaType);
   }
 
-  openPrintViewer(url: string, mediaType: string) {
+  private openPrintViewer(url: string, mediaType: string) {
     this.filePrintPreview.open(url, mediaType);
   }
 

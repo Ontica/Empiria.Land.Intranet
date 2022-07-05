@@ -9,6 +9,8 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } 
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { combineLatest } from 'rxjs';
+
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
@@ -153,16 +155,15 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
       selector = RecordableSubjectsStateSelector.NO_PROPERTY_KIND_LIST;
     }
 
-    this.helper.select<string[]>(selector)
-      .subscribe(x => {
-        this.kindsList = x.map(item => Object.create({ name: item }));
-        this.isLoading = false;
-      });
-
-    this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
-      .subscribe(x => {
-        this.recorderOfficeList = x;
-      });
+    combineLatest([
+      this.helper.select<string[]>(selector),
+      this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST),
+    ])
+    .subscribe(([a, b]) => {
+      this.kindsList = a.map(item => Object.create({ name: item }));
+      this.recorderOfficeList = b;
+      this.isLoading = false;
+    });
   }
 
 

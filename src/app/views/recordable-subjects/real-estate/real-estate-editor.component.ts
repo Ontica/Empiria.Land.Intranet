@@ -10,6 +10,8 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { combineLatest } from 'rxjs';
+
 import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
@@ -216,22 +218,19 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   private loadDataLists() {
     this.isLoading = true;
 
-    this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
-      .subscribe(x => {
-        this.recorderOfficeList = x;
-        this.setRecorderOfficeAndMunicipalityDataList();
-        this.isLoading = false;
-      });
+    combineLatest([
+      this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST),
+      this.helper.select<string[]>(RecordableSubjectsStateSelector.REAL_ESTATE_KIND_LIST),
+      this.helper.select<Identifiable[]>(RecordableSubjectsStateSelector.REAL_ESTATE_LOT_SIZE_UNIT_LIST),
+    ])
+    .subscribe(([a, b, c]) => {
+      this.recorderOfficeList = a;
+      this.realEstateKindList = b.map(item => Object.create({ name: item }));
+      this.lotSizeUnitList = c;
 
-    this.helper.select<string[]>(RecordableSubjectsStateSelector.REAL_ESTATE_KIND_LIST)
-      .subscribe(x => {
-        this.realEstateKindList = x.map(item => Object.create({ name: item }));
-      });
-
-    this.helper.select<Identifiable[]>(RecordableSubjectsStateSelector.REAL_ESTATE_LOT_SIZE_UNIT_LIST)
-      .subscribe(x => {
-        this.lotSizeUnitList = x;
-      });
+      this.setRecorderOfficeAndMunicipalityDataList();
+      this.isLoading = false;
+    });
   }
 
 

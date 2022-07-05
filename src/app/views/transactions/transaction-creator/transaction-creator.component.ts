@@ -7,7 +7,10 @@
 
 import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 
+import { combineLatest } from 'rxjs';
+
 import { Command, EventInfo, Identifiable } from '@app/core';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
@@ -41,21 +44,8 @@ export class TransactionCreatorComponent implements OnInit, OnDestroy {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
-  ngOnInit(): void {
-    this.helper.select<TransactionType[]>(TransactionStateSelector.TRANSACTION_TYPE_LIST, {})
-      .subscribe(x => {
-        this.transactionTypeList = x;
-      });
-
-    this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST, {})
-      .subscribe(x => {
-        this.filingOfficeList = x;
-      });
-
-    this.helper.select<Agency[]>(TransactionStateSelector.AGENCY_LIST, {})
-      .subscribe(x => {
-        this.agencyList = x;
-      });
+  ngOnInit() {
+    this.loadDataLists();
   }
 
   ngOnDestroy() {
@@ -63,7 +53,6 @@ export class TransactionCreatorComponent implements OnInit, OnDestroy {
   }
 
   onTransactionHeaderEvent(event: EventInfo): void {
-
     if (this.submitted) {
       return;
     }
@@ -90,6 +79,19 @@ export class TransactionCreatorComponent implements OnInit, OnDestroy {
 
   onClose() {
     this.closeEvent.emit();
+  }
+
+  private loadDataLists() {
+    combineLatest([
+      this.helper.select<TransactionType[]>(TransactionStateSelector.TRANSACTION_TYPE_LIST),
+      this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST),
+      this.helper.select<Agency[]>(TransactionStateSelector.AGENCY_LIST),
+    ])
+    .subscribe(([a, b, c]) => {
+      this.transactionTypeList = a;
+      this.filingOfficeList = b;
+      this.agencyList = c;
+    });
   }
 
   private executeCommand<T>(commandType: any, payload?: any): Promise<T> {

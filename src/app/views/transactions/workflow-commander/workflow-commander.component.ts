@@ -145,7 +145,8 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
 
     this.helper.select<TransactionShortModel>(TransactionStateSelector.TRANSACTION_FROM_COMMAND_EXECUTION,
       workflowCommand)
-      .subscribe(x => {
+      .toPromise()
+      .then(x => {
         this.handleTransactionDuplicate(data.searchUID, x.uid);
         this.transactionList = ArrayLibrary.insertItemTop(this.transactionList, x, 'uid');
       });

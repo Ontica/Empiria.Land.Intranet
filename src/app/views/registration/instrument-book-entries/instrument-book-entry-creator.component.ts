@@ -9,6 +9,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { combineLatest } from 'rxjs';
+
 import { Assertion, Command, Identifiable } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
@@ -53,7 +55,7 @@ export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
-    this.loadData();
+    this.loadDataList();
   }
 
   ngOnDestroy() {
@@ -84,16 +86,15 @@ export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private loadData() {
-    this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST)
-      .subscribe(x => {
-        this.recorderOfficeList = x;
-      });
-
-    this.helper.select<RecordingSection[]>(TransactionStateSelector.RECORDING_SECTION_LIST)
-      .subscribe(x => {
-        this.recordingSectionList = x;
-      });
+  private loadDataList() {
+    combineLatest([
+      this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST),
+      this.helper.select<RecordingSection[]>(TransactionStateSelector.RECORDING_SECTION_LIST),
+    ])
+    .subscribe(([a, b]) => {
+      this.recorderOfficeList = a;
+      this.recordingSectionList = b;
+    });
   }
 
 
