@@ -80,11 +80,11 @@
 
   </div>
 
-  <div class="file-add-section" *ngIf="!readonly && ( !filesToUpload || fileControlConfig.maxFiles > filesToUpload.length )"
+  <div class="file-add-section" *ngIf="!filesToUpload || fileControlConfig.maxFiles > filesToUpload.length"
     [ngClass]="{'tag-required': fileControlConfig.tagRequired,
                 'multiple': fileControlConfig.maxFiles > 1}">
 
-    <div class="file-add"
+    <div class="file-add" *ngIf="!readonly"
       [title]="fileControlConfig.textAccion">
       <label [for]="idFileControl">
         <mat-icon>add</mat-icon>
