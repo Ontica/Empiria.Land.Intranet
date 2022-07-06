@@ -35,11 +35,6 @@ export class LandTransactionTabbedViewComponent implements OnChanges {
   }
 
 
-  private setSelectedTabIndex() {
-    this.selectedTabIndex = 0;
-  }
-
-
   private setCardHint() {
     this.cardHint = `<strong>${this.transaction.transactionID}</strong>`;
 

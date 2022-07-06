@@ -7,11 +7,14 @@
 
 import { EmptyInstrument, Instrument } from './instrument';
 
+import { MediaFile } from './files';
+
 
 export interface PreprocessingData {
   instrument: Instrument;
   antecedent: any;
   antecedentRecordingActs: any;
+  media: MediaFile[];
   actions: PreprocessingActions;
 }
 
@@ -54,5 +57,6 @@ export const EmptyPreprocessingData: PreprocessingData = {
   instrument: EmptyInstrument,
   antecedent: {},
   antecedentRecordingActs: {},
+  media: [],
   actions: EmptyPreprocessingDataAction,
 };

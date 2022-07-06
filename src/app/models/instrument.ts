@@ -7,6 +7,8 @@
 
 import { DateString } from '@app/core';
 
+import { MediaFile } from './files';
+
 
 export interface Period {
   fromDate: DateString;
@@ -63,7 +65,7 @@ export interface Instrument {
   folio: string;
   endFolio: string;
   sheetsCount: number;
-  media: InstrumentMedia[];
+  media: MediaFile[];
 }
 
 
@@ -124,17 +126,8 @@ export interface InstrumentFields  {
   sheetsCount?: number;
 }
 
+
 export type InstrumentStatus = 'Opened' | 'Closed' | 'ReadOnly' | 'Secured' | 'Confidential';
-
-
-export interface InstrumentMedia {
-  uid: string;
-  type: string;
-  content: InstrumentMediaContent;
-  name: string;
-  url: string;
-  size: number;
-}
 
 
 export type InstrumentMediaContent = 'InstrumentMainFile' | 'InstrumentAuxiliaryFile';

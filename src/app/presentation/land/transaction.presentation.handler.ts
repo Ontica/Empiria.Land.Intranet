@@ -17,24 +17,25 @@ import { AbstractPresentationHandler, StateValues } from '@app/core/presentation
 
 import { TransactionDataService } from '@app/data-services';
 
-import { FileDownloadService } from '@app/data-services/file-services/file-download.service';
-
 import { ArrayLibrary } from '@app/shared/utils';
 
 import {
-  PreprocessingData, Transaction, TransactionFilter, TransactionShortModel,
+  PreprocessingData, TransactionFilter, TransactionShortModel,
   EmptyPreprocessingData, EmptyTransaction, EmptyTransactionFilter,
   mapTransactionShortModelFromTransaction
 } from '@app/models';
+
 import { EmptyFileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 
 export enum ActionType {
-  SELECT_TRANSACTION = 'Land.Transactions.Action.SelectTransaction',
   SET_LIST_FILTER = 'Land.Transactions.Action.SetListFilter',
+  SELECT_TRANSACTION = 'Land.Transactions.Action.SelectTransaction',
   UNSELECT_TRANSACTION = 'Land.Transactions.Action.UnselectTransaction',
   SELECT_FILE_LIST = 'Land.Transactions.Action.SelectFileList',
   UNSELECT_FILE_LIST = 'Land.Transactions.Action.UnselectFileList',
+  SELECT_PREPROCESSING_DATA = 'Land.Transactions.Action.SelectPreprocessingData',
+  UNSELECT_PREPROCESSING_DATA = 'Land.Transactions.Action.UnselectPreprocessingData',
 }
 
 
@@ -50,9 +51,8 @@ export enum CommandType {
   CANCEL_PAYMENT_ORDER = 'Land.Transactions.Command.CancelPaymentOrder',
   SET_PAYMENT = 'Land.Transactions.Command.SetPayment',
   CANCEL_PAYMENT = 'Land.Transactions.Command.CancelPayment',
-  UPLOAD_INSTRUMENT_FILE = 'Land.Transactions.Command.UploadInstrumentFile',
-  REMOVE_INSTRUMENT_FILE = 'Land.Transactions.Command.RemoveInstrumentFile',
-  DOWNLOAD_INSTRUMENT_FILE = 'Land.Transactions.Command.DownloadInstrumentFile',
+  UPLOAD_TRANSACTION_FILE = 'Land.Transactions.Command.UploadTransactionFile',
+  REMOVE_TRANSACTION_FILE = 'Land.Transactions.Command.RemoveTransactionFile',
   EXECUTE_WORKFLOW_COMMAND = 'Land.Transactions.Command.ExecuteWorkflowCommand',
 }
 
@@ -70,8 +70,8 @@ export enum EffectType {
   CANCEL_PAYMENT_ORDER = CommandType.CANCEL_PAYMENT_ORDER,
   SET_PAYMENT = CommandType.SET_PAYMENT,
   CANCEL_PAYMENT = CommandType.CANCEL_PAYMENT,
-  UPLOAD_INSTRUMENT_FILE = CommandType.UPLOAD_INSTRUMENT_FILE,
-  REMOVE_INSTRUMENT_FILE = CommandType.REMOVE_INSTRUMENT_FILE,
+  UPLOAD_TRANSACTION_FILE = CommandType.UPLOAD_TRANSACTION_FILE,
+  REMOVE_TRANSACTION_FILE = CommandType.REMOVE_TRANSACTION_FILE,
   EXECUTE_WORKFLOW_COMMAND = CommandType.EXECUTE_WORKFLOW_COMMAND,
 }
 
@@ -112,8 +112,7 @@ const initialState: StateValues = [
 @Injectable()
 export class TransactionPresentationHandler extends AbstractPresentationHandler {
 
-  constructor(private data: TransactionDataService,
-              private fileDownload: FileDownloadService) {
+  constructor(private data: TransactionDataService) {
     super({
       initialState,
       selectors: SelectorType,
@@ -203,8 +202,6 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         this.setValue(SelectorType.SELECTED_TRANSACTION, params.result);
 
-        this.getPreprocessingDataInstrument(params.result);
-
         this.getWorkflowHistoryForTransaction(params.result.uid);
 
         return;
@@ -241,22 +238,13 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         return;
 
 
-      case EffectType.UPLOAD_INSTRUMENT_FILE:
+      case EffectType.UPLOAD_TRANSACTION_FILE:
+      case EffectType.REMOVE_TRANSACTION_FILE:
 
-        if (params.result.data) {
-          this.setPreprocessingDataInstrument(params.result.data);
-
-          this.setValue(SelectorType.SELECTED_FILE_LIST, EmptyFileViewerData);
-        }
-
-        return;
-
-
-      case EffectType.REMOVE_INSTRUMENT_FILE:
-
-        this.setPreprocessingDataInstrument(params.result);
-
+        this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, params.result as PreprocessingData)
         this.setValue(SelectorType.SELECTED_FILE_LIST, EmptyFileViewerData);
+
+        this.dispatch(ActionType.SELECT_TRANSACTION, {transactionUID: params.payload.transactionUID});
 
         return;
 
@@ -329,23 +317,17 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
           this.data.cancelPayment(command.payload.transactionUID)
         );
 
-      case CommandType.UPLOAD_INSTRUMENT_FILE:
+      case CommandType.UPLOAD_TRANSACTION_FILE:
         return toPromise<T>(
-          this.data.uploadInstrumentFile(command.payload.instrumentUID,
+          this.data.uploadTransactionMediaFile(command.payload.transactionUID,
             command.payload.file,
-            command.payload.mediaContent,
-            command.payload.fileName)
+            command.payload.mediaContent)
         );
 
-      case CommandType.REMOVE_INSTRUMENT_FILE:
+      case CommandType.REMOVE_TRANSACTION_FILE:
         return toPromise<T>(
-          this.data.removeInstrumentFile(command.payload.instrumentUID,
+          this.data.removeTransactionMediaFile(command.payload.transactionUID,
             command.payload.mediaFileUID)
-        );
-
-      case CommandType.DOWNLOAD_INSTRUMENT_FILE:
-        return toPromise<T>(
-          this.fileDownload.downloadWithProgress(command.payload.file.url, command.payload.file.name)
         );
 
       case CommandType.EXECUTE_WORKFLOW_COMMAND:
@@ -363,13 +345,10 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
     switch (actionType) {
 
       case ActionType.SELECT_TRANSACTION:
-        Assertion.assertValue(params.transactionUID, 'payload.transactionUID');
+        Assertion.assertValue(params.transactionUID, 'params.transactionUID');
 
         const transaction = this.data.getTransaction(params.transactionUID)
-          .pipe(tap(t => {
-            this.getPreprocessingDataInstrument(t);
-            this.getWorkflowHistoryForTransaction(t.uid);
-          }));
+          .pipe(tap(t => this.getWorkflowHistoryForTransaction(t.uid)));
 
         this.setValue(SelectorType.SELECTED_TRANSACTION, transaction);
 
@@ -380,9 +359,21 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         this.setValue(SelectorType.SELECTED_FILE_LIST, EmptyFileViewerData);
 
-        this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, EmptyPreprocessingData);
-
         this.setValue(SelectorType.SELECTED_WORKFLOW_HISTORY, []);
+
+        return;
+
+      case ActionType.SELECT_PREPROCESSING_DATA:
+        Assertion.assertValue(params.transactionUID, 'payload.transactionUID');
+
+        const preprocessingData = this.data.getTransactionPreprocessingData(params.transactionUID);
+
+        this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, preprocessingData);
+
+        return;
+
+      case ActionType.UNSELECT_PREPROCESSING_DATA:
+        this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, EmptyPreprocessingData);
 
         return;
 
@@ -414,23 +405,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
   }
 
 
-  getPreprocessingDataInstrument(transaction: Transaction) {
-    if (transaction.actions.show.preprocessingTab) {
-      const preprocessingData = this.data.getTransactionPreprocessingData(transaction.uid);
-      this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, preprocessingData);
-    }
-  }
-
-
-  setPreprocessingDataInstrument(instrument) {
-    const preprocessingData = this.getValue<PreprocessingData>(SelectorType.SELECTED_PREPROCESSING_DATA);
-
-    preprocessingData.instrument = instrument;
-    this.setValue(SelectorType.SELECTED_PREPROCESSING_DATA, preprocessingData);
-  }
-
-
-  getWorkflowHistoryForTransaction(transactionUID: string) {
+  private getWorkflowHistoryForTransaction(transactionUID: string) {
     const workflowHistory = this.data.getWorkflowHistoryForTransaction(transactionUID);
 
     this.setValue(SelectorType.SELECTED_WORKFLOW_HISTORY, workflowHistory);

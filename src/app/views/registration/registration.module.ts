@@ -27,7 +27,6 @@ import { RecordingActEditorComponent } from './recording-acts/recording-act-edit
 import { RecordingActsListComponent } from './recording-acts/recording-acts-list.component';
 import { RecordingBookEditionComponent } from './recording-book/recording-book-edition.component';
 import { RecordingBookSelectorComponent } from './recording-book/recording-book-selector.component';
-import { RegistrationMainPageComponent } from './main-page/registration-main-page.component';
 import { RecordableSubjectEditorComponent } from './recordable-subject-editor/recordable-subject-editor.component';
 
 
@@ -57,16 +56,16 @@ import { RecordableSubjectEditorComponent } from './recordable-subject-editor/re
     RecordingActsListComponent,
     RecordingBookEditionComponent,
     RecordingBookSelectorComponent,
-    RegistrationMainPageComponent,
   ],
 
   exports: [
     BookEntryEditionComponent,
     RecordableSubjectEditorComponent,
     RecordableSubjectTabbedViewComponent,
+    RecordingActCreatorComponent,
     RecordingActEditionComponent,
+    RecordingActsListComponent,
     RecordingBookEditionComponent,
-    RegistrationMainPageComponent,
   ]
 })
 export class RegistrationModule { }

@@ -6,18 +6,15 @@
  */
 
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
 
 import { Assertion, HttpService, Identifiable } from '@app/core';
 
-import {
-  Agency, Instrument, InstrumentMediaContent, PaymentFields, PreprocessingData,
-  ProvidedServiceType, RecordingSection, RequestedServiceFields,
-  Transaction, TransactionFields, TransactionFilter, TransactionShortModel, TransactionType,
-  WorkflowCommand, WorkflowTask, ApplicableCommand
-} from '@app/models';
-
-import { Progress, reportHttpProgress } from './file-services/http-progress';
+import { Agency, InstrumentMediaContent, PaymentFields, PreprocessingData, ProvidedServiceType,
+         RecordingSection, RequestedServiceFields, Transaction, TransactionFields, TransactionFilter,
+         TransactionShortModel, TransactionType, WorkflowCommand, WorkflowTask,
+         ApplicableCommand } from '@app/models';
 
 
 @Injectable()
@@ -209,17 +206,6 @@ export class TransactionDataService {
   }
 
 
-  removeInstrumentFile(instrumentUID: string,
-                       mediaFileUID: string): Observable<Instrument> {
-    Assertion.assertValue(instrumentUID, 'instrumentUID');
-    Assertion.assertValue(mediaFileUID, 'mediaFileUID');
-
-    const path = `v5/land/instruments/${instrumentUID}/media-files/${mediaFileUID}`;
-
-    return this.http.delete<Instrument>(path);
-  }
-
-
   searchAndAssertCommandExecution(command: WorkflowCommand): Observable<TransactionShortModel> {
     Assertion.assertValue(command, 'command');
 
@@ -259,24 +245,30 @@ export class TransactionDataService {
   }
 
 
-  uploadInstrumentFile(instrumentUID: string,
-                       fileToUpload: File,
-                       mediaContent: InstrumentMediaContent,
-                       fileName?: string): Observable<Progress> {
-    Assertion.assertValue(instrumentUID, 'instrumentUID');
-    Assertion.assertValue(fileToUpload, 'fileToUpload');
+  uploadTransactionMediaFile(transactionUID: string,
+                             file: File,
+                             mediaContent: InstrumentMediaContent): Observable<PreprocessingData> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+    Assertion.assertValue(file, 'file');
     Assertion.assertValue(mediaContent, 'mediaContent');
 
     const formData: FormData = new FormData();
-    formData.append('media', fileToUpload, fileName ?? fileToUpload.name);
+    formData.append('media', file);
     formData.append('mediaContent', mediaContent);
 
-    const path = `v5/land/instruments/${instrumentUID}/media-files`;
+    const path = `v5/land/transactions/${transactionUID}/media-files`;
 
-    return this.http.post(path, formData, { observe: 'events', reportProgress: true, dataField: null })
-      .pipe(
-        reportHttpProgress()
-      );
+    return this.http.post<PreprocessingData>(path, formData);
+  }
+
+
+  removeTransactionMediaFile(transactionUID: string, mediaFileUID: string): Observable<PreprocessingData> {
+    Assertion.assertValue(transactionUID, 'transactionUID');
+    Assertion.assertValue(mediaFileUID, 'mediaFileUID');
+
+    const path = `v5/land/transactions/${transactionUID}/media-files/${mediaFileUID}`;
+
+    return this.http.delete<PreprocessingData>(path);
   }
 
 }

@@ -18,6 +18,8 @@
 // needed for external services interaction.
 //
 
+export * from './files';
+
 export * from './instrument';
 
 export * from './party';
@@ -29,8 +31,6 @@ export * from './recordable-subjects';
 export * from './recording-act';
 
 export * from './registration';
-
-export * from './reporting';
 
 export * from './transaction';
 

@@ -1,8 +1,7 @@
-<emp-land-transaction-files-uploader *ngIf="preprocessingData.actions.show.instrumentFiles"
-  [instrumentFileName]="preprocessingData.instrument.typeName"
-  [instrumentMainFile]="instrumentMainFile"
-  [instrumentAuxiliaryFile]="instrumentAuxiliaryFile"
-  [canEdit]="preprocessingData.actions.can.uploadInstrumentFiles && !isInstrumentEmpty()"
-  (instrumentFilesEditorEvent)="onInstrumentFilesEditorEvent($event)">
+<emp-land-transaction-files *ngIf="preprocessingData.actions.show.instrumentFiles"
+  [transactionUID]="transactionUID"
+  [mediaFiles]="preprocessingData.media"
+  [canEdit]="preprocessingData.actions.can.uploadInstrumentFiles"
+  (transactionFilesEvent)="onTransactionFilesEvent($event)">
 
-</emp-land-transaction-files-uploader>
+</emp-land-transaction-files>

@@ -6,22 +6,23 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RegistrationMainPageComponent } from './registration-main-page.component';
+
+import { TransactionFilesComponent } from './transaction-files.component';
 
 
-describe('RegistrationMainPageComponent', () => {
-  let component: RegistrationMainPageComponent;
-  let fixture: ComponentFixture<RegistrationMainPageComponent>;
+describe('TransactionFilesComponent', () => {
+  let component: TransactionFilesComponent;
+  let fixture: ComponentFixture<TransactionFilesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RegistrationMainPageComponent ]
+      declarations: [ TransactionFilesComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RegistrationMainPageComponent);
+    fixture = TestBed.createComponent(TransactionFilesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

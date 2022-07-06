@@ -19,12 +19,12 @@ import { RecordableSubjectsModule } from '@app/views/recordable-subjects/recorda
 import { RegistrationModule } from '@app/views/registration/registration.module';
 import { TransactionsModule } from '@app/views/transactions/transactions.module';
 
-
+import { LandTransactionsWorkspaceRoutingModule } from './land-transactions-workspace-routing.module';
 import { LandTransactionsWorkspaceComponent } from './land-transactions-workspace.component';
 import { LandPreRegistationComponent } from './parts/land-pre-registration.component';
+import { LandRegistrationComponent } from './parts/land-registration.component';
 import { LandTransactionTabbedViewComponent } from './parts/land-transaction-tabbed-view.component';
-
-import { LandTransactionsWorkspaceRoutingModule } from './land-transactions-workspace-routing.module';
+import { InstrumentBookEntriesModule } from '@app/views/registration/instrument-book-entries/instrument-book-entries.module';
 
 
 @NgModule({
@@ -37,16 +37,18 @@ import { LandTransactionsWorkspaceRoutingModule } from './land-transactions-work
     AngularFlexLayoutModule,
     SharedModule,
 
+    InstrumentBookEntriesModule,
     LandControlsModule,
-    TransactionsModule,
     RecordableSubjectsModule,
     RegistrationModule,
+    TransactionsModule,
 
     LandTransactionsWorkspaceRoutingModule,
   ],
 
   declarations: [
     LandPreRegistationComponent,
+    LandRegistrationComponent,
     LandTransactionsWorkspaceComponent,
     LandTransactionTabbedViewComponent
   ],

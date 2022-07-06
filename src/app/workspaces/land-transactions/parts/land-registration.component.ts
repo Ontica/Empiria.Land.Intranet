@@ -11,11 +11,11 @@ import { Assertion, Command, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { RegistrationAction, RegistrationCommandType,
-         RegistrationStateSelector } from '@app/core/presentation/presentation-types';
+import { RegistrationAction, RegistrationCommandType, RegistrationStateSelector,
+         TransactionAction } from '@app/core/presentation/presentation-types';
 
 import { InstrumentRecording, InstrumentFields, EmptyInstrumentRecording, RecordingActTypeGroup,
-         InstrumentRecordingActions, EmptyInstrumentRecordingActions } from '@app/models';
+         EmptyInstrumentRecordingActions  } from '@app/models';
 
 import {
   InstrumentEditorEventType
@@ -25,32 +25,49 @@ import {
   FilePrintPreviewComponent
 } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 
-import { RecordingActCreatorEventType } from '../recording-acts/recording-act-creator.component';
+import {
+  RecordingActCreatorEventType
+} from '../../../views/registration/recording-acts/recording-act-creator.component';
 
-import { RecordingActsListEventType } from '../recording-acts/recording-acts-list.component';
+import {
+  RecordingActsListEventType
+} from '../../../views/registration/recording-acts/recording-acts-list.component';
+
+import {
+  TransactionFilesEventType
+} from '@app/views/transactions/transaction-files/transaction-files.component';
+
+import { FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 
 @Component({
-  selector: 'emp-land-registration-main-page',
-  templateUrl: './registration-main-page.component.html',
+  selector: 'emp-land-registration',
+  templateUrl: './land-registration.component.html',
 })
-export class RegistrationMainPageComponent implements OnInit, OnChanges, OnDestroy {
+export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() transactionUID = 'Empty';
+  @Input() transactionUID = '';
 
   @ViewChild('filePrintPreview', { static: true }) filePrintPreview: FilePrintPreviewComponent;
 
   instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
-  actions: InstrumentRecordingActions = EmptyInstrumentRecordingActions;
-  helper: SubscriptionHelper;
 
   panelAddState = false;
+
   submitted = false;
 
   recordingActTypeGroupList: RecordingActTypeGroup[] = [];
 
+  helper: SubscriptionHelper;
+
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
+  }
+
+
+  ngOnChanges() {
+    this.uiLayer.dispatch(RegistrationAction.SELECT_TRANSACTION_INSTRUMENT_RECORDINGT,
+      {transactionUID: this.transactionUID});
   }
 
 
@@ -58,18 +75,12 @@ export class RegistrationMainPageComponent implements OnInit, OnChanges, OnDestr
     this.helper.select<InstrumentRecording>(RegistrationStateSelector.TRANSACTION_INSTRUMENT_RECORDING)
       .subscribe(x => {
         this.instrumentRecording = isEmpty(x) ? EmptyInstrumentRecording : x;
-        this.actions = x.actions ?? EmptyInstrumentRecordingActions;
+        this.instrumentRecording.actions = x.actions ?? EmptyInstrumentRecordingActions;
         if (!isEmpty(this.instrumentRecording)) {
           this.loadData();
           this.resetPanelState();
         }
       });
-  }
-
-
-  ngOnChanges() {
-    this.uiLayer.dispatch(RegistrationAction.SELECT_TRANSACTION_INSTRUMENT_RECORDINGT,
-      {transactionUID: this.transactionUID});
   }
 
 
@@ -81,6 +92,26 @@ export class RegistrationMainPageComponent implements OnInit, OnChanges, OnDestr
 
   resetPanelState() {
     this.panelAddState = false;
+  }
+
+
+  onTransactionFilesEvent(event: EventInfo): void {
+    switch (event.type as TransactionFilesEventType) {
+
+      case TransactionFilesEventType.SHOW_FILE_CLICKED:
+
+        const fileViewerData: FileViewerData = {
+          fileList: [event.payload]
+        };
+
+        this.uiLayer.dispatch(TransactionAction.SELECT_FILE_LIST, { fileViewerData });
+
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
   }
 
 
@@ -180,9 +211,8 @@ export class RegistrationMainPageComponent implements OnInit, OnChanges, OnDestr
     this.helper.select<RecordingActTypeGroup[]>(
       RegistrationStateSelector.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT,
       { instrumentUID: this.instrumentRecording.instrument.uid })
-      .subscribe(x => {
-        this.recordingActTypeGroupList = x;
-      });
+      .toPromise()
+      .then(x => this.recordingActTypeGroupList = x);
   }
 
 

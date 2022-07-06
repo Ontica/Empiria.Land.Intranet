@@ -38,7 +38,6 @@ export class WorkflowHistoryComponent implements OnInit, OnDestroy {
   displayedFooterColumns = ['footerElapsedTime', 'footerNotes'];
 
   elapsedTimeTotal = '';
-  elapsedTimeTotal2 = '';
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();

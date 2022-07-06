@@ -1,16 +1,31 @@
+<ng-container *ngIf="instrumentRecording.actions.show.files">
+
+  <emp-land-transaction-files
+    [transactionUID]="transactionUID"
+    [mediaFiles]="instrumentRecording.instrument.media"
+    [readonly]="true"
+    (transactionFilesEvent)="onTransactionFilesEvent($event)">
+
+  </emp-land-transaction-files>
+
+  <br>
+
+</ng-container>
+
+
 <emp-land-instrument-editor
   [instrument]="instrumentRecording.instrument"
-  [actions]="actions"
+  [actions]="instrumentRecording.actions"
   (instrumentEditorEvent)="onInstrumentEditorEvent($event)">
 </emp-land-instrument-editor>
 
-<ng-container *ngIf="actions.show.recordingBookEntries">
+<ng-container *ngIf="instrumentRecording.actions.show.recordingBookEntries">
 
   <br>
 
   <div class="section-title">Registro del documento en libros</div>
 
-  <emp-ng-expansion-button *ngIf="actions.can.createNextRecordingBookEntries"
+  <emp-ng-expansion-button *ngIf="instrumentRecording.actions.can.createNextRecordingBookEntries"
     [(panelState)]="panelAddState"
     [config]="{textButtonOpen: 'Agregar registro del documento en libros',
                textButtonClose: 'Cancelar agregar registro'}">
@@ -29,13 +44,13 @@
 </ng-container>
 
 
-<ng-container *ngIf="actions.show.recordingActs">
+<ng-container *ngIf="instrumentRecording.actions.show.recordingActs">
 
   <br>
 
   <div class="section-title">Actos jurídicos contenidos en el documento</div>
 
-  <emp-ng-expansion-button *ngIf="actions.can.editRecordingActs"
+  <emp-ng-expansion-button *ngIf="instrumentRecording.actions.can.editRecordingActs"
     [(panelState)]="panelAddState"
     [config]="{textButtonOpen: 'Agregar un acto jurídico al instrumento',
                textButtonClose: 'Cancelar agregar registro'}">
