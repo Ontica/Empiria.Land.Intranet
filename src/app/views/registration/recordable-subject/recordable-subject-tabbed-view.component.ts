@@ -15,7 +15,7 @@ import { sendEvent } from '@app/shared/utils';
 
 import { InstrumentRecording, RealEstate, RecordableSubjectType, RecordingActEntry } from '@app/models';
 
-import { RecordableSubjectEditorEventType } from '../recordable-subject-editor/recordable-subject-editor.component';
+import { RecordableSubjectEditorEventType } from '../recordable-subject/recordable-subject-editor.component';
 
 export enum RecordableSubjectTabbedViewEventType {
   RECORDABLE_SUBJECT_UPDATED = 'RecordableSubjectTabbedViewComponent.Event.RecordableSubjectUpdated',

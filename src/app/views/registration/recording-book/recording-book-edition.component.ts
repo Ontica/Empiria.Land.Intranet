@@ -12,15 +12,15 @@ import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 import { ManualBookEntryFields, EmptyRecordingBook,
          RecordingBook, BookEntry, EmptyBookEntry } from '@app/models';
 
+import { RecordingDataService } from '@app/data-services';
+
+import { FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
+
 import { BookEntryEditorEventType } from './book-entry-editor.component';
 
 import { BookEntryListEventType } from './book-entry-list.component';
 
 import { RecordingBookSelectorEventType } from './recording-book-selector.component';
-
-import { RecordingDataService } from '@app/data-services';
-
-import { FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 
 export enum RecordingBookEditionEventType {

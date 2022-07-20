@@ -26,7 +26,7 @@ import { TransactionListEventType} from '@app/views/transactions/transaction-lis
 
 import {
   RecordableSubjectTabbedViewEventType
-} from '@app/views/registration/recordable-subject-tabbed-view/recordable-subject-tabbed-view.component';
+} from '@app/views/registration/recordable-subject/recordable-subject-tabbed-view.component';
 
 import {
   RecordingActEditionEventType

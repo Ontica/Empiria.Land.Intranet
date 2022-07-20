@@ -27,11 +27,11 @@ import {
 
 import {
   RecordingActCreatorEventType
-} from '../../../views/registration/recording-acts/recording-act-creator.component';
+} from '@app/views/registration/recording-acts/recording-act-creator.component';
 
 import {
   RecordingActsListEventType
-} from '../../../views/registration/recording-acts/recording-acts-list.component';
+} from '@app/views/registration/recording-acts/recording-acts-list.component';
 
 import {
   TransactionFilesEventType

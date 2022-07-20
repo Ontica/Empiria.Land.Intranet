@@ -9,14 +9,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { HistoricRegistrationWorkspaceComponent } from './historic-registration-workspace.component';
+import { SharedModule } from '@app/shared/shared.module';
+import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
+
+import { LandControlsModule } from '@app/views/land-controls/land.controls.module';
+import { RegistrationModule } from '@app/views/registration/registration.module';
 
 import { HistoricRegistrationWorkspaceRoutingModule } from './historic-registration-workspace-routing.module';
-import { SharedModule } from '@app/shared/shared.module';
-import { RegistrationModule } from '@app/views/registration/registration.module';
-import { RecordableSubjectsModule } from '@app/views/recordable-subjects/recordable-subjects.module';
-import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
-import { LandControlsModule } from '@app/views/land-controls/land.controls.module';
+import { HistoricRegistrationWorkspaceComponent } from './historic-registration-workspace.component';
 
 
 @NgModule({
@@ -24,13 +24,14 @@ import { LandControlsModule } from '@app/views/land-controls/land.controls.modul
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    AngularFlexLayoutModule,
 
-    HistoricRegistrationWorkspaceRoutingModule,
+    AngularFlexLayoutModule,
     SharedModule,
+
     LandControlsModule,
     RegistrationModule,
-    RecordableSubjectsModule,
+
+    HistoricRegistrationWorkspaceRoutingModule,
   ],
 
   declarations: [
