@@ -204,60 +204,6 @@ export interface RealEstateFields extends RecordableSubjectFields {
 }
 
 
-export interface TractIndex {
-  recordableSubject: RecordableSubject;
-  tractIndex: TractIndexEntry[];
-}
-
-
-export enum TractIndexEntryType {
-  RecordingAct = 'RecordingAct',
-  Certificate = 'Certificate',
-}
-
-
-export const TractIndexEntryTypeList: Identifiable[] = [
-  { uid: TractIndexEntryType.RecordingAct, name: 'Acto Jurídico' },
-  { uid: TractIndexEntryType.Certificate, name: 'Certificado' },
-];
-
-
-export interface TractIndexEntry {
-  uid: string;
-  type: TractIndexEntryType;
-  name: string;
-  documentID: string;
-  transactionID: string;
-  presentationTime: DateString;
-  recordingTime: DateString;
-  stampMedia: MediaBase;
-  instrumentRecordingUID: string;
-  recordableSubject: RecordableSubject;
-  status: string;
-}
-
-
-export const EmptyTractIndex: TractIndex = {
-  recordableSubject: EmptyRecordableSubject,
-  tractIndex: [],
-};
-
-
-export const EmptyTractIndexEntry: TractIndexEntry = {
-  uid: '',
-  type: TractIndexEntryType.RecordingAct,
-  name: '',
-  documentID: '',
-  transactionID: '',
-  presentationTime: '',
-  recordingTime: '',
-  stampMedia: EmptyMediaBase,
-  instrumentRecordingUID: '',
-  recordableSubject: EmptyRecordableSubject,
-  status: '',
-};
-
-
 export const EmptyRecordableSubjectFields: RecordableSubjectFields = {
   uid: '',
   type: RecordableSubjectType.None,

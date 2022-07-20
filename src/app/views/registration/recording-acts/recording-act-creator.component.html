@@ -94,7 +94,7 @@
         <label class="ellipsis">Acto jurídico a cancelar o modificar:</label>
 
         <emp-ng-select [formControlName]="controls.amendmentRecordingActUID"
-          [items]="tractIndexSelected.tractIndex"
+          [items]="tractIndexSelected.entries"
           [config]="{clearable: true}"
           [placeholder]="formHandler.showInvalidControl(controls.recordableSubject) ?
             'Seleccione el folio real' : 'Seleccione'"

@@ -32,6 +32,8 @@ export * from './recording-act';
 
 export * from './registration';
 
+export * from './tract-index';
+
 export * from './transaction';
 
 export * from './workflow';

@@ -17,12 +17,12 @@ import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
+import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
+
 import { EmptyInstrumentRecording, EmptyRegistrationCommandRule, EmptyTractIndex, InstrumentRecording,
          RecordableSubjectFilter, RecordableSubjectShortModel, RecordableSubjectType, RecordingActType,
          RecordingActTypeGroup, RegistrationCommand, RegistrationCommandConfig, RegistrationCommandPayload,
          RegistrationCommandRule, TractIndex} from '@app/models';
-
-import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
 import { FormHandler } from '@app/shared/utils';
 
