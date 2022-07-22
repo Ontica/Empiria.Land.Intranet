@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 
 import { Assertion, EventInfo } from '@app/core';
 
@@ -13,7 +13,9 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { sendEvent } from '@app/shared/utils';
 
-import { InstrumentRecording, RealEstate, RecordableSubjectType, RecordingActEntry } from '@app/models';
+import { RecordingDataService } from '@app/data-services';
+
+import { EmptyTractIndex, RealEstate, RecordableSubjectType, TractIndex } from '@app/models';
 
 import { RecordableSubjectEditorEventType } from '../recordable-subject/recordable-subject-editor.component';
 
@@ -29,11 +31,17 @@ export enum RecordableSubjectTabbedViewEventType {
 })
 export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestroy {
 
-  @Input() instrumentRecording: InstrumentRecording;
+  @Input() instrumentRecordingUID: string;
 
-  @Input() recordingAct: RecordingActEntry;
+  @Input() recordingActUID: string;
+
+  @Input() canEditRecordableSubject = false;
+
+  @Input() canEditTractIndex = false;
 
   @Output() recordableSubjectTabbedViewEvent = new EventEmitter<EventInfo>();
+
+  tractIndex: TractIndex = EmptyTractIndex;
 
   helper: SubscriptionHelper;
 
@@ -41,15 +49,19 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
   cardHint: string;
 
+  isLoading = false;
+
   tabEditorLabel = 'Datos del predio';
 
-  constructor(private uiLayer: PresentationLayer) {
+  constructor(private uiLayer: PresentationLayer, private recordingDataService: RecordingDataService) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
 
-  ngOnChanges() {
-    this.initTexts();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.instrumentRecordingUID && changes.recordingActUID) {
+      this.getTractIndex();
+    }
   }
 
 
@@ -59,22 +71,22 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
 
   get isRealEstate() {
-    return this.recordingAct.recordableSubject.type === RecordableSubjectType.RealEstate;
+    return this.tractIndex.recordableSubject.type === RecordableSubjectType.RealEstate;
   }
 
 
   get isAssociation() {
-    return this.recordingAct.recordableSubject.type === RecordableSubjectType.Association;
+    return this.tractIndex.recordableSubject.type === RecordableSubjectType.Association;
   }
 
 
   get isNoProperty() {
-    return this.recordingAct.recordableSubject.type === RecordableSubjectType.NoProperty;
+    return this.tractIndex.recordableSubject.type === RecordableSubjectType.NoProperty;
   }
 
 
   get realEstate(): RealEstate {
-    return this.recordingAct.recordableSubject as RealEstate;
+    return this.tractIndex.recordableSubject as RealEstate;
   }
 
 
@@ -88,6 +100,7 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
     switch (event.type as RecordableSubjectEditorEventType) {
       case RecordableSubjectEditorEventType.RECORDABLE_SUBJECT_UPDATED:
         Assertion.assertValue(event.payload.instrumentRecording, 'event.payload.instrumentRecording');
+        this.getTractIndex();
         sendEvent(this.recordableSubjectTabbedViewEvent,
           RecordableSubjectTabbedViewEventType.RECORDABLE_SUBJECT_UPDATED, event.payload)
         return;
@@ -95,6 +108,26 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
       default:
         throw Assertion.assertNoReachThisCode(`Unrecoginzed event ${event.type}.`);
     }
+  }
+
+
+  private getTractIndex() {
+    if (!this.instrumentRecordingUID || !this.recordingActUID) {
+      this.tractIndex = EmptyTractIndex;
+      this.initTexts();
+
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.recordingDataService.getTractIndex(this.instrumentRecordingUID, this.recordingActUID)
+      .toPromise()
+      .then(x => {
+        this.tractIndex = x;
+        this.initTexts();
+      })
+      .finally(() => this.isLoading = false);
   }
 
 
@@ -122,7 +155,7 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
 
   private setCardHint() {
-    this.cardHint = `<strong>${this.recordingAct.recordableSubject.electronicID}</strong>`;
+    this.cardHint = `<strong>${this.tractIndex.recordableSubject.electronicID}</strong>`;
   }
 
 

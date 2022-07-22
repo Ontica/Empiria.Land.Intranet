@@ -28,7 +28,7 @@ export class TractIndexEntriesFilterComponent implements OnInit {
   @Output() tractIndexEntriesFilterEvent = new EventEmitter<EventInfo>();
 
   formData = {
-    type: '',
+    entryType: '',
     keywords: '',
   };
 
@@ -47,7 +47,7 @@ export class TractIndexEntriesFilterComponent implements OnInit {
 
   onFilterChanges() {
     const filter = {
-      type: this.formData.type,
+      entryType: this.formData.entryType,
       keywords: this.formData.keywords,
     };
 
@@ -57,7 +57,7 @@ export class TractIndexEntriesFilterComponent implements OnInit {
 
   private initFormData() {
     this.formData = {
-      type: this.tractIndexEntryType,
+      entryType: this.tractIndexEntryType,
       keywords: '',
     };
   }

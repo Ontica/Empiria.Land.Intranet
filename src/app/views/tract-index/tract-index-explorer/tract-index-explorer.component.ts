@@ -56,8 +56,6 @@ export class TractIndexExplorerComponent implements OnInit {
 
       case TractIndexEntriesViewerEventType.SELECT_TRACT_INDEX_ENTRY:
         Assertion.assertValue(event.payload.tractIndexEntry, 'event.payload.tractIndexEntry');
-        Assertion.assertValue(event.payload.tractIndexEntry.instrumentRecordingUID,
-          'event.payload.tractIndexEntry.instrumentRecordingUID');
         Assertion.assertValue(event.payload.tractIndexEntry.uid, 'event.payload.tractIndexEntry.uid');
 
         this.selectedTractIndexEntry = event.payload.tractIndexEntry as TractIndexEntry;

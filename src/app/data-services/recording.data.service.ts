@@ -12,9 +12,8 @@ import { Observable } from 'rxjs';
 import { Assertion, HttpService, Identifiable } from '@app/core';
 
 import { ManualBookEntryFields, InstrumentBookEntryFields, InstrumentFields, InstrumentRecording,
-         RecordableSubjectFields, RecordingAct, RecordingActTypeGroup, RecordingBook,
-         RegistrationCommand, RecordingActFields, RecordingActPartyFields, PartyFilter,
-         Party} from '@app/models';
+         RecordableSubjectFields, RecordingAct, RecordingActTypeGroup, RecordingBook, RegistrationCommand,
+         RecordingActFields, RecordingActPartyFields, PartyFilter, Party, TractIndex } from '@app/models';
 
 
 @Injectable()
@@ -22,13 +21,15 @@ export class RecordingDataService {
 
   constructor(private http: HttpService) { }
 
+
   getInstrumentRecording(instrumentRecordingUID: string): Observable<InstrumentRecording> {
     const path = `v5/land/registration/${instrumentRecordingUID}`;
 
     return this.http.get<InstrumentRecording>(path);
   }
 
-    getRecordingAct(instrumentRecordingUID: string,
+
+  getRecordingAct(instrumentRecordingUID: string,
                     recordingActUID: string): Observable<RecordingAct> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(recordingActUID, 'recordingActUID');
@@ -300,6 +301,16 @@ export class RecordingDataService {
     const path = `v5/land/registration/${instrumentRecordingUID}/close-registration`;
 
     return this.http.post<InstrumentRecording>(path);
+  }
+
+
+  getTractIndex(instrumentRecordingUID: string, recordingActUID: string): Observable<TractIndex> {
+    Assertion.assertValue(recordingActUID, 'recordingActUID');
+
+    const path = `v5/land/registration/${instrumentRecordingUID}/` +
+      `recording-acts/${recordingActUID}/tract-index`;
+
+    return this.http.get<TractIndex>(path);
   }
 
 }

@@ -167,17 +167,17 @@ export class HistoricRegistrationWorkspaceComponent {
 
   private refreshInstrumentRecordingAndSelectionAct(instrumentRecording: InstrumentRecording) {
     const recordingAct = instrumentRecording.recordingActs
-      .filter(x => x.uid === this.selectedRecordingAct.recordingAct.uid);
+      .find(x => x.uid === this.selectedRecordingAct.recordingAct.uid);
 
-    if (recordingAct.length > 0) {
+    if (!isEmpty(recordingAct)) {
       const selectionAct: SelectionAct = {
         instrumentRecording,
-        recordingAct: recordingAct[0]
+        recordingAct: recordingAct,
       };
 
       this.selectedRecordingAct = selectionAct;
     } else {
-        this.unselectCurrentRecordingAct();
+      this.unselectCurrentRecordingAct();
     }
 
     this.refreshBookEntrySelected();

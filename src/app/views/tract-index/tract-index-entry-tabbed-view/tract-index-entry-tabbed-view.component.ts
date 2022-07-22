@@ -50,20 +50,21 @@ export class TractIndexEntryTabbedViewComponent implements OnChanges, OnDestroy 
 
 
   get displayStampMediaTab(): boolean {
-    return !!this.tractIndexEntry.documentID && !!this.tractIndexEntry.stampMedia.url;
+    return !!this.tractIndexEntry.officialDocument.documentID &&
+      !!this.tractIndexEntry.officialDocument.media.url;
   }
 
 
   get recordableSubjectTabName(){
-    if (this.tractIndexEntry.recordableSubject.type === RecordableSubjectType.RealEstate) {
+    if (this.tractIndexEntry.subjectChanges.snapshot.type === RecordableSubjectType.RealEstate) {
       return 'Predio';
     }
 
-    if (this.tractIndexEntry.recordableSubject.type === RecordableSubjectType.Association) {
+    if (this.tractIndexEntry.subjectChanges.snapshot.type === RecordableSubjectType.Association) {
       return 'Asociación';
     }
 
-    if (this.tractIndexEntry.recordableSubject.type === RecordableSubjectType.NoProperty) {
+    if (this.tractIndexEntry.subjectChanges.snapshot.type === RecordableSubjectType.NoProperty) {
       return 'Documento';
     }
 
@@ -82,14 +83,15 @@ export class TractIndexEntryTabbedViewComponent implements OnChanges, OnDestroy 
 
 
   private initTexts(){
-    this.cardTitle = `${this.tractIndexEntry.name}`;
+    this.cardTitle = `${this.tractIndexEntry.description}`;
 
-    this.cardHint = !this.tractIndexEntry.documentID ? 'Información del acto jurídico seleccionado' :
-      `<strong>${this.tractIndexEntry.documentID}</strong>`;
+    this.cardHint = !this.tractIndexEntry.officialDocument.documentID ?
+      'Información del acto jurídico seleccionado' :
+      `<strong>${this.tractIndexEntry.officialDocument.documentID }</strong>`;
 
-    if (!!this.tractIndexEntry.recordingTime) {
+    if (!!this.tractIndexEntry.requestedTime) {
       this.cardHint += `&nbsp; &nbsp; | &nbsp; &nbsp;` +
-        `${DateStringLibrary.format(this.tractIndexEntry.recordingTime)}`;
+        `${DateStringLibrary.format(this.tractIndexEntry.requestedTime)}`;
     }
   }
 

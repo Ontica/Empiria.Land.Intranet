@@ -7,7 +7,7 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { EventInfo, isEmpty } from '@app/core';
+import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
@@ -18,7 +18,7 @@ import { View } from '@app/main-layout';
 
 import { TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
          mapTransactionStageFromViewName, mapTransactionStatusFromViewName, EmptySelectionAct,
-         SelectionAct } from '@app/models';
+         SelectionAct, InstrumentRecording} from '@app/models';
 
 import { EmptyFileViewerData, FileViewerData} from '@app/shared/form-controls/file-control/file-control-data';
 
@@ -72,50 +72,8 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.subscriptionHelper.select<TransactionShortModel[]>(TransactionStateSelector.TRANSACTION_LIST)
-      .subscribe(x => {
-        this.transactionList = x;
-        this.isLoading = false;
-
-        this.unselectCurrentSelections();
-      }, error => {
-        this.isLoading = false;
-      });
-
-    this.subscriptionHelper.select<View>(MainUIStateSelector.CURRENT_VIEW)
-      .subscribe(x => this.onCurrentViewChanged(x));
-
-    this.subscriptionHelper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
-      .subscribe(x => {
-        this.selectedTransaction = x;
-        this.isLoadingTransaction = false;
-        this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
-
-        this.unselectCurrentSelections();
-      }, error => {
-        this.isLoadingTransaction = false;
-      });
-
-    this.subscriptionHelper.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
-      .subscribe(x => this.filter = x);
-
-    this.subscriptionHelper.select<SelectionAct>(RegistrationStateSelector.SELECTED_RECORDABLE_SUBJECT)
-      .subscribe(x => {
-        this.selectedRecordableSubject = x;
-        this.displayRecordableSubjectTabbedView = !isEmpty(this.selectedRecordableSubject?.recordingAct);
-      });
-
-    this.subscriptionHelper.select<SelectionAct>(RegistrationStateSelector.SELECTED_RECORDING_ACT)
-      .subscribe(x => {
-        this.selectedRecordingAct = x;
-        this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct?.recordingAct);
-      });
-
-    this.subscriptionHelper.select<FileViewerData>(TransactionStateSelector.SELECTED_FILE_LIST)
-      .subscribe(x => {
-        this.selectedFileViewerData = x;
-        this.displayFileViewer = this.selectedFileViewerData.fileList.length > 0;
-      });
+    this.subscribeToDataInit();
+    this.suscribeToSelectedData();
   }
 
 
@@ -174,9 +132,31 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
         this.unselectCurrentRecordableSubject();
         return;
 
+      case RecordableSubjectTabbedViewEventType.RECORDABLE_SUBJECT_UPDATED:
+        Assertion.assertValue(event.payload.instrumentRecording, 'payload.instrumentRecording');
+        this.refreshSelectedRecordableSubject(event.payload.instrumentRecording as InstrumentRecording);
+        return;
+
       default:
         console.log(`Unhandled user interface event ${event.type}`);
         return;
+    }
+  }
+
+
+  private refreshSelectedRecordableSubject(instrumentRecording: InstrumentRecording) {
+    const recordingAct = instrumentRecording.recordingActs
+      .find(x => x.uid === this.selectedRecordableSubject.recordingAct.uid);
+
+    if (!isEmpty(recordingAct)) {
+      const selectionAct: SelectionAct = {
+        instrumentRecording,
+        recordingAct: recordingAct,
+      };
+
+      this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDABLE_SUBJECT, selectionAct);
+    } else {
+      this.unselectCurrentRecordableSubject();
     }
   }
 
@@ -234,6 +214,51 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
   // private methods
+
+  private subscribeToDataInit() {
+    this.subscriptionHelper.select<TransactionShortModel[]>(TransactionStateSelector.TRANSACTION_LIST)
+      .subscribe(x => {
+        this.transactionList = x;
+        this.isLoading = false;
+        this.unselectCurrentSelections();
+      }, error => this.isLoading = false);
+
+    this.subscriptionHelper.select<View>(MainUIStateSelector.CURRENT_VIEW)
+      .subscribe(x => this.onCurrentViewChanged(x));
+
+    this.subscriptionHelper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
+      .subscribe(x => {
+        this.selectedTransaction = x;
+        this.isLoadingTransaction = false;
+        this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
+        this.unselectCurrentSelections();
+      }, error => this.isLoadingTransaction = false);
+
+    this.subscriptionHelper.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
+      .subscribe(x => this.filter = x);
+  }
+
+
+  private suscribeToSelectedData() {
+    this.subscriptionHelper.select<SelectionAct>(RegistrationStateSelector.SELECTED_RECORDABLE_SUBJECT)
+      .subscribe(x => {
+        this.selectedRecordableSubject = x;
+        this.displayRecordableSubjectTabbedView = !isEmpty(this.selectedRecordableSubject?.recordingAct);
+      });
+
+    this.subscriptionHelper.select<SelectionAct>(RegistrationStateSelector.SELECTED_RECORDING_ACT)
+      .subscribe(x => {
+        this.selectedRecordingAct = x;
+        this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct?.recordingAct);
+      });
+
+    this.subscriptionHelper.select<FileViewerData>(TransactionStateSelector.SELECTED_FILE_LIST)
+      .subscribe(x => {
+        this.selectedFileViewerData = x;
+        this.displayFileViewer = this.selectedFileViewerData.fileList.length > 0;
+      });
+  }
+
 
   private applyTransactionsFilter(data?: { keywords: string }) {
     const currentKeywords =

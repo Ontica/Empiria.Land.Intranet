@@ -45,8 +45,10 @@
     class="secondary">
 
     <emp-land-recordable-subject-tabbed-view
-      [instrumentRecording]="selectedRecordingAct.instrumentRecording"
-      [recordingAct]="selectedRecordingAct.recordingAct"
+      [instrumentRecordingUID]="selectedRecordingAct.instrumentRecording.uid"
+      [recordingActUID]="selectedRecordingAct.recordingAct.uid"
+      [canEditRecordableSubject]="selectedRecordingAct.instrumentRecording.actions.can.openInstrument"
+      [canEditTractIndex]="false"
       (recordableSubjectTabbedViewEvent)="onRecordableSubjectTabbedViewEvent($event)">
 
     </emp-land-recordable-subject-tabbed-view>

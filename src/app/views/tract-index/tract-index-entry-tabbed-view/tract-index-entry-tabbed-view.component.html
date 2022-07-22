@@ -22,8 +22,8 @@
         <ng-template matTabContent>
 
           <emp-land-tract-index-entry-printable-viewer
-            [documentID]="tractIndexEntry.documentID"
-            [stampMedia]="tractIndexEntry.stampMedia">
+            [documentID]="tractIndexEntry.officialDocument.documentID"
+            [stampMedia]="tractIndexEntry.officialDocument.media">
 
           </emp-land-tract-index-entry-printable-viewer>
 
@@ -36,7 +36,7 @@
         <ng-template matTabContent>
 
           <emp-land-recording-act-edition
-            [instrumentRecordingUID]="tractIndexEntry.instrumentRecordingUID"
+            [instrumentRecordingUID]="tractIndexEntry.officialDocument.uid"
             [recordingActUID]="tractIndexEntry.uid"
             [readonly]="true"
             [displayFlat]="true"
@@ -53,9 +53,9 @@
         <ng-template matTabContent>
 
           <emp-land-recordable-subject-editor
-            [instrumentRecordingUID]="tractIndexEntry.instrumentRecordingUID"
+            [instrumentRecordingUID]="tractIndexEntry.officialDocument.uid"
             [recordingActUID]="tractIndexEntry.uid"
-            [recordableSubject]="tractIndexEntry.recordableSubject"
+            [recordableSubject]="tractIndexEntry.subjectChanges.snapshot"
             [readonly]="true">
 
           </emp-land-recordable-subject-editor>

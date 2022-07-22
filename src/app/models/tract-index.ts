@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { DateString, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
+import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
 
 import { EmptyRecordableSubject, RecordableSubject } from './recordable-subjects';
 
@@ -36,16 +36,54 @@ export interface StructureEntry {
 
 export interface TractIndexEntry {
   uid: string;
-  type: TractIndexEntryType;
-  name: string;
-  documentID: string;
-  transactionID: string;
-  presentationTime: DateString;
-  recordingTime: DateString;
-  stampMedia: MediaBase;
-  instrumentRecordingUID: string;
-  recordableSubject: RecordableSubject;
+  entryType: TractIndexEntryType;
+  description: string;
+  requestedTime: DateString;
+  issueTime: DateString;
   status: string;
+  transaction: TransactionInfo,
+  officialDocument: OfficialDocument,
+  subjectChanges: RecordableSubjectChanges;
+}
+
+
+export interface TransactionInfo {
+  uid: string;
+  transactionID: string;
+  requestedBy: string;
+  agency: Identifiable;
+  filingOffice: Identifiable;
+  presentationTime: DateString;
+  completedTime: DateString;
+  status: string;
+}
+
+
+export interface OfficialDocument {
+  uid: string;
+  type: string;
+  documentID: string;
+  description: string;
+  office: Identifiable;
+  issueTime: DateString;
+  elaboratedBy: string;
+  authorizedBy: string;
+  status: string;
+  media: MediaBase;
+}
+
+
+export interface RecordableSubjectChanges {
+  summary: string;
+  snapshot: RecordableSubject;
+  structureChanges: StructureChange[];
+}
+
+
+export interface StructureChange {
+  operation: string;
+  operationType: string;
+  relatedSubject: RecordableSubject;
 }
 
 
@@ -56,16 +94,54 @@ export const EmptyTractIndex: TractIndex = {
 };
 
 
+export const EmptyTransactionInfo: TransactionInfo = {
+  uid: '',
+  transactionID: '',
+  requestedBy: '',
+  agency: Empty,
+  filingOffice: Empty,
+  presentationTime: '',
+  completedTime: '',
+  status: '',
+}
+
+
+export const EmptyOfficialDocument: OfficialDocument = {
+  uid: '',
+  type: '',
+  documentID: '',
+  description: '',
+  office: Empty,
+  issueTime: '',
+  elaboratedBy: '',
+  authorizedBy: '',
+  status: '',
+  media: EmptyMediaBase,
+}
+
+
+export const EmptyStructureChange: StructureChange = {
+  operation: '',
+  operationType: '',
+  relatedSubject: EmptyRecordableSubject,
+}
+
+
+export const EmptyRecordableSubjectChanges: RecordableSubjectChanges = {
+  summary: '',
+  snapshot: EmptyRecordableSubject,
+  structureChanges: [],
+}
+
+
 export const EmptyTractIndexEntry: TractIndexEntry = {
   uid: '',
-  type: TractIndexEntryType.RecordingAct,
-  name: '',
-  documentID: '',
-  transactionID: '',
-  presentationTime: '',
-  recordingTime: '',
-  stampMedia: EmptyMediaBase,
-  instrumentRecordingUID: '',
-  recordableSubject: EmptyRecordableSubject,
+  entryType: TractIndexEntryType.RecordingAct,
+  description: '',
+  requestedTime: '',
+  issueTime: '',
   status: '',
+  transaction: EmptyTransactionInfo,
+  officialDocument: EmptyOfficialDocument,
+  subjectChanges: EmptyRecordableSubjectChanges,
 };

@@ -33,7 +33,7 @@ export class TractIndexEntriesTableComponent implements OnChanges  {
 
   @Output() tractIndexEntriesTableEvent = new EventEmitter<EventInfo>();
 
-  displayedColumns: string[] = ['name', 'documentID', 'transactionID', 'status'];
+  displayedColumns: string[] = ['description', 'documentID', 'transactionID', 'status'];
 
   dataSource: MatTableDataSource<TractIndexEntry>;
 
@@ -63,11 +63,25 @@ export class TractIndexEntriesTableComponent implements OnChanges  {
 
   private getFilterPredicate() {
     return (row: TractIndexEntry, filters: any) => (
-      this.displayedColumns.filter(x =>
-        (!filters.type || row.type === filters.type) &&
-        row[x]?.toString().toLowerCase().includes(filters.keywords.trim().toLowerCase())
-      ).length > 0
+      this.filterByType(row, filters.entryType) && this.filterByKeyword(row, filters.keywords)
     );
+  }
+
+
+  private filterByType(row: TractIndexEntry, entryType: string) {
+    return !entryType || row.entryType === entryType;
+  }
+
+
+  private filterByKeyword(row: TractIndexEntry, keywords: string) {
+    return this.filterField(row.description, keywords) ||
+           this.filterField(row.transaction.transactionID, keywords) ||
+           this.filterField(row.officialDocument.documentID, keywords)
+  }
+
+
+  private filterField(field: string, filter: string): boolean {
+    return field.toString().toLowerCase().includes(filter.trim().toLowerCase());
   }
 
 
