@@ -28,7 +28,14 @@
 
     </mat-tab>
 
-    <mat-tab label="Historia" disabled>
+    <mat-tab label="Historia">
+
+      <emp-land-recordable-subject-history
+        [recordableSubjectUID]="tractIndex.recordableSubject.uid"
+        [tractIndexEntriesList]="tractIndex.entries"
+        [canEdit]="canEditTractIndex">
+
+      </emp-land-recordable-subject-history>
 
     </mat-tab>
 

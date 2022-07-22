@@ -22,6 +22,7 @@ import { InstrumentBookEntryCreatorComponent } from '../registration/instrument-
 import { InstrumentBookEntryListComponent } from '../registration/instrument-book-entries/instrument-book-entry-list.component';
 import { InstrumentEditorComponent } from '../recordable-subjects/instrument/instrument-editor.component';
 import { RecordableSubjectEditorComponent } from './recordable-subject/recordable-subject-editor.component';
+import { RecordableSubjectHistoryComponent } from './recordable-subject/recordable-subject-history.component';
 import { RecordableSubjectTabbedViewComponent } from './recordable-subject/recordable-subject-tabbed-view.component';
 import { BookEntryEditionComponent } from './recording-book/book-entry-edition.component';
 import { BookEntryEditorComponent } from './recording-book/book-entry-editor.component';
@@ -50,6 +51,7 @@ import { RecordingActsListComponent } from './recording-acts/recording-acts-list
 
   declarations: [
     RecordableSubjectEditorComponent,
+    RecordableSubjectHistoryComponent,
     RecordableSubjectTabbedViewComponent,
     BookEntryEditionComponent,
     BookEntryEditorComponent,
