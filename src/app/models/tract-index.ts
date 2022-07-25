@@ -14,6 +14,14 @@ export interface TractIndex {
   recordableSubject: RecordableSubject;
   entries: TractIndexEntry[];
   structure: StructureEntry[];
+  actions: TractIndexActions;
+}
+
+
+export interface TractIndexActions {
+  canBeClosed: boolean;
+  canBeOpened: boolean;
+  canBeUpdated: boolean;
 }
 
 
@@ -34,6 +42,14 @@ export interface StructureEntry {
 }
 
 
+export interface TractIndexEntryActions {
+  canBeClosed: boolean;
+  canBeDeleted: boolean;
+  canBeOpened: boolean;
+  canBeUpdated: boolean;
+}
+
+
 export interface TractIndexEntry {
   uid: string;
   entryType: TractIndexEntryType;
@@ -44,6 +60,7 @@ export interface TractIndexEntry {
   transaction: TransactionInfo,
   officialDocument: OfficialDocument,
   subjectChanges: RecordableSubjectChanges;
+  actions: TractIndexEntryActions;
 }
 
 
@@ -87,10 +104,18 @@ export interface StructureChange {
 }
 
 
+export const EmptyTractIndexActions: TractIndexActions = {
+  canBeClosed: false,
+  canBeOpened: false,
+  canBeUpdated: false,
+}
+
+
 export const EmptyTractIndex: TractIndex = {
   recordableSubject: EmptyRecordableSubject,
   entries: [],
   structure: [],
+  actions: EmptyTractIndexActions,
 };
 
 
@@ -134,6 +159,14 @@ export const EmptyRecordableSubjectChanges: RecordableSubjectChanges = {
 }
 
 
+export const EmptyTractIndexEntryActions: TractIndexEntryActions = {
+  canBeClosed: false,
+  canBeDeleted: false,
+  canBeOpened: false,
+  canBeUpdated: false
+}
+
+
 export const EmptyTractIndexEntry: TractIndexEntry = {
   uid: '',
   entryType: TractIndexEntryType.RecordingAct,
@@ -144,4 +177,5 @@ export const EmptyTractIndexEntry: TractIndexEntry = {
   transaction: EmptyTransactionInfo,
   officialDocument: EmptyOfficialDocument,
   subjectChanges: EmptyRecordableSubjectChanges,
+  actions: EmptyTractIndexEntryActions,
 };
