@@ -32,7 +32,6 @@
 
     <emp-land-instrument-land-book-entry-creator *ngIf="panelAddState"
       [instrumentRecordingUID]="instrumentRecording.uid">
-
     </emp-land-instrument-land-book-entry-creator>
 
   </emp-ng-expansion-button>
@@ -56,7 +55,7 @@
                textButtonClose: 'Cancelar agregar registro'}">
 
     <emp-land-recording-act-creator *ngIf="panelAddState"
-      [instrumentRecording]="instrumentRecording"
+      [instrumentRecordingUID]="instrumentRecording.uid"
       [recordingActTypeGroupList]="recordingActTypeGroupList"
       (recordingActCreatorEvent)="onRecordingActCreatorEvent($event)">
     </emp-land-recording-act-creator>

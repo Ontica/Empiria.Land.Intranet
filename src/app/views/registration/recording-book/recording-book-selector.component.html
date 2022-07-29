@@ -15,6 +15,7 @@
                       dropdownPosition: selectorPosition }"
           [items]="recorderOfficeList"
           [required]="fieldsRequired"
+          [disabled]="hasRecorderOfficeDefault"
           [showError]="fieldsRequired && ( !recorderOfficeSelected || !recorderOfficeSelected.uid )"
           (changes)="onRecorderOfficeChange($event)">
         </emp-ng-select>

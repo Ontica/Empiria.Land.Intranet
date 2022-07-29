@@ -2,7 +2,6 @@
 
 <div class="tab-container scrollable-container mat-elevation-z1" [empNgSpinnerHost]="spinner">
 
-  <!-- TODO: quitar este cuando se implementen WS -->
   <emp-ng-spinner #spinner [visible]="submitted">
 
   </emp-ng-spinner>
@@ -50,7 +49,7 @@
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let row" class="column-action">
         <mat-icon *ngIf="row.actions.canBeDeleted"
-          (click)="removeRecordingAct(row)"
+          (click)="onRemoveRecordingActClicked(row)"
           title="Elimiar este acto">
           delete
         </mat-icon>
@@ -68,25 +67,27 @@
 </div>
 
 
-<ng-container *ngIf="actions.canBeClosed || actions.canBeOpened || actions.canBeUpdated">
+<ng-container *ngIf="tractIndex.actions.canBeClosed ||
+                     tractIndex.actions.canBeOpened ||
+                     tractIndex.actions.canBeUpdated">
 
   <mat-divider class="divider-padding"></mat-divider>
 
   <div fxLayout="row" [style.marginRight.px]="8">
 
     <div fxFlex fxLayoutAlign="start">
-      <button type="button" class="btn" *ngIf="actions.canBeClosed"
+      <button type="button" class="btn" *ngIf="tractIndex.actions.canBeClosed"
         (click)="onCloseTractIndex()">
         Marcar la historia como completa
       </button>
 
-      <button type="button" class="btn" *ngIf="actions.canBeOpened"
+      <button type="button" class="btn" *ngIf="tractIndex.actions.canBeOpened"
         (click)="onOpenTractIndex()">
         Abrir la historia
       </button>
     </div>
 
-    <div fxFlex fxLayoutAlign="end" *ngIf="actions.canBeUpdated">
+    <div fxFlex fxLayoutAlign="end" *ngIf="tractIndex.actions.canBeUpdated">
       <button type="submit" class="btn-action"
        (click)="onOpenRecordingActCreator()">
         Agregar un acto a la historia
@@ -96,3 +97,19 @@
   </div>
 
 </ng-container>
+
+
+<emp-land-recording-act-creator-modal *ngIf="displayRecordingActCreator"
+  [recordableSubject]="tractIndex.recordableSubject"
+  (recordingActCreatorModalEvent)="onRecordingActCreatorModalEvent($event)">
+
+</emp-land-recording-act-creator-modal>
+
+
+<emp-land-recording-act-edition-modal *ngIf="displayRecordingActEdition"
+  [instrumentRecordingUID]="tractIndexEntrySelected.officialDocument.uid"
+  [recordingActUID]="tractIndexEntrySelected.uid"
+  [readonly]="!tractIndexEntrySelected.actions.canBeUpdated"
+  (recordingActEditionModalEvent)="onRecordingActEditionModalEvent($event)">
+
+</emp-land-recording-act-edition-modal>

@@ -53,6 +53,8 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
   @Input() recordingBookButtonText = 'Ver';
 
+  @Input() recorderOffice: Identifiable = Empty;
+
   @Output() recordingBookSelectorEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;
@@ -84,7 +86,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
     this.initForm();
     this.loadDataLists();
     this.resetRecordingBookField();
-    this.recorderOfficeSelected = null;
+    this.setRecorderOfficeDefault();
     this.recordingSectionSelected = null;
   }
 
@@ -94,6 +96,10 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
       this.recordingBookEntrySelected = null;
       this.bookEntryNo = null;
     }
+
+    if (changes.recorderOffice) {
+      this.setRecorderOfficeDefault();
+    }
   }
 
 
@@ -101,8 +107,14 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
     this.helper.destroy();
   }
 
-  get isReadyToFilterRecordingBook(){
-    return this.recorderOfficeSelected && this.recordingSectionSelected;
+
+  get isReadyToFilterRecordingBook(): boolean {
+    return !isEmpty(this.recorderOfficeSelected) && !isEmpty(this.recordingSectionSelected);
+  }
+
+
+  get hasRecorderOfficeDefault(): boolean {
+    return !isEmpty(this.recorderOffice);
   }
 
 
@@ -185,6 +197,11 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
         this.recordingSectionList = b;
         this.isLoading = false;
     });
+  }
+
+
+  private setRecorderOfficeDefault() {
+    this.recorderOfficeSelected = this.hasRecorderOfficeDefault ? this.recorderOffice : null;
   }
 
 

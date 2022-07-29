@@ -31,9 +31,8 @@
     <mat-tab label="Historia">
 
       <emp-land-recordable-subject-history
-        [recordableSubjectUID]="tractIndex.recordableSubject.uid"
-        [tractIndexEntriesList]="tractIndex.entries"
-        [actions]="tractIndex.actions">
+        [tractIndex]="tractIndex"
+        (recordableSubjectHistoryEvent)="onRecordableSubjectHistoryEvent($event)">
 
       </emp-land-recordable-subject-history>
 

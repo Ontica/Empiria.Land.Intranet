@@ -42,6 +42,8 @@ export enum SelectorType {
   INSTRUMENT_RECORDING             = 'Land.Registration.Selector.InstrumentRecording',
   RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT =
     'Land.RecordableSubjects.Selector.RecordingActTypesForInstrument.List',
+  RECORDING_ACT_TYPES_LIST_FOR_RECORDABLE_SUBJECT =
+    'Land.RecordableSubjects.Selector.RecordingActTypesForRecordableSubject.List',
 }
 
 
@@ -110,6 +112,11 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         Assertion.assertValue(params.instrumentUID, 'params.instrumentUID');
 
         return toObservable<U>(this.data.getRecordingActTypesForInstrument(params.instrumentUID));
+
+      case SelectorType.RECORDING_ACT_TYPES_LIST_FOR_RECORDABLE_SUBJECT:
+        Assertion.assertValue(params.recordableSubjectUID, 'params.recordableSubjectUID');
+
+        return toObservable<U>(this.data.getRecordingActTypesForRecordableSubject(params.recordableSubjectUID));
 
       default:
         return super.select<U>(selectorType, params);

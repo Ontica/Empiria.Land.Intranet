@@ -19,6 +19,8 @@ import { EmptyTractIndex, RealEstate, RecordableSubjectType, TractIndex } from '
 
 import { RecordableSubjectEditorEventType } from '../recordable-subject/recordable-subject-editor.component';
 
+import { RecordableSubjectHistoryEventType } from './recordable-subject-history.component';
+
 export enum RecordableSubjectTabbedViewEventType {
   RECORDABLE_SUBJECT_UPDATED = 'RecordableSubjectTabbedViewComponent.Event.RecordableSubjectUpdated',
   CLOSE_BUTTON_CLICKED       = 'RecordableSubjectTabbedViewComponent.Event.CloseButtonClicked',
@@ -100,7 +102,7 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
     switch (event.type as RecordableSubjectEditorEventType) {
       case RecordableSubjectEditorEventType.RECORDABLE_SUBJECT_UPDATED:
         Assertion.assertValue(event.payload.instrumentRecording, 'event.payload.instrumentRecording');
-        this.getTractIndex();
+        this.refreshTractIndex();
         sendEvent(this.recordableSubjectTabbedViewEvent,
           RecordableSubjectTabbedViewEventType.RECORDABLE_SUBJECT_UPDATED, event.payload)
         return;
@@ -111,11 +113,26 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
   }
 
 
+  onRecordableSubjectHistoryEvent(event: EventInfo) {
+    switch (event.type as RecordableSubjectHistoryEventType) {
+      case RecordableSubjectHistoryEventType.TRACT_INDEX_UPDATED:
+        Assertion.assertValue(event.payload.tractIndex, 'event.payload.tractIndex');
+        this.setTractIndex(event.payload.tractIndex as TractIndex);
+        return;
+
+      case RecordableSubjectHistoryEventType.TRACT_INDEX_REFRESH:
+        this.refreshTractIndex();
+        return;
+
+      default:
+        throw Assertion.assertNoReachThisCode(`Unrecoginzed event ${event.type}.`);
+    }
+  }
+
+
   private getTractIndex() {
     if (!this.instrumentRecordingUID || !this.recordingActUID) {
-      this.tractIndex = EmptyTractIndex;
-      this.initTexts();
-
+      this.setTractIndex(EmptyTractIndex);
       return;
     }
 
@@ -123,11 +140,20 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
     this.recordingDataService.getTractIndex(this.instrumentRecordingUID, this.recordingActUID)
       .toPromise()
-      .then(x => {
-        this.tractIndex = x;
-        this.initTexts();
-      })
+      .then(x => this.setTractIndex(x))
+      .catch(() => this.onClose())
       .finally(() => this.isLoading = false);
+  }
+
+
+  private refreshTractIndex() {
+    this.getTractIndex();
+  }
+
+
+  private setTractIndex(tractIndex: TractIndex) {
+    this.tractIndex = tractIndex;
+    this.initTexts();
   }
 
 

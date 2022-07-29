@@ -153,6 +153,7 @@ export class RecordingActEditionComponent implements OnChanges {
         this.setPrimaryPartyList();
         this.initTexts();
       })
+      .catch(() => this.onClose())
       .finally(() => this.setSubmitted(false));
   }
 
@@ -170,10 +171,10 @@ export class RecordingActEditionComponent implements OnChanges {
                                           recordingActFields)
       .toPromise()
       .then(x => {
+        this.emitRecordingActUpdated();
         this.recordingAct = x;
         this.setPrimaryPartyList();
         this.initTexts();
-        this.emitRecordingActUpdated();
       })
       .finally(() => this.setSubmitted(false));
   }
@@ -228,6 +229,7 @@ export class RecordingActEditionComponent implements OnChanges {
     this.isLoading = submitted;
     this.submitted = submitted;
   }
+
 
   private resetPanelState(open) {
     this.panelAddState = open;

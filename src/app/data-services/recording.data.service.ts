@@ -30,7 +30,7 @@ export class RecordingDataService {
 
 
   getRecordingAct(instrumentRecordingUID: string,
-                    recordingActUID: string): Observable<RecordingAct> {
+                  recordingActUID: string): Observable<RecordingAct> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(recordingActUID, 'recordingActUID');
 
@@ -53,6 +53,16 @@ export class RecordingDataService {
     Assertion.assertValue(instrumentUID, 'instrumentUID');
 
     const path = `v5/land/registration/${instrumentUID}/recording-act-types`;
+
+    return this.http.get<RecordingActTypeGroup[]>(path);
+  }
+
+
+  getRecordingActTypesForRecordableSubject(recordableSubjectUID: string): Observable<RecordingActTypeGroup[]> {
+    Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
+
+    const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}` +
+      `/tract-index/recording-act-types`;
 
     return this.http.get<RecordingActTypeGroup[]>(path);
   }
@@ -311,6 +321,47 @@ export class RecordingDataService {
       `recording-acts/${recordingActUID}/tract-index`;
 
     return this.http.get<TractIndex>(path);
+  }
+
+
+  createRecordingActInTractIndex(recordableSubjectUID: string,
+                                 command: RegistrationCommand): Observable<TractIndex> {
+    Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
+    Assertion.assertValue(command, 'command');
+
+    const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}/tract-index`;
+
+    return this.http.post<TractIndex>(path, command);
+  }
+
+
+  removeRecordingActFromTractIndex(recordableSubjectUID: string,
+                                   recordingActUID: string): Observable<TractIndex> {
+    Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
+    Assertion.assertValue(recordingActUID, 'recordingActUID');
+
+    const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}` +
+      `/tract-index/${recordingActUID}`;
+
+    return this.http.delete<TractIndex>(path);
+  }
+
+
+  openTractIndex(recordableSubjectUID: string): Observable<TractIndex> {
+    Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
+
+    const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}/tract-index/open`;
+
+    return this.http.post<TractIndex>(path);
+  }
+
+
+  closeTractIndex(recordableSubjectUID: string): Observable<TractIndex> {
+    Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
+
+    const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}/tract-index/close`;
+
+    return this.http.post<TractIndex>(path);
   }
 
 }
