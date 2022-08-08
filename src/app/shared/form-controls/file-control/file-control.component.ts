@@ -124,6 +124,10 @@ export class FileControlComponent implements OnChanges {
     return FormatLibrary.formatBytes(sizeBytes);
   }
 
+  resetFileControl() {
+    this.clearFileControl();
+  }
+
   private setAcceptedFilesTypes() {
     this.acceptedFilesTypes = [];
 
@@ -298,6 +302,11 @@ export class FileControlComponent implements OnChanges {
 
   private removeFile(file) {
     this.filesToUpload = this.filesToUpload.filter(f => f !== file);
+    this.emitFiles();
+  }
+
+  private clearFileControl() {
+    this.filesToUpload = [];
     this.emitFiles();
   }
 

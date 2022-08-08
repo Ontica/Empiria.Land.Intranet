@@ -1,17 +1,9 @@
-<ng-container *ngIf="instrumentRecording.actions.show.files">
-
-  <emp-land-transaction-files
-    [transactionUID]="transactionUID"
-    [mediaFiles]="instrumentRecording.instrument.media"
-    [readonly]="true"
-    (transactionFilesEvent)="onTransactionFilesEvent($event)">
-
-  </emp-land-transaction-files>
-
-  <br>
-
-</ng-container>
-
+<emp-land-transaction-files *ngIf="instrumentRecording.actions.show.files"
+  [transactionUID]="transactionUID"
+  [mediaFiles]="instrumentRecording.instrument.media"
+  [readonly]="true"
+  (transactionFilesEvent)="onTransactionFilesEvent($event)">
+</emp-land-transaction-files>
 
 <emp-land-instrument-editor
   [instrument]="instrumentRecording.instrument"

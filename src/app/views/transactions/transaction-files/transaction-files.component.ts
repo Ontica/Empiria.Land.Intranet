@@ -5,13 +5,16 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, QueryList, SimpleChanges,
+         ViewChildren } from '@angular/core';
 
 import { EventInfo } from '@app/core';
 
 import { InstrumentMediaContent, mapToFileDataFromMediaFile, MediaFile } from '@app/models';
 
 import { FileData, FileControlActions } from '@app/shared/form-controls/file-control/file-control-data';
+
+import { FileControlComponent } from '@app/shared/form-controls/file-control/file-control.component';
 
 import { sendEvent } from '@app/shared/utils';
 
@@ -28,6 +31,8 @@ export enum TransactionFilesEventType {
   templateUrl: './transaction-files.component.html',
 })
 export class TransactionFilesComponent implements OnChanges {
+
+  @ViewChildren(FileControlComponent) fileControls: QueryList<FileControlComponent>;
 
   @Input() transactionUID = '';
 
@@ -46,6 +51,7 @@ export class TransactionFilesComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.mediaFiles) {
+      this.resetFileControls();
       this.mapFileDataFromMediaFile();
     }
   }
@@ -71,6 +77,13 @@ export class TransactionFilesComponent implements OnChanges {
       default:
         console.log(`Unhandled user interface event ${event.type}`);
         return;
+    }
+  }
+
+
+  private resetFileControls() {
+    if(!!this.fileControls) {
+      this.fileControls.forEach((item: FileControlComponent) => item.resetFileControl())
     }
   }
 

@@ -87,6 +87,7 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy() {
     this.helper.destroy();
     this.uiLayer.dispatch(RegistrationAction.UNSELECT_TRANSACTION_INSTRUMENT_RECORDING);
+    this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE_LIST);
   }
 
 
@@ -101,7 +102,7 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
       case TransactionFilesEventType.SHOW_FILE_CLICKED:
 
         const fileViewerData: FileViewerData = {
-          fileList: [event.payload]
+          fileList: [event.payload.file]
         };
 
         this.uiLayer.dispatch(TransactionAction.SELECT_FILE_LIST, { fileViewerData });
