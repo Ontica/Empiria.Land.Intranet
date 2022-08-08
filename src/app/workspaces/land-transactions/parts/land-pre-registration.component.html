@@ -1,7 +1,16 @@
-<emp-land-transaction-files *ngIf="preprocessingData.actions.show.instrumentFiles"
-  [transactionUID]="transactionUID"
-  [mediaFiles]="preprocessingData.media"
-  [canEdit]="preprocessingData.actions.can.uploadInstrumentFiles"
-  (transactionFilesEvent)="onTransactionFilesEvent($event)">
 
-</emp-land-transaction-files>
+<div [empNgSpinnerHost]="spinner" [style.minHeight.px]="150">
+
+  <emp-ng-spinner #spinner [visible]="isLoading">
+
+  </emp-ng-spinner>
+
+  <emp-land-transaction-files
+    [transactionUID]="transactionUID"
+    [mediaFiles]="preprocessingData.media"
+    [canEdit]="preprocessingData.actions.can.uploadInstrumentFiles"
+    (transactionFilesEvent)="onTransactionFilesEvent($event)">
+
+  </emp-land-transaction-files>
+
+</div>

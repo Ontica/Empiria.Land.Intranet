@@ -32,6 +32,8 @@ export class LandPreRegistationComponent implements OnChanges, OnInit, OnDestroy
 
   @Input() readonly = false;
 
+  isLoading = false;
+
   preprocessingData: PreprocessingData = EmptyPreprocessingData;
 
   helper: SubscriptionHelper;
@@ -46,13 +48,17 @@ export class LandPreRegistationComponent implements OnChanges, OnInit, OnDestroy
     if (changes.transactionUID) {
       this.uiLayer.dispatch(TransactionAction.SELECT_PREPROCESSING_DATA,
         {transactionUID: this.transactionUID});
+      this.isLoading = true;
     }
   }
 
 
   ngOnInit() {
     this.helper.select<PreprocessingData>(TransactionStateSelector.SELECTED_PREPROCESSING_DATA)
-      .subscribe(x => {this.preprocessingData = x});
+      .subscribe(x => {
+        this.preprocessingData = x;
+        this.isLoading = false;
+      });
   }
 
 

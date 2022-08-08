@@ -1,66 +1,74 @@
-<emp-land-transaction-files *ngIf="instrumentRecording.actions.show.files"
-  [transactionUID]="transactionUID"
-  [mediaFiles]="instrumentRecording.instrument.media"
-  [readonly]="true"
-  (transactionFilesEvent)="onTransactionFilesEvent($event)">
-</emp-land-transaction-files>
+<div [empNgSpinnerHost]="spinner" [style.minHeight.px]="150">
 
-<emp-land-instrument-editor
-  [instrument]="instrumentRecording.instrument"
-  [actions]="instrumentRecording.actions"
-  (instrumentEditorEvent)="onInstrumentEditorEvent($event)">
-</emp-land-instrument-editor>
+  <emp-ng-spinner #spinner [visible]="isLoading">
 
-<ng-container *ngIf="instrumentRecording.actions.show.recordingBookEntries">
+  </emp-ng-spinner>
 
-  <br>
+  <emp-land-transaction-files *ngIf="instrumentRecording.actions.show.files"
+    [transactionUID]="transactionUID"
+    [mediaFiles]="instrumentRecording.instrument.media"
+    [readonly]="true"
+    (transactionFilesEvent)="onTransactionFilesEvent($event)">
+  </emp-land-transaction-files>
 
-  <div class="section-title">Registro del documento en libros</div>
+  <emp-land-instrument-editor
+    [instrument]="instrumentRecording.instrument"
+    [actions]="instrumentRecording.actions"
+    (instrumentEditorEvent)="onInstrumentEditorEvent($event)">
+  </emp-land-instrument-editor>
 
-  <emp-ng-expansion-button *ngIf="instrumentRecording.actions.can.createNextRecordingBookEntries"
-    [(panelState)]="panelAddState"
-    [config]="{textButtonOpen: 'Agregar registro del documento en libros',
-               textButtonClose: 'Cancelar agregar registro'}">
+  <ng-container *ngIf="instrumentRecording.actions.show.recordingBookEntries">
 
-    <emp-land-instrument-land-book-entry-creator *ngIf="panelAddState"
-      [instrumentRecordingUID]="instrumentRecording.uid">
-    </emp-land-instrument-land-book-entry-creator>
+    <br>
 
-  </emp-ng-expansion-button>
+    <div class="section-title">Registro del documento en libros</div>
 
-  <emp-land-instrument-book-entry-list
-    [instrumentRecording]="instrumentRecording">
-  </emp-land-instrument-book-entry-list>
+    <emp-ng-expansion-button *ngIf="instrumentRecording.actions.can.createNextRecordingBookEntries"
+      [(panelState)]="panelAddState"
+      [config]="{textButtonOpen: 'Agregar registro del documento en libros',
+                textButtonClose: 'Cancelar agregar registro'}">
 
-</ng-container>
+      <emp-land-instrument-land-book-entry-creator *ngIf="panelAddState"
+        [instrumentRecordingUID]="instrumentRecording.uid">
+      </emp-land-instrument-land-book-entry-creator>
+
+    </emp-ng-expansion-button>
+
+    <emp-land-instrument-book-entry-list
+      [instrumentRecording]="instrumentRecording">
+    </emp-land-instrument-book-entry-list>
+
+  </ng-container>
 
 
-<ng-container *ngIf="instrumentRecording.actions.show.recordingActs">
+  <ng-container *ngIf="instrumentRecording.actions.show.recordingActs">
 
-  <br>
+    <br>
 
-  <div class="section-title">Actos jurídicos contenidos en el documento</div>
+    <div class="section-title">Actos jurídicos contenidos en el documento</div>
 
-  <emp-ng-expansion-button *ngIf="instrumentRecording.actions.can.editRecordingActs"
-    [(panelState)]="panelAddState"
-    [config]="{textButtonOpen: 'Agregar un acto jurídico al instrumento',
-               textButtonClose: 'Cancelar agregar registro'}">
+    <emp-ng-expansion-button *ngIf="instrumentRecording.actions.can.editRecordingActs"
+      [(panelState)]="panelAddState"
+      [config]="{textButtonOpen: 'Agregar un acto jurídico al instrumento',
+                textButtonClose: 'Cancelar agregar registro'}">
 
-    <emp-land-recording-act-creator *ngIf="panelAddState"
-      [instrumentRecordingUID]="instrumentRecording.uid"
-      [recordingActTypeGroupList]="recordingActTypeGroupList"
-      (recordingActCreatorEvent)="onRecordingActCreatorEvent($event)">
-    </emp-land-recording-act-creator>
+      <emp-land-recording-act-creator *ngIf="panelAddState"
+        [instrumentRecordingUID]="instrumentRecording.uid"
+        [recordingActTypeGroupList]="recordingActTypeGroupList"
+        (recordingActCreatorEvent)="onRecordingActCreatorEvent($event)">
+      </emp-land-recording-act-creator>
 
-  </emp-ng-expansion-button>
+    </emp-ng-expansion-button>
 
-  <emp-land-recording-acts-list
-    [instrumentRecording]="instrumentRecording"
-    [recordingActs]="instrumentRecording.recordingActs"
-    (recordingActsListEvent)="onRecordingActsListEvent($event)">
-  </emp-land-recording-acts-list>
+    <emp-land-recording-acts-list
+      [instrumentRecording]="instrumentRecording"
+      [recordingActs]="instrumentRecording.recordingActs"
+      (recordingActsListEvent)="onRecordingActsListEvent($event)">
+    </emp-land-recording-acts-list>
 
-</ng-container>
+  </ng-container>
+
+</div>
 
 <emp-ng-file-print-preview #filePrintPreview
   title="Impresión de sello interesado"

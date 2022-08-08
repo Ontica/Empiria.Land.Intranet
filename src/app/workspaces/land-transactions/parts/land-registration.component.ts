@@ -54,6 +54,8 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
 
   panelAddState = false;
 
+  isLoading = false;
+
   submitted = false;
 
   recordingActTypeGroupList: RecordingActTypeGroup[] = [];
@@ -68,14 +70,16 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges() {
     this.uiLayer.dispatch(RegistrationAction.SELECT_TRANSACTION_INSTRUMENT_RECORDINGT,
       {transactionUID: this.transactionUID});
+    this.isLoading = true;
   }
 
 
   ngOnInit(){
     this.helper.select<InstrumentRecording>(RegistrationStateSelector.TRANSACTION_INSTRUMENT_RECORDING)
       .subscribe(x => {
-        this.instrumentRecording = isEmpty(x) ? EmptyInstrumentRecording : x;
+        this.instrumentRecording = x;
         this.instrumentRecording.actions = x.actions ?? EmptyInstrumentRecordingActions;
+        this.isLoading = false;
         if (!isEmpty(this.instrumentRecording)) {
           this.loadData();
           this.resetPanelState();
