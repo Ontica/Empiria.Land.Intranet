@@ -35,6 +35,7 @@ import { WorkflowHistoryComponent } from './workflow-history/workflow-history.co
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+
     AngularMaterialModule,
     AngularFlexLayoutModule,
     SharedModule

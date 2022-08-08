@@ -32,6 +32,7 @@ import { TractIndexEntryTabbedViewComponent } from './tract-index-entry-tabbed-v
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+
     AngularMaterialModule,
     AngularFlexLayoutModule,
     SharedModule,

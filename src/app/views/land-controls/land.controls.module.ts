@@ -11,14 +11,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AngularMaterialModule } from '@app/shared/angular-material.module';
 import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
-
-import { SharedContainersModule } from '@app/shared/containers/shared-containers.module';
-import { SharedFormControlsModule } from '@app/shared/form-controls/shared-form-controls.module';
-import { SharedIndicatorsModule } from '@app/shared/indicators/shared-indicators.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { FileViewerComponent } from './file-viewer/file-viewer.component';
-import { SharedPipesModule } from '@app/shared/pipes/shared-pipes.module';
-import { SharedDirectivesModule } from '@app/shared/directives/shared-directives.module';
 import { FileViewerNavigatorComponent } from './file-viewer/file-viewer-navigator.component';
 
 
@@ -28,14 +23,10 @@ import { FileViewerNavigatorComponent } from './file-viewer/file-viewer-navigato
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+
     AngularMaterialModule,
     AngularFlexLayoutModule,
-
-    SharedContainersModule,
-    SharedFormControlsModule,
-    SharedIndicatorsModule,
-    SharedPipesModule,
-    SharedDirectivesModule,
+    SharedModule,
   ],
 
   declarations: [
