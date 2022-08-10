@@ -30,6 +30,7 @@ export class WorkflowHistoryComponent implements OnInit, OnDestroy {
   helper: SubscriptionHelper;
 
   listWorkflowTask: WorkflowTask[] = [];
+
   dataSource: MatTableDataSource<WorkflowTask>;
 
   displayedColumns = ['taskName', 'assigneeName', 'checkInTime', 'checkOutTime', 'endProcessTime',
@@ -43,6 +44,7 @@ export class WorkflowHistoryComponent implements OnInit, OnDestroy {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
+
   ngOnInit(): void {
     this.helper.select<WorkflowTask[]>(TransactionStateSelector.SELECTED_WORKFLOW_HISTORY,
       this.transactionUID)
@@ -52,16 +54,19 @@ export class WorkflowHistoryComponent implements OnInit, OnDestroy {
       });
   }
 
+
   ngOnDestroy() {
     this.helper.destroy();
   }
 
-  setData() {
+
+  private setData() {
     this.dataSource = new MatTableDataSource(this.listWorkflowTask);
     this.setElapsedTimeTotal();
   }
 
-  setElapsedTimeTotal() {
+
+  private setElapsedTimeTotal() {
     this.elapsedTimeTotal = this.listWorkflowTask
       .filter(x => x.checkInTime !== x.endProcessTime)
       .map(x => x.elapsedTime)
