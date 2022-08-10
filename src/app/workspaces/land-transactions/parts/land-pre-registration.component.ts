@@ -5,14 +5,17 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 
 import { Assertion, Command, EventInfo } from '@app/core';
 
-import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+import { Subscription } from 'rxjs';
 
-import { TransactionAction, TransactionCommandType,
-         TransactionStateSelector } from '@app/core/presentation/presentation-types';
+import { PresentationLayer } from '@app/core/presentation';
+
+import { TransactionAction, TransactionCommandType  } from '@app/core/presentation/presentation-types';
+
+import { TransactionDataService } from '@app/data-services';
 
 import { EmptyPreprocessingData, PreprocessingData } from '@app/models';
 
@@ -22,11 +25,12 @@ import {
   TransactionFilesEventType
 } from '@app/views/transactions/transaction-files/transaction-files.component';
 
+
 @Component({
   selector: 'emp-land-pre-registration',
   templateUrl: './land-pre-registration.component.html',
 })
-export class LandPreRegistationComponent implements OnChanges, OnInit, OnDestroy {
+export class LandPreRegistationComponent implements OnChanges, OnDestroy {
 
   @Input() transactionUID = 'Empty';
 
@@ -36,36 +40,24 @@ export class LandPreRegistationComponent implements OnChanges, OnInit, OnDestroy
 
   preprocessingData: PreprocessingData = EmptyPreprocessingData;
 
-  helper: SubscriptionHelper;
+  suscription: Subscription;
 
 
-  constructor(private uiLayer: PresentationLayer) {
-    this.helper = uiLayer.createSubscriptionHelper();
+  constructor(private uiLayer: PresentationLayer,
+              private transactionData: TransactionDataService) {
   }
 
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.transactionUID) {
-      this.uiLayer.dispatch(TransactionAction.SELECT_PREPROCESSING_DATA,
-        {transactionUID: this.transactionUID});
-      this.isLoading = true;
+      this.unsuscribePreprocessingData();
+      this.getPreprocessingData();
     }
   }
 
 
-  ngOnInit() {
-    this.helper.select<PreprocessingData>(TransactionStateSelector.SELECTED_PREPROCESSING_DATA)
-      .subscribe(x => {
-        this.preprocessingData = x;
-        this.isLoading = false;
-      });
-  }
-
-
   ngOnDestroy() {
-    this.uiLayer.dispatch(TransactionAction.UNSELECT_PREPROCESSING_DATA);
-    this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE_LIST);
-    this.helper.destroy();
+    this.unsuscribePreprocessingData();
   }
 
 
@@ -77,7 +69,8 @@ export class LandPreRegistationComponent implements OnChanges, OnInit, OnDestroy
         Assertion.assertValue(event.payload.mediaContent, 'event.payload.mediaContent');
         Assertion.assertValue(event.payload.file, 'event.payload.file');
 
-        this.executeCommand<PreprocessingData>(TransactionCommandType.UPLOAD_TRANSACTION_FILE, event.payload);
+        this.executeCommand<PreprocessingData>(TransactionCommandType.UPLOAD_TRANSACTION_FILE, event.payload)
+          .then(x => this.preprocessingData = x);
 
         return;
 
@@ -85,7 +78,8 @@ export class LandPreRegistationComponent implements OnChanges, OnInit, OnDestroy
         Assertion.assertValue(event.payload.transactionUID, 'event.payload.transactionUID');
         Assertion.assertValue(event.payload.mediaFileUID, 'event.payload.mediaFileUID');
 
-        this.executeCommand<PreprocessingData>(TransactionCommandType.REMOVE_TRANSACTION_FILE, event.payload);
+        this.executeCommand<PreprocessingData>(TransactionCommandType.REMOVE_TRANSACTION_FILE, event.payload)
+          .then(x => this.preprocessingData = x);
 
         return;
 
@@ -101,6 +95,24 @@ export class LandPreRegistationComponent implements OnChanges, OnInit, OnDestroy
       default:
         console.log(`Unhandled user interface event ${event.type}`);
         return;
+    }
+  }
+
+
+  private getPreprocessingData() {
+    this.isLoading = true;
+
+    this.suscription = this.transactionData.getTransactionPreprocessingData(this.transactionUID)
+      .subscribe(x => {
+        this.preprocessingData = x;
+        this.isLoading = false;
+      });
+  }
+
+
+  private unsuscribePreprocessingData() {
+    if (this.suscription) {
+      this.suscription.unsubscribe();
     }
   }
 

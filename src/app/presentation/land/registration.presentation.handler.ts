@@ -20,7 +20,7 @@ import { RecordingDataService } from '@app/data-services';
 
 
 export enum ActionType {
-  SELECT_TRANSACTION_INSTRUMENT_RECORDINGT =  'Land.Registration.Action.SelectTransactionInstrumentRecording',
+  SELECT_TRANSACTION_INSTRUMENT_RECORDING   =  'Land.Registration.Action.SelectTransactionInstrumentRecording',
   UNSELECT_TRANSACTION_INSTRUMENT_RECORDING = 'Land.Registration.Action.UnselectTransactionInstrumentRecording',
   SELECT_RECORDABLE_SUBJECT   = 'Land.Registration.Action.SelectRecordableSubject',
   UNSELECT_RECORDABLE_SUBJECT = 'Land.Registration.Action.UnselectRecordableSubject',
@@ -103,11 +103,6 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
   select<U>(selectorType: SelectorType, params?: any): Observable<U> {
     switch (selectorType) {
 
-      case SelectorType.INSTRUMENT_RECORDING:
-        Assertion.assertValue(params.instrumentRecordingUID, 'params.instrumentRecordingUID');
-
-        return toObservable<U>(this.data.getInstrumentRecording(params.instrumentRecordingUID));
-
       case SelectorType.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT:
         Assertion.assertValue(params.instrumentUID, 'params.instrumentUID');
 
@@ -136,19 +131,17 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
       case EffectType.DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY:
       case EffectType.CLOSE_REGISTRATION:
       case EffectType.OPEN_REGISTRATION:
-
         this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, params.result);
         return;
 
       case EffectType.UPDATE_RECORDABLE_SUBJECT:
+        const recordingActUID = params.payload.recordingActUID;
         const instrumentRecording = params.result;
-        const instrumenRecordringSelected =
+        const instrumentRecordingSelected =
           this.getValue<InstrumentRecording>(SelectorType.TRANSACTION_INSTRUMENT_RECORDING);
 
-        if (instrumentRecording.uid === instrumenRecordringSelected.uid) {
-          const recordingAct = instrumentRecording.recordingActs
-            .filter(x => x.uid === params.payload.recordingActUID)[0];
-
+        if (instrumentRecording.uid === instrumentRecordingSelected.uid) {
+          const recordingAct = instrumentRecording.recordingActs.find(x => x.uid === recordingActUID);
           this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, instrumentRecording);
           this.setValue(SelectorType.SELECTED_RECORDABLE_SUBJECT, { instrumentRecording, recordingAct });
         }
@@ -208,16 +201,16 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
                                             command.payload.recordableSubjectFields)
         );
 
-        case CommandType.CLOSE_REGISTRATION:
-          return toPromise<U>(
-            this.data.closeRegistration(command.payload.instrumentRecordingUID)
-          );
+      case CommandType.CLOSE_REGISTRATION:
+        return toPromise<U>(
+          this.data.closeRegistration(command.payload.instrumentRecordingUID)
+        );
 
 
-        case CommandType.OPEN_REGISTRATION:
-          return toPromise<U>(
-            this.data.openRegistration(command.payload.instrumentRecordingUID)
-          );
+      case CommandType.OPEN_REGISTRATION:
+        return toPromise<U>(
+          this.data.openRegistration(command.payload.instrumentRecordingUID)
+        );
 
       default:
         throw this.unhandledCommand(command);
@@ -228,10 +221,9 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
   dispatch(actionType: ActionType, params?: any): void {
     switch (actionType) {
 
-      case ActionType.SELECT_TRANSACTION_INSTRUMENT_RECORDINGT:
-        Assertion.assertValue(params.transactionUID, 'params.transactionUID');
-        super.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING,
-                       this.data.getTransactionInstrumentRecording(params.transactionUID));
+      case ActionType.SELECT_TRANSACTION_INSTRUMENT_RECORDING:
+        Assertion.assertValue(params.transactionInstrumentRecording, 'params.transactionInstrumentRecording');
+        super.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, params.transactionInstrumentRecording);
         return;
 
       case ActionType.UNSELECT_TRANSACTION_INSTRUMENT_RECORDING:

@@ -9,21 +9,25 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angu
 
 import { Assertion, Command, EventInfo, isEmpty } from '@app/core';
 
+import { Subscription } from 'rxjs';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
+import { RecordingDataService } from '@app/data-services';
 
 import { RegistrationAction, RegistrationCommandType, RegistrationStateSelector,
          TransactionAction } from '@app/core/presentation/presentation-types';
 
-import { InstrumentRecording, InstrumentFields, EmptyInstrumentRecording, RecordingActTypeGroup,
-         EmptyInstrumentRecordingActions  } from '@app/models';
-
-import {
-  InstrumentEditorEventType
-} from '@app/views/recordable-subjects/instrument/instrument-editor.component';
+import { InstrumentRecording, InstrumentFields, EmptyInstrumentRecording,
+         RecordingActTypeGroup } from '@app/models';
 
 import {
   FilePrintPreviewComponent
 } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
+
+import {
+  InstrumentEditorEventType
+} from '@app/views/recordable-subjects/instrument/instrument-editor.component';
 
 import {
   RecordingActCreatorEventType
@@ -62,41 +66,28 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
 
   helper: SubscriptionHelper;
 
-  constructor(private uiLayer: PresentationLayer) {
+  suscription: Subscription;
+
+  constructor(private uiLayer: PresentationLayer, private recordingData: RecordingDataService) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
 
   ngOnChanges() {
-    this.uiLayer.dispatch(RegistrationAction.SELECT_TRANSACTION_INSTRUMENT_RECORDINGT,
-      {transactionUID: this.transactionUID});
-    this.isLoading = true;
+    this.unsuscribeTransactionInstrumentRecordingData();
+    this.getTransactionInstrumentRecording();
   }
 
 
   ngOnInit(){
-    this.helper.select<InstrumentRecording>(RegistrationStateSelector.TRANSACTION_INSTRUMENT_RECORDING)
-      .subscribe(x => {
-        this.instrumentRecording = x;
-        this.instrumentRecording.actions = x.actions ?? EmptyInstrumentRecordingActions;
-        this.isLoading = false;
-        if (!isEmpty(this.instrumentRecording)) {
-          this.loadData();
-          this.resetPanelState();
-        }
-      });
+    this.subscribeToDataInit();
   }
 
 
   ngOnDestroy() {
-    this.helper.destroy();
+    this.unsuscribeTransactionInstrumentRecordingData();
     this.uiLayer.dispatch(RegistrationAction.UNSELECT_TRANSACTION_INSTRUMENT_RECORDING);
-    this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE_LIST);
-  }
-
-
-  resetPanelState() {
-    this.panelAddState = false;
+    this.helper.destroy();
   }
 
 
@@ -212,6 +203,38 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
+  private subscribeToDataInit() {
+    this.helper.select<InstrumentRecording>(RegistrationStateSelector.TRANSACTION_INSTRUMENT_RECORDING)
+      .subscribe(x => {
+        this.instrumentRecording = x;
+
+        if (!isEmpty(this.instrumentRecording)) {
+          this.loadData();
+          this.resetPanelState();
+        }
+      });
+  }
+
+
+  private getTransactionInstrumentRecording() {
+    this.isLoading = true;
+
+    this.suscription = this.recordingData.getTransactionInstrumentRecording(this.transactionUID)
+      .subscribe(x => {
+        this.uiLayer.dispatch(RegistrationAction.SELECT_TRANSACTION_INSTRUMENT_RECORDING,
+          {transactionInstrumentRecording: x});
+        this.isLoading = false;
+      });
+  }
+
+
+  private unsuscribeTransactionInstrumentRecordingData() {
+    if (this.suscription) {
+      this.suscription.unsubscribe();
+    }
+  }
+
+
   private loadData(){
     this.helper.select<RecordingActTypeGroup[]>(
       RegistrationStateSelector.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT,
@@ -222,7 +245,6 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
 
 
   private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
-
     this.submitted = true;
 
     const command: Command = {
@@ -232,6 +254,11 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
 
     return this.uiLayer.execute<T>(command)
       .finally(() => this.submitted = false);
+  }
+
+
+  private resetPanelState() {
+    this.panelAddState = false;
   }
 
 }

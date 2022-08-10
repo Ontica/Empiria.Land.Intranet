@@ -144,34 +144,15 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
-  private refreshSelectedRecordableSubject(instrumentRecording: InstrumentRecording) {
-    const recordingAct = instrumentRecording.recordingActs
-      .find(x => x.uid === this.selectedRecordableSubject.recordingAct.uid);
-
-    if (!isEmpty(recordingAct)) {
-      const selectionAct: SelectionAct = {
-        instrumentRecording,
-        recordingAct: recordingAct,
-      };
-
-      this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDABLE_SUBJECT, selectionAct);
-    } else {
-      this.unselectCurrentRecordableSubject();
-    }
-  }
-
-
   onRecordingActEditionEventType(event: EventInfo) {
     switch (event.type as RecordingActEditionEventType) {
 
       case RecordingActEditionEventType.CLOSE_BUTTON_CLICKED:
         this.unselectCurrentRecordingAct();
-
         return;
 
       case RecordingActEditionEventType.RECORDING_ACT_UPDATED:
-        this.uiLayer.dispatch(RegistrationAction.SELECT_TRANSACTION_INSTRUMENT_RECORDINGT,
-          {transactionUID: this.selectedTransaction.uid});
+        this.refreshInstrumentRecording();
         return;
 
       default:
@@ -194,23 +175,6 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   onCloseFileViewer() {
     this.unselectCurrentFile();
     this.unselectCurrentRecordableSubject();
-  }
-
-
-  unselectCurrentSelections(){
-    this.unselectCurrentFile();
-    this.unselectCurrentRecordableSubject();
-    this.unselectCurrentRecordingAct();
-  }
-
-
-  unselectCurrentRecordableSubject() {
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDABLE_SUBJECT);
-  }
-
-
-  unselectCurrentRecordingAct() {
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
   }
 
   // private methods
@@ -260,6 +224,28 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
+  private refreshSelectedRecordableSubject(instrumentRecording: InstrumentRecording) {
+    const recordingAct = instrumentRecording.recordingActs
+      .find(x => x.uid === this.selectedRecordableSubject.recordingAct.uid);
+
+    if (!isEmpty(recordingAct)) {
+      const selectionAct: SelectionAct = {
+        instrumentRecording,
+        recordingAct: recordingAct,
+      };
+
+      this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDABLE_SUBJECT, selectionAct);
+    } else {
+      this.unselectCurrentRecordableSubject();
+    }
+  }
+
+
+  private refreshInstrumentRecording() {
+
+  }
+
+
   private applyTransactionsFilter(data?: { keywords: string }) {
     const currentKeywords =
       this.uiLayer.selectValue<TransactionFilter>(TransactionStateSelector.LIST_FILTER).keywords;
@@ -286,6 +272,23 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   private unselectCurrentFile() {
     this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE_LIST);
+  }
+
+
+  private unselectCurrentSelections(){
+    this.unselectCurrentFile();
+    this.unselectCurrentRecordableSubject();
+    this.unselectCurrentRecordingAct();
+  }
+
+
+  private unselectCurrentRecordableSubject() {
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDABLE_SUBJECT);
+  }
+
+
+  private unselectCurrentRecordingAct() {
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
   }
 
 }
