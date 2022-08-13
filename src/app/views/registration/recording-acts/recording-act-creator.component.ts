@@ -24,7 +24,7 @@ import { EmptyRegistrationCommandRule, EmptyTractIndex, RecordableSubjectFilter,
          RegistrationCommandConfig, RegistrationCommandPayload, RegistrationCommandRule,
          TractIndex } from '@app/models';
 
-import { FormHandler } from '@app/shared/utils';
+import { FormHandler, sendEvent } from '@app/shared/utils';
 
 import { RecordingBookSelectorEventType } from '../recording-book/recording-book-selector.component';
 
@@ -154,7 +154,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  onBookEntryCheckChanged(check: boolean) {
+  onBookEntryCheckChanged() {
     this.formHandler.getControl(this.controls.bookEntryUID).reset();
     this.formHandler.getControl(this.controls.bookEntryNo).reset();
 
@@ -207,7 +207,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
       registrationCommand,
     };
 
-    this.sendEvent(RecordingActCreatorEventType.APPEND_RECORDING_ACT, payload);
+    sendEvent(this.recordingActCreatorEvent, RecordingActCreatorEventType.APPEND_RECORDING_ACT, payload);
   }
 
 
@@ -417,16 +417,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     }
 
     return data;
-  }
-
-
-  private sendEvent(eventType: RecordingActCreatorEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.recordingActCreatorEvent.emit(event);
   }
 
 }

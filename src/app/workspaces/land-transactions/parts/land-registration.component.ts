@@ -68,7 +68,8 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
 
   suscription: Subscription;
 
-  constructor(private uiLayer: PresentationLayer, private recordingData: RecordingDataService) {
+  constructor(private uiLayer: PresentationLayer,
+              private recordingData: RecordingDataService) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 

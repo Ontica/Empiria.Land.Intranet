@@ -18,6 +18,8 @@
 // needed for external services interaction.
 //
 
+export * from './file-services/file-download.service';
+
 export * from './recordable-subjects.data.service';
 
 export * from './recording.data.service';

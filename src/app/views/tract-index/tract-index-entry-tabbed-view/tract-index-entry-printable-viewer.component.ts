@@ -13,23 +13,6 @@ import { EmptyMediaBase, MediaBase, StringLibrary } from '@app/core';
 @Component({
   selector: 'emp-land-tract-index-entry-printable-viewer',
   templateUrl: './tract-index-entry-printable-viewer.component.html',
-  styles: [`
-    .preview-container {
-      width: 100%;
-      height: 100%;
-    }
-
-    .object-preview-container {
-      width: 100%;
-      height: 100%;
-      padding: 3px;
-    }
-
-    .object-preview {
-      width: 100%;
-      height: 100%;
-    }`
-  ],
 })
 export class TractIndexEntryPrintableViewerComponent implements OnChanges {
 

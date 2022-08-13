@@ -7,7 +7,7 @@
 
 import { Component, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 
-import { FileDownloadService } from '@app/data-services/file-services/file-download.service';
+import { FileDownloadService } from '@app/data-services';
 
 import { FormatLibrary } from '@app/shared/utils';
 

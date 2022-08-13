@@ -72,13 +72,15 @@ export class TransactionDataService {
     return this.http.get<TransactionType[]>(path);
   }
 
+
   getTransactionPreprocessingData(transactionUID: string): Observable<PreprocessingData> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
-    const path = `/v5/land/transactions/${transactionUID}/preprocessing-data`;
+    const path = `v5/land/transactions/${transactionUID}/preprocessing-data`;
 
     return this.http.get<PreprocessingData>(path);
   }
+
 
   getTransaction(transactionUID: string): Observable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
