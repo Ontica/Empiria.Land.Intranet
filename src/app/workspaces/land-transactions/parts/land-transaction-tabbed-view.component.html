@@ -23,8 +23,12 @@
     </emp-land-registration>
   </mat-tab>
 
-  <mat-tab label="Emisión de certificados" *ngIf="transaction.actions.show.certificatesEmissionTab" disabled>
+  <mat-tab label="Emisión de certificados" *ngIf="transaction.actions.show.certificatesEmissionTab">
+    <emp-land-certification
+      [transactionUID]="transaction.uid"
+      [recorderOffice]="transaction.filingOffice">
 
+    </emp-land-certification>
   </mat-tab>
 
   <mat-tab label="Historia">

@@ -1,0 +1,128 @@
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section">
+
+  <div fxLayout="column" fxLayoutGap="0.75rem">
+
+    <div fxLayout="row">
+
+      <div [fxFlex]="100/3">
+        <label>Tipo de certificado:</label>
+        <emp-ng-select [formControlName]="controls.certificateType"
+          [items]="certificateTypesList"
+          [loading]="isLoading"
+          [showError]="formHandler.showInvalidControl(controls.certificateType)"
+          (changes)="onCertificateTypeChange($event)">
+        </emp-ng-select>
+      </div>
+
+      <div fxFlex>
+        <label>Sobre:</label>
+        <emp-ng-select [formControlName]="controls.registrationCommand"
+          [items]="issuingCommandsList"
+          [placeholder]="issuingCommandsList.length === 0 ? 'Seleccione el certificado a registrar' : 'Seleccione'"
+          [showError]="formHandler.showInvalidControl(controls.registrationCommand)"
+          (changes)="onIssuingCommandChange($event)">
+        </emp-ng-select>
+      </div>
+
+    </div>
+
+    <div fxLayout="row" *ngIf="certificateRulesSelected.selectSubject">
+
+        <div [fxFlex]="100/3">
+          <label class="ellipsis"> Buscar y seleccionar el folio real: </label>
+          <emp-ng-select [formControlName]="controls.recordableSubjectUID"
+            [config]="{ clearable: true,
+                        minTermLength: recordableSubjectMinTermLength}"
+            [items]="recordableSubjectList$ | async"
+            [typeahead]="recordableSubjectInput$"
+            [loading]="recordableSubjectLoading"
+            placeholder="Buscar"
+            [showError]="formHandler.showInvalidControl(controls.recordableSubjectUID)"
+            [style.width.%]="100">
+
+            <ng-template #labelTemplate let-item="item">
+              {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
+            </ng-template>
+
+            <ng-template #optionTemplate let-item="item">
+              {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
+            </ng-template>
+
+          </emp-ng-select>
+        </div>
+
+        <div fxFlex="none" [style.marginTop.px]="18">
+          <button type="button" class="btn" [style.width.px]="75">
+            Ver
+          </button>
+
+          <button type="button" class="btn" [style.width.px]="75">
+            Sello
+          </button>
+        </div>
+
+    </div>
+
+    <ng-container *ngIf="certificateRulesSelected.selectBookEntry">
+
+      <div class="section-title">
+        Inscripción donde está registrado el predio
+      </div>
+
+      <div fxlayout="row" >
+
+        <div fxFlex>
+
+          <emp-land-recording-book-selector
+            [recorderOffice]="recorderOffice"
+            [showRecordingBookEntryField]="true"
+            [bookEntryInput]="checkBookEntryInput"
+            [fieldsRequired]="true"
+            (recordingBookSelectorEvent)="onRecordingBookSelectorEvent($event)">
+
+          </emp-land-recording-book-selector>
+
+        </div>
+
+        <div fxflex="150px">
+
+          <mat-checkbox [(ngModel)]="checkBookEntryInput" [ngModelOptions]="{standalone: true}"
+            (change)="onBookEntryCheckChanged()"
+            style="display: block; padding-bottom: 4px; margin-top: -5px; padding-left: 15px;">
+            Nueva inscripción
+          </mat-checkbox>
+
+          <button type="button" class="btn" [style.width.px]="75" [style.minWidth.px]="65">
+            Ver
+          </button>
+
+          <button type="button" class="btn" [style.width.px]="75" [style.minWidth.px]="65">
+            Sello
+          </button>
+
+        </div>
+
+      </div>
+
+    </ng-container>
+
+    <mat-divider class="divider-padding"></mat-divider>
+
+    <div fxLayout="row">
+
+      <div fxFlex fxLayoutAlign="end">
+
+        <button type="submit"
+          [class.btn]="!formHandler.isValid"
+          [class.btn-action]="formHandler.isValid"
+          (click)="onSubmitCertificate()">
+          Agregar el certificado
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</form>

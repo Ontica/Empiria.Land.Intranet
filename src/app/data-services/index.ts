@@ -20,6 +20,8 @@
 
 export * from './file-services/file-download.service';
 
+export * from './certification.data.service';
+
 export * from './recordable-subjects.data.service';
 
 export * from './recording.data.service';

@@ -1,0 +1,67 @@
+<emp-ng-modal-window [config]="{width:'80%', height: '90%', maxWidth: '960px'}">
+
+  <emp-ng-card
+    [title]="title"
+    [hint]="hint"
+    (cardClose)="onClose()">
+
+    <div fxLayout="column" fxFlexFill [empNgSpinnerHost]="spinner"
+      [style.padding]="'0 16px 16px 16px'">
+
+      <emp-ng-spinner #spinner [visible]="submitted">
+
+      </emp-ng-spinner>
+
+      <div class="preview-container" fxFlex *ngIf="certificate.mediaLink.url">
+
+        <div class="object-preview-container">
+
+          <object
+            [data]="certificate.mediaLink.url | safeUrl"
+            class="object-preview mat-elevation-z1">
+
+          </object>
+
+        </div>
+
+      </div>
+
+      <div class="instruction-text" *ngIf="!certificate.mediaLink.url"
+        [style.width.%]="100" [style.height.%]="100" fxLayoutAlign="space-around center">
+        No se encontro el archivo del certificado.
+      </div>
+
+      <mat-divider [style.margin]="'8px 0'"></mat-divider>
+
+      <div fxLayout="row" fxLayoutAlign="end">
+
+        <ng-container *ngIf="isHtmlMediaFile">
+
+          <button class="btn"
+            (click)="onPrintMediaClicked()">
+            Imprimir
+          </button>
+
+          <mat-divider vertical="true" class="vertical" [style.margin]="'0 8px'">
+
+          </mat-divider>
+
+        </ng-container>
+
+        <button class="btn-action"
+          (click)="onCloseCertificateClicked()">
+          Cerrar certificado
+        </button>
+
+        <button class="btn-action" *ngIf="false"
+          (click)="onOpenCertificateClicked()">
+          Abrir certificado
+        </button>
+
+      </div>
+
+    </div>
+
+  </emp-ng-card>
+
+</emp-ng-modal-window>

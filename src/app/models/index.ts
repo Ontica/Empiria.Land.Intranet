@@ -20,6 +20,8 @@
 
 export * from './files';
 
+export * from './certificate';
+
 export * from './instrument';
 
 export * from './party';
