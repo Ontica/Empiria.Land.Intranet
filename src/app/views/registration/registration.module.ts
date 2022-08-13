@@ -34,7 +34,6 @@ import { RecordingActEditionModalComponent } from './recording-acts/recording-ac
 import { RecordingActEditorComponent } from './recording-acts/recording-act-editor.component';
 import { RecordingActsListComponent } from './recording-acts/recording-acts-list.component';
 import { RecordingBookEditionComponent } from './recording-book/recording-book-edition.component';
-import { RecordingBookSelectorComponent } from './recording-book/recording-book-selector.component';
 
 
 @NgModule({
@@ -65,7 +64,6 @@ import { RecordingBookSelectorComponent } from './recording-book/recording-book-
     RecordingActEditorComponent,
     RecordingActsListComponent,
     RecordingBookEditionComponent,
-    RecordingBookSelectorComponent,
   ],
 
   exports: [

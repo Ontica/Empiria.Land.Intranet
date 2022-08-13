@@ -16,6 +16,8 @@ import { SharedModule } from '@app/shared/shared.module';
 import { FileViewerComponent } from './file-viewer/file-viewer.component';
 import { FileViewerNavigatorComponent } from './file-viewer/file-viewer-navigator.component';
 
+import { RecordingBookSelectorComponent } from './recording-book-selector/recording-book-selector.component';
+
 
 @NgModule({
 
@@ -32,10 +34,14 @@ import { FileViewerNavigatorComponent } from './file-viewer/file-viewer-navigato
   declarations: [
     FileViewerComponent,
     FileViewerNavigatorComponent,
+
+    RecordingBookSelectorComponent,
   ],
 
   exports: [
     FileViewerComponent,
+
+    RecordingBookSelectorComponent,
   ]
 
 })

@@ -20,7 +20,7 @@ import { BookEntryEditorEventType } from './book-entry-editor.component';
 
 import { BookEntryListEventType } from './book-entry-list.component';
 
-import { RecordingBookSelectorEventType } from './recording-book-selector.component';
+import { RecordingBookSelectorEventType } from '@app/views/land-controls/recording-book-selector/recording-book-selector.component';
 
 
 export enum RecordingBookEditionEventType {

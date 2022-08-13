@@ -25,6 +25,7 @@ import { TractIndexEntriesViewerComponent } from './tract-index-explorer/tract-i
 import { TractIndexExplorerComponent } from './tract-index-explorer/tract-index-explorer.component';
 import { TractIndexEntryPrintableViewerComponent } from './tract-index-entry-tabbed-view/tract-index-entry-printable-viewer.component';
 import { TractIndexEntryTabbedViewComponent } from './tract-index-entry-tabbed-view/tract-index-entry-tabbed-view.component';
+import { LandControlsModule } from '../land-controls/land.controls.module';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { TractIndexEntryTabbedViewComponent } from './tract-index-entry-tabbed-v
     AngularFlexLayoutModule,
     SharedModule,
 
+    LandControlsModule,
     RegistrationModule,
   ],
   declarations: [

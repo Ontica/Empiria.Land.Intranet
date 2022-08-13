@@ -26,7 +26,7 @@ import { EmptyRegistrationCommandRule, EmptyTractIndex, RecordableSubjectFilter,
 
 import { FormHandler, sendEvent } from '@app/shared/utils';
 
-import { RecordingBookSelectorEventType } from '../recording-book/recording-book-selector.component';
+import { RecordingBookSelectorEventType } from '@app/views/land-controls/recording-book-selector/recording-book-selector.component';
 
 export enum RecordingActCreatorEventType {
   APPEND_RECORDING_ACT = 'RecordingActCreatorComponent.Event.AppendRecordingAct',
