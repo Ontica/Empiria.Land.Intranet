@@ -7,11 +7,11 @@
 
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
-import { EventInfo, StringLibrary } from '@app/core';
+import { EventInfo, MediaType, StringLibrary } from '@app/core';
 
 import { CertificationDataService } from '@app/data-services';
 
-import { Certificate, EmptyCertificate, FileType } from '@app/models';
+import { Certificate, EmptyCertificate } from '@app/models';
 
 import { sendEvent } from '@app/shared/utils';
 
@@ -50,7 +50,7 @@ export class CertificateEditionComponent implements OnChanges {
 
 
   get isHtmlMediaFile() {
-    return this.certificate.mediaLink.type === FileType.HTML;
+    return this.certificate.mediaLink.mediaType === MediaType.html;
   }
 
 

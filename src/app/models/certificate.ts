@@ -5,11 +5,10 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { DateString } from "@app/core";
+import { DateString, EmptyMediaBase, MediaBase } from "@app/core";
 
-import { MediaFile } from "./files";
-
-import { EmptyRecordableSubject, RecordableSubject, RecordableSubjectType } from "./recordable-subjects";
+import { EmptyRecordableSubject, EmptyRecordingContext, RecordableSubject, RecordableSubjectType,
+         RecordingContext } from "./recordable-subjects";
 
 
 export interface CertificateType {
@@ -45,7 +44,8 @@ export interface Certificate {
   type: string;
   certificateID: string;
   recordableSubject: RecordableSubject;
-  mediaLink: MediaFile;
+  issuingRecordingContext: RecordingContext;
+  mediaLink: MediaBase;
   status: string;
   issueTime?: DateString;
 }
@@ -56,7 +56,8 @@ export const EmptyCertificate: Certificate = {
   type: '',
   certificateID: '',
   recordableSubject: EmptyRecordableSubject,
-  mediaLink: null,
+  issuingRecordingContext: EmptyRecordingContext,
+  mediaLink: EmptyMediaBase,
   status: '',
   issueTime: null,
 }

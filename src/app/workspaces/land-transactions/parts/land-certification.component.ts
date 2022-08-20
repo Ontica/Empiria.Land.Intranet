@@ -172,7 +172,7 @@ export class LandCertificationComponent implements OnChanges {
     this.certificationData.deleteCertificate(transactionUID, certificateUID)
       .toPromise()
       .then(x =>{
-        this.messageBox.show('Eliminar certificado', 'El certificado fue eliminado correctamente.');
+        this.messageBox.show('El certificado fue eliminado correctamente.', 'Eliminar certificado');
         this.refreshData();
       })
       .finally(() => this.submitted = false);
