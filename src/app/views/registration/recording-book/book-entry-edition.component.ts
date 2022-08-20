@@ -14,6 +14,8 @@ import { RecordingDataService } from '@app/data-services';
 import { BookEntry, ManualBookEntryFields, EmptyBookEntry, EmptyInstrumentRecording,
          InstrumentRecording, RecordingActTypeGroup, RegistrationCommand} from '@app/models';
 
+import { sendEvent } from '@app/shared/utils';
+
 import { RecordingActCreatorEventType } from '../recording-acts/recording-act-creator.component';
 
 import { RecordingActsListEventType } from '../recording-acts/recording-acts-list.component';
@@ -130,13 +132,13 @@ export class BookEntryEditionComponent implements OnChanges {
 
     switch (event.type as RecordingActsListEventType) {
       case RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT:
-        this.sendEvent(BookEntryEditionEventType.RECORDABLE_SUBJECT_SELECTED,
+        sendEvent(this.BookEntryEditionEvent, BookEntryEditionEventType.RECORDABLE_SUBJECT_SELECTED,
           { recordingActSelect: event.payload });
 
         return;
 
       case RecordingActsListEventType.SELECT_RECORDING_ACT:
-        this.sendEvent(BookEntryEditionEventType.RECORDING_ACT_SELECTED,
+        sendEvent(this.BookEntryEditionEvent, BookEntryEditionEventType.RECORDING_ACT_SELECTED,
           { recordingActSelect: event.payload });
 
         return;
@@ -171,20 +173,14 @@ export class BookEntryEditionComponent implements OnChanges {
     this.recordingData
       .updateBookEntryInstrumentRecording(this.instrumentRecording.uid, this.bookEntryUID, bookEntryFields)
       .toPromise()
-      .then(x => {
-        this.setInstrumentRecording(x);
-      })
-      .finally(() => {
-        this.setSubmited(false);
-      });
+      .then(x => this.setInstrumentRecording(x))
+      .finally(() => this.setSubmited(false));
   }
 
 
   private getRecordingActTypesForBookEntry(){
     this.recordingData.getRecordingActTypesForBookEntry(this.recordingBookUID, this.bookEntryUID)
-      .subscribe(x => {
-        this.recordingActTypeGroupList = x;
-      });
+      .subscribe(x => this.recordingActTypeGroupList = x);
   }
 
 
@@ -194,12 +190,8 @@ export class BookEntryEditionComponent implements OnChanges {
     this.recordingData
       .appendRecordingActToBookEntry(this.recordingBookUID, this.bookEntryUID, registrationCommand)
       .toPromise()
-      .then(x => {
-        this.setInstrumentRecording(x);
-      })
-      .finally(() => {
-        this.setSubmited(false);
-      });
+      .then(x => this.setInstrumentRecording(x))
+      .finally(() => this.setSubmited(false));
   }
 
 
@@ -209,12 +201,8 @@ export class BookEntryEditionComponent implements OnChanges {
     this.recordingData
       .removeRecordingActFromBookEntry(this.recordingBookUID, this.bookEntryUID, recordingActUID)
       .toPromise()
-      .then(x => {
-        this.setInstrumentRecording(x);
-      })
-      .finally(() => {
-        this.setSubmited(false);
-      });
+      .then(x => this.setInstrumentRecording(x))
+      .finally(() => this.setSubmited(false));
   }
 
 
@@ -254,16 +242,6 @@ export class BookEntryEditionComponent implements OnChanges {
   private setSubmited(submitted: boolean) {
     this.isLoading = submitted;
     this.submitted = submitted;
-  }
-
-
-  private sendEvent(eventType: BookEntryEditionEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.BookEntryEditionEvent.emit(event);
   }
 
 }

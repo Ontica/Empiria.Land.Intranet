@@ -225,7 +225,7 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
         this.uiLayer.dispatch(RegistrationAction.SELECT_TRANSACTION_INSTRUMENT_RECORDING,
           {transactionInstrumentRecording: x});
         this.isLoading = false;
-      });
+      }, error => this.isLoading = false);
   }
 
 

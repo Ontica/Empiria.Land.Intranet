@@ -106,7 +106,7 @@ export class LandPreRegistationComponent implements OnChanges, OnDestroy {
       .subscribe(x => {
         this.preprocessingData = x;
         this.isLoading = false;
-      });
+      }, error => this.isLoading = false);
   }
 
 
