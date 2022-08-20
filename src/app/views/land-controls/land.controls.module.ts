@@ -15,8 +15,9 @@ import { SharedModule } from '@app/shared/shared.module';
 
 import { FileViewerComponent } from './file-viewer/file-viewer.component';
 import { FileViewerNavigatorComponent } from './file-viewer/file-viewer-navigator.component';
-
+import { RecordableSubjectSearcherComponent } from './recordable-subject-searcher/recordable-subject-searcher.component';
 import { RecordingBookSelectorComponent } from './recording-book-selector/recording-book-selector.component';
+import { RecordingViewsButtonsComponent } from './recording-views-buttons/recording-views-buttons.component';
 
 
 @NgModule({
@@ -34,14 +35,16 @@ import { RecordingBookSelectorComponent } from './recording-book-selector/record
   declarations: [
     FileViewerComponent,
     FileViewerNavigatorComponent,
-
+    RecordableSubjectSearcherComponent,
     RecordingBookSelectorComponent,
+    RecordingViewsButtonsComponent,
   ],
 
   exports: [
     FileViewerComponent,
-
+    RecordableSubjectSearcherComponent,
     RecordingBookSelectorComponent,
+    RecordingViewsButtonsComponent,
   ]
 
 })

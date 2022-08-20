@@ -1,0 +1,28 @@
+<emp-ng-select [fxFlex]="allWidth ? 'calc(100% - 140px)' : 100/3"
+  [ngModel]="recordableSubject"
+  (ngModelChange)="selectRecordableSubject($event)"
+  [config]="{ clearable: true,
+              bindByValue: false,
+              minTermLength: recordableSubjectMinTermLength,
+              dropdownPosition: allWidth ? 'top' : 'auto'}"
+  [items]="recordableSubjectList$ | async"
+  [typeahead]="recordableSubjectInput$"
+  [loading]="recordableSubjectLoading"
+  placeholder="Buscar"
+  [disabled]="disabled"
+  [showError]="showError"
+  [style.width.%]="100">
+
+  <ng-template #labelTemplate let-item="item">
+    {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
+  </ng-template>
+
+  <ng-template #optionTemplate let-item="item">
+    {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
+  </ng-template>
+
+</emp-ng-select>
+
+<emp-land-recording-views-buttons>
+
+</emp-land-recording-views-buttons>
