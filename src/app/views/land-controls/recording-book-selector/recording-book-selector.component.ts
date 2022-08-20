@@ -21,11 +21,10 @@ import { BookEntryShortModel, EmptyBookEntryShortModel, RecorderOffice } from '@
 import { RecordableSubjectsStateSelector,
          TransactionStateSelector } from '@app/presentation/exported.presentation.types';
 
+import { sendEvent } from '@app/shared/utils';
 
 
 export enum RecordingBookSelectorEventType {
-  RECORDING_BOOK_CLICKED = 'RecordingBookSelectorComponent.Event.RecordingBookClicked',
-  BOOK_ENTRY_CLICKED = 'RecordingBookSelectorComponent.Event.BookEntryClicked',
   RECORDING_BOOK_CHANGED = 'RecordingBookSelectorComponent.Event.RecordingBookChanged',
   BOOK_ENTRY_CHANGED = 'RecordingBookSelectorComponent.Event.BookEntryChanged',
 }
@@ -44,10 +43,6 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
   @Input() fieldsRequired = false;
 
   @Input() selectorPosition: 'auto' | 'top' | 'bottom' = 'auto';
-
-  @Input() showBookEntryButton = false;
-
-  @Input() showRecordingBookButton = false;
 
   @Input() showRecordingBookEntryField = false;
 
@@ -145,35 +140,29 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
 
   onBookEntryNoChange(bookEntryNo: string) {
-    this.sendEvent(RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED,
+    sendEvent(this.recordingBookSelectorEvent, RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED,
       { bookEntry: { recordingNo: bookEntryNo } });
   }
 
 
-  onRecordingBookClicked(){
-    if (this.recordingBookSelected) {
-      this.sendEvent(RecordingBookSelectorEventType.RECORDING_BOOK_CLICKED,
-        { recordingBook: this.recordingBookSelected });
-    }
-  }
-
-
-  onRecordingBookEntryClicked(){
-    if (this.recordingBookEntrySelected) {
-      this.sendEvent(RecordingBookSelectorEventType.BOOK_ENTRY_CLICKED,
-        { recordingBookEntry: this.recordingBookEntrySelected });
-    }
-  }
-
-
   private emitRecordingBook(recordingBook: Identifiable) {
-    this.sendEvent(RecordingBookSelectorEventType.RECORDING_BOOK_CHANGED, { recordingBook });
+    sendEvent(this.recordingBookSelectorEvent, RecordingBookSelectorEventType.RECORDING_BOOK_CHANGED,
+      { recordingBook });
+
+    this.clearBookEntry();
+  }
+
+
+  private clearBookEntry() {
+    this.recordingBookEntrySelected = null;
+    this.bookEntryNo = null;
     this.emitBookEntry(EmptyBookEntryShortModel);
   }
 
 
   private emitBookEntry(bookEntry: BookEntryShortModel) {
-    this.sendEvent(RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED, { bookEntry });
+    sendEvent(this.recordingBookSelectorEvent, RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED,
+      { bookEntry });
   }
 
 
@@ -182,6 +171,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
     this.recordingSectionSelected = null;
     this.recordingBookSelected = null;
     this.recordingBookEntrySelected = null;
+    this.bookEntryNo = null;
   }
 
 
@@ -249,7 +239,6 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
 
   private loadRecordingBookEntryList() {
-
     if (!this.showRecordingBookEntryField) {
       return;
     }
@@ -268,16 +257,6 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
         this.recordingBookEntryList = x;
         this.isLoading = false;
       });
-  }
-
-
-  private sendEvent(eventType: RecordingBookSelectorEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.recordingBookSelectorEvent.emit(event);
   }
 
 }

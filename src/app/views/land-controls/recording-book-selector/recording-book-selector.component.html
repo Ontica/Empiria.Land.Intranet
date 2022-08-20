@@ -5,6 +5,7 @@
   <div fxLayout="column" fxLayoutGap="0.75rem">
 
     <div fxLayout="row">
+
       <div fxFlex="20">
 
         <label>Distrito:</label>
@@ -22,7 +23,8 @@
 
       </div>
 
-      <div [style.width.%]="100" [style.max-width.px]="showRecordingBookEntryField ? 330 : 351">
+      <div [fxFlex]="showRecordingBookEntryField ? 'calc(80% - 220px)': '351px'"
+           [fxFlex.lt-sm]="showRecordingBookEntryField ? 'calc(80% - 220px)' : 'calc(80% - 110px)'">
 
         <label>Sección:</label>
 
@@ -32,13 +34,12 @@
           [items]="recordingSectionList"
           [required]="fieldsRequired"
           [showError]="fieldsRequired && ( !recordingSectionSelected || !recordingSectionSelected.uid )"
-          [style.width.%]="100"
           (changes)="onRecordingSectionChange($event)">
         </emp-ng-select>
 
       </div>
 
-      <div fxFlex="120px">
+      <div fxFlex="110px">
 
         <label>Volumen:</label>
 
@@ -60,55 +61,30 @@
 
       </div>
 
-      <div *ngIf="showRecordingBookButton" fxFlex="75px" fxLayoutAlign="end end" [style.marginBottom.px]="2"
-        [style.marginLeft.px]="8">
+      <div fxFlex="110px" *ngIf="showRecordingBookEntryField">
 
-        <button type="button" class="btn" fxFlex="75px"
-          (click)="onRecordingBookClicked()">
-          {{ recordingBookButtonText }}
-        </button>
+        <label>Inscripción:</label>
 
-      </div>
+        <emp-ng-select name="recordingBookEntry" *ngIf="!bookEntryInput"
+          [(ngModel)]="recordingBookEntrySelected"
+          [config]="{ clearable: true,
+                      bindByValue: false,
+                      dropdownPosition: selectorPosition }"
+          bindLabel="recordingNo"
+          [disabled]="!isReadyToFilterRecordingBook"
+          [items]="recordingBookEntryList"
+          [placeholder]="recordingBookEntryList.length === 0 ? 'Seleccione' : 'Seleccionar'"
+          [required]="fieldsRequired"
+          [showError]="fieldsRequired && ( !recordingBookEntrySelected || !recordingBookEntrySelected.uid )"
+          (changes)="onBookEntryChange($event)">
+        </emp-ng-select>
 
-      <div fxFlex="120px" >
-
-        <ng-container *ngIf="showRecordingBookEntryField">
-
-          <label>Inscripción:</label>
-
-          <emp-ng-select name="recordingBookEntry" *ngIf="!bookEntryInput"
-            [(ngModel)]="recordingBookEntrySelected"
-            [config]="{ clearable: true,
-                        bindByValue: false,
-                        dropdownPosition: selectorPosition }"
-            bindLabel="recordingNo"
-            [disabled]="!isReadyToFilterRecordingBook"
-            [items]="recordingBookEntryList"
-            [placeholder]="recordingBookEntryList.length === 0 ? 'Seleccione' : 'Seleccionar'"
-            [required]="fieldsRequired"
-            [showError]="fieldsRequired && ( !recordingBookEntrySelected || !recordingBookEntrySelected.uid )"
-            (changes)="onBookEntryChange($event)">
-          </emp-ng-select>
-
-          <input *ngIf="bookEntryInput"
-            [disabled]="!isReadyToFilterRecordingBook"
-            type="text" class="text-box" name="recordingNo"
-            [(ngModel)]="bookEntryNo" [required]="fieldsRequired"
-            [class.invalid-control]="bookEntryNo === null || bookEntryNo === ''"
-            (input)="onBookEntryNoChange(bookEntryNo)">
-
-        </ng-container>
-
-      </div>
-
-      <div *ngIf="showBookEntryButton" fxFlex="75px" fxLayoutAlign="end end" [style.marginBottom.px]="2"
-        [style.marginLeft.px]="8">
-
-        <button *ngIf="showBookEntryButton"
-          type="button" class="btn" fxFlex="75px"
-          (click)="onRecordingBookEntryClicked()">
-          {{ bookEntryButtonText }}
-        </button>
+        <input *ngIf="bookEntryInput"
+          [disabled]="!isReadyToFilterRecordingBook"
+          type="text" class="text-box" name="recordingNo"
+          [(ngModel)]="bookEntryNo" [required]="fieldsRequired"
+          [class.invalid-control]="bookEntryNo === null || bookEntryNo === ''"
+          (input)="onBookEntryNoChange(bookEntryNo)">
 
       </div>
 
