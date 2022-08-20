@@ -39,10 +39,10 @@ export class RecordableSubjectsDataService {
   }
 
 
-  getAmendableRecordingActs(recordableSubject: string,
+  getAmendableRecordingActs(recordableSubjectUID: string,
                             instrumentRecordingUID: string,
                             amendmentRecordingActTypeUID: string): Observable<TractIndex> {
-    const path = `v5/land/registration/recordable-subjects/${recordableSubject}`
+    const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}`
       + `/amendable-recording-acts/?instrumentRecordingUID=${instrumentRecordingUID}`
       + `&amendmentRecordingActTypeUID=${amendmentRecordingActTypeUID}`;
 

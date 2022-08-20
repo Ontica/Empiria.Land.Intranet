@@ -13,7 +13,7 @@
         </emp-ng-select>
       </div>
 
-      <div fxFlex class="resizable-field-width">
+      <div fxFlex="calc(100% - {{widthFirstColumn}})">
         <label class="ellipsis">Acto jurídico a registrar:</label>
         <emp-ng-select [formControlName]="controls.recordingActType"
           [items]="recordingActTypeList"
@@ -38,7 +38,7 @@
 
       <ng-container *ngIf="registrationCommandRules.selectSubject">
 
-        <div fxFlex class="resizable-field-width">
+        <div fxFlex="calc(100% - {{widthFirstColumn}})">
           <label class="ellipsis"> Buscar y seleccionar
             <ng-container *ngIf="isRealEstate"> el folio real del predio</ng-container>
             <ng-container *ngIf="isAssociation"> la asociación o sociedad</ng-container>
@@ -46,46 +46,23 @@
             <ng-container *ngIf="registrationCommandRules.newPartition">
               del cual se va a desprender la fracción</ng-container>:
           </label>
-          <emp-ng-select [formControlName]="controls.recordableSubject"
-            [config]="{ clearable: true,
-                        minTermLength: recordableSubjectMinTermLength,
-                        dropdownPosition: 'top'  }"
-            [items]="recordableSubjectList$ | async"
-            [typeahead]="recordableSubjectInput$"
-            [loading]="recordableSubjectLoading"
-            placeholder="Buscar"
+
+          <emp-land-recordable-subject-searcher
+            [formControlName]="controls.recordableSubject"
+            [type]="registrationCommandRules.subjectType"
             [showError]="formHandler.showInvalidControl(controls.recordableSubject)"
-            [style.width.%]="100"
+            [allWidth]="true"
             (changes)="onRecordableSubjectChange($event)">
 
-            <ng-template #labelTemplate let-item="item">
-              {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
-            </ng-template>
+          </emp-land-recordable-subject-searcher>
 
-            <ng-template #optionTemplate let-item="item">
-              {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
-            </ng-template>
-
-          </emp-ng-select>
-        </div>
-
-        <div fxFlex="75px" fxLayoutAlign="end end" [style.paddingBottom.px]="2">
-          <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
-            Ver
-          </button>
-        </div>
-
-        <div fxFlex="75px" fxLayoutAlign="end end" [style.paddingBottom.px]="2">
-          <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
-            Sello
-          </button>
         </div>
 
       </ng-container>
 
       <ng-container *ngIf="registrationCommandRules.newPartition && !registrationCommandRules.selectSubject">
 
-        <div fxFlex class="resizable-field-width">
+        <div fxFlex="calc(100% - {{widthFirstColumn}})">
 
           <ng-container *ngTemplateOutlet="newPartitionTemplate">
 
@@ -100,7 +77,7 @@
 
     <div fxLayout="row" *ngIf="registrationCommandRules.selectTargetAct">
 
-      <div [fxFlexOffset]="widthFirstColumn" fxFlex class="resizable-field-width">
+      <div [fxFlexOffset]="widthFirstColumn" fxFlex="calc(100% - {{widthFirstColumn}})">
 
         <label class="ellipsis">Acto jurídico a cancelar o modificar:</label>
 
@@ -128,17 +105,9 @@
 
       </div>
 
-      <div fxFlex="75px" fxLayoutAlign="end end" [style.paddingBottom.px]="2">
-        <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
-          Ver
-        </button>
-      </div>
+      <emp-land-recording-views-buttons [style.paddingTop.px]="16">
 
-      <div fxFlex="75px" fxLayoutAlign="end end" [style.paddingBottom.px]="2">
-        <button type="button" class="btn" [style.width.%]="100" [style.minWidth.px]="65">
-          Sello
-        </button>
-      </div>
+      </emp-land-recording-views-buttons>
 
     </div>
 
@@ -157,35 +126,29 @@
 
       <div fxlayout="row" >
 
-        <div fxFlex>
+        <emp-land-recording-book-selector fxFlex="calc(100% - 140px)"
+          [recorderOffice]="recorderOffice"
+          [showRecordingBookEntryField]="true"
+          [bookEntryInput]="checkBookEntryInput"
+          [fieldsRequired]="true"
+          selectorPosition="top"
+          (recordingBookSelectorEvent)="onRecordingBookSelectorEvent($event)">
 
-          <emp-land-recording-book-selector
-            [recorderOffice]="recorderOffice"
-            [showRecordingBookEntryField]="true"
-            [bookEntryInput]="checkBookEntryInput"
-            [fieldsRequired]="true"
-            selectorPosition="top"
-            (recordingBookSelectorEvent)="onRecordingBookSelectorEvent($event)">
+        </emp-land-recording-book-selector>
 
-          </emp-land-recording-book-selector>
+        <div fxflex="140px">
 
-        </div>
-
-        <div fxflex="150px" [style.marginBottom.px]="1">
-
-          <mat-checkbox [(ngModel)]="checkBookEntryInput" [ngModelOptions]="{standalone: true}"
+          <mat-checkbox fxlayout="row"
+            [(ngModel)]="checkBookEntryInput"
+            [ngModelOptions]="{standalone: true}"
             (change)="onBookEntryCheckChanged()"
-            style="display: block; padding-bottom: 4px; margin-top: -5px; padding-left: 15px;">
+            style="display: block; margin-top: -3px;">
             Nueva inscripción
           </mat-checkbox>
 
-          <button type="button" class="btn" [style.width.px]="75" [style.minWidth.px]="65">
-            Ver
-          </button>
+          <emp-land-recording-views-buttons fxlayout="row">
 
-          <button type="button" class="btn" [style.width.px]="75" [style.minWidth.px]="65">
-            Sello
-          </button>
+          </emp-land-recording-views-buttons>
 
         </div>
 
@@ -222,9 +185,9 @@
 
   <ng-template #newPartitionTemplate>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div fxLayout="row">
 
-      <div [fxFlex]="registrationCommandRules.selectSubject ? widthFirstColumn : '50'" fxFlex.lt-md="none">
+      <div [fxFlex]="registrationCommandRules.selectSubject ? widthFirstColumn : '50'">
 
         <label class="ellipsis">Tipo de la nueva fracción:</label>
 
@@ -237,7 +200,7 @@
 
       </div>
 
-      <div [fxFlex]="registrationCommandRules.selectSubject ? 'auto' : '50'" fxFlex.lt-md="none">
+      <div [fxFlex]="registrationCommandRules.selectSubject ? 'auto' : '50'">
 
         <label class="ellipsis">Número o identificador de la nueva fracción:</label>
 
@@ -246,7 +209,9 @@
 
       </div>
 
-      <div fxFlex="150px" fxFlex.lt-md="0" *ngIf="registrationCommandRules.selectSubject"></div>
+      <div fxFlex="140px" fxFlex.lt-md="0" *ngIf="registrationCommandRules.selectSubject">
+
+      </div>
 
     </div>
 

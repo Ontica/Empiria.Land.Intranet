@@ -7,10 +7,6 @@
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
-import { concat, Observable, of, Subject } from 'rxjs';
-
-import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
-
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Assertion, Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
@@ -19,14 +15,15 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
-import { EmptyRegistrationCommandRule, EmptyTractIndex, RecordableSubjectFilter, RecordableSubjectShortModel,
-         RecordableSubjectType, RecordingActType, RecordingActTypeGroup, RegistrationCommand,
-         RegistrationCommandConfig, RegistrationCommandPayload, RegistrationCommandRule,
-         TractIndex } from '@app/models';
+import { EmptyRegistrationCommandRule, EmptyTractIndex, RecordableSubjectShortModel, RecordableSubjectType,
+         RecordingActType, RecordingActTypeGroup, RegistrationCommand, RegistrationCommandConfig,
+         RegistrationCommandPayload, RegistrationCommandRule, TractIndex } from '@app/models';
 
 import { FormHandler, sendEvent } from '@app/shared/utils';
 
-import { RecordingBookSelectorEventType } from '@app/views/land-controls/recording-book-selector/recording-book-selector.component';
+import {
+  RecordingBookSelectorEventType
+} from '@app/views/land-controls/recording-book-selector/recording-book-selector.component';
 
 export enum RecordingActCreatorEventType {
   APPEND_RECORDING_ACT = 'RecordingActCreatorComponent.Event.AppendRecordingAct',
@@ -48,9 +45,6 @@ enum RecordingActCreatorFormControls {
 @Component({
   selector: 'emp-land-recording-act-creator',
   templateUrl: './recording-act-creator.component.html',
-  styles: [`.resizable-field-width {
-    width: calc(100% - 470px); /* widthFirstColumn + 150px */
-  }`]
 })
 export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
@@ -74,11 +68,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   registrationCommandRules: RegistrationCommandRule = EmptyRegistrationCommandRule;
 
-  recordableSubjectList$: Observable<RecordableSubjectShortModel[]>;
-  recordableSubjectInput$ = new Subject<string>();
-  recordableSubjectLoading = false;
-  recordableSubjectMinTermLength = 5;
-
   partitionKindList: string[] = [];
   tractIndexSelected: TractIndex = EmptyTractIndex;
 
@@ -94,7 +83,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     this.loadDataLists();
-    this.subscribeRecordableSubjectList();
   }
 
 
@@ -235,46 +223,10 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private subscribeRecordableSubjectList() {
-    this.recordableSubjectList$ = concat(
-      of([]),
-      this.recordableSubjectInput$.pipe(
-          filter(keyword => this.validRecordableSubjectFilter(keyword)),
-          distinctUntilChanged(),
-          debounceTime(800),
-          tap(() => this.recordableSubjectLoading = true),
-          switchMap(keyword => this.helper.select<RecordableSubjectShortModel[]>(
-            RecordableSubjectsStateSelector.RECORDABLE_SUBJECTS_LIST,
-            this.buildRecordableSubjectFilter(keyword))
-            .pipe(
-              catchError(() => of([])),
-              tap(() => this.recordableSubjectLoading = false)
-          ))
-      )
-    );
-  }
-
-
-  private validRecordableSubjectFilter(keyword: string): boolean {
-    return !!this.registrationCommandRules.subjectType &&
-      keyword !== null && keyword.length >= this.recordableSubjectMinTermLength
-  }
-
-
-  private buildRecordableSubjectFilter(keywords: string): RecordableSubjectFilter {
-    const recordableSubjectFilter: RecordableSubjectFilter = {
-      type: this.registrationCommandRules.subjectType,
-      keywords
-    };
-
-    return recordableSubjectFilter;
-  }
-
-
   private getAmendmentRecordingActs() {
     const payload = {
       instrumentRecordingUID: this.instrumentRecordingUID,
-      recordableSubject: this.formHandler.getControl(this.controls.recordableSubject).value,
+      recordableSubjectUID: this.formHandler.getControl(this.controls.recordableSubject).value.uid,
       amendmentRecordingActTypeUID: this.formHandler.getControl(this.controls.recordingActType).value,
     };
 
@@ -398,7 +350,8 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     };
 
     if (this.registrationCommandRules.selectSubject) {
-      data.recordableSubjectUID = formModel.recordableSubject ?? '';
+      data.recordableSubjectUID = !isEmpty(formModel.recordableSubject) ?
+        formModel.recordableSubject.uid : '';
     }
 
     if (this.registrationCommandRules.selectBookEntry) {

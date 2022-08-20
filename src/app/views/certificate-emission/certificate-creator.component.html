@@ -14,7 +14,7 @@
         </emp-ng-select>
       </div>
 
-      <div fxFlex>
+      <div [fxFlex]="200/3">
         <label>Sobre:</label>
         <emp-ng-select [formControlName]="controls.registrationCommand"
           [items]="issuingCommandsList"
@@ -28,37 +28,14 @@
 
     <div fxLayout="row" *ngIf="certificateRulesSelected.selectSubject">
 
-        <div [fxFlex]="100/3">
+        <div [fxFlex]="100">
           <label class="ellipsis"> Buscar y seleccionar el folio real: </label>
-          <emp-ng-select [formControlName]="controls.recordableSubjectUID"
-            [config]="{ clearable: true,
-                        minTermLength: recordableSubjectMinTermLength}"
-            [items]="recordableSubjectList$ | async"
-            [typeahead]="recordableSubjectInput$"
-            [loading]="recordableSubjectLoading"
-            placeholder="Buscar"
-            [showError]="formHandler.showInvalidControl(controls.recordableSubjectUID)"
-            [style.width.%]="100">
+          <emp-land-recordable-subject-searcher
+            [formControlName]="controls.recordableSubject"
+            [type]="certificateRulesSelected.subjectType"
+            [showError]="formHandler.showInvalidControl(controls.recordableSubject)">
 
-            <ng-template #labelTemplate let-item="item">
-              {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
-            </ng-template>
-
-            <ng-template #optionTemplate let-item="item">
-              {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
-            </ng-template>
-
-          </emp-ng-select>
-        </div>
-
-        <div fxFlex="none" [style.marginTop.px]="18">
-          <button type="button" class="btn" [style.width.px]="75">
-            Ver
-          </button>
-
-          <button type="button" class="btn" [style.width.px]="75">
-            Sello
-          </button>
+          </emp-land-recordable-subject-searcher>
         </div>
 
     </div>
@@ -69,36 +46,30 @@
         Inscripción donde está registrado el predio
       </div>
 
-      <div fxlayout="row" >
+      <div fxlayout="row">
 
-        <div fxFlex>
+        <emp-land-recording-book-selector fxFlex="calc(100% - 140px)"
+          [recorderOffice]="recorderOffice"
+          [showRecordingBookEntryField]="true"
+          [bookEntryInput]="checkBookEntryInput"
+          [fieldsRequired]="true"
+          (recordingBookSelectorEvent)="onRecordingBookSelectorEvent($event)">
 
-          <emp-land-recording-book-selector
-            [recorderOffice]="recorderOffice"
-            [showRecordingBookEntryField]="true"
-            [bookEntryInput]="checkBookEntryInput"
-            [fieldsRequired]="true"
-            (recordingBookSelectorEvent)="onRecordingBookSelectorEvent($event)">
+        </emp-land-recording-book-selector>
 
-          </emp-land-recording-book-selector>
+        <div fxflex="140px">
 
-        </div>
-
-        <div fxflex="150px">
-
-          <mat-checkbox [(ngModel)]="checkBookEntryInput" [ngModelOptions]="{standalone: true}"
+          <mat-checkbox fxlayout="row"
+            [(ngModel)]="checkBookEntryInput"
+            [ngModelOptions]="{standalone: true}"
             (change)="onBookEntryCheckChanged()"
-            style="display: block; padding-bottom: 4px; margin-top: -5px; padding-left: 15px;">
+            style="display: block; margin-top: -3px;">
             Nueva inscripción
           </mat-checkbox>
 
-          <button type="button" class="btn" [style.width.px]="75" [style.minWidth.px]="65">
-            Ver
-          </button>
+          <emp-land-recording-views-buttons fxlayout="row">
 
-          <button type="button" class="btn" [style.width.px]="75" [style.minWidth.px]="65">
-            Sello
-          </button>
+          </emp-land-recording-views-buttons>
 
         </div>
 

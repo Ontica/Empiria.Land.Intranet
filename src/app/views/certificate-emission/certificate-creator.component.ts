@@ -10,21 +10,14 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { concat, Observable, of, Subject } from 'rxjs';
-
-import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
-
-import { Assertion, Empty, EventInfo, Identifiable } from '@app/core';
+import { Assertion, Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-
-import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
 import { CertificationDataService } from '@app/data-services';
 
 import { CertificateRules, CertificateType, CreateCertificateCommand, CreateCertificateCommandPayload,
-         EmptyCertificateRules, IssuingCommands, RecordableSubjectFilter,
-         RecordableSubjectShortModel } from '@app/models';
+         EmptyCertificateRules, IssuingCommands } from '@app/models';
 
 import { FormHandler, sendEvent } from '@app/shared/utils';
 
@@ -35,7 +28,7 @@ import {
 enum CertificateCreatorFormControls {
   certificateType = 'certificateType',
   registrationCommand = 'registrationCommand',
-  recordableSubjectUID = 'recordableSubjectUID',
+  recordableSubject = 'recordableSubject',
   recordingBookUID = 'recordingBookUID',
   bookEntryNo = 'bookEntryNo',
   bookEntryUID = 'bookEntryUID',
@@ -69,11 +62,6 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
 
   certificateRulesSelected: CertificateRules = EmptyCertificateRules;
 
-  recordableSubjectList$: Observable<RecordableSubjectShortModel[]>;
-  recordableSubjectInput$ = new Subject<string>();
-  recordableSubjectLoading = false;
-  recordableSubjectMinTermLength = 5;
-
   checkBookEntryInput = false;
 
   isLoading = false;
@@ -94,7 +82,6 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
 
   ngOnInit(): void {
     this.initForm();
-    this.subscribeRecordableSubjectList();
   }
 
 
@@ -177,7 +164,7 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
       new FormGroup({
         certificateType: new FormControl('', Validators.required),
         registrationCommand: new FormControl('', Validators.required),
-        recordableSubjectUID: new FormControl(''),
+        recordableSubject: new FormControl(''),
         recordingBookUID: new FormControl(''),
         bookEntryUID: new FormControl(''),
         bookEntryNo: new FormControl(''),
@@ -195,41 +182,6 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
   }
 
 
-  private subscribeRecordableSubjectList() {
-    this.recordableSubjectList$ = concat(
-      of([]),
-      this.recordableSubjectInput$.pipe(
-          filter(keyword => this.validRecordableSubjectFilter(keyword)),
-          distinctUntilChanged(),
-          debounceTime(800),
-          tap(() => this.recordableSubjectLoading = true),
-          switchMap(keyword => this.helper.select<RecordableSubjectShortModel[]>(
-            RecordableSubjectsStateSelector.RECORDABLE_SUBJECTS_LIST,
-            this.buildRecordableSubjectFilter(keyword))
-            .pipe(
-              catchError(() => of([])),
-              tap(() => this.recordableSubjectLoading = false)
-          ))
-      )
-    );
-  }
-
-  private validRecordableSubjectFilter(keyword: string): boolean {
-    return !!this.certificateRulesSelected.subjectType &&
-      keyword !== null && keyword.length >= this.recordableSubjectMinTermLength
-  }
-
-
-  private buildRecordableSubjectFilter(keywords: string): RecordableSubjectFilter {
-    const recordableSubjectFilter: RecordableSubjectFilter = {
-      type: this.certificateRulesSelected.subjectType,
-      keywords
-    };
-
-    return recordableSubjectFilter;
-  }
-
-
   private resetCertificateRules(rules: CertificateRules) {
     this.setCertificateRulesSelected(rules);
     this.validateRecordableSubjectField();
@@ -243,12 +195,12 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
 
 
   private validateRecordableSubjectField(){
-    this.formHandler.getControl(this.controls.recordableSubjectUID).reset();
+    this.formHandler.getControl(this.controls.recordableSubject).reset();
 
     if (this.certificateRulesSelected.selectSubject) {
-      this.formHandler.setControlValidators(this.controls.recordableSubjectUID, Validators.required);
+      this.formHandler.setControlValidators(this.controls.recordableSubject, Validators.required);
     } else {
-      this.formHandler.clearControlValidators(this.controls.recordableSubjectUID);
+      this.formHandler.clearControlValidators(this.controls.recordableSubject);
     }
   }
 
@@ -311,7 +263,8 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
     };
 
     if (this.certificateRulesSelected.selectSubject) {
-      payload.recordableSubjectUID = formModel.recordableSubjectUID ?? '';
+      payload.recordableSubjectUID =
+        !isEmpty(formModel.recordableSubject) ? formModel.recordableSubject.uid : '';
     }
 
     if (this.certificateRulesSelected.selectBookEntry) {

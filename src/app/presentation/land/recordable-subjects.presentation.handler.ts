@@ -72,11 +72,11 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
     switch (selectorType) {
 
       case SelectorType.AMENDABLE_RECORDING_ACTS:
-        Assertion.assertValue(params.recordableSubject, 'params.recordableSubject');
+        Assertion.assertValue(params.recordableSubjectUID, 'params.recordableSubjectUID');
         Assertion.assertValue(params.instrumentRecordingUID, 'params.instrumentRecordingUID');
         Assertion.assertValue(params.amendmentRecordingActTypeUID, 'params.amendmentRecordingActTypeUID');
 
-        return toObservable<U>(this.data.getAmendableRecordingActs(params.recordableSubject,
+        return toObservable<U>(this.data.getAmendableRecordingActs(params.recordableSubjectUID,
                                                                   params.instrumentRecordingUID,
                                                                   params.amendmentRecordingActTypeUID));
 
