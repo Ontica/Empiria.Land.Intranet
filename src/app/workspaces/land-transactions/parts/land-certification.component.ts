@@ -9,6 +9,10 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 import { Assertion, Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
 
+import { PresentationLayer } from '@app/core/presentation';
+
+import { RegistrationAction } from '@app/presentation/exported.presentation.types';
+
 import { CertificationDataService } from '@app/data-services';
 
 import { Certificate, CreateCertificateCommand, EmptyCertificate } from '@app/models';
@@ -51,7 +55,8 @@ export class LandCertificationComponent implements OnChanges {
   submitted = false;
 
 
-  constructor(private certificationData: CertificationDataService,
+  constructor(private uiLayer: PresentationLayer,
+              private certificationData: CertificationDataService,
               private messageBox: MessageBoxService) { }
 
 
@@ -103,6 +108,13 @@ export class LandCertificationComponent implements OnChanges {
 
         this.deleteCertificate(event.payload.transactionUID, event.payload.certificateUID);
 
+        return;
+
+      case CertificateListEventType.SELECT_RECORDABLE_SUBJECT:
+        Assertion.assertValue(event.payload.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
+        Assertion.assertValue(event.payload.recordingActUID, 'event.payload.recordingActUID');
+
+        this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDABLE_SUBJECT, event.payload );
         return;
 
       default:

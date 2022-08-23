@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 import { Assertion, EventInfo } from '@app/core';
 
@@ -14,7 +14,7 @@ import { RecordingDataService } from '@app/data-services';
 import { sendEvent } from '@app/shared/utils';
 
 import { EmptyParty, EmptyRecordingAct, Party, RecordingAct, RecordingActFields,
-         RecordingActPartyFields} from '@app/models';
+         RecordingActPartyFields } from '@app/models';
 
 import { PartyEditorEventType } from '@app/views/recordable-subjects/parties/party-editor.component';
 
@@ -33,11 +33,11 @@ export enum RecordingActEditionEventType {
 })
 export class RecordingActEditionComponent implements OnChanges {
 
-  @Input() instrumentRecordingUID: string;
+  @Input() instrumentRecordingUID = '';
 
-  @Input() recordingActUID: string;
+  @Input() recordingActUID = '';
 
-  @Input() readonly = false;
+  @Input() readonly = true;
 
   @Input() displayFlat = false;
 
@@ -60,9 +60,12 @@ export class RecordingActEditionComponent implements OnChanges {
 
   constructor(private recordingData: RecordingDataService) { }
 
-  ngOnChanges() {
-    this.getRecordingAct();
-    this.resetPanelState(false);
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.instrumentRecordingUID && changes.recordingActUID) {
+      this.getRecordingAct();
+      this.resetPanelState(false);
+    }
   }
 
 
@@ -138,20 +141,18 @@ export class RecordingActEditionComponent implements OnChanges {
 
   private getRecordingAct() {
     if (!this.instrumentRecordingUID || !this.recordingActUID) {
-      this.recordingAct = EmptyRecordingAct;
-      this.initTexts();
-
+      this.setRecordingAct(EmptyRecordingAct);
       return;
     }
 
     this.setSubmitted(true);
 
-    this.recordingData.getRecordingAct(this.instrumentRecordingUID, this.recordingActUID)
+    this.recordingData.getRecordingAct(this.instrumentRecordingUID,
+                                       this.recordingActUID)
       .toPromise()
       .then(x => {
-        this.recordingAct = x;
+        this.setRecordingAct(x);
         this.setPrimaryPartyList();
-        this.initTexts();
       })
       .catch(() => this.onClose())
       .finally(() => this.setSubmitted(false));
@@ -172,9 +173,8 @@ export class RecordingActEditionComponent implements OnChanges {
       .toPromise()
       .then(x => {
         this.emitRecordingActUpdated();
-        this.recordingAct = x;
+        this.setRecordingAct(x);
         this.setPrimaryPartyList();
-        this.initTexts();
       })
       .finally(() => this.setSubmitted(false));
   }
@@ -195,7 +195,7 @@ export class RecordingActEditionComponent implements OnChanges {
                                                recordingActPartyFields)
       .toPromise()
       .then(x => {
-        this.recordingAct = x;
+        this.setRecordingAct(x);
         this.setPrimaryPartyList();
         this.resetPanelState(false);
       })
@@ -211,11 +211,17 @@ export class RecordingActEditionComponent implements OnChanges {
                                                recordingActPartyUID)
       .toPromise()
       .then(x => {
-        this.recordingAct = x;
+        this.setRecordingAct(x);
         this.setPrimaryPartyList();
         this.resetPanelState(false);
       })
       .finally(() => this.setSubmitted(false));
+  }
+
+
+  private setRecordingAct(recordingAct: RecordingAct) {
+    this.recordingAct = recordingAct;
+    this.initTexts();
   }
 
 

@@ -13,11 +13,13 @@ import { MatTableDataSource } from '@angular/material/table';
 import { EventInfo } from '@app/core';
 
 import { EmptyInstrumentRecording, getRecordableObjectStatusName, InstrumentRecording, RecordableObjectStatus,
-         RecordingActEntry, SelectionAct } from '@app/models';
+         RecordingActEntry, RecordingContext } from '@app/models';
 
 import { AlertService } from '@app/shared/containers/alert/alert.service';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
+
+import { sendEvent } from '@app/shared/utils';
 
 export enum RecordingActsListEventType {
   REMOVE_RECORDING_ACT = 'RecordingActsListComponent.Event.RemoveRecordingAct',
@@ -64,16 +66,15 @@ export class RecordingActsListComponent implements OnChanges {
   }
 
 
-  onOpenRecordableSubjactTabbedView(recordingAct: RecordingActEntry) {
-    const selectionAct: SelectionAct =
-      { instrumentRecording: this.instrumentRecording, recordingAct };
-    this.sendEvent(RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT, selectionAct);
+  onOpenRecordableSubjectTabbedView(recordingAct: RecordingActEntry) {
+    sendEvent(this.recordingActsListEvent, RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT,
+      this.getRecordingContext(recordingAct));
   }
 
 
   onOpenRecordingActEditor(recordingAct: RecordingActEntry) {
-    const selectionAct: SelectionAct = { instrumentRecording: this.instrumentRecording, recordingAct };
-    this.sendEvent(RecordingActsListEventType.SELECT_RECORDING_ACT, selectionAct);
+    sendEvent(this.recordingActsListEvent, RecordingActsListEventType.SELECT_RECORDING_ACT,
+      this.getRecordingContext(recordingAct));
   }
 
 
@@ -95,7 +96,7 @@ export class RecordingActsListComponent implements OnChanges {
             recordingActUID: recordingAct.uid
           };
 
-          this.sendEvent(RecordingActsListEventType.REMOVE_RECORDING_ACT, payload);
+          sendEvent(this.recordingActsListEvent, RecordingActsListEventType.REMOVE_RECORDING_ACT, payload);
         }
       });
   }
@@ -131,13 +132,14 @@ export class RecordingActsListComponent implements OnChanges {
   }
 
 
-  private sendEvent(eventType: RecordingActsListEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
+  private getRecordingContext(recordingAct: RecordingActEntry): RecordingContext {
+    const recordingContext: RecordingContext = {
+      instrumentRecordingUID: this.instrumentRecording.uid,
+      recordingActUID: recordingAct.uid,
+      actions: { can: { editRecordableSubject: this.instrumentRecording.actions.can.editRecordingActs} },
     };
 
-    this.recordingActsListEvent.emit(event);
+    return recordingContext;
   }
 
 }

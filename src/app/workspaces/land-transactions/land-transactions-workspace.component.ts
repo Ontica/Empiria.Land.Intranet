@@ -7,7 +7,7 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Assertion, EventInfo, isEmpty } from '@app/core';
+import { EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
@@ -17,8 +17,8 @@ import { MainUIStateSelector, RegistrationAction, RegistrationStateSelector, Tra
 import { View } from '@app/main-layout';
 
 import { TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
-         mapTransactionStageFromViewName, mapTransactionStatusFromViewName, EmptySelectionAct,
-         SelectionAct, InstrumentRecording} from '@app/models';
+         mapTransactionStageFromViewName, mapTransactionStatusFromViewName, EmptyRecordingContext,
+         RecordingContext } from '@app/models';
 
 import { EmptyFileViewerData, FileViewerData} from '@app/shared/form-controls/file-control/file-control-data';
 
@@ -49,9 +49,8 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   filter: TransactionFilter = EmptyTransactionFilter;
 
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
-  selectedRecordableSubject: SelectionAct = EmptySelectionAct;
-  selectedRecordingAct: SelectionAct = EmptySelectionAct;
   selectedTransaction: Transaction = EmptyTransaction;
+  selectedRecordingContext: RecordingContext = EmptyRecordingContext;
 
   displayOptionModalSelected: TransactionModalOptions = null;
   selectedTransactions: TransactionShortModel[] = [];
@@ -129,12 +128,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
     switch (event.type as RecordableSubjectTabbedViewEventType) {
 
       case RecordableSubjectTabbedViewEventType.CLOSE_BUTTON_CLICKED:
-        this.unselectCurrentRecordableSubject();
-        return;
-
-      case RecordableSubjectTabbedViewEventType.RECORDABLE_SUBJECT_UPDATED:
-        Assertion.assertValue(event.payload.instrumentRecording, 'payload.instrumentRecording');
-        this.refreshSelectedRecordableSubject(event.payload.instrumentRecording as InstrumentRecording);
+        this.unselectSecondaryEditors();
         return;
 
       default:
@@ -148,11 +142,7 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
     switch (event.type as RecordingActEditionEventType) {
 
       case RecordingActEditionEventType.CLOSE_BUTTON_CLICKED:
-        this.unselectCurrentRecordingAct();
-        return;
-
-      case RecordingActEditionEventType.RECORDING_ACT_UPDATED:
-        this.refreshInstrumentRecording();
+        this.unselectSecondaryEditors();
         return;
 
       default:
@@ -174,7 +164,6 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   onCloseFileViewer() {
     this.unselectCurrentFile();
-    this.unselectCurrentRecordableSubject();
   }
 
   // private methods
@@ -204,16 +193,16 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
 
   private suscribeToSelectedData() {
-    this.subscriptionHelper.select<SelectionAct>(RegistrationStateSelector.SELECTED_RECORDABLE_SUBJECT)
+    this.subscriptionHelper.select<RecordingContext>(RegistrationStateSelector.SELECTED_RECORDABLE_SUBJECT)
       .subscribe(x => {
-        this.selectedRecordableSubject = x;
-        this.displayRecordableSubjectTabbedView = !isEmpty(this.selectedRecordableSubject?.recordingAct);
+        this.selectedRecordingContext = x;
+        this.displayRecordableSubjectTabbedView = this.isRecordingContextValid();
       });
 
-    this.subscriptionHelper.select<SelectionAct>(RegistrationStateSelector.SELECTED_RECORDING_ACT)
+    this.subscriptionHelper.select<RecordingContext>(RegistrationStateSelector.SELECTED_RECORDING_ACT)
       .subscribe(x => {
-        this.selectedRecordingAct = x;
-        this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct?.recordingAct);
+        this.selectedRecordingContext = x;
+        this.displayRecordingActEditor = this.isRecordingContextValid();
       });
 
     this.subscriptionHelper.select<FileViewerData>(TransactionStateSelector.SELECTED_FILE_LIST)
@@ -221,28 +210,6 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
         this.selectedFileViewerData = x;
         this.displayFileViewer = this.selectedFileViewerData.fileList.length > 0;
       });
-  }
-
-
-  private refreshSelectedRecordableSubject(instrumentRecording: InstrumentRecording) {
-    const recordingAct = instrumentRecording.recordingActs
-      .find(x => x.uid === this.selectedRecordableSubject.recordingAct.uid);
-
-    if (!isEmpty(recordingAct)) {
-      const selectionAct: SelectionAct = {
-        instrumentRecording,
-        recordingAct: recordingAct,
-      };
-
-      this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDABLE_SUBJECT, selectionAct);
-    } else {
-      this.unselectCurrentRecordableSubject();
-    }
-  }
-
-
-  private refreshInstrumentRecording() {
-
   }
 
 
@@ -261,14 +228,17 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
     this.uiLayer.dispatch(TransactionAction.SET_LIST_FILTER, { filter });
   }
 
+
   private onCurrentViewChanged(newView: View) {
     this.currentView = newView;
     this.applyTransactionsFilter();
   }
 
+
   private unselectCurrentTransaction() {
     this.uiLayer.dispatch(TransactionAction.UNSELECT_TRANSACTION);
   }
+
 
   private unselectCurrentFile() {
     this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE_LIST);
@@ -277,18 +247,19 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   private unselectCurrentSelections(){
     this.unselectCurrentFile();
-    this.unselectCurrentRecordableSubject();
-    this.unselectCurrentRecordingAct();
+    this.unselectSecondaryEditors();
   }
 
 
-  private unselectCurrentRecordableSubject() {
+  private unselectSecondaryEditors() {
     this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDABLE_SUBJECT);
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
   }
 
 
-  private unselectCurrentRecordingAct() {
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
+  private isRecordingContextValid() {
+    return !!this.selectedRecordingContext.instrumentRecordingUID &&
+           !!this.selectedRecordingContext.recordingActUID;
   }
 
 }

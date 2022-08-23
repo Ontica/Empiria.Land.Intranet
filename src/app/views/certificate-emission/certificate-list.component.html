@@ -23,7 +23,9 @@
     <ng-container matColumnDef="recordableSubject">
       <th mat-header-cell *matHeaderCellDef> Folio electrónico / Persona / Documento </th>
       <td mat-cell *matCellDef="let row">
-        {{ row.recordableSubject.electronicID ?? 'N/A' }}
+        <a class="link" (click)="onOpenRecordableSubjectTabbedView(row)">
+          {{ row.recordableSubject.electronicID ?? 'N/A' }}
+        </a>
       </td>
     </ng-container>
     <ng-container matColumnDef="issueTime">

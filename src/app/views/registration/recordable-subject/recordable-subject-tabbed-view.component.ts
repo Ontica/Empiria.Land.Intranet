@@ -33,13 +33,11 @@ export enum RecordableSubjectTabbedViewEventType {
 })
 export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestroy {
 
-  @Input() instrumentRecordingUID: string;
+  @Input() instrumentRecordingUID = '';
 
-  @Input() recordingActUID: string;
+  @Input() recordingActUID = '';
 
   @Input() canEditRecordableSubject = false;
-
-  @Input() canEditTractIndex = false;
 
   @Output() recordableSubjectTabbedViewEvent = new EventEmitter<EventInfo>();
 
@@ -55,7 +53,8 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
   tabEditorLabel = 'Datos del predio';
 
-  constructor(private uiLayer: PresentationLayer, private recordingDataService: RecordingDataService) {
+  constructor(private uiLayer: PresentationLayer,
+              private recordingDataService: RecordingDataService) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
@@ -138,7 +137,8 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
     this.isLoading = true;
 
-    this.recordingDataService.getTractIndex(this.instrumentRecordingUID, this.recordingActUID)
+    this.recordingDataService.getTractIndex(this.instrumentRecordingUID,
+                                            this.recordingActUID)
       .toPromise()
       .then(x => this.setTractIndex(x))
       .catch(() => this.onClose())

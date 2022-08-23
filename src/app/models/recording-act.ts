@@ -6,11 +6,12 @@
  */
 
 import { Empty, Identifiable, PartitionedType } from '@app/core';
+
 import { RecordingActParty } from './party';
 
 import { EmptyRecordableSubject, RecordableObjectStatus, RecordableSubject } from './recordable-subjects';
 
-import { EmptyInstrumentRecording, InstrumentRecording, RegistrationCommandConfig } from './registration';
+import { RegistrationCommandConfig } from './registration';
 
 export interface RecordingActTypeGroup extends Identifiable {
   recordingActTypes: RecordingActType[];
@@ -76,12 +77,6 @@ export interface RecordingActFields {
 }
 
 
-export interface SelectionAct {
-  instrumentRecording: InstrumentRecording;
-  recordingAct: RecordingActEntry;
-}
-
-
 export const EmptyRecordingActEntry: RecordingActEntry = {
   uid: 'Empty',
   name: '',
@@ -116,10 +111,4 @@ export const EmptyRecordingAct: RecordingAct = {
   parties: [],
   status: 'Incomplete',
   actions: EmptyRecordingActActions,
-};
-
-
-export const EmptySelectionAct: SelectionAct = {
-  instrumentRecording: EmptyInstrumentRecording,
-  recordingAct: EmptyRecordingActEntry
 };

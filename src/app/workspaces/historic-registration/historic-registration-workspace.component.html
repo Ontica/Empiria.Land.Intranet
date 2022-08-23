@@ -8,7 +8,7 @@
     <emp-land-file-viewer
       [fileViewerData]="selectedFileViewerData"
       [showCloseButton]="true"
-      (closeEvent)="unselectCurrentFile()">
+      (closeEvent)="onCloseFileViewer()">
 
     </emp-land-file-viewer>
 
@@ -34,8 +34,7 @@
       [recordingBookUID]="selectedBookEntry.recordingBookUID"
       [bookEntryUID]="selectedBookEntry.uid"
       [instrumentRecordingUID]="selectedBookEntry.instrumentRecording.uid"
-      (BookEntryEditionEvent)="onBookEntryEditionEvent($event)"
-      (closeEvent)="unselectBookEntry()">
+      (bookEntryEditionEvent)="onBookEntryEditionEvent($event)">
 
     </emp-land-book-entry-edition>
 
@@ -45,10 +44,9 @@
     class="secondary">
 
     <emp-land-recordable-subject-tabbed-view
-      [instrumentRecordingUID]="selectedRecordingAct.instrumentRecording.uid"
-      [recordingActUID]="selectedRecordingAct.recordingAct.uid"
-      [canEditRecordableSubject]="selectedRecordingAct.instrumentRecording.actions.can.openInstrument"
-      [canEditTractIndex]="false"
+      [instrumentRecordingUID]="selectedRecordingContext.instrumentRecordingUID"
+      [recordingActUID]="selectedRecordingContext.recordingActUID"
+      [canEditRecordableSubject]="selectedRecordingContext.actions.can.editRecordableSubject"
       (recordableSubjectTabbedViewEvent)="onRecordableSubjectTabbedViewEvent($event)">
 
     </emp-land-recordable-subject-tabbed-view>
@@ -59,8 +57,9 @@
     class="secondary">
 
     <emp-land-recording-act-edition
-      [instrumentRecordingUID]="selectedRecordingAct.instrumentRecording.uid"
-      [recordingActUID]="selectedRecordingAct.recordingAct.uid"
+      [instrumentRecordingUID]="selectedRecordingContext.instrumentRecordingUID"
+      [recordingActUID]="selectedRecordingContext.recordingActUID"
+      [readonly]="!selectedRecordingContext.actions.can.editRecordableSubject"
       (recordingActEditionEventType)="onRecordingActEditionEventType($event)">
 
     </emp-land-recording-act-edition>

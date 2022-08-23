@@ -13,7 +13,7 @@ import { Assertion, Command, toObservable, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { EmptyBookEntry, EmptyInstrumentRecording, EmptySelectionAct, EmptyRecordingBook,
+import { EmptyBookEntry, EmptyInstrumentRecording, EmptyRecordingContext, EmptyRecordingBook,
          InstrumentRecording } from '@app/models';
 
 import { RecordingDataService } from '@app/data-services';
@@ -79,8 +79,8 @@ export enum EffectType {
 
 const initialState: StateValues = [
   { key: SelectorType.TRANSACTION_INSTRUMENT_RECORDING, value: EmptyInstrumentRecording },
-  { key: SelectorType.SELECTED_RECORDABLE_SUBJECT, value: EmptySelectionAct },
-  { key: SelectorType.SELECTED_RECORDING_ACT, value: EmptySelectionAct },
+  { key: SelectorType.SELECTED_RECORDABLE_SUBJECT, value: EmptyRecordingContext },
+  { key: SelectorType.SELECTED_RECORDING_ACT, value: EmptyRecordingContext },
   { key: SelectorType.SELECTED_RECORDING_BOOK, value: EmptyRecordingBook },
   { key: SelectorType.SELECTED_BOOK_ENTRY, value: EmptyBookEntry },
 ];
@@ -135,15 +135,12 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         return;
 
       case EffectType.UPDATE_RECORDABLE_SUBJECT:
-        const recordingActUID = params.payload.recordingActUID;
-        const instrumentRecording = params.result;
+        const instrumentRecordingUpdated = params.result;
         const instrumentRecordingSelected =
           this.getValue<InstrumentRecording>(SelectorType.TRANSACTION_INSTRUMENT_RECORDING);
 
-        if (instrumentRecording.uid === instrumentRecordingSelected.uid) {
-          const recordingAct = instrumentRecording.recordingActs.find(x => x.uid === recordingActUID);
-          this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, instrumentRecording);
-          this.setValue(SelectorType.SELECTED_RECORDABLE_SUBJECT, { instrumentRecording, recordingAct });
+        if (instrumentRecordingUpdated.uid === instrumentRecordingSelected.uid) {
+          this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, instrumentRecordingUpdated);
         }
 
         return;
@@ -231,23 +228,23 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         return;
 
       case ActionType.SELECT_RECORDABLE_SUBJECT:
-        Assertion.assertValue(params.instrumentRecording, 'payload.instrumentRecording');
-        Assertion.assertValue(params.recordingAct, 'payload.recordingAct');
+        Assertion.assertValue(params.instrumentRecordingUID, 'payload.instrumentRecordingUID');
+        Assertion.assertValue(params.recordingActUID, 'payload.recordingActUID');
         this.setValue(SelectorType.SELECTED_RECORDABLE_SUBJECT, params);
         return;
 
       case ActionType.UNSELECT_RECORDABLE_SUBJECT:
-        this.setValue(SelectorType.SELECTED_RECORDABLE_SUBJECT, EmptySelectionAct);
+        this.setValue(SelectorType.SELECTED_RECORDABLE_SUBJECT, EmptyRecordingContext);
         return;
 
       case ActionType.SELECT_RECORDING_ACT:
-        Assertion.assertValue(params.instrumentRecording, 'payload.instrumentRecording');
-        Assertion.assertValue(params.recordingAct, 'payload.recordingAct');
+        Assertion.assertValue(params.instrumentRecordingUID, 'payload.instrumentRecordingUID');
+        Assertion.assertValue(params.recordingActUID, 'payload.recordingActUID');
         this.setValue(SelectorType.SELECTED_RECORDING_ACT, params);
         return;
 
       case ActionType.UNSELECT_RECORDING_ACT:
-        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptySelectionAct);
+        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptyRecordingContext);
         return;
 
       case ActionType.SELECT_RECORDING_BOOK:

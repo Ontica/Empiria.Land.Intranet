@@ -38,7 +38,6 @@
           <emp-land-recording-act-edition
             [instrumentRecordingUID]="tractIndexEntry.officialDocument.uid"
             [recordingActUID]="tractIndexEntry.uid"
-            [readonly]="true"
             [displayFlat]="true"
             (recordingActEditionEventType)="onRecordingActEditionEventType($event)">
 
@@ -55,8 +54,7 @@
           <emp-land-recordable-subject-editor
             [instrumentRecordingUID]="tractIndexEntry.officialDocument.uid"
             [recordingActUID]="tractIndexEntry.uid"
-            [recordableSubject]="tractIndexEntry.subjectChanges.snapshot"
-            [readonly]="true">
+            [recordableSubject]="tractIndexEntry.subjectChanges.snapshot">
 
           </emp-land-recordable-subject-editor>
 

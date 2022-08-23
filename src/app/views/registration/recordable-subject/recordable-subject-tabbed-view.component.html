@@ -17,7 +17,7 @@
        [instrumentRecordingUID]="instrumentRecordingUID"
        [recordingActUID]="recordingActUID"
        [recordableSubject]="tractIndex.recordableSubject"
-       [readonly]="canEditRecordableSubject"
+       [readonly]="!canEditRecordableSubject"
        (recordableSubjectEditorEvent)="onRecordableSubjectEditorEvent($event)">
 
       </emp-land-recordable-subject-editor>

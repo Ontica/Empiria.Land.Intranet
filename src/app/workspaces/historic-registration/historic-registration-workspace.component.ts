@@ -9,7 +9,7 @@ import { Component, ViewChild } from '@angular/core';
 
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 
-import { BookEntry, EmptyBookEntry, EmptySelectionAct, InstrumentRecording, SelectionAct } from '@app/models';
+import { BookEntry, EmptyBookEntry, EmptyRecordingContext, RecordingContext } from '@app/models';
 
 import { EmptyFileViewerData,
          FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
@@ -42,12 +42,17 @@ export class HistoricRegistrationWorkspaceComponent {
 
   selectedBookEntry: BookEntry = EmptyBookEntry;
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
-  selectedRecordingAct: SelectionAct = EmptySelectionAct;
+  selectedRecordingContext: RecordingContext = EmptyRecordingContext;
 
   displayBookEntryEdition = false;
   displayFileViewer = false;
   displayRecordingActEditor = false;
   displayRecordableSubjectTabbedView = false;
+
+
+  onCloseFileViewer() {
+    this.unselectCurrentFile();
+  }
 
 
   onRecordingBookEditionEvent(event: EventInfo) {
@@ -59,7 +64,7 @@ export class HistoricRegistrationWorkspaceComponent {
         this.selectedBookEntry = event.payload.bookEntry;
         this.displayBookEntryEdition = !isEmpty(this.selectedBookEntry);
 
-        this.unselectCurrentRecordingAct();
+        this.unselectSecondaryEditors();
 
         return;
 
@@ -81,19 +86,26 @@ export class HistoricRegistrationWorkspaceComponent {
   onBookEntryEditionEvent(event: EventInfo) {
     switch (event.type as BookEntryEditionEventType) {
 
-      case BookEntryEditionEventType.RECORDING_ACT_SELECTED:
-        Assertion.assertValue(event.payload.recordingActSelect, 'event.payload.recordingActSelect');
+      case BookEntryEditionEventType.CLOSE_BUTTON_CLICKED:
+        this.unselectBookEntry();
 
-        this.selectedRecordingAct = event.payload.recordingActSelect;
-        this.displayRecordingActEditor = !isEmpty(this.selectedRecordingAct.recordingAct);
+        return;
+
+      case BookEntryEditionEventType.RECORDING_ACT_SELECTED:
+        Assertion.assertValue(event.payload.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
+        Assertion.assertValue(event.payload.recordingActUID, 'event.payload.recordingActUID');
+
+        this.selectedRecordingContext = event.payload as RecordingContext;
+        this.displayRecordingActEditor = this.isRecordingContextValid();
 
         return;
 
       case BookEntryEditionEventType.RECORDABLE_SUBJECT_SELECTED:
-        Assertion.assertValue(event.payload.recordingActSelect, 'event.payload.recordingActSelect');
+        Assertion.assertValue(event.payload.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
+        Assertion.assertValue(event.payload.recordingActUID, 'event.payload.recordingActUID');
 
-        this.selectedRecordingAct = event.payload.recordingActSelect;
-        this.displayRecordableSubjectTabbedView = !isEmpty(this.selectedRecordingAct.recordingAct);
+        this.selectedRecordingContext = event.payload as RecordingContext;
+        this.displayRecordableSubjectTabbedView = this.isRecordingContextValid();
 
         return;
 
@@ -108,15 +120,12 @@ export class HistoricRegistrationWorkspaceComponent {
     switch (event.type as RecordableSubjectTabbedViewEventType) {
 
       case RecordableSubjectTabbedViewEventType.CLOSE_BUTTON_CLICKED:
-        this.unselectCurrentRecordingAct();
+        this.unselectSecondaryEditors();
 
         return;
 
       case RecordableSubjectTabbedViewEventType.RECORDABLE_SUBJECT_UPDATED:
-        Assertion.assertValue(event.payload.instrumentRecording, 'event.payload.instrumentRecording');
-
-        this.refreshInstrumentRecordingAndSelectionAct(
-          event.payload.instrumentRecording as InstrumentRecording);
+        this.refreshSelectedBookEntry();
 
         return;
 
@@ -131,12 +140,12 @@ export class HistoricRegistrationWorkspaceComponent {
     switch (event.type as RecordingActEditionEventType) {
 
       case RecordingActEditionEventType.CLOSE_BUTTON_CLICKED:
-        this.unselectCurrentRecordingAct();
+        this.unselectSecondaryEditors();
 
         return;
 
       case RecordingActEditionEventType.RECORDING_ACT_UPDATED:
-        this.refreshBookEntrySelected();
+        this.refreshSelectedBookEntry();
         return;
 
       default:
@@ -146,45 +155,32 @@ export class HistoricRegistrationWorkspaceComponent {
   }
 
 
-  unselectBookEntry(){
-    this.selectedBookEntry = EmptyBookEntry;
-    this.displayBookEntryEdition = false;
-  }
-
-
-  unselectCurrentRecordingAct() {
-    this.selectedRecordingAct = EmptySelectionAct;
-    this.displayRecordingActEditor = false;
-    this.displayRecordableSubjectTabbedView = false;
-  }
-
-
-  unselectCurrentFile() {
+  private unselectCurrentFile() {
     this.selectedFileViewerData = EmptyFileViewerData;
     this.displayFileViewer = false;
   }
 
 
-  private refreshInstrumentRecordingAndSelectionAct(instrumentRecording: InstrumentRecording) {
-    const recordingAct = instrumentRecording.recordingActs
-      .find(x => x.uid === this.selectedRecordingAct.recordingAct.uid);
-
-    if (!isEmpty(recordingAct)) {
-      const selectionAct: SelectionAct = {
-        instrumentRecording,
-        recordingAct: recordingAct,
-      };
-
-      this.selectedRecordingAct = selectionAct;
-    } else {
-      this.unselectCurrentRecordingAct();
-    }
-
-    this.refreshBookEntrySelected();
+  private unselectBookEntry(){
+    this.selectedBookEntry = EmptyBookEntry;
+    this.displayBookEntryEdition = false;
   }
 
 
-  private refreshBookEntrySelected() {
+  private unselectSecondaryEditors() {
+    this.selectedRecordingContext = EmptyRecordingContext;
+    this.displayRecordingActEditor = false;
+    this.displayRecordableSubjectTabbedView = false;
+  }
+
+
+  private isRecordingContextValid() {
+    return !!this.selectedRecordingContext.instrumentRecordingUID &&
+           !!this.selectedRecordingContext.recordingActUID;
+  }
+
+
+  private refreshSelectedBookEntry() {
     this.bookEntryEdition.ngOnChanges();
   }
 

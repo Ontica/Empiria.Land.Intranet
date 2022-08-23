@@ -107,15 +107,31 @@ export interface NoPropertyFields extends RecordableSubjectFields {
 }
 
 
+export interface RecordingContextActions {
+  can: {
+    editRecordableSubject: boolean;
+  }
+}
+
+
+export const EmptyRecordingContextActions: RecordingContextActions = {
+  can: {
+    editRecordableSubject: false,
+  }
+}
+
+
 export interface RecordingContext {
-  instrumentUID: string;
+  instrumentRecordingUID: string;
   recordingActUID: string;
+  actions?: RecordingContextActions;
 }
 
 
 export const EmptyRecordingContext: RecordingContext = {
-  instrumentUID: '',
-  recordingActUID: ''
+  instrumentRecordingUID: '',
+  recordingActUID: '',
+  actions: EmptyRecordingContextActions,
 };
 
 

@@ -23,8 +23,9 @@ import { RecordingActsListEventType } from '../recording-acts/recording-acts-lis
 import { BookEntryEditorEventType } from './book-entry-editor.component';
 
 export enum BookEntryEditionEventType {
+  CLOSE_BUTTON_CLICKED        = 'BookEntryEditionComponent.Event.CloseButtonClicked',
   RECORDABLE_SUBJECT_SELECTED = 'BookEntryEditionComponent.Event.RecordableSubjectSelected',
-  RECORDING_ACT_SELECTED = 'BookEntryEditionComponent.Event.RecordingActSelected',
+  RECORDING_ACT_SELECTED      = 'BookEntryEditionComponent.Event.RecordingActSelected',
 }
 
 
@@ -40,9 +41,7 @@ export class BookEntryEditionComponent implements OnChanges {
 
   @Input() instrumentRecordingUID: string;
 
-  @Output() BookEntryEditionEvent = new EventEmitter<EventInfo>();
-
-  @Output() closeEvent = new EventEmitter<void>();
+  @Output() bookEntryEditionEvent = new EventEmitter<EventInfo>();
 
   cardTitle = 'Inscripción';
 
@@ -79,7 +78,7 @@ export class BookEntryEditionComponent implements OnChanges {
 
 
   onClose() {
-    this.closeEvent.emit();
+    sendEvent(this.bookEntryEditionEvent, BookEntryEditionEventType.CLOSE_BUTTON_CLICKED);
   }
 
 
@@ -132,14 +131,14 @@ export class BookEntryEditionComponent implements OnChanges {
 
     switch (event.type as RecordingActsListEventType) {
       case RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT:
-        sendEvent(this.BookEntryEditionEvent, BookEntryEditionEventType.RECORDABLE_SUBJECT_SELECTED,
-          { recordingActSelect: event.payload });
+        sendEvent(this.bookEntryEditionEvent, BookEntryEditionEventType.RECORDABLE_SUBJECT_SELECTED,
+          event.payload);
 
         return;
 
       case RecordingActsListEventType.SELECT_RECORDING_ACT:
-        sendEvent(this.BookEntryEditionEvent, BookEntryEditionEventType.RECORDING_ACT_SELECTED,
-          { recordingActSelect: event.payload });
+        sendEvent(this.bookEntryEditionEvent, BookEntryEditionEventType.RECORDING_ACT_SELECTED,
+          event.payload);
 
         return;
 

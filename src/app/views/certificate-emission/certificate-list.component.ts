@@ -11,15 +11,16 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo } from '@app/core';
 
-import { Certificate } from '@app/models';
+import { Certificate, RecordingContext } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 import { sendEvent } from '@app/shared/utils';
 
 export enum CertificateListEventType {
-  SELECT_CERTIFICATE = 'CertificateListComponent.Event.SelectCertificate',
-  REMOVE_CERTIFICATE = 'CertificateListComponent.Event.RemoveCertificate',
+  SELECT_CERTIFICATE        = 'CertificateListComponent.Event.SelectCertificate',
+  REMOVE_CERTIFICATE        = 'CertificateListComponent.Event.RemoveCertificate',
+  SELECT_RECORDABLE_SUBJECT = 'CertificateListComponent.Event.SelectRecordableSubject',
 }
 
 @Component({
@@ -57,6 +58,17 @@ export class CertificateListComponent implements OnChanges {
 
   onOpenCertificateEditor(certificate: Certificate) {
     sendEvent(this.certificateListEvent, CertificateListEventType.SELECT_CERTIFICATE, {certificate});
+  }
+
+
+  onOpenRecordableSubjectTabbedView(certificate: Certificate) {
+    const payload: RecordingContext = {
+      instrumentRecordingUID: certificate.issuingRecordingContext.instrumentRecordingUID,
+      recordingActUID: certificate.issuingRecordingContext.recordingActUID,
+      actions: { can: { editRecordableSubject: false} },
+    };
+
+    sendEvent(this.certificateListEvent, CertificateListEventType.SELECT_RECORDABLE_SUBJECT, payload);
   }
 
 
