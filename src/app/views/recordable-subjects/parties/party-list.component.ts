@@ -15,12 +15,11 @@ import { RecordingActParty } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
-import { ArrayLibrary } from '@app/shared/utils';
+import { ArrayLibrary, sendEvent } from '@app/shared/utils';
 
 export enum PartyListEventType {
   REMOVE_PARTY = 'PartyListComponent.Event.RemoveParty',
 }
-
 
 @Component({
   selector: 'emp-land-party-list',
@@ -86,11 +85,7 @@ export class PartyListComponent implements OnChanges {
       .toPromise()
       .then(x => {
         if (x) {
-          const payload = {
-            partyUID: party.uid
-          };
-
-          this.sendEvent(PartyListEventType.REMOVE_PARTY, payload);
+          sendEvent(this.partyListEvent, PartyListEventType.REMOVE_PARTY, { partyUID: party.uid });
         }
       });
   }
@@ -142,16 +137,6 @@ export class PartyListComponent implements OnChanges {
       </table>
 
      <br>¿Elimino el registro?`;
-  }
-
-
-  private sendEvent(eventType: PartyListEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.partyListEvent.emit(event);
   }
 
 }

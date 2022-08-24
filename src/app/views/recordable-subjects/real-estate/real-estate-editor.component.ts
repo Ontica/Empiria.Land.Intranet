@@ -23,7 +23,7 @@ import { RealEstateFields, RecordableObjectStatusItem, RecordableObjectStatusLis
 
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
-import { ArrayLibrary, FormHandler } from '@app/shared/utils';
+import { ArrayLibrary, FormHandler, sendEvent } from '@app/shared/utils';
 
 export enum RealEstateEditorComponentEventType {
   UPDATE_REAL_ESTATE = 'RealEstateEditorComponent.Event.UpdateRealEstate',
@@ -156,7 +156,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       recordableSubjectFields: this.getFormData()
     };
 
-    this.sendEvent(RealEstateEditorComponentEventType.UPDATE_REAL_ESTATE, payload);
+    sendEvent(this.realEstateEditorEvent, RealEstateEditorComponentEventType.UPDATE_REAL_ESTATE, payload);
   }
 
 
@@ -310,16 +310,6 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
     };
 
     return data;
-  }
-
-
-  private sendEvent(eventType: RealEstateEditorComponentEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.realEstateEditorEvent.emit(event);
   }
 
 }

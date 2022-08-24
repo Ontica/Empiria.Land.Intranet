@@ -14,7 +14,7 @@ import { EventInfo, Identifiable, isEmpty } from '@app/core';
 import { EmptyRecordingAct, RecordableObjectStatusItem, RecordableObjectStatusList,
          RecordingAct, RecordingActFields} from '@app/models';
 
-import { ArrayLibrary, FormatLibrary, FormHandler } from '@app/shared/utils';
+import { ArrayLibrary, FormatLibrary, FormHandler, sendEvent } from '@app/shared/utils';
 
 export enum RecordingActEditorEventType {
   UPDATE_RECORDING_ACT = 'RecordingActEditorEventType.Event.UpdateRecordingAct',
@@ -90,8 +90,8 @@ export class RecordingActEditorComponent implements OnChanges {
       return;
     }
 
-    this.sendEvent(RecordingActEditorEventType.UPDATE_RECORDING_ACT,
-                   { recordingActFields: this.getFormData() });
+    sendEvent(this.recordingActEditorEvent, RecordingActEditorEventType.UPDATE_RECORDING_ACT,
+      {recordingActFields: this.getFormData()});
   }
 
 
@@ -188,16 +188,6 @@ export class RecordingActEditorComponent implements OnChanges {
     };
 
     return data;
-  }
-
-
-  private sendEvent(eventType: RecordingActEditorEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.recordingActEditorEvent.emit(event);
   }
 
 }

@@ -6,6 +6,7 @@
  */
 
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+
 import { CurrencyPipe } from '@angular/common';
 
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,17 +17,15 @@ import { RequestedService } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
+import { sendEvent } from '@app/shared/utils';
 
 export enum RequestedServiceListEventType {
   DELETE_REQUESTED_SERVICE_CLICKED = 'RequestedServiceListComponent.Event.DeleteRequestedServiceClicked',
 }
 
-
 @Component({
   selector: 'emp-land-requested-service-list',
   templateUrl: './requested-service-list.component.html',
-  styles: [
-  ]
 })
 export class RequestedServiceListComponent implements OnChanges {
 
@@ -43,6 +42,7 @@ export class RequestedServiceListComponent implements OnChanges {
 
   displayedColumns = [...this.displayedColumnsDefault];
 
+
   constructor(private messageBox: MessageBoxService,
               private currencyPipe: CurrencyPipe) { }
 
@@ -56,14 +56,6 @@ export class RequestedServiceListComponent implements OnChanges {
   }
 
 
-  resetColumns() {
-    this.displayedColumns = [...this.displayedColumnsDefault];
-
-    if (this.canDelete) {
-      this.displayedColumns.push('action');
-    }
-  }
-
   removeService(service: RequestedService) {
     const message = `Esta operación eliminará el concepto
       <strong>${service.typeName}</strong> con importe de
@@ -74,20 +66,19 @@ export class RequestedServiceListComponent implements OnChanges {
       .toPromise()
       .then(x => {
         if (x) {
-          this.sendEvent(RequestedServiceListEventType.DELETE_REQUESTED_SERVICE_CLICKED,
-            service.uid);
+          sendEvent(this.requestedServiceListEvent,
+            RequestedServiceListEventType.DELETE_REQUESTED_SERVICE_CLICKED, service.uid);
         }
       });
   }
 
 
-  private sendEvent(eventType: RequestedServiceListEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
+  private resetColumns() {
+    this.displayedColumns = [...this.displayedColumnsDefault];
 
-    this.requestedServiceListEvent.emit(event);
+    if (this.canDelete) {
+      this.displayedColumns.push('action');
+    }
   }
 
 }

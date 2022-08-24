@@ -6,6 +6,7 @@
  */
 
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+
 import { CurrencyPipe } from '@angular/common';
 
 import { Assertion, EventInfo, Validate } from '@app/core';
@@ -15,21 +16,19 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { EmptyPayment, PaymentFields, PaymentOrder } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
-import { FormatLibrary, FormHandler } from '@app/shared/utils';
 
+import { FormatLibrary, FormHandler, sendEvent } from '@app/shared/utils';
 
 export enum TransactionSubmitterEventType {
-  SET_PAYMENT_CLICKED = 'TransactionSubmitterComponent.Event.SetPaymentClicked',
-  CANCEL_PAYMENT_CLICKED = 'TransactionSubmitterComponent.Event.CancelPaymentClicked',
+  SET_PAYMENT_CLICKED        = 'TransactionSubmitterComponent.Event.SetPaymentClicked',
+  CANCEL_PAYMENT_CLICKED     = 'TransactionSubmitterComponent.Event.CancelPaymentClicked',
   SUBMIT_TRANSACTION_CLICKED = 'TransactionSubmitterComponent.Event.SubmitTransactionClicked',
 }
-
 
 enum TransactionSubmitterFormControls {
   paymentReceiptNo = 'paymentReceiptNo',
   total = 'total',
 }
-
 
 @Component({
   selector: 'emp-land-transaction-submitter',
@@ -74,13 +73,7 @@ export class TransactionSubmitterComponent implements OnChanges {
       total: this.payment?.total ? this.currencyPipe.transform(this.payment.total) : null
     });
 
-    // if (this.paymentOrder?.total) {
-    //   this.formHandler.setControlValidators(this.controls.total,
-    //     [Validators.required, Validate.maxCurrencyValue(this.paymentOrder.total)]);
-    // } else {
-    //   this.formHandler.clearControlValidators(this.controls.total);
-    // }
-
+    // this.validateTotalField();
     this.formHandler.disableForm(!this.canEdit);
   }
 
@@ -90,7 +83,8 @@ export class TransactionSubmitterComponent implements OnChanges {
       return;
     }
 
-    this.sendEvent(TransactionSubmitterEventType.SET_PAYMENT_CLICKED, this.getFormData());
+    sendEvent(this.transactionSubmittertEvent,
+      TransactionSubmitterEventType.SET_PAYMENT_CLICKED, this.getFormData());
   }
 
 
@@ -104,7 +98,7 @@ export class TransactionSubmitterComponent implements OnChanges {
       .toPromise()
       .then(x => {
         if (x) {
-          this.sendEvent(TransactionSubmitterEventType.CANCEL_PAYMENT_CLICKED);
+          sendEvent(this.transactionSubmittertEvent, TransactionSubmitterEventType.CANCEL_PAYMENT_CLICKED);
         }
       });
   }
@@ -119,12 +113,24 @@ export class TransactionSubmitterComponent implements OnChanges {
       .toPromise()
       .then(x => {
         if (x) {
-          this.sendEvent(TransactionSubmitterEventType.SUBMIT_TRANSACTION_CLICKED);
+          sendEvent(this.transactionSubmittertEvent,
+            TransactionSubmitterEventType.SUBMIT_TRANSACTION_CLICKED);
         }
       });
   }
 
-  private getFormData(): any {
+
+  private validateTotalField() {
+    if (this.paymentOrder?.total) {
+      this.formHandler.setControlValidators(this.controls.total,
+        [Validators.required, Validate.maxCurrencyValue(this.paymentOrder.total)]);
+    } else {
+      this.formHandler.clearControlValidators(this.controls.total);
+    }
+  }
+
+
+  private getFormData(): PaymentFields {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
 
@@ -136,15 +142,6 @@ export class TransactionSubmitterComponent implements OnChanges {
     };
 
     return data;
-  }
-
-  private sendEvent(eventType: TransactionSubmitterEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.transactionSubmittertEvent.emit(event);
   }
 
 }

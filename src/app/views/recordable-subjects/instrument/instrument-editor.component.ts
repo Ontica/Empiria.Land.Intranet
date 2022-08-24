@@ -23,7 +23,7 @@ import { Instrument, InstrumentFields, InstrumentTypeEnum, InstrumentTypesList, 
          EmptyInstrument, InstrumentRecordingActions, EmptyInstrumentRecordingActions,
          InstrumentType} from '@app/models';
 
-import { FormHandler } from '@app/shared/utils';
+import { FormHandler, sendEvent } from '@app/shared/utils';
 
 export enum InstrumentEditorEventType {
   CREATE_INSTRUMENT = 'InstrumentEditorEventType.Event.CreateInstrument',
@@ -117,7 +117,7 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
     this.setFormModel();
     this.setFormValidatorsByType();
     this.formHandler.disableForm(!this.editionMode);
-    this.sendEvent(InstrumentEditorEventType.EDITION_MODE_CHANGED, this.editionMode);
+    sendEvent(this.instrumentEditorEvent, InstrumentEditorEventType.EDITION_MODE_CHANGED, this.editionMode);
   }
 
 
@@ -134,11 +134,11 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
 
   closeRegistration() {
-    this.sendEvent(InstrumentEditorEventType.CLOSE_REGISTRATION);
+    sendEvent(this.instrumentEditorEvent, InstrumentEditorEventType.CLOSE_REGISTRATION);
   }
 
   openRegistration() {
-    this.sendEvent(InstrumentEditorEventType.OPEN_REGISTRATION);
+    sendEvent(this.instrumentEditorEvent, InstrumentEditorEventType.OPEN_REGISTRATION);
   }
 
 
@@ -148,14 +148,14 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
       return;
     }
 
-    this.sendEvent(this.addMode ? InstrumentEditorEventType.CREATE_INSTRUMENT :
-                   InstrumentEditorEventType.UPDATE_INSTRUMENT,
-                   { instrumentFields: this.getFormData() });
+    sendEvent(this.instrumentEditorEvent, this.addMode ?
+      InstrumentEditorEventType.CREATE_INSTRUMENT : InstrumentEditorEventType.UPDATE_INSTRUMENT,
+      {instrumentFields: this.getFormData()});
   }
 
 
   submitPrintRegistrationStampMedia() {
-    this.sendEvent(InstrumentEditorEventType.PRINT_REGISTRATION_STAMP_MEDIA);
+    sendEvent(this.instrumentEditorEvent, InstrumentEditorEventType.PRINT_REGISTRATION_STAMP_MEDIA);
   }
 
 
@@ -308,16 +308,6 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
     };
 
     return issuerFilter;
-  }
-
-
-  private sendEvent(eventType: InstrumentEditorEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.instrumentEditorEvent.emit(event);
   }
 
 }

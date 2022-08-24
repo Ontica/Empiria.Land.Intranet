@@ -13,10 +13,11 @@ import { EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { EmptyParty, Party, RecordingActPartyFields, RecordingActPartyType } from '@app/models';
 
+import { sendEvent } from '@app/shared/utils';
+
 export enum PartyEditorEventType {
   ADD_PARTY = 'PartyEditorComponent.Event.AddParty',
 }
-
 
 @Component({
   selector: 'emp-land-party-editor',
@@ -117,7 +118,7 @@ export class PartyEditorComponent implements OnChanges {
       return;
     }
 
-    this.sendEvent(PartyEditorEventType.ADD_PARTY, { party: this.getFormData() });
+    sendEvent(this.partyEditorEvent, PartyEditorEventType.ADD_PARTY, { party: this.getFormData() });
   }
 
 
@@ -245,16 +246,6 @@ export class PartyEditorComponent implements OnChanges {
       const control = this.form.get(field);
       control.markAsTouched({ onlySelf: true });
     });
-  }
-
-
-  private sendEvent(eventType: PartyEditorEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.partyEditorEvent.emit(event);
   }
 
 }

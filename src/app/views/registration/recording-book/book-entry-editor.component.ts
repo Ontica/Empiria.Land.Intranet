@@ -15,7 +15,7 @@ import { BookEntry, ManualBookEntryFields, EmptyBookEntry, EmptyInstrument,
          EmptyInstrumentRecordingActions, Instrument, InstrumentFields,
          InstrumentRecordingActions } from '@app/models';
 
-import { FormHandler } from '@app/shared/utils';
+import { FormHandler, sendEvent } from '@app/shared/utils';
 
 import {
   InstrumentEditorEventType
@@ -81,7 +81,7 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
           return;
         }
 
-        this.sendEvent(BookEntryEditorEventType.CREATE_BOOK_ENTRY,
+        sendEvent(this.bookEntryEditorEvent, BookEntryEditorEventType.CREATE_BOOK_ENTRY,
           this.getFormData(event.payload.instrumentFields as InstrumentFields));
 
         return;
@@ -92,7 +92,7 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
           return;
         }
 
-        this.sendEvent(BookEntryEditorEventType.UPDATE_BOOK_ENTRY,
+        sendEvent(this.bookEntryEditorEvent, BookEntryEditorEventType.UPDATE_BOOK_ENTRY,
           this.getFormData(event.payload.instrumentFields as InstrumentFields));
 
         return;
@@ -148,16 +148,6 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
     };
 
     return bookEntryFields;
-  }
-
-
-  private sendEvent(eventType: BookEntryEditorEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.bookEntryEditorEvent.emit(event);
   }
 
 }

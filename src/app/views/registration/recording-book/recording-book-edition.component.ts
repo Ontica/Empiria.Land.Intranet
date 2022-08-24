@@ -16,17 +16,20 @@ import { RecordingDataService } from '@app/data-services';
 
 import { FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
+import { sendEvent } from '@app/shared/utils';
+
 import { BookEntryEditorEventType } from './book-entry-editor.component';
 
 import { BookEntryListEventType } from './book-entry-list.component';
 
-import { RecordingBookSelectorEventType } from '@app/views/land-controls/recording-book-selector/recording-book-selector.component';
-
+import {
+  RecordingBookSelectorEventType
+} from '@app/views/land-controls/recording-book-selector/recording-book-selector.component';
 
 export enum RecordingBookEditionEventType {
   RECORDING_BOOK_SELECTED = 'RecordingBookEditionComponent.Event.RecordingBookSelected',
-  BOOK_ENTRY_SELECTED = 'RecordingBookEditionComponent.Event.BookEntrySelected',
-  FILES_SELECTED = 'RecordingBookEditionComponent.Event.FilesSelected',
+  BOOK_ENTRY_SELECTED     = 'RecordingBookEditionComponent.Event.BookEntrySelected',
+  FILES_SELECTED          = 'RecordingBookEditionComponent.Event.FilesSelected',
 }
 
 @Component({
@@ -35,7 +38,7 @@ export enum RecordingBookEditionEventType {
 })
 export class RecordingBookEditionComponent implements OnInit {
 
-  @Output() RecordingBookEditionEvent = new EventEmitter<EventInfo>();
+  @Output() recordingBookEditionEvent = new EventEmitter<EventInfo>();
 
   cardHint = 'Seleccione el volumen';
 
@@ -91,8 +94,8 @@ export class RecordingBookEditionComponent implements OnInit {
         Assertion.assertValue(event.payload.bookEntry.instrumentRecording,
           'event.payload.bookEntry.instrumentRecording');
 
-        this.sendEvent(RecordingBookEditionEventType.BOOK_ENTRY_SELECTED,
-          { bookEntry: event.payload.bookEntry });
+        sendEvent(this.recordingBookEditionEvent, RecordingBookEditionEventType.BOOK_ENTRY_SELECTED,
+          {bookEntry: event.payload.bookEntry});
 
         return;
 
@@ -114,7 +117,8 @@ export class RecordingBookEditionComponent implements OnInit {
           hint: `<strong>Visor de Archivos</strong>`,
         };
 
-        this.sendEvent(RecordingBookEditionEventType.FILES_SELECTED, { fileViewerData });
+        sendEvent(this.recordingBookEditionEvent, RecordingBookEditionEventType.FILES_SELECTED,
+          {fileViewerData});
 
         return;
 
@@ -206,8 +210,8 @@ export class RecordingBookEditionComponent implements OnInit {
       .then(x => {
         this.selectedRecordingBook = x;
 
-        this.sendEvent(RecordingBookEditionEventType.BOOK_ENTRY_SELECTED,
-          { bookEntry: EmptyBookEntry });
+        sendEvent(this.recordingBookEditionEvent, RecordingBookEditionEventType.BOOK_ENTRY_SELECTED,
+          {bookEntry: EmptyBookEntry});
       })
       .finally(() => this.setSubmitted(false));
   }
@@ -221,16 +225,6 @@ export class RecordingBookEditionComponent implements OnInit {
   private setSubmitted(submitted: boolean) {
     this.isLoading = submitted;
     this.submitted = submitted;
-  }
-
-
-  private sendEvent(eventType: RecordingBookEditionEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.RecordingBookEditionEvent.emit(event);
   }
 
 }

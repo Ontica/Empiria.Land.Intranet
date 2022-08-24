@@ -15,18 +15,17 @@ import { BookEntry, EmptyBookEntry, EmptyRecordingBook, RecordingBook } from '@a
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
+import { sendEvent } from '@app/shared/utils';
+
 export enum BookEntryListEventType {
   BOOK_ENTRY_CLICKED = 'BookEntryListComponent.Event.BookEntryClicked',
   DELETE_BOOK_ENTRY_CLICKED = 'BookEntryListComponent.Event.DeleteBookEntryClicked',
   SHOW_FILES_CLICKED = 'BookEntryListComponent.Event.ShowFilesClicked',
 }
 
-
 @Component({
   selector: 'emp-land-book-entry-list',
   templateUrl: './book-entry-list.component.html',
-  styles: [
-  ]
 })
 export class BookEntryListComponent implements OnChanges {
 
@@ -42,8 +41,7 @@ export class BookEntryListComponent implements OnChanges {
                       'actionShowFiles', 'actionEdit', 'actionDelete'];
 
 
-  constructor(private messageBox: MessageBoxService) {
-  }
+  constructor(private messageBox: MessageBoxService) {}
 
 
   ngOnChanges(changes: SimpleChanges) {
@@ -56,8 +54,7 @@ export class BookEntryListComponent implements OnChanges {
   onBookEntryClicked(bookEntry: BookEntry){
     if (bookEntry) {
       this.bookEntrySelected = bookEntry;
-      this.sendEvent(BookEntryListEventType.BOOK_ENTRY_CLICKED,
-                    { bookEntry });
+      sendEvent(this.bookEntryListEvent, BookEntryListEventType.BOOK_ENTRY_CLICKED, {bookEntry});
     }
   }
 
@@ -69,15 +66,14 @@ export class BookEntryListComponent implements OnChanges {
       .toPromise()
       .then(x => {
         if (x) {
-          this.sendEvent(BookEntryListEventType.DELETE_BOOK_ENTRY_CLICKED,
-                        { bookEntry });
+          sendEvent(this.bookEntryListEvent, BookEntryListEventType.DELETE_BOOK_ENTRY_CLICKED, {bookEntry});
         }
       });
   }
 
 
   showFilesBookEntry(bookEntry: BookEntry) {
-    this.sendEvent(BookEntryListEventType.SHOW_FILES_CLICKED, { bookEntry });
+    sendEvent(this.bookEntryListEvent, BookEntryListEventType.SHOW_FILES_CLICKED, {bookEntry});
   }
 
 
@@ -95,17 +91,6 @@ export class BookEntryListComponent implements OnChanges {
       </table>
 
      <br>¿Elimino el registro?`;
-  }
-
-
-
-  private sendEvent(eventType: BookEntryListEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.bookEntryListEvent.emit(event);
   }
 
 }

@@ -5,18 +5,18 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+
+import { SelectionModel } from '@angular/cdk/collections';
 
 import { EventInfo } from '@app/core';
 
-import {
-  TransactionShortModel, EmptyTransaction, Transaction,
-  TransactionFilter, EmptyTransactionFilter
-} from '@app/models';
+import { TransactionShortModel, EmptyTransaction, Transaction, TransactionFilter,
+         EmptyTransactionFilter } from '@app/models';
 
 import { expandCollapse } from '@app/shared/animations/animations';
 
+import { sendEvent } from '@app/shared/utils';
 
 export enum TransactionListEventType {
   CREATE_TRANSACTION_CLICKED = 'TransactionListComponent.Event.CreateTransactionClicked',
@@ -26,7 +26,6 @@ export enum TransactionListEventType {
   TRANSACTIONS_SELECTED_OPTIONS_CLICKED = 'TransactionListComponent.Event.TransactionsSelectedOptionsClicked',
   RECEIVE_TRANSACTIONS_CLICKED = 'TransactionListComponent.Event.ReceiveTransactionsClicked',
 }
-
 
 @Component({
   selector: 'emp-land-transaction-list',
@@ -53,6 +52,7 @@ export class TransactionListComponent implements OnChanges {
 
   selection = new SelectionModel<TransactionShortModel>(true, []);
 
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes.filter) {
       this.keywords = this.filter.keywords;
@@ -70,44 +70,33 @@ export class TransactionListComponent implements OnChanges {
 
 
   onChangeFilter() {
-    this.sendEvent(TransactionListEventType.FILTER_CHANGED, { keywords: this.keywords });
+    sendEvent(this.transactionListEvent, TransactionListEventType.FILTER_CHANGED, {keywords: this.keywords});
   }
 
 
   onClickCreateTransaction() {
-    this.sendEvent(TransactionListEventType.CREATE_TRANSACTION_CLICKED);
+    sendEvent(this.transactionListEvent, TransactionListEventType.CREATE_TRANSACTION_CLICKED);
   }
 
 
   onClickTransactionOptions(transaction: TransactionShortModel) {
-    this.sendEvent(TransactionListEventType.TRANSACTION_OPTIONS_CLICKED, { transaction });
+    sendEvent(this.transactionListEvent, TransactionListEventType.TRANSACTION_OPTIONS_CLICKED, {transaction});
   }
 
 
   onSelectTransaction(transaction: TransactionShortModel) {
-    this.sendEvent(TransactionListEventType.TRANSACTION_SELECTED, { transaction });
+    sendEvent(this.transactionListEvent, TransactionListEventType.TRANSACTION_SELECTED, {transaction});
   }
 
 
   onClickTransactionsSelectedOptions() {
-    this.sendEvent(TransactionListEventType.TRANSACTIONS_SELECTED_OPTIONS_CLICKED,
+    sendEvent(this.transactionListEvent, TransactionListEventType.TRANSACTIONS_SELECTED_OPTIONS_CLICKED,
       { transactions: this.selection.selected });
   }
 
+
   onClickReceiveTransactionsOptions() {
-    this.sendEvent(TransactionListEventType.RECEIVE_TRANSACTIONS_CLICKED);
-  }
-
-  // private methods
-
-
-  private sendEvent(eventType: TransactionListEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.transactionListEvent.emit(event);
+    sendEvent(this.transactionListEvent, TransactionListEventType.RECEIVE_TRANSACTIONS_CLICKED);
   }
 
 }

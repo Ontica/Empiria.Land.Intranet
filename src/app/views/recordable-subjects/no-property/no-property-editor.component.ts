@@ -22,7 +22,7 @@ import { RecordableObjectStatusItem, RecordableObjectStatusList,
 
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
-import { FormHandler } from '@app/shared/utils';
+import { FormHandler, sendEvent } from '@app/shared/utils';
 
 export enum NoPropertyEditorComponentEventType {
   UPDATE_NO_PROPERTY = 'NoPropertyEditorComponent.Event.UpdateNoProperty',
@@ -124,7 +124,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
       recordableSubjectFields: this.getFormData()
     };
 
-    this.sendEvent(NoPropertyEditorComponentEventType.UPDATE_NO_PROPERTY, payload);
+    sendEvent(this.noPropertyEditorEvent, NoPropertyEditorComponentEventType.UPDATE_NO_PROPERTY, payload);
   }
 
 
@@ -221,15 +221,6 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
     };
 
     return data;
-  }
-
-  private sendEvent(eventType: NoPropertyEditorComponentEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
-
-    this.noPropertyEditorEvent.emit(event);
   }
 
 }
