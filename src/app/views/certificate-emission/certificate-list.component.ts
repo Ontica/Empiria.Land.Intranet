@@ -43,9 +43,7 @@ export class CertificateListComponent implements OnChanges {
   dataSource: MatTableDataSource<Certificate>;
 
 
-  constructor(private messageBox: MessageBoxService) {
-
-  }
+  constructor(private messageBox: MessageBoxService) { }
 
 
   ngOnChanges(changes: SimpleChanges) {
@@ -93,7 +91,7 @@ export class CertificateListComponent implements OnChanges {
   private resetColumns() {
     this.displayedColumns = [...[], ...this.displayedColumnsDefault];
 
-    if (true) {
+    if (this.certificatesList.filter(x => x.actions.canDelete).length > 0) {
       this.displayedColumns.push('action');
     }
   }

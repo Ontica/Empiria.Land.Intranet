@@ -48,12 +48,12 @@
 
         </ng-container>
 
-        <button class="btn-action"
+        <button class="btn-action" *ngIf="certificate.actions.canClose"
           (click)="onCloseCertificateClicked()">
           Cerrar certificado
         </button>
 
-        <button class="btn-action" *ngIf="false"
+        <button class="btn-action" *ngIf="certificate.actions.canOpen"
           (click)="onOpenCertificateClicked()">
           Abrir certificado
         </button>

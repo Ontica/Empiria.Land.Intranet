@@ -137,7 +137,7 @@ export class LandCertificationComponent implements OnChanges {
       case CertificateEditionEventType.CERTIFICATE_UPDATED:
         Assertion.assertValue(event.payload.certificate, 'event.payload.certificate');
 
-        this.setCertificateSelected(event.payload.certificate as Certificate);
+        this.setCertificateSelected(EmptyCertificate);
         this.refreshData();
 
         return;

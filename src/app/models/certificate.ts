@@ -39,6 +39,21 @@ export const EmptyCertificateRules: CertificateRules = {
 };
 
 
+export interface CertificateActions {
+  canClose: boolean;
+  canDelete: boolean;
+  canOpen: boolean;
+}
+
+
+export const EmptyCertificateActions: CertificateActions = {
+  canClose: false,
+  canDelete: false,
+  canOpen: false,
+}
+
+
+
 export interface Certificate {
   uid: string;
   type: string;
@@ -48,6 +63,7 @@ export interface Certificate {
   mediaLink: MediaBase;
   status: string;
   issueTime?: DateString;
+  actions: CertificateActions;
 }
 
 
@@ -60,6 +76,7 @@ export const EmptyCertificate: Certificate = {
   mediaLink: EmptyMediaBase,
   status: '',
   issueTime: null,
+  actions: EmptyCertificateActions,
 }
 
 
