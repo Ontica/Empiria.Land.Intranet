@@ -1,4 +1,4 @@
-<form [formGroup]="form" autocomplete="off" class="form-section" [empNgSpinnerHost]="spinner">
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section" [empNgSpinnerHost]="spinner">
 
   <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
@@ -7,70 +7,80 @@
     <div class="section-title">Datos del interesado</div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
+
       <div fxFlex>
         <label>Interesado:</label>
-        <input formControlName="name"
+        <input [formControlName]="controls.name"
           type="text"
           class="text-box uppercase"
-          [class.invalid-control]="getFormControl('name').touched && getFormControl('name').errors">
+          [class.invalid-control]="formHandler.showInvalidControl(controls.name)">
       </div>
+
       <div [fxFlex]="100/3">
         <label>Correo electrónico:</label>
-        <input formControlName="email"
+        <input [formControlName]="controls.email"
           type="text"
           class="text-box lowercase"
-          [class.invalid-control]="getFormControl('email').touched && getFormControl('email').errors">
+          [class.invalid-control]="formHandler.showInvalidControl(controls.email)">
       </div>
+
     </div>
 
     <div class="section-title">Información del trámite solicitado</div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
+
       <div [fxFlex]="100/3">
         <label>Tipo de trámite:</label>
-        <emp-ng-select formControlName="type"
+        <emp-ng-select [formControlName]="controls.type"
           [items]="transactionTypeList"
-          [showError]="getFormControl('type').touched && getFormControl('type').invalid"
+          [showError]="formHandler.showInvalidControl(controls.type)"
           (changes)="transactionTypeChange($event)">
         </emp-ng-select>
       </div>
+
       <div [fxFlex]="100/3">
         <label>Tipo de documento:</label>
-        <emp-ng-select formControlName="subtype"
-          [placeholder]="getFormControl('type').value === null ? 'Seleccione el tipo de trámite' : 'Seleccione'"
-          [showError]="getFormControl('subtype').touched && getFormControl('subtype').invalid"
+        <emp-ng-select [formControlName]="controls.subtype"
+          [placeholder]="formHandler.getControl(controls.type).invalid ? 'Seleccione el tipo de trámite' : 'Seleccione'"
+          [showError]="formHandler.showInvalidControl(controls.subtype)"
           [items]="transactionSubtypeList">
         </emp-ng-select>
       </div>
+
       <div [fxFlex]="100/3">
         <label>No. Instrumento:</label>
-        <input formControlName="instrumentNo"
+        <input [formControlName]="controls.instrumentNo"
           type="text"
           class="text-box uppercase">
       </div>
+
     </div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
+
       <div fxFlex>
         <label>Tramitado por:</label>
-        <emp-ng-select formControlName="agency"
+        <emp-ng-select [formControlName]="controls.agency"
           [config]="{clearable: true}"
-          [showError]="getFormControl('agency').touched && getFormControl('agency').invalid"
+          [showError]="formHandler.showInvalidControl(controls.agency)"
           [items]="agencyList">
         </emp-ng-select>
       </div>
+
       <div [fxFlex]="100/3">
         <label>Distrito:</label>
-        <emp-ng-select formControlName="filingOffice"
+        <emp-ng-select [formControlName]="controls.filingOffice"
           [items]="filingOfficeList"
-          [showError]="getFormControl('filingOffice').touched && getFormControl('filingOffice').invalid">
+          [showError]="formHandler.showInvalidControl(controls.filingOffice)">
         </emp-ng-select>
       </div>
+
     </div>
 
     <mat-divider class="divider-padding"></mat-divider>
 
-    <div fxLayout="row" *ngIf="editionMode && readonly">
+    <div fxLayout="row" *ngIf="readonly && editionMode">
 
       <div fxFlex="25" fxLayoutAlign="start">
         <button (click)="submitClone()" type="button" class="btn-action">
@@ -79,24 +89,54 @@
       </div>
 
       <div fxFlex="75" fxLayoutAlign="end">
-        <button *ngIf="showEnableEditor" (click)="toggleReadonly()" type="button" class="btn-action">
-          Editar
-        </button>
-        <button *ngIf="canPrintControlVoucher" (click)="submitPrintControlVoucher()" type="submit" class="btn-action">
+
+        <button *ngIf="transaction.actions.can.printControlVoucher"
+          type="submit" class="btn-action"
+          (click)="submitPrintControlVoucher()">
           Boleta de control
         </button>
-        <button *ngIf="canGeneratePaymentOrder" (click)="submitGeneratePaymentOrder()" type="submit" class="btn-action">
+
+        <button *ngIf="transaction.actions.can.generatePaymentOrder"
+          type="submit" class="btn-action"
+          (click)="submitGeneratePaymentOrder()">
           Generar orden de pago
         </button>
-        <button *ngIf="canPrintPaymentOrder" (click)="submitPrintPaymentOrder()" type="submit" class="btn-action">
+
+        <button *ngIf="transaction.actions.can.editPayment && transaction.paymentOrder?.media.url"
+           type="submit" class="btn-action"
+           (click)="submitPrintPaymentOrder()">
           Orden de pago
         </button>
-        <button *ngIf="canCancelPaymentOrder" (click)="submitCancelPaymentOrder()" type="submit" class="btn-warning">
+
+        <button *ngIf="transaction.actions.can.cancelPaymentOrder"
+          type="submit" class="btn-warning"
+          (click)="submitCancelPaymentOrder()">
           Cancelar orden de pago
         </button>
-        <button *ngIf="canPrintSubmissionReceipt" (click)="submitPrintSubmissionReceipt()" type="submit" class="btn-action">
+
+        <button *ngIf="transaction.actions.can.printSubmissionReceipt"
+           type="submit" class="btn-action"
+           (click)="submitPrintSubmissionReceipt()">
           Boleta de recepción
         </button>
+
+        <ng-container *ngIf="transaction.actions.can.edit || transaction.actions.can.delete">
+
+          <mat-divider vertical="true" class="vertical" [style.margin]="'0 8px 0 0'"
+            *ngIf="transaction.actions.can.printControlVoucher || transaction.actions.can.generatePaymentOrder ||
+                   (transaction.actions.can.editPayment && transaction.paymentOrder?.media.url) ||
+                   transaction.actions.can.cancelPaymentOrder || transaction.actions.can.printSubmissionReceipt">
+
+          </mat-divider>
+
+          <button
+            type="button" class="btn-action"
+            (click)="toggleReadonly()">
+            Editar
+          </button>
+
+        </ng-container>
+
       </div>
 
     </div>
@@ -104,25 +144,34 @@
     <div fxLayout="row" *ngIf="!readonly">
 
       <div fxFlex="25" fxLayoutAlign="start">
-        <button *ngIf="canDelete" (click)="submitDelete()" type="button" class="btn-warning">
+
+        <button *ngIf="editionMode && transaction.actions.can.delete"
+           type="button" class="btn-warning"
+           (click)="submitDelete()">
           Eliminar
         </button>
+
       </div>
 
       <div fxFlex="75" fxLayoutAlign="end">
-        <button *ngIf="canSave" type="submit"
+
+        <button *ngIf="!editionMode || (editionMode && transaction.actions.can.edit)" type="submit"
           (click)="submit()"
-          [class.btn]="form?.invalid"
-          [class.btn-action]="form?.valid">
+          [class.btn]="!formHandler.isValid"
+          [class.btn-action]="formHandler.isValid">
           {{editionMode ? 'Guardar la solicitud' : 'Crear la solicitud'}}
         </button>
 
-        <button *ngIf="editionMode" (click)="discardChanges()" type="button" class="btn">
+        <button *ngIf="editionMode"
+          type="button" class="btn"
+          (click)="discardChanges()">
           Descartar Cambios
         </button>
+
       </div>
 
     </div>
 
   </div>
+
 </form>

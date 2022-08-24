@@ -6,6 +6,7 @@
  */
 
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+
 import { CurrencyPipe } from '@angular/common';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -15,24 +16,29 @@ import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 import { Agency, Transaction, EmptyTransaction, TransactionType, TransactionSubtype } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
-import { ArrayLibrary } from '@app/shared/utils';
 
-
-type transactionFormControls = 'type' | 'subtype' | 'name' | 'email' |
-  'instrumentNo' | 'agency' | 'filingOffice';
-
+import { ArrayLibrary, FormHandler, sendEvent } from '@app/shared/utils';
 
 export enum TransactionHeaderEventType {
-  SAVE_TRANSACTION_CLICKED = 'TransactionHeaderComponent.Event.SaveTransactionClicked',
-  CLONE_TRANSACTION_CLICKED = 'TransactionHeaderComponent.Event.CloneTransactionClicked',
+  SAVE_TRANSACTION_CLICKED   = 'TransactionHeaderComponent.Event.SaveTransactionClicked',
+  CLONE_TRANSACTION_CLICKED  = 'TransactionHeaderComponent.Event.CloneTransactionClicked',
   DELETE_TRANSACTION_CLICKED = 'TransactionHeaderComponent.Event.DeleteTransactionClicked',
-  GENERATE_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.GeneratePaymentOrderClicked',
-  CANCEL_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.CancelPaymentOrderClicked',
-  PRINT_CONTROL_VOUCHER = 'TransactionHeaderComponent.Event.PrintControlVoucherClicked',
-  PRINT_PAYMENT_ORDER = 'TransactionHeaderComponent.Event.PrintPaymentOrderClicked',
-  PRINT_SUBMISSION_RECEIPT = 'TransactionHeaderComponent.Event.PrintSubmissionReceiptClicked',
+  GENERATE_PAYMENT_ORDER     = 'TransactionHeaderComponent.Event.GeneratePaymentOrderClicked',
+  CANCEL_PAYMENT_ORDER       = 'TransactionHeaderComponent.Event.CancelPaymentOrderClicked',
+  PRINT_CONTROL_VOUCHER      = 'TransactionHeaderComponent.Event.PrintControlVoucherClicked',
+  PRINT_PAYMENT_ORDER        = 'TransactionHeaderComponent.Event.PrintPaymentOrderClicked',
+  PRINT_SUBMISSION_RECEIPT   = 'TransactionHeaderComponent.Event.PrintSubmissionReceiptClicked',
 }
 
+enum TransactionHeaderFormControls {
+  type = 'type',
+  subtype = 'subtype',
+  name = 'name',
+  email = 'email',
+  instrumentNo = 'instrumentNo',
+  agency = 'agency',
+  filingOffice = 'filingOffice',
+}
 
 @Component({
   selector: 'emp-land-transaction-header',
@@ -52,90 +58,27 @@ export class TransactionHeaderComponent implements OnChanges {
 
   transactionSubtypeList: TransactionSubtype[] = [];
 
+  formHandler: FormHandler;
+
+  controls = TransactionHeaderFormControls;
+
   editionMode = false;
+
   readonly = false;
+
   isLoading = false;
 
-  form: FormGroup = new FormGroup({
-    type: new FormControl('', Validators.required),
-    subtype: new FormControl('', Validators.required),
-    name: new FormControl('', Validators.required),
-    email: new FormControl('', Validators.email),
-    instrumentNo: new FormControl(''),
-    agency: new FormControl('', Validators.required),
-    filingOffice: new FormControl('', Validators.required)
-  });
-
   constructor(private messageBox: MessageBoxService,
-              private currencyPipe: CurrencyPipe) { }
-
-
-  get showEnableEditor() {
-    return this.canEdit || this.canDelete;
-  }
-
-  get canSave() {
-    return !this.editionMode || (this.editionMode && this.transaction.actions.can.edit);
-  }
-
-  get canEdit() {
-    return this.transaction.actions.can.edit;
-  }
-
-  get canGeneratePaymentOrder() {
-    return this.transaction.actions.can.generatePaymentOrder;
-  }
-
-  get canPrintPaymentOrder() {
-    return this.transaction.paymentOrder?.media.url && this.transaction.actions.can.editPayment;
-  }
-
-  get canCancelPaymentOrder() {
-    return this.transaction.actions.can.cancelPaymentOrder;
-  }
-
-  get canDelete() {
-    return this.editionMode && this.transaction.actions.can.delete;
-  }
-
-  get canSubmit() {
-    return this.transaction.actions.can.submit;
-  }
-
-  get canPrintSubmissionReceipt() {
-    return this.transaction.actions.can.printSubmissionReceipt;
-  }
-
-  get canPrintControlVoucher() {
-    return this.transaction.actions.can.printControlVoucher;
+              private currencyPipe: CurrencyPipe) {
+    this.initForm();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.transaction) {
-      this.editionMode = !isEmpty(this.transaction);
-      if (this.editionMode) {
-        this.setFormModel();
-      } else {
-        this.resetForm();
-      }
-      this.disableForm();
+      this.enableEditor();
     }
+
     this.loadInitialSubtypeList();
-  }
-
-
-  loadInitialSubtypeList() {
-    this.transactionSubtypeList = [];
-    if (!isEmpty(this.transaction.type)) {
-
-      const subtypeList =
-        this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid).length > 0 ?
-          this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid)[0].subtypes : [];
-
-      this.transactionSubtypeList = ArrayLibrary.insertIfNotExist(subtypeList,
-        this.transaction.subtype,
-        'uid');
-    }
   }
 
 
@@ -145,32 +88,27 @@ export class TransactionHeaderComponent implements OnChanges {
     const subtypeUID = !isEmpty(this.transaction.subtype) && change.uid === this.transaction.type.uid ?
       this.transaction.subtype.uid : null;
 
-    this.getFormControl('subtype').reset(subtypeUID);
-  }
-
-
-  getFormControl(name: transactionFormControls) {
-    return this.form.get(name);
+    this.formHandler.getControl(this.controls.subtype).reset(subtypeUID);
   }
 
   toggleReadonly() {
     this.readonly = !this.readonly;
-    this.disableForm();
+    this.formHandler.disableForm(this.readonly);
   }
 
   discardChanges() {
     this.setFormModel();
     this.loadInitialSubtypeList();
-    this.disableForm();
+    this.formHandler.disableForm(this.readonly);
   }
 
   submit() {
-    if (!this.form.valid) {
-      this.invalidateForm(this.form);
+    if (!this.formHandler.validateReadyForSubmit()) {
       return;
     }
 
-    this.sendEvent(TransactionHeaderEventType.SAVE_TRANSACTION_CLICKED, this.getFormData());
+    sendEvent(this.transactionHeadertEvent,
+      TransactionHeaderEventType.SAVE_TRANSACTION_CLICKED, this.getFormData());
   }
 
 
@@ -183,10 +121,11 @@ export class TransactionHeaderComponent implements OnChanges {
       .toPromise()
       .then(x => {
         if (x) {
-          this.sendEvent(TransactionHeaderEventType.CLONE_TRANSACTION_CLICKED);
+          sendEvent(this.transactionHeadertEvent, TransactionHeaderEventType.CLONE_TRANSACTION_CLICKED);
         }
       });
   }
+
 
   submitDelete() {
     const message = `Esta operación eliminará el trámite
@@ -196,22 +135,26 @@ export class TransactionHeaderComponent implements OnChanges {
       .toPromise()
       .then(x => {
         if (x) {
-          this.sendEvent(TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED);
+          sendEvent(this.transactionHeadertEvent, TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED);
         }
       });
   }
 
+
   submitGeneratePaymentOrder() {
-    this.sendEvent(TransactionHeaderEventType.GENERATE_PAYMENT_ORDER);
+    sendEvent(this.transactionHeadertEvent, TransactionHeaderEventType.GENERATE_PAYMENT_ORDER);
   }
+
 
   submitPrintControlVoucher() {
-    this.sendEvent(TransactionHeaderEventType.PRINT_CONTROL_VOUCHER);
+    sendEvent(this.transactionHeadertEvent, TransactionHeaderEventType.PRINT_CONTROL_VOUCHER);
   }
 
+
   submitPrintPaymentOrder() {
-    this.sendEvent(TransactionHeaderEventType.PRINT_PAYMENT_ORDER);
+    sendEvent(this.transactionHeadertEvent, TransactionHeaderEventType.PRINT_PAYMENT_ORDER);
   }
+
 
   submitCancelPaymentOrder() {
     const message = `Esta operación cancelará la orden de pago con importe de
@@ -222,28 +165,39 @@ export class TransactionHeaderComponent implements OnChanges {
       .toPromise()
       .then(x => {
         if (x) {
-          this.sendEvent(TransactionHeaderEventType.CANCEL_PAYMENT_ORDER);
+          sendEvent(this.transactionHeadertEvent, TransactionHeaderEventType.CANCEL_PAYMENT_ORDER);
         }
       });
   }
 
+
   submitPrintSubmissionReceipt() {
-    this.sendEvent(TransactionHeaderEventType.PRINT_SUBMISSION_RECEIPT);
+    sendEvent(this.transactionHeadertEvent, TransactionHeaderEventType.PRINT_SUBMISSION_RECEIPT);
   }
 
   // private methods
 
-  private sendEvent(eventType: TransactionHeaderEventType, payload?: any) {
-    const event: EventInfo = {
-      type: eventType,
-      payload
-    };
+  private initForm() {
+    if (this.formHandler) {
+      return;
+    }
 
-    this.transactionHeadertEvent.emit(event);
+    this.formHandler = new FormHandler(
+      new FormGroup({
+        type: new FormControl('', Validators.required),
+        subtype: new FormControl('', Validators.required),
+        name: new FormControl('', Validators.required),
+        email: new FormControl('', Validators.email),
+        instrumentNo: new FormControl(''),
+        agency: new FormControl('', Validators.required),
+        filingOffice: new FormControl('', Validators.required)
+      })
+    );
   }
 
+
   private setFormModel() {
-    this.form.reset({
+    this.formHandler.form.reset({
       type: this.transaction.type.uid,
       subtype: isEmpty(this.transaction.subtype) ? null : this.transaction.subtype.uid,
       name: this.transaction.requestedBy.name,
@@ -256,11 +210,12 @@ export class TransactionHeaderComponent implements OnChanges {
     this.readonly = true;
   }
 
+
   private getFormData(): any {
-    Assertion.assert(this.form.valid,
+    Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
 
-    const formModel = this.form.value;
+    const formModel = this.formHandler.form.value;
 
     const data = {
       typeUID: formModel.type,
@@ -275,24 +230,34 @@ export class TransactionHeaderComponent implements OnChanges {
     return data;
   }
 
-  private resetForm() {
-    this.readonly = false;
-    this.form.reset();
+
+  private enableEditor() {
+    this.editionMode = !isEmpty(this.transaction);
+    if (this.editionMode) {
+      this.setFormModel();
+    } else {
+      this.resetForm();
+    }
+    this.formHandler.disableForm(this.readonly);
   }
 
-  private disableForm() {
-    if (this.readonly) {
-      this.form.disable();
-    } else {
-      this.form.enable();
+
+  private loadInitialSubtypeList() {
+    this.transactionSubtypeList = [];
+    if (!isEmpty(this.transaction.type)) {
+      const subtypeList =
+        this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid).length > 0 ?
+          this.transactionTypeList.filter(y => y.uid === this.transaction.type.uid)[0].subtypes : [];
+
+      this.transactionSubtypeList = ArrayLibrary.insertIfNotExist(subtypeList,
+        this.transaction.subtype, 'uid');
     }
   }
 
-  private invalidateForm(form: FormGroup) {
-    Object.keys(form.controls).forEach(field => {
-      const control = form.get(field);
-      control.markAsTouched({ onlySelf: true });
-    });
+
+  private resetForm() {
+    this.readonly = false;
+    this.formHandler.form.reset();
   }
 
 }

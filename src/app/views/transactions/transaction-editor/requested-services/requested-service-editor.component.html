@@ -1,35 +1,33 @@
-<form [formGroup]="form" autocomplete="off" class="form-section">
+<form [formGroup]="formHandler.form" autocomplete="off" class="form-section">
 
   <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
 
     <div fxLayout="row" fxLayout.lt-md="column">
       <div [fxFlex]="100/4">
         <label>Tipo:</label>
-        <emp-ng-select formControlName="serviceType"
+        <emp-ng-select [formControlName]="controls.serviceType"
           [items]="providedServiceTypeList"
-          [showError]="getFormControl('serviceType').touched &&
-            getFormControl('serviceType').invalid"
+          [showError]="formHandler.showInvalidControl(controls.serviceType)"
           (changes)="serviceTypeChange($event)">
         </emp-ng-select>
       </div>
       <div [fxFlex]="100/2">
         <label>Concepto:</label>
-        <emp-ng-select formControlName="service"
+        <emp-ng-select [formControlName]="controls.service"
           [items]="providedServiceList"
-          [placeholder]="getFormControl('serviceType').value === null ? 'Seleccione el tipo de concepto' : 'Seleccione'"
-          [showError]="getFormControl('service').touched &&
-            getFormControl('service').invalid"
+          [placeholder]="formHandler.getControl(controls.serviceType).invalid ? 'Seleccione el tipo de concepto' : 'Seleccione'"
+          [showError]="formHandler.showInvalidControl(controls.service)"
           (changes)="serviceChange($event)">
         </emp-ng-select>
       </div>
       <div [fxFlex]="100/4">
         <label>Fundamento:</label>
-        <emp-ng-select formControlName="feeConcept"
+        <emp-ng-select [formControlName]="controls.feeConcept"
           [bindLabel]="'legalBasis'"
           [config]="{ autoSelect: true }"
           [items]="serviceSelected.feeConcepts"
-          [placeholder]="getFormControl('service').value === null ? 'Seleccione el concepto' : 'Seleccione'"
-          [showError]="getFormControl('feeConcept').touched && getFormControl('feeConcept').invalid"
+          [placeholder]="formHandler.getControl(controls.service).invalid ? 'Seleccione el concepto' : 'Seleccione'"
+          [showError]="formHandler.showInvalidControl(controls.feeConcept)"
           (changes)="feeConceptChange($event)">
         </emp-ng-select>
       </div>
@@ -38,7 +36,7 @@
     <div fxLayout="row" fxLayout.lt-md="column">
       <div [fxFlex]="100/4">
         <label>Unidad:</label>
-        <input formControlName="unit"
+        <input [formControlName]="controls.unit"
           type="text"
           class="text-box"
           placeholder="Seleccione el concepto">
@@ -47,20 +45,18 @@
         <div fxLayout="row">
           <div [fxFlex]="60" *ngIf="feeConceptSelected.requiresTaxableBase">
             <label>Base gravable:</label>
-            <input formControlName="taxableBase" empNgCurrency
+            <input [formControlName]="controls.taxableBase" empNgCurrency
               type="text"
               class="text-box"
-              [class.invalid-control]="getFormControl('taxableBase').touched &&
-                getFormControl('taxableBase').invalid">
+              [class.invalid-control]="formHandler.showInvalidControl(controls.taxableBase)">
           </div>
 
           <div [fxFlex]="40">
             <label>Cantidad:</label>
-            <input formControlName="quantity" empNgInteger
+            <input [formControlName]="controls.quantity" empNgInteger
               type="text"
               class="text-box"
-              [class.invalid-control]="getFormControl('quantity').touched &&
-                getFormControl('quantity').invalid">
+              [class.invalid-control]="formHandler.showInvalidControl(controls.quantity)">
           </div>
         </div>
 
@@ -70,7 +66,7 @@
     <div fxLayout="row" fxLayout.lt-md="column">
       <div fxFlex>
         <label>Observaciones:</label>
-        <textarea formControlName="notes" empNgTextareaAutoresize
+        <textarea [formControlName]="controls.notes" empNgTextareaAutoresize
           rows="1"
           class="text-area uppercase">
         </textarea>
@@ -82,8 +78,8 @@
     <div fxLayout="row">
       <div fxFlex fxLayoutAlign="end">
         <button (click)="submit()" type="submit"
-          [class.btn]="form?.invalid"
-          [class.btn-action]="form?.valid">
+          [class.btn]="!formHandler.isValid"
+          [class.btn-action]="formHandler.isValid">
           Agregar concepto
         </button>
       </div>
