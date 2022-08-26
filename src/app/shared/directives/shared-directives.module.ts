@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { EmpBreakpointDirective } from './notebook-breakpoint.directive';
 import { EmpContextMenuDisabledDirective } from './context-menu-disabled.directive';
 import { EmpCurrencyDirective } from './currency.directive';
+import { EmpFormKeyDownEnterDirective } from './form-keydown-enter.directive';
 import { EmpHasPermissionDirective } from './has-permission.directive';
 import { EmpIntegerDirective } from './integer.directive';
 import { EmpNumerationDirective } from './numeration.directive';
@@ -30,6 +31,7 @@ import { EmpNotebookBreakPointsProvider } from './notebook-breakpoint';
     EmpBreakpointDirective,
     EmpContextMenuDisabledDirective,
     EmpCurrencyDirective,
+    EmpFormKeyDownEnterDirective,
     EmpHasPermissionDirective,
     EmpIntegerDirective,
     EmpNumerationDirective,
@@ -41,6 +43,7 @@ import { EmpNotebookBreakPointsProvider } from './notebook-breakpoint';
     EmpBreakpointDirective,
     EmpContextMenuDisabledDirective,
     EmpCurrencyDirective,
+    EmpFormKeyDownEnterDirective,
     EmpHasPermissionDirective,
     EmpIntegerDirective,
     EmpNumerationDirective,
