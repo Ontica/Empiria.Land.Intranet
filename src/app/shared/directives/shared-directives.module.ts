@@ -7,15 +7,17 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { EmpBreakpointDirective } from './notebook-breakpoint.directive';
+import { EmpContextMenuDisabledDirective } from './context-menu-disabled.directive';
 import { EmpCurrencyDirective } from './currency.directive';
+import { EmpHasPermissionDirective } from './has-permission.directive';
 import { EmpIntegerDirective } from './integer.directive';
 import { EmpNumerationDirective } from './numeration.directive';
+import { EmpResizableDirective } from './resizable.directive';
 import { EmpTextareaAutoresizeDirective } from './text-area-autoresize.directive';
-import { HasPermissionDirective } from './has-permission.directive';
-import { ResizableDirective } from './resizable.directive';
-import { BreakpointDirective } from './notebook-breakpoint.directive';
-import { NotebookBreakPointsProvider } from './notebook-breakpoint';
-import { EmpContextMenuDisabledDirective } from './context-menu-disabled.directive';
+
+import { EmpNotebookBreakPointsProvider } from './notebook-breakpoint';
 
 
 @NgModule({
@@ -25,29 +27,29 @@ import { EmpContextMenuDisabledDirective } from './context-menu-disabled.directi
   ],
 
   declarations: [
-    BreakpointDirective,
+    EmpBreakpointDirective,
     EmpContextMenuDisabledDirective,
     EmpCurrencyDirective,
+    EmpHasPermissionDirective,
     EmpIntegerDirective,
     EmpNumerationDirective,
+    EmpResizableDirective,
     EmpTextareaAutoresizeDirective,
-    HasPermissionDirective,
-    ResizableDirective,
   ],
 
   exports: [
-    BreakpointDirective,
+    EmpBreakpointDirective,
     EmpContextMenuDisabledDirective,
     EmpCurrencyDirective,
+    EmpHasPermissionDirective,
     EmpIntegerDirective,
     EmpNumerationDirective,
+    EmpResizableDirective,
     EmpTextareaAutoresizeDirective,
-    HasPermissionDirective,
-    ResizableDirective,
   ],
 
   providers: [
-    NotebookBreakPointsProvider,
+    EmpNotebookBreakPointsProvider,
   ],
 
 })
