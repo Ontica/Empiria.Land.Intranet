@@ -29,6 +29,8 @@ export interface CertificateRules {
   subjectType: RecordableSubjectType;
   selectSubject: boolean;
   selectBookEntry: boolean;
+  givePersonName: boolean;
+  giveRealEstateDescription: boolean;
 }
 
 
@@ -36,6 +38,8 @@ export const EmptyCertificateRules: CertificateRules = {
   subjectType: null,
   selectSubject: false,
   selectBookEntry: false,
+  givePersonName: false,
+  giveRealEstateDescription: false,
 };
 
 
@@ -92,4 +96,6 @@ export interface CreateCertificateCommandPayload {
   recordingBookUID?: string;
   bookEntryUID?: string;
   bookEntryNo?: string;
+  personName?: string;
+  realEstateDescription?: string;
 }

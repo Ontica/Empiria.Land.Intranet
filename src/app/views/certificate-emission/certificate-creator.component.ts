@@ -32,6 +32,8 @@ enum CertificateCreatorFormControls {
   recordingBookUID = 'recordingBookUID',
   bookEntryNo = 'bookEntryNo',
   bookEntryUID = 'bookEntryUID',
+  personName = 'personName',
+  realEstateDescription = 'realEstateDescription',
 }
 
 export enum CertificateCreatorEventType {
@@ -168,6 +170,8 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
         recordingBookUID: new FormControl(''),
         bookEntryUID: new FormControl(''),
         bookEntryNo: new FormControl(''),
+        personName: new FormControl(''),
+        realEstateDescription: new FormControl(''),
       })
     );
   }
@@ -186,6 +190,8 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
     this.setCertificateRulesSelected(rules);
     this.validateRecordableSubjectField();
     this.validateRecordingBookFields();
+    this.validatePersonNameField();
+    this.validateRealEstateDescriptionField();
   }
 
 
@@ -235,13 +241,35 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
   }
 
 
+  private validatePersonNameField(){
+    this.formHandler.getControl(this.controls.personName).reset();
+
+    if (this.certificateRulesSelected.givePersonName) {
+      this.formHandler.setControlValidators(this.controls.personName, Validators.required);
+    } else {
+      this.formHandler.clearControlValidators(this.controls.personName);
+    }
+  }
+
+
+  private validateRealEstateDescriptionField(){
+    this.formHandler.getControl(this.controls.realEstateDescription).reset();
+
+    if (this.certificateRulesSelected.giveRealEstateDescription) {
+      this.formHandler.setControlValidators(this.controls.realEstateDescription, Validators.required);
+    } else {
+      this.formHandler.clearControlValidators(this.controls.realEstateDescription);
+    }
+  }
+
+
   private getCreateCertificateCommand(): CreateCertificateCommand {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
 
     const formModel = this.formHandler.form.getRawValue();
 
-    const payload: CreateCertificateCommandPayload = this.getCreateCertificateCommandPayload();
+    const payload: CreateCertificateCommandPayload = this.getFormData();
 
     const command: CreateCertificateCommand = {
       type: formModel.registrationCommand,
@@ -252,27 +280,43 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
   }
 
 
-  private getCreateCertificateCommandPayload(): CreateCertificateCommandPayload {
+  private getFormData(): CreateCertificateCommandPayload {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
 
     const formModel = this.formHandler.form.getRawValue();
 
-    let payload: CreateCertificateCommandPayload = {
+    let data: CreateCertificateCommandPayload = {
       certificateTypeUID: formModel.certificateType ?? '',
     };
 
+    this.validateFieldsByCertificateRule(data);
+
+    return data;
+  }
+
+
+  private validateFieldsByCertificateRule(data: CreateCertificateCommandPayload) {
+    const formModel = this.formHandler.form.getRawValue();
+
     if (this.certificateRulesSelected.selectSubject) {
-      payload.recordableSubjectUID =
+      data.recordableSubjectUID =
         !isEmpty(formModel.recordableSubject) ? formModel.recordableSubject.uid : '';
     }
 
     if (this.certificateRulesSelected.selectBookEntry) {
-      payload.recordingBookUID = formModel.recordingBookUID ?? '';
-      payload.bookEntryUID = !this.checkBookEntryInput ? formModel.bookEntryUID ?? '' : '';
-      payload.bookEntryNo = this.checkBookEntryInput ? formModel.bookEntryNo ?? '' : '';
+      data.recordingBookUID = formModel.recordingBookUID ?? '';
+      data.bookEntryUID = !this.checkBookEntryInput ? formModel.bookEntryUID ?? '' : '';
+      data.bookEntryNo = this.checkBookEntryInput ? formModel.bookEntryNo ?? '' : '';
     }
 
-    return payload;
+    if (this.certificateRulesSelected.givePersonName) {
+      data.personName = formModel.personName ?? '';
+    }
+
+    if (this.certificateRulesSelected.giveRealEstateDescription) {
+      data.realEstateDescription = formModel.realEstateDescription ?? '';
+    }
   }
+
 }

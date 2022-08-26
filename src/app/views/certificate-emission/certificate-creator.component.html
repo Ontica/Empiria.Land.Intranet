@@ -1,4 +1,5 @@
-<form [formGroup]="formHandler.form" autocomplete="off" class="form-section">
+<form [formGroup]="formHandler.form" (keydown.enter)="$event.preventDefault()"
+  autocomplete="off" class="form-section">
 
   <div fxLayout="column" fxLayoutGap="0.75rem">
 
@@ -28,7 +29,7 @@
 
     <div fxLayout="row" *ngIf="certificateRulesSelected.selectSubject">
 
-        <div [fxFlex]="100">
+        <div fxFlex="100">
           <label class="ellipsis"> Buscar y seleccionar el folio real: </label>
           <emp-land-recordable-subject-searcher
             [formControlName]="controls.recordableSubject"
@@ -76,6 +77,32 @@
       </div>
 
     </ng-container>
+
+    <div fxLayout="row" *ngIf="certificateRulesSelected.givePersonName">
+
+      <div fxFlex="100">
+        <label> Nombre completo de la persona: </label>
+        <input [formControlName]="controls.personName"
+          type="text" class="text-box"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.personName)">
+      </div>
+
+    </div>
+
+
+    <div fxLayout="row" *ngIf="certificateRulesSelected.giveRealEstateDescription">
+
+      <div fxFlex="100">
+        <label> Descripción y datos del predio: </label>
+        <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
+          [formControlName]="controls.realEstateDescription"
+          [class.invalid-control]="formHandler.showInvalidControl(controls.realEstateDescription)"
+          (keydown.enter)="$event.stopPropagation()">
+
+        </textarea>
+      </div>
+
+    </div>
 
     <mat-divider class="divider-padding"></mat-divider>
 
