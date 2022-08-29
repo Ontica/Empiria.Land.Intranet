@@ -1,4 +1,5 @@
-<form [formGroup]="formHandler.form" autocomplete="off" class="form-section" [empNgSpinnerHost]="spinner">
+<form [formGroup]="formHandler.form" [empNgSpinnerHost]="spinner" empNgFormKeyDownEnter
+  autocomplete="off" class="form-section">
 
   <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
