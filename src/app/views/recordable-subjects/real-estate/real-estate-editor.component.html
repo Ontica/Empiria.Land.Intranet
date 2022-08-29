@@ -7,7 +7,7 @@
 
     <div fxLayout="row" fxLayout.lt-md="column">
 
-      <div fxFlex="290px">
+      <div fxFlex="290px" fxFlex.lt-md="none">
         <label>Folio real:</label>
 
         <div fxLayout="row">
@@ -24,29 +24,27 @@
           [class.invalid-control]="formHandler.showInvalidControl(controls.cadastralID)">
       </div>
 
-      <div [fxFlex]="readonly ? '175px' : '92px'">
+      <div [fxFlex]="readonly ? '175px' : '92px'" fxFlex.lt-md="none">
         <label>Vinculado el:</label>
         <input type="text" class="text-box" [formControlName]="controls.cadastreLinkingDate">
       </div>
 
-      <div fxFlex="119px" *ngIf="!readonly">
-        <ng-container >
-          <label>
-            <a class="link" (click)="onCadastralCertificateClicked()">Cédula catastral</a>
-          </label>
-          <button type="button" class="btn" disabled
-            [style.marginTop.px]="2" [style.width.px]="111"
-            (click)="onCadastralClicked()">
-            {{realEstate.cadastralID ? 'Desvincular' : 'Vincular'}}
-          </button>
-        </ng-container>
+      <div fxFlex="119px" fxFlex.lt-md="none" *ngIf="!readonly">
+        <label>
+          <a class="link" (click)="onCadastralCertificateClicked()">Cédula catastral</a>
+        </label>
+        <button type="button" class="btn" disabled
+          [style.marginTop.px]="2" [style.width.px]="111"
+          (click)="onCadastralClicked()">
+          {{realEstate.cadastralID ? 'Desvincular' : 'Vincular'}}
+        </button>
       </div>
 
     </div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
 
-      <div fxFlex="290px">
+      <div fxFlex="290px" fxFlex.lt-md="none">
         <label>Distrito:</label>
         <emp-ng-select #districtControl [formControlName]="controls.recorderOfficeUID"
           [items]="recorderOfficeList"
@@ -68,7 +66,7 @@
 
     <div fxLayout="row" fxLayout.lt-md="column">
 
-      <div fxFlex="290px">
+      <div fxFlex="290px" fxFlex.lt-md="none">
         <label>Tipo de predio:</label>
         <emp-ng-select [formControlName]="controls.kind"
           [bindValue]="'name'"
@@ -83,7 +81,7 @@
           [class.invalid-control]="formHandler.showInvalidControl(controls.lotSize)">
       </div>
 
-      <div fxFlex="175px" fxLayoutAlign="start end">
+      <div fxFlex="175px" fxFlex.lt-md="none" fxLayoutAlign="start end">
         <emp-ng-select [formControlName]="controls.lotSizeUnitUID"
           [items]="lotSizeUnitList"
           [showError]="formHandler.showInvalidControl(controls.lotSizeUnitUID)"

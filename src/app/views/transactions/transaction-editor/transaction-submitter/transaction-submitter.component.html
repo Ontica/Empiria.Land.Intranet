@@ -15,7 +15,7 @@
             class="text-box"
             [class.invalid-control]="formHandler.showInvalidControl(controls.paymentReceiptNo)">
         </div>
-        <div fxFlex="100px">
+        <div fxFlex="100px" fxFlex.lt-md="none">
           <label>Importe del recibo:</label>
           <input [formControlName]="controls.total" empNgCurrency
             type="text"
