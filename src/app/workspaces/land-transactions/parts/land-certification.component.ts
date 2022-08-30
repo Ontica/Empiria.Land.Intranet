@@ -148,16 +148,6 @@ export class LandCertificationComponent implements OnChanges {
   }
 
 
-  onCloseCertificateRegister() {
-    this.messageBox.showInDevelopment('Cerrar registro de certificado', this.transactionUID);
-  }
-
-
-  onOpenCertificateRegister() {
-    this.messageBox.showInDevelopment('Abrir registro de certificado', this.transactionUID);
-  }
-
-
   private getTransactionCertificates() {
     this.isLoading = true;
 

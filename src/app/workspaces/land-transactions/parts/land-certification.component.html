@@ -27,24 +27,6 @@
 
   </emp-land-certificate-list>
 
-  <mat-divider class="divider-padding"></mat-divider>
-
-  <div fxLayout="row" [style.marginRight.px]="8">
-
-  <div fxFlex fxLayoutAlign="end">
-    <button type="submit" class="btn-action"
-      (click)="onCloseCertificateRegister()">
-      Emitir los certificados pendientes
-    </button>
-
-    <button type="button" class="btn" *ngIf="false"
-      (click)="onOpenCertificateRegister()">
-      Abrir registro de certificados
-    </button>
-  </div>
-
-  </div>
-
 </div>
 
 <emp-ng-modal-window *ngIf="displayCertificateEditor"
