@@ -13,6 +13,8 @@ import { CertificationDataService } from '@app/data-services';
 
 import { Certificate, EmptyCertificate } from '@app/models';
 
+import { MessageBoxService } from '@app/shared/containers/message-box';
+
 import { sendEvent } from '@app/shared/utils';
 
 
@@ -41,7 +43,8 @@ export class CertificateEditionComponent implements OnChanges {
   submitted = false;
 
 
-  constructor(private certificationData: CertificationDataService) { }
+  constructor(private certificationData: CertificationDataService,
+              private messageBox: MessageBoxService) { }
 
 
   ngOnChanges() {
@@ -64,7 +67,13 @@ export class CertificateEditionComponent implements OnChanges {
       return;
     }
 
-    this.closeCertificate();
+    const message = `Esta operación cerrará el certificado.<br><br>¿Cierro el certificado?`;
+
+    this.messageBox.confirm(message, 'Cerrar certificado')
+      .toPromise()
+      .then(x => {
+        if (x) this.closeCertificate()
+      });
   }
 
 
@@ -73,7 +82,13 @@ export class CertificateEditionComponent implements OnChanges {
       return;
     }
 
-    this.openCertificate();
+    const message = `Esta operación abrirá el certificado.<br><br>¿Abro el certificado?`;
+
+    this.messageBox.confirm(message, 'Abrir certificado')
+      .toPromise()
+      .then(x => {
+        if (x) this.openCertificate();
+      });
   }
 
 
