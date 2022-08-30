@@ -8,12 +8,10 @@
 
 export enum PermissionsLibrary {
   MODULE_TRANSACTIONS = 'menu-transactions',
-  MODULE_SEARCH_SERVICES = 'menu-search-services',
   MODULE_HISTORIC_REGISTRATION = 'menu-historic-registration',
   MODULE_SEARCH_RECORDABLE_SUBJECTS = 'menu-search-recordable-subjects',
 
   ROUTE_TRANSACTIONS = 'route-transactions',
-  ROUTE_SEARCH_SERVICES = 'route-search-services',
   ROUTE_HISTORIC_REGISTRATION = 'route-historic-registration',
 
   FEATURE_TRANSACTIONS_ADD = 'feature-transactions-add',
@@ -29,12 +27,6 @@ export const ROUTES_LIBRARY = {
     parent: '',
     path: 'transactions',
     fullpath: '/transactions',
-  },
-  search_services: {
-    permission: PermissionsLibrary.MODULE_SEARCH_SERVICES,
-    parent: '',
-    path: 'search-services',
-    fullpath: '/search-services',
   },
   historic_registration: {
     permission: PermissionsLibrary.MODULE_HISTORIC_REGISTRATION,
@@ -86,59 +78,6 @@ export const ROUTES_LIBRARY = {
     parent: 'transactions',
     path: 'all',
     fullpath: '/transactions/all',
-  },
-
-  // #endregion
-
-  // #region search-services-routing module
-
-  search_services_all: {
-    permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    parent: 'search-services',
-    path: 'all',
-    fullpath: '/search-services/all',
-  },
-  search_services_real_estate: {
-    permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    parent: 'search-services',
-    path: 'real-estate',
-    fullpath: '/search-services/real-estate',
-  },
-  search_services_associations: {
-    permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    parent: 'search-services',
-    path: 'associations',
-    fullpath: '/search-services/associations',
-  },
-  search_services_persons: {
-    permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    parent: 'search-services',
-    path: 'persons',
-    fullpath: '/search-services/persons',
-  },
-  search_services_documents: {
-    permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    parent: 'search-services',
-    path: 'documents',
-    fullpath: '/search-services/documents',
-  },
-  search_services_certificates: {
-    permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    parent: 'search-services',
-    path: 'certificates',
-    fullpath: '/search-services/certificates',
-  },
-  search_services_transactions: {
-    permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    parent: 'search-services',
-    path: 'transactions',
-    fullpath: '/search-services/transactions',
-  },
-  search_services_books: {
-    permission: PermissionsLibrary.ROUTE_SEARCH_SERVICES,
-    parent: 'search-services',
-    path: 'books',
-    fullpath: '/search-services/books',
   },
 
   // #endregion

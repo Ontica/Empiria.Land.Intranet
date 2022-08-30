@@ -69,66 +69,6 @@ export const TransactionViews: View[] = [
 ];
 
 
-export const SearchViews: View[] = [
-  {
-    name: 'Search.All',
-    title: 'Búsqueda general',
-    menuTitle: 'Todo',
-    url: ROUTES_LIBRARY.search_services_all.fullpath,
-    permission: ROUTES_LIBRARY.search_services_all.permission,
-  },
-  {
-    name: 'Search.RealEstate',
-    title: 'Índice de propiedades',
-    menuTitle: 'Propiedades',
-    url: ROUTES_LIBRARY.search_services_real_estate.fullpath,
-    permission: ROUTES_LIBRARY.search_services_real_estate.permission,
-  },
-  {
-    name: 'Search.Persons',
-    title: 'Índice de personas',
-    menuTitle: 'Personas',
-    url: ROUTES_LIBRARY.search_services_persons.fullpath,
-    permission: ROUTES_LIBRARY.search_services_persons.permission,
-  },
-  {
-    name: 'Search.Associations',
-    title: 'Asociaciones y sociedades civiles',
-    menuTitle: 'Asociaciones',
-    url: ROUTES_LIBRARY.search_services_associations.fullpath,
-    permission: ROUTES_LIBRARY.search_services_associations.permission,
-  },
-  {
-    name: 'Search.Documents',
-    title: 'Documentos',
-    menuTitle: 'Documentos',
-    url: ROUTES_LIBRARY.search_services_documents.fullpath,
-    permission: ROUTES_LIBRARY.search_services_documents.permission,
-  },
-  {
-    name: 'Search.Certificates',
-    title: 'Certificados',
-    menuTitle: 'Certificados',
-    url: ROUTES_LIBRARY.search_services_certificates.fullpath,
-    permission: ROUTES_LIBRARY.search_services_certificates.permission,
-  },
-  {
-    name: 'Search.Transactions',
-    title: 'Trámites',
-    menuTitle: 'Trámites',
-    url: ROUTES_LIBRARY.search_services_transactions.fullpath,
-    permission: ROUTES_LIBRARY.search_services_transactions.permission,
-  },
-  {
-    name: 'Search.Books',
-    title: 'Libros',
-    menuTitle: 'Libros',
-    url: ROUTES_LIBRARY.search_services_books.fullpath,
-    permission: ROUTES_LIBRARY.search_services_books.permission,
-  }
-];
-
-
 export const HistoricRegistrationViews: View[] = [
   {
     name: 'HistoricRegistration.ByBook',

@@ -11,14 +11,12 @@ import { View, Layout } from '../common-models/common';
 
 import {
   TransactionViews,
-  SearchViews,
   HistoricRegistrationViews,
   UnauthorizedViews
 } from './views-config';
 
 
 export const APP_VIEWS: View[] = TransactionViews.concat(HistoricRegistrationViews,
-                                                         SearchViews,
                                                          UnauthorizedViews);
 
 export const APP_LAYOUTS: Layout[] = [
@@ -29,14 +27,6 @@ export const APP_LAYOUTS: Layout[] = [
     defaultTitle: 'Trámites',
     url: ROUTES_LIBRARY.transactions.fullpath,
     permission: ROUTES_LIBRARY.transactions.permission,
-  },
-  {
-    name: 'Search',
-    views: SearchViews,
-    hint: 'Servicios de consulta en línea',
-    defaultTitle: 'Consultas',
-    url: ROUTES_LIBRARY.search_services.fullpath,
-    permission: ROUTES_LIBRARY.search_services.permission,
   },
   {
     name: 'HistoricRegistration',

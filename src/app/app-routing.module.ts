@@ -25,15 +25,6 @@ const routes: Routes = [
                               .then((m) => m.LandTransactionsWorkpaceModule)
   },
   {
-    data: { permission: ROUTES_LIBRARY.search_services.permission },
-    path: ROUTES_LIBRARY.search_services.path,
-    component: MainLayoutComponent,
-    canActivate: [SecurityGuard],
-    canActivateChild: [SecurityGuard],
-    loadChildren: () => import('./workspaces/land-search/land-search-workspace.module')
-                              .then(m => m.LandSearchWorkspaceModule)
-  },
-  {
     data: { permission: ROUTES_LIBRARY.historic_registration.permission },
     path: ROUTES_LIBRARY.historic_registration.path,
     component: MainLayoutComponent,

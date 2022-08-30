@@ -55,13 +55,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
 
-  onSearchClicked(keywords: string) {
-    if (keywords) {
-      this.router.navigate(['/search-services/all', { keywords } ]);
-    }
-  }
-
-
   private setToolSelected(tool: TOOL) {
     this.toolSelected = tool;
     this.displayAsideRight = this.toolSelected !== 'None';
