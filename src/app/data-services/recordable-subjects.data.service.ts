@@ -125,18 +125,11 @@ export class RecordableSubjectsDataService {
 
 
   searchRecordableSubject(filter: RecordableSubjectFilter): Observable<RecordableSubjectShortModel[]> {
-    let path = `v5/land/registration/recordable-subjects`;
+    Assertion.assertValue(filter, 'filter');
 
-    if (filter.type) {
-      path += `/?type=${filter.type}`;
-    }
+    const path = `v5/land/internal-search-services/recordable-subjects`;
 
-    if (filter.keywords) {
-      path += filter.type ? '&' : '/?';
-      path += `keywords=${filter.keywords}`;
-    }
-
-    return this.http.get<RecordableSubjectShortModel[]>(path);
+    return this.http.post<RecordableSubjectShortModel[]>(path, filter);
   }
 
 
