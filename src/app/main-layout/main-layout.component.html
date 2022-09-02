@@ -52,14 +52,16 @@
       <button class="toolbar-item btn-collapse-sidenav-right"
         title="Cerrar herramienta"
         (click)="onCloseAsideRight()">
+
         <mat-icon>last_page</mat-icon>
+
       </button>
 
       <container-element [ngSwitch]="toolSelected">
 
-        <emp-land-recordable-subjects-tool *ngSwitchCase="'SearchRecordableSubject'">
+        <emp-land-recordable-subjects-search-tool *ngSwitchCase="'SearchRecordableSubject'">
 
-        </emp-land-recordable-subjects-tool>
+        </emp-land-recordable-subjects-search-tool>
 
       </container-element>
 

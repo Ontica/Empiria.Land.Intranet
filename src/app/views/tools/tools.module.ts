@@ -13,14 +13,14 @@ import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module'
 
 import { SharedModule } from '@app/shared/shared.module';
 
-import { RecordableSubjectsToolComponent } from './recordable-subjects-tool.component';
+import { RecordableSubjectsSearchToolComponent } from './recordable-subjects-search-tool.component';
 
 import { SearchServicesModule } from '../search-services/search-services.module';
 
 
 @NgModule({
   declarations: [
-    RecordableSubjectsToolComponent,
+    RecordableSubjectsSearchToolComponent,
   ],
   imports: [
     CommonModule,
@@ -30,7 +30,7 @@ import { SearchServicesModule } from '../search-services/search-services.module'
     SearchServicesModule,
   ],
   exports: [
-    RecordableSubjectsToolComponent,
+    RecordableSubjectsSearchToolComponent,
   ],
 })
 export class ToolsModule { }

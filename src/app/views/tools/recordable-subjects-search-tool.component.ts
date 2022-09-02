@@ -8,7 +8,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'emp-land-recordable-subjects-tool',
-  templateUrl: './recordable-subjects-tool.component.html',
+  selector: 'emp-land-recordable-subjects-search-tool',
+  templateUrl: './recordable-subjects-search-tool.component.html',
 })
-export class RecordableSubjectsToolComponent { }
+export class RecordableSubjectsSearchToolComponent { }
