@@ -9,10 +9,10 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 
 import { MatTableDataSource } from '@angular/material/table';
 
-import { EventInfo, Identifiable, isEmpty } from '@app/core';
+import { EventInfo } from '@app/core';
 
-import { EmptyRecordableSubject, getRecordableSubjectTypeName, RecordableSubject, RecordableSubjectShortModel, RecordableSubjectType,
-         RecordableSubjectTypeList } from '@app/models';
+import { EmptyRecordableSubject, getRecordableSubjectTypeName, RecordableSubject, RecordableSubjectShortModel,
+         RecordableSubjectType } from '@app/models';
 
 import { sendEvent } from '@app/shared/utils';
 

@@ -131,7 +131,7 @@
 
         <ng-container>
 
-          <span style="padding-right: 0.5rem;">Marcar el predio como:</span>
+          <span class="pr-1">{{editionMode ? 'Marcar el predio como:' : 'Marcado como:'}}</span>
 
           <emp-ng-select
             [formControlName]="controls.status"

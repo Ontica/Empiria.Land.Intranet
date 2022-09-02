@@ -35,7 +35,7 @@ export function getRecordableSubjectTypeName(type: RecordableSubjectType): strin
     case RecordableSubjectType.None:
       return 'Ninguno';
     default:
-      throw Assertion.assertNoReachThisCode(`Unhandled type name for type '${status}'.`);
+      throw Assertion.assertNoReachThisCode(`Unhandled type name for type '${type}'.`);
   }
 }
 

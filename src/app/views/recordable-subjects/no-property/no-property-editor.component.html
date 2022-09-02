@@ -77,7 +77,7 @@
 
         <ng-container>
 
-          <span style="padding-right: 0.5rem;">Marcar como:</span>
+          <span class="pr-1">{{editionMode ? 'Marcar como:' : 'Marcado como:'}}</span>
 
           <emp-ng-select
             [formControlName]="controls.status"

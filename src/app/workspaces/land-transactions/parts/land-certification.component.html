@@ -11,12 +11,12 @@
     [config]="{textButtonOpen: 'Agregar un certificado',
                textButtonClose: 'Cancelar agregar registro'}">
 
-  <emp-land-certificate-creator *ngIf="panelAddState"
-    [transactionUID]="transactionUID"
-    [recorderOffice]="recorderOffice"
-    (certificateCreatorEvent)="onCertificateCreatorEvent($event)">
+    <emp-land-certificate-creator *ngIf="panelAddState"
+      [transactionUID]="transactionUID"
+      [recorderOffice]="recorderOffice"
+      (certificateCreatorEvent)="onCertificateCreatorEvent($event)">
 
-  </emp-land-certificate-creator>
+    </emp-land-certificate-creator>
 
   </emp-ng-expansion-button>
 
