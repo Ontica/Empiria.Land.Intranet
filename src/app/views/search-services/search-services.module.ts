@@ -13,19 +13,18 @@ import { AngularMaterialModule } from '@app/shared/angular-material.module';
 import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
 import { SharedModule } from '@app/shared/shared.module';
 
+import { LandControlsModule } from '../land-controls/land.controls.module';
 import { RegistrationModule } from '../registration/registration.module';
 
-import { RecordableSubjectsExplorerComponent } from './recordable-subjects-explorer/recordable-subjects-explorer.component';
-import { RecordableSubjectsFilterComponent } from './recordable-subjects-explorer/recordable-subjects-filter.component';
-import { RecordableSubjectsTableComponent } from './recordable-subjects-explorer/recordable-subjects-table.component';
-import { RecordableSubjectsViewerComponent } from './recordable-subjects-explorer/recordable-subjects-viewer.component';
+import { RecordableSubjectsFilterComponent } from './recordable-subjects-searcher/recordable-subjects-filter.component';
+import { RecordableSubjectsSearcherComponent } from './recordable-subjects-searcher/recordable-subjects-searcher.component';
+import { RecordableSubjectsTableComponent } from './recordable-subjects-searcher/recordable-subjects-table.component';
 import { TractIndexEntriesFilterComponent } from './tract-index-explorer/tract-index-entries-filter.component';
 import { TractIndexEntriesTableComponent } from './tract-index-explorer/tract-index-entries-table.component';
 import { TractIndexEntriesViewerComponent } from './tract-index-explorer/tract-index-entries-viewer.component';
-import { TractIndexExplorerComponent } from './tract-index-explorer/tract-index-explorer.component';
 import { TractIndexEntryPrintableViewerComponent } from './tract-index-entry-tabbed-view/tract-index-entry-printable-viewer.component';
 import { TractIndexEntryTabbedViewComponent } from './tract-index-entry-tabbed-view/tract-index-entry-tabbed-view.component';
-import { LandControlsModule } from '../land-controls/land.controls.module';
+import { TractIndexExplorerComponent } from './tract-index-explorer/tract-index-explorer.component';
 
 
 @NgModule({
@@ -42,19 +41,18 @@ import { LandControlsModule } from '../land-controls/land.controls.module';
     RegistrationModule,
   ],
   declarations: [
-    RecordableSubjectsExplorerComponent,
     RecordableSubjectsFilterComponent,
+    RecordableSubjectsSearcherComponent,
     RecordableSubjectsTableComponent,
-    RecordableSubjectsViewerComponent,
     TractIndexEntriesFilterComponent,
     TractIndexEntriesTableComponent,
     TractIndexEntriesViewerComponent,
-    TractIndexExplorerComponent,
     TractIndexEntryPrintableViewerComponent,
     TractIndexEntryTabbedViewComponent,
+    TractIndexExplorerComponent,
   ],
   exports: [
-    RecordableSubjectsExplorerComponent,
+    RecordableSubjectsSearcherComponent,
   ]
 })
-export class TractIndexModule { }
+export class SearchServicesModule { }

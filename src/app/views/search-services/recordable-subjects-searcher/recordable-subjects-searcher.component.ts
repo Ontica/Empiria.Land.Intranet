@@ -5,16 +5,15 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
-import { Assertion, EventInfo } from '@app/core';
+import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { sendEvent } from '@app/shared/utils';
-
-import { EmptyRecordableSubject, EmptyRecordableSubjectFilter, RecordableSubject, RecordableSubjectData,
-         RecordableSubjectFilter, RecordableSubjectShortModel } from '@app/models';
+import { EmptyRecordableSubject, EmptyRecordableSubjectFilter, EmptyTractIndex, RecordableSubject,
+         RecordableSubjectData, RecordableSubjectFilter, RecordableSubjectShortModel,
+         TractIndex } from '@app/models';
 
 import { RecordableSubjectsFilterEventType } from './recordable-subjects-filter.component';
 
@@ -24,20 +23,13 @@ import { RecordableSubjectsAction,
 import { RecordableSubjectsTableEventType } from './recordable-subjects-table.component';
 
 
-export enum RecordableSubjectsViewerEventType {
-  SELECT_RECORDABLE_SUBJECT   = 'RecordableSubjectsViewerComponent.Event.SelectRecordableSubject',
-  UNSELECT_RECORDABLE_SUBJECT = 'RecordableSubjectsViewerComponent.Event.UnselectRecordableSubject',
-}
-
 @Component({
-  selector: 'emp-land-recordable-subjects-viewer',
-  templateUrl: './recordable-subjects-viewer.component.html',
+  selector: 'emp-land-recordable-subjects-searcher',
+  templateUrl: './recordable-subjects-searcher.component.html',
 })
-export class RecordableSubjectsViewerComponent implements OnInit, OnDestroy {
+export class RecordableSubjectsSearcherComponent implements OnInit, OnDestroy {
 
   @Input() selectedRecordableSubject: RecordableSubject = EmptyRecordableSubject;
-
-  @Output() recordableSubjectsViewerEvent = new EventEmitter<EventInfo>();
 
   cardHint = 'Seleccionar los filtros';
 
@@ -50,6 +42,10 @@ export class RecordableSubjectsViewerComponent implements OnInit, OnDestroy {
   filter: RecordableSubjectFilter = EmptyRecordableSubjectFilter;
 
   recordableSubjectsList: RecordableSubjectShortModel[] = [];
+
+  displayTractIndex = false;
+
+  selectedTractIndex: TractIndex = EmptyTractIndex;
 
   helper: SubscriptionHelper;
 
@@ -80,10 +76,7 @@ export class RecordableSubjectsViewerComponent implements OnInit, OnDestroy {
         Assertion.assertValue(event.payload.recordableSubjectFilter, 'event.payload.recordableSubjectFilter');
         this.filter = event.payload.recordableSubjectFilter as RecordableSubjectFilter;
         this.resetData();
-
-        if (!!this.filter.keywords) {
-          this.getRecordableSubjects();
-        }
+        this.getRecordableSubjects();
 
         return;
 
@@ -98,8 +91,8 @@ export class RecordableSubjectsViewerComponent implements OnInit, OnDestroy {
     switch (event.type as RecordableSubjectsTableEventType) {
 
       case RecordableSubjectsTableEventType.SELECT_RECORDABLE_SUBJECT:
-        Assertion.assertValue(event.payload.recordableSubject, 'event.payload.recordableSubject');
-        this.emitSelectRecordableSubject(event.payload.recordableSubject as RecordableSubjectShortModel);
+        Assertion.assertValue(event.payload.recordableSubject.uid, 'event.payload.recordableSubject.uid');
+        this.getTrackIndex(event.payload.recordableSubject.uid);
         return;
 
       default:
@@ -109,7 +102,16 @@ export class RecordableSubjectsViewerComponent implements OnInit, OnDestroy {
   }
 
 
+  onCloseTractIndexExplorer() {
+    this.setSelectedTractIndex(EmptyTractIndex);
+  }
+
+
   private getRecordableSubjects() {
+    if (!this.filter.keywords) {
+      return;
+    }
+
     this.setSubmitted(true);
 
     this.helper.select<RecordableSubjectShortModel[]>(
@@ -123,6 +125,22 @@ export class RecordableSubjectsViewerComponent implements OnInit, OnDestroy {
   }
 
 
+  private getTrackIndex(recordableSubjectUID: string) {
+    this.isLoading = true;
+
+    this.helper.select<TractIndex>(RecordableSubjectsStateSelector.TRACT_INDEX, {recordableSubjectUID})
+      .toPromise()
+      .then(x => this.setSelectedTractIndex(x))
+      .finally(() => this.isLoading = false);
+  }
+
+
+  private setSelectedTractIndex(tractIndex: TractIndex) {
+    this.selectedTractIndex = tractIndex;
+    this.displayTractIndex = !isEmpty(tractIndex.recordableSubject);
+  }
+
+
   private setRecordableSubjectsList(recordableSubjectsList: RecordableSubjectShortModel[]) {
     this.recordableSubjectsList = recordableSubjectsList;
     this.saveDataInState();
@@ -133,8 +151,7 @@ export class RecordableSubjectsViewerComponent implements OnInit, OnDestroy {
   private resetData() {
     this.queryExecuted = false;
     this.setRecordableSubjectsList([]);
-    sendEvent(this.recordableSubjectsViewerEvent,
-      RecordableSubjectsViewerEventType.UNSELECT_RECORDABLE_SUBJECT);
+    this.onCloseTractIndexExplorer();
   }
 
 
@@ -171,12 +188,6 @@ export class RecordableSubjectsViewerComponent implements OnInit, OnDestroy {
   private setSubmitted(submitted: boolean) {
     this.isLoading = submitted;
     this.submitted = submitted;
-  }
-
-
-  private emitSelectRecordableSubject(recordableSubject: RecordableSubjectShortModel) {
-    sendEvent(this.recordableSubjectsViewerEvent,
-      RecordableSubjectsViewerEventType.SELECT_RECORDABLE_SUBJECT, {recordableSubject});
   }
 
 }

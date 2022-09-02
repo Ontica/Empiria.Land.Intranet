@@ -15,7 +15,7 @@ import { SharedModule } from '@app/shared/shared.module';
 
 import { RecordableSubjectsToolComponent } from './recordable-subjects-tool.component';
 
-import { TractIndexModule } from '../tract-index/tract-index.module';
+import { SearchServicesModule } from '../search-services/search-services.module';
 
 
 @NgModule({
@@ -27,7 +27,7 @@ import { TractIndexModule } from '../tract-index/tract-index.module';
     AngularFlexLayoutModule,
     SharedModule,
 
-    TractIndexModule,
+    SearchServicesModule,
   ],
   exports: [
     RecordableSubjectsToolComponent,
