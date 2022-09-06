@@ -128,9 +128,9 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   onCloseTractIndex() {
       if (this.tractIndex.actions.canBeClosed && !this.submitted) {
-      const message = `Esta operación marcará la historia como completa.<br><br>¿Cierro la historia?`;
+      const message = `Esta operación marcará el tracto como completo.<br><br>¿Cierro el tracto?`;
 
-      this.messageBox.confirm(message, 'Cerrar la historia', 'AcceptCancel')
+      this.messageBox.confirm(message, 'Cerrar el tracto', 'AcceptCancel')
         .toPromise()
         .then(x => {
           if (x) {
@@ -143,9 +143,9 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   onOpenTractIndex() {
       if (this.tractIndex.actions.canBeOpened && !this.submitted) {
-      const message = `Esta operación abrirá la historia para su edición.<br><br>¿Abro la historia?`;
+      const message = `Esta operación abrirá el tracto para su edición.<br><br>¿Abro el tracto?`;
 
-      this.messageBox.confirm(message, 'Abrir la historia', 'AcceptCancel')
+      this.messageBox.confirm(message, 'Abrir el tracto', 'AcceptCancel')
         .toPromise()
         .then(x => {
           if (x) {

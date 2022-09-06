@@ -78,19 +78,19 @@
     <div fxFlex fxLayoutAlign="start">
       <button type="button" class="btn" *ngIf="tractIndex.actions.canBeClosed"
         (click)="onCloseTractIndex()">
-        Marcar la historia como completa
+        Marcar el tracto como completo
       </button>
 
       <button type="button" class="btn" *ngIf="tractIndex.actions.canBeOpened"
         (click)="onOpenTractIndex()">
-        Abrir la historia
+        Abrir el tracto
       </button>
     </div>
 
     <div fxFlex fxLayoutAlign="end" *ngIf="tractIndex.actions.canBeUpdated">
       <button type="submit" class="btn-action"
        (click)="onOpenRecordingActCreator()">
-        Agregar un acto a la historia
+        Agregar un acto al tracto
       </button>
     </div>
 
