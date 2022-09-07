@@ -33,6 +33,8 @@
                       dropdownPosition: selectorPosition }"
           [items]="recordingSectionList"
           [required]="fieldsRequired"
+          [disabled]="!recorderOfficeSelected"
+          [placeholder]="!recorderOfficeSelected ? 'Seleccione el distrito' : 'Seleccione'"
           [showError]="fieldsRequired && ( !recordingSectionSelected || !recordingSectionSelected.uid )"
           (changes)="onRecordingSectionChange($event)">
         </emp-ng-select>
