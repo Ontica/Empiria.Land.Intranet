@@ -13,7 +13,9 @@ import { SharedDirectivesModule } from './directives/shared-directives.module';
 import { SharedFormControlsModule } from './form-controls/shared-form-controls.module';
 import { SharedIndicatorsModule } from './indicators/shared-indicators.module';
 import { SharedPipesModule } from './pipes/shared-pipes.module';
+
 import { PrinterService } from './utils/printer.service';
+import { UrlViewerService } from './utils/url-viewer.service';
 
 
 @NgModule({
@@ -40,7 +42,8 @@ import { PrinterService } from './utils/printer.service';
 
   providers: [
     CurrencyPipe,
-    PrinterService
+    PrinterService,
+    UrlViewerService,
   ]
 
 })

@@ -7,7 +7,9 @@
 
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
-import { EmptyMediaBase, MediaBase, StringLibrary } from '@app/core';
+import { EmptyMediaBase, MediaBase } from '@app/core';
+
+import { UrlViewerService } from '@app/shared/services';
 
 
 @Component({
@@ -24,6 +26,10 @@ export class TractIndexEntryPrintableViewerComponent implements OnChanges {
 
   stampMediaError = false;
 
+
+  constructor(private urlViewer: UrlViewerService){}
+
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes.stampMedia) {
       this.resetStampMediaTab();
@@ -32,7 +38,7 @@ export class TractIndexEntryPrintableViewerComponent implements OnChanges {
 
 
   onPrintStamp() {
-    this.openStampMediaWindowToPrint();
+    this.urlViewer.openWindowCenter(this.stampMedia.url);
   }
 
 
@@ -48,18 +54,6 @@ export class TractIndexEntryPrintableViewerComponent implements OnChanges {
 
     if (!!this.documentID && !!this.stampMedia.url) {
       setTimeout(() => this.displayStampMedia = true);
-    }
-  }
-
-
-  private openStampMediaWindowToPrint() {
-    if (StringLibrary.isValidHttpUrl(this.stampMedia.url || '')) {
-      const width = 900;
-      const height = 600;
-      const top = Math.floor((screen.height / 2) - (height / 2));
-      const left = Math.floor((screen.width / 2) - (width / 2));
-      window.open(this.stampMedia.url, '_blank',
-        `resizable=yes,width=${width},height=${height},top=${top},left=${left}`);
     }
   }
 

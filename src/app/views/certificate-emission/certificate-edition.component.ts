@@ -7,13 +7,15 @@
 
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
-import { EventInfo, MediaType, StringLibrary } from '@app/core';
+import { EventInfo, MediaType } from '@app/core';
 
 import { CertificationDataService } from '@app/data-services';
 
 import { Certificate, EmptyCertificate } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
+
+import { UrlViewerService } from '@app/shared/services';
 
 import { sendEvent } from '@app/shared/utils';
 
@@ -44,7 +46,8 @@ export class CertificateEditionComponent implements OnChanges {
 
 
   constructor(private certificationData: CertificationDataService,
-              private messageBox: MessageBoxService) { }
+              private messageBox: MessageBoxService,
+              private urlViewer: UrlViewerService) { }
 
 
   ngOnChanges() {
@@ -93,7 +96,7 @@ export class CertificateEditionComponent implements OnChanges {
 
 
   onPrintMediaClicked() {
-    this.openMediaLinkWindowToPrint();
+    this.urlViewer.openWindowCenter(this.certificate.mediaLink.url);
   }
 
 
@@ -101,18 +104,6 @@ export class CertificateEditionComponent implements OnChanges {
     this.hint = `<strong>${this.certificate.type}</strong>` +
       ` &nbsp; &nbsp; | &nbsp; &nbsp; <strong> ${this.certificate.certificateID} </strong>` +
       ` &nbsp; &nbsp; | &nbsp; &nbsp; ${this.certificate.recordableSubject.electronicID}`;
-  }
-
-
-  private openMediaLinkWindowToPrint() {
-    if (StringLibrary.isValidHttpUrl(this.certificate.mediaLink.url || '')) {
-      const width = 900;
-      const height = 600;
-      const top = Math.floor((screen.height / 2) - (height / 2));
-      const left = Math.floor((screen.width / 2) - (width / 2));
-      window.open(this.certificate.mediaLink.url, '_blank',
-        `resizable=yes,width=${width},height=${height},top=${top},left=${left}`);
-    }
   }
 
 

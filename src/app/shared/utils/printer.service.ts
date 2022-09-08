@@ -7,13 +7,8 @@
 
 import { Injectable } from '@angular/core';
 
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class PrinterService {
-
-  constructor() { }
 
   printFile(url) {
     if (url !== null && url !== undefined && url !== '') {
@@ -22,6 +17,7 @@ export class PrinterService {
       this.removeProxyIframe(proxyIframe);
     }
   }
+
 
   createProxyIframe() {
     const proxyIframe = document.createElement('iframe');
@@ -36,6 +32,7 @@ export class PrinterService {
     return proxyIframe;
   }
 
+
   createContent(contentIframe, url) {
     contentIframe.document.open();
 
@@ -49,9 +46,11 @@ export class PrinterService {
     contentIframe.document.close();
   }
 
+
   removeProxyIframe(proxyIframe) {
     setTimeout(() => {
       proxyIframe.remove();
     }, 1000);
   }
+
 }

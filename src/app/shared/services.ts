@@ -6,3 +6,7 @@
  */
 
 export { SpinnerService } from './indicators/spinner/spinner.service';
+
+export { PrinterService } from './utils/printer.service';
+
+export { UrlViewerService } from './utils/url-viewer.service';

@@ -7,15 +7,17 @@
 
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
-import { MediaType } from '@app/core';
+import { MediaType, StringLibrary } from '@app/core';
 
 import { FileReport, FileType } from '@app/models';
+
+import { UrlViewerService } from '@app/shared/services';
 
 
 @Component({
   selector: 'emp-ng-file-print-preview',
   templateUrl: './file-print-preview.component.html',
-  styleUrls: ['./file-print-preview.component.scss']
+  styleUrls: ['./file-print-preview.component.scss'],
 })
 export class FilePrintPreviewComponent implements OnChanges {
 
@@ -31,6 +33,8 @@ export class FilePrintPreviewComponent implements OnChanges {
 
   fileError = false;
 
+  constructor(private urlViewer: UrlViewerService){}
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.file && !!this.file?.url) {
       this.open(this.file.url, this.file.type);
@@ -39,12 +43,12 @@ export class FilePrintPreviewComponent implements OnChanges {
 
 
   open(url, type) {
-    if (!this.validUrl(url)) {
+    if (!StringLibrary.isValidHttpUrl(url)) {
       return;
     }
 
     if (type === MediaType.html || type === FileType.HTML) {
-      this.openWindowCenter(url);
+      this.urlViewer.openWindowCenter(url);
       return;
     }
 
@@ -63,20 +67,6 @@ export class FilePrintPreviewComponent implements OnChanges {
   onClose() {
     this.url = null;
     this.display = false;
-  }
-
-
-  private validUrl(url: string) {
-    return url !== null && url !== undefined && url !== '';
-  }
-
-
-  private openWindowCenter(url: string, width: number = 1100, height: number = 600) {
-    const top = Math.floor((screen.height / 2) - (height / 2));
-    const left = Math.floor((screen.width / 2) - (width / 2));
-
-    return window.open(url, '_blank',
-      `resizable=yes,width=${width},height=${height},top=${top},left=${left}`);
   }
 
 }
