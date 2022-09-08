@@ -28,6 +28,7 @@ export interface View {
   url: string;
   menuTitle?: string;
   disabled?: boolean;
+  hidden?: boolean;
   permission?: string;
   actions?: ViewAction[];
 }

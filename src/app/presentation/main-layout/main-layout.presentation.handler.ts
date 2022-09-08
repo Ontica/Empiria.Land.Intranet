@@ -127,10 +127,11 @@ export class MainLayoutPresentationHandler extends AbstractPresentationHandler {
 
   private setCurrentViewFromUrl(url: string) {
     if (this.state.currentView.url !== url) {
-      const view = APP_VIEWS.find(x => x.url === url);
+      const urlClean = url.split('?', 1)[0];
+      const view = APP_VIEWS.find(x => x.url === urlClean);
 
       if (!view) {
-        throw new Exception(`Unregistered view with url '${url}'.`);
+        throw new Exception(`Unregistered view with url '${urlClean}'.`);
       }
 
       const viewLayout = this.getViewLayout(view);
@@ -161,7 +162,6 @@ export class MainLayoutPresentationHandler extends AbstractPresentationHandler {
         buildNavigationHeader(layout, this.session.getPrincipal().permissions, value);
 
       this.setValue(SelectorType.NAVIGATION_HEADER, navHeader);
-
     } else if (value) {
       this.setValue(SelectorType.NAVIGATION_HEADER, value as NavigationHeader);
     }
