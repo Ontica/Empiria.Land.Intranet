@@ -16,9 +16,13 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { RecordingDataService } from '@app/data-services';
 
+import { ROUTES_LIBRARY } from '@app/main-layout';
+
 import { EmptyTractIndex, EmptyTractIndexEntry, TractIndex, TractIndexEntry } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
+
+import { UrlViewerService } from '@app/shared/services';
 
 import { sendEvent } from '@app/shared/utils';
 
@@ -59,9 +63,12 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   helper: SubscriptionHelper;
 
+  bookEntryUrl = ROUTES_LIBRARY.historic_registration_book_entry.fullpath;
+
   constructor(private uiLayer: PresentationLayer,
               private recordingData: RecordingDataService,
-              private messageBox: MessageBoxService) {
+              private messageBox: MessageBoxService,
+              private urlViewer: UrlViewerService) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
@@ -156,6 +163,15 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
   }
 
 
+  onOpenBookEntry(tractIndexEntry: TractIndexEntry) {
+    if (!tractIndexEntry.officialDocument.bookEntry) {
+      this.urlViewer.openWindowCenter(tractIndexEntry.officialDocument.media.url);
+    } else {
+      this.confirmRedirectToBookEntryWindow(tractIndexEntry);
+    }
+  }
+
+
   onRemoveRecordingActClicked(recordingAct: TractIndexEntry) {
     if (recordingAct.actions.canBeDeleted && !this.submitted) {
       const message = this.getConfirmMessageToRemove(recordingAct);
@@ -186,9 +202,28 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
   }
 
 
-  private getConfirmMessageToRemove(recordingAct: TractIndexEntry): string {
-    return `Esta operación eliminará el acto jurídico <strong>${recordingAct.description}</strong> ` +
-           `inscrito en <strong>${recordingAct.officialDocument.description}</strong>.` +
+  private confirmRedirectToBookEntryWindow(tractIndexEntry: TractIndexEntry) {
+    this.messageBox.confirm(this.getConfirmMessageToRedirect(tractIndexEntry),
+                            'Abrir inscripción en una nueva pestaña')
+      .toPromise()
+      .then(x => {
+        if(x) {
+          this.urlViewer.openRouteInNewTab(this.bookEntryUrl, tractIndexEntry.officialDocument.bookEntry);
+        }
+      });
+  }
+
+
+  private getConfirmMessageToRedirect(tractIndexEntry: TractIndexEntry): string {
+    return `Esta operación abrirá la inscripción ` +
+           `<strong>${tractIndexEntry.officialDocument.description}</strong> ` +
+           `en otra pestaña <br><br>¿Continuo con la operación?`;
+  }
+
+
+  private getConfirmMessageToRemove(tractIndexEntry: TractIndexEntry): string {
+    return `Esta operación eliminará el acto jurídico <strong>${tractIndexEntry.description}</strong> ` +
+           `inscrito en <strong>${tractIndexEntry.officialDocument.description}</strong>.` +
            `<br><br>¿Elimino el acto jurídico?`;
   }
 

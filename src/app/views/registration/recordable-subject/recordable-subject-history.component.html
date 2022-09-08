@@ -23,7 +23,9 @@
     <ng-container matColumnDef="officialDocument">
       <th mat-header-cell *matHeaderCellDef> Inscrito en </th>
       <td mat-cell *matCellDef="let row">
-        {{ row.officialDocument.description }}
+        <a class="link" (click)="onOpenBookEntry(row)">
+          {{ row.officialDocument.description }}
+        </a>
       </td>
     </ng-container>
     <ng-container matColumnDef="summary">

@@ -41,6 +41,8 @@ export class BookEntryEditionComponent implements OnChanges {
 
   @Input() instrumentRecordingUID: string;
 
+  @Input() primaryEditor = false;
+
   @Output() bookEntryEditionEvent = new EventEmitter<EventInfo>();
 
   cardTitle = 'Inscripción';
@@ -67,7 +69,9 @@ export class BookEntryEditionComponent implements OnChanges {
 
 
   ngOnChanges() {
-    this.getInstrumentRecording();
+    if (!!this.instrumentRecordingUID) {
+      this.getInstrumentRecording();
+    }
   }
 
 
@@ -226,7 +230,8 @@ export class BookEntryEditionComponent implements OnChanges {
       ${this.bookEntry?.recordingSectionName},
       ${this.bookEntry?.recorderOfficeName}`;
 
-    this.cardHint = `<strong>Estado: ${this.bookEntry?.status} </strong><br>
+    this.cardHint = `<strong>${this.instrumentRecording?.instrumentRecordingID}` +
+      `&nbsp; &nbsp; | &nbsp; &nbsp; Estado: ${this.bookEntry?.status} </strong><br>
       Herramienta para buscar, y en su caso generar, folios reales en inscripciones en libros físicos`;
 
     this.recordingActListTitle = `Predios y actos registrados en la <strong>${this.cardTitle}</strong>`;

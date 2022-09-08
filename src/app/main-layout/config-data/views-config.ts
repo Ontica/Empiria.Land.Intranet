@@ -77,6 +77,14 @@ export const HistoricRegistrationViews: View[] = [
     url: ROUTES_LIBRARY.historic_registration_by_book.fullpath,
     permission: ROUTES_LIBRARY.historic_registration_by_book.permission,
   },
+  {
+    name: 'HistoricRegistration.BookEntry',
+    title: 'Inscripción',
+    menuTitle: 'Inscripción',
+    url: ROUTES_LIBRARY.historic_registration_book_entry.fullpath,
+    permission: ROUTES_LIBRARY.historic_registration_book_entry.permission,
+    hidden: true,
+  },
 ];
 
 

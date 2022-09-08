@@ -7,12 +7,14 @@
 
 import { Component, ViewChild } from '@angular/core';
 
-import { Assertion, EventInfo, isEmpty } from '@app/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { BookEntry, EmptyBookEntry, EmptyRecordingContext, RecordingContext } from '@app/models';
+import { Assertion, EventInfo, SessionService } from '@app/core';
 
-import { EmptyFileViewerData,
-         FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
+import { BookEntryContext, EmptyBookEntryContext, EmptyRecordingContext,
+         RecordingContext } from '@app/models';
+
+import { MessageBoxService } from '@app/shared/containers/message-box';
 
 import {
   RecordableSubjectTabbedViewEventType
@@ -27,73 +29,40 @@ import {
   BookEntryEditionEventType
 } from '@app/views/registration/recording-book/book-entry-edition.component';
 
-import {
-  RecordingBookEditionEventType
-} from '@app/views/registration/recording-book/recording-book-edition.component';
-
 
 @Component({
-  selector: 'emp-land-historic-registration',
-  templateUrl: './historic-registration-workspace.component.html'
+  selector: 'emp-land-book-entry',
+  templateUrl: './book-entry-workspace.component.html'
 })
-export class HistoricRegistrationWorkspaceComponent {
+export class BookEntryWorkspaceComponent {
 
   @ViewChild('bookEntryEdition') bookEntryEdition: BookEntryEditionComponent;
 
-  selectedBookEntry: BookEntry = EmptyBookEntry;
-  selectedFileViewerData: FileViewerData = EmptyFileViewerData;
+  bookEntryContext: BookEntryContext = EmptyBookEntryContext;
+
   selectedRecordingContext: RecordingContext = EmptyRecordingContext;
 
-  displayBookEntryEdition = false;
-  displayFileViewer = false;
   displayRecordingActEditor = false;
+
   displayRecordableSubjectTabbedView = false;
 
 
-  onCloseFileViewer() {
-    this.unselectCurrentFile();
-  }
-
-
-  onRecordingBookEditionEvent(event: EventInfo) {
-    switch (event.type as RecordingBookEditionEventType) {
-
-      case RecordingBookEditionEventType.BOOK_ENTRY_SELECTED:
-        Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
-
-        this.selectedBookEntry = event.payload.bookEntry;
-        this.displayBookEntryEdition = !isEmpty(this.selectedBookEntry);
-
-        this.unselectSecondaryEditors();
-
-        return;
-
-      case RecordingBookEditionEventType.FILES_SELECTED:
-        Assertion.assertValue(event.payload.fileViewerData, 'event.payload.fileViewerData');
-
-        this.selectedFileViewerData = event.payload.fileViewerData;
-        this.displayFileViewer = this.selectedFileViewerData.fileList?.length > 0;
-
-        return;
-
-      default:
-        console.log(`Unhandled user interface event ${event.type}`);
-        return;
-    }
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private session: SessionService,
+              private messageBox: MessageBoxService){
+    this.validateAndSetBookEntryContextFromRoute();
   }
 
 
   onBookEntryEditionEvent(event: EventInfo) {
     switch (event.type as BookEntryEditionEventType) {
 
-      case BookEntryEditionEventType.CLOSE_BUTTON_CLICKED:
-        this.unselectBookEntry();
-
-        return;
-
       case BookEntryEditionEventType.RECORDING_ACT_SELECTED:
         Assertion.assertValue(event.payload.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
         Assertion.assertValue(event.payload.recordingActUID, 'event.payload.recordingActUID');
+
+        this.unselectSecondaryEditors();
 
         this.selectedRecordingContext = event.payload as RecordingContext;
         this.displayRecordingActEditor = this.isRecordingContextValid();
@@ -103,6 +72,8 @@ export class HistoricRegistrationWorkspaceComponent {
       case BookEntryEditionEventType.RECORDABLE_SUBJECT_SELECTED:
         Assertion.assertValue(event.payload.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
         Assertion.assertValue(event.payload.recordingActUID, 'event.payload.recordingActUID');
+
+        this.unselectSecondaryEditors();
 
         this.selectedRecordingContext = event.payload as RecordingContext;
         this.displayRecordableSubjectTabbedView = this.isRecordingContextValid();
@@ -121,12 +92,10 @@ export class HistoricRegistrationWorkspaceComponent {
 
       case RecordableSubjectTabbedViewEventType.CLOSE_BUTTON_CLICKED:
         this.unselectSecondaryEditors();
-
         return;
 
       case RecordableSubjectTabbedViewEventType.RECORDABLE_SUBJECT_UPDATED:
         this.refreshSelectedBookEntry();
-
         return;
 
       default:
@@ -141,7 +110,6 @@ export class HistoricRegistrationWorkspaceComponent {
 
       case RecordingActEditionEventType.CLOSE_BUTTON_CLICKED:
         this.unselectSecondaryEditors();
-
         return;
 
       case RecordingActEditionEventType.RECORDING_ACT_UPDATED:
@@ -155,15 +123,21 @@ export class HistoricRegistrationWorkspaceComponent {
   }
 
 
-  private unselectCurrentFile() {
-    this.selectedFileViewerData = EmptyFileViewerData;
-    this.displayFileViewer = false;
-  }
+  private validateAndSetBookEntryContextFromRoute() {
+    this.route.queryParams.subscribe( params => {
+      const bookEntryUID = params['uid'] ?? '';
+      const recordingBookUID = params['recordingBookUID'] ?? '';
+      const instrumentRecordingUID = params['instrumentRecordingUID'] ?? '';
 
-
-  private unselectBookEntry(){
-    this.selectedBookEntry = EmptyBookEntry;
-    this.displayBookEntryEdition = false;
+      if (!!bookEntryUID && !!recordingBookUID && !!instrumentRecordingUID) {
+        this.bookEntryContext.uid = bookEntryUID;
+        this.bookEntryContext.recordingBookUID = recordingBookUID;
+        this.bookEntryContext.instrumentRecordingUID = instrumentRecordingUID;
+      } else {
+        this.messageBox.showError(`La ruta es invalida.`);
+        this.router.navigate([this.session.getPrincipal().defaultRoute]);
+      }
+    });
   }
 
 

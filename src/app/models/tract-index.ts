@@ -82,11 +82,19 @@ export interface OfficialDocument {
   documentID: string;
   description: string;
   office: Identifiable;
+  bookEntry: BookEntryContext;
   issueTime: DateString;
   elaboratedBy: string;
   authorizedBy: string;
   status: string;
   media: MediaBase;
+}
+
+
+export interface BookEntryContext {
+  uid: string;
+  recordingBookUID: string;
+  instrumentRecordingUID: string;
 }
 
 
@@ -131,12 +139,20 @@ export const EmptyTransactionInfo: TransactionInfo = {
 }
 
 
+export const EmptyBookEntryContext: BookEntryContext = {
+  uid: '',
+  recordingBookUID: '',
+  instrumentRecordingUID: '',
+}
+
+
 export const EmptyOfficialDocument: OfficialDocument = {
   uid: '',
   type: '',
   documentID: '',
   description: '',
   office: Empty,
+  bookEntry: EmptyBookEntryContext,
   issueTime: '',
   elaboratedBy: '',
   authorizedBy: '',

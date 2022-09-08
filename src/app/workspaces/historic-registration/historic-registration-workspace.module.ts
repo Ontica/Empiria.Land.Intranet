@@ -16,6 +16,7 @@ import { LandControlsModule } from '@app/views/land-controls/land.controls.modul
 import { RegistrationModule } from '@app/views/registration/registration.module';
 
 import { HistoricRegistrationWorkspaceRoutingModule } from './historic-registration-workspace-routing.module';
+import { BookEntryWorkspaceComponent } from './book-entry-workspace.component';
 import { HistoricRegistrationWorkspaceComponent } from './historic-registration-workspace.component';
 
 
@@ -35,11 +36,13 @@ import { HistoricRegistrationWorkspaceComponent } from './historic-registration-
   ],
 
   declarations: [
-    HistoricRegistrationWorkspaceComponent
+    BookEntryWorkspaceComponent,
+    HistoricRegistrationWorkspaceComponent,
   ],
 
   exports: [
-    HistoricRegistrationWorkspaceComponent
+    BookEntryWorkspaceComponent,
+    HistoricRegistrationWorkspaceComponent,
   ]
 
 })

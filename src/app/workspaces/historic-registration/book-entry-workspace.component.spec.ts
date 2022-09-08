@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { HistoricRegistrationWorkspaceComponent } from './historic-registration-workspace.component';
+import { BookEntryWorkspaceComponent } from './book-entry-workspace.component';
 
 
-describe('HistoricRegistrationWorkspaceComponent', () => {
-  let component: HistoricRegistrationWorkspaceComponent;
-  let fixture: ComponentFixture<HistoricRegistrationWorkspaceComponent>;
+describe('BookEntryWorkspaceComponent', () => {
+  let component: BookEntryWorkspaceComponent;
+  let fixture: ComponentFixture<BookEntryWorkspaceComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ HistoricRegistrationWorkspaceComponent ]
+      declarations: [ BookEntryWorkspaceComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HistoricRegistrationWorkspaceComponent);
+    fixture = TestBed.createComponent(BookEntryWorkspaceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

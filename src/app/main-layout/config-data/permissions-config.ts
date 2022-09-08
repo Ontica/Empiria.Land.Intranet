@@ -91,6 +91,13 @@ export const ROUTES_LIBRARY = {
     fullpath: '/historic-registration/by-book',
   },
 
+  historic_registration_book_entry: {
+    permission: PermissionsLibrary.ROUTE_HISTORIC_REGISTRATION,
+    parent: 'historic-registration',
+    path: 'book-entry',
+    fullpath: '/historic-registration/book-entry',
+  },
+
   // #endregion
 
   // #region security-routing module
