@@ -27,7 +27,9 @@ export class UrlViewerService {
 
 
   openRouteInNewTab(route: string, queryParams) {
-    const url = this.router.serializeUrl(this.router.createUrlTree([route], {queryParams}));
+    const BASE_HREF = '/intranet/';   // ToDo: Remove this hardcoded url fragment.
+
+    const url = this.router.serializeUrl(this.router.createUrlTree([BASE_HREF + route], {queryParams}));
     window.open(url, '_blank');
   }
 
