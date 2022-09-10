@@ -33,7 +33,8 @@ export class TractIndexEntriesTableComponent implements OnChanges  {
 
   @Output() tractIndexEntriesTableEvent = new EventEmitter<EventInfo>();
 
-  displayedColumns: string[] = ['description', 'documentID', 'transactionID', 'status'];
+  displayedColumns: string[] = ['rowIndex', 'issuedAndRequestedTime',
+                                'recordingAct', 'subjectChanges', 'recordLink'];
 
   dataSource: MatTableDataSource<TractIndexEntry>;
 

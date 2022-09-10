@@ -9,7 +9,7 @@
     <div fxLayout="row" fxFill>
 
       <emp-land-tract-index-entries-viewer
-        fxFlex="550px" fxFlex.lt-lg="30"
+        fxFlex="800px" fxFlex.lt-lg="50"
         [tractIndex]="tractIndex"
         [selectedTractIndexEntry]="selectedTractIndexEntry"
         (tractIndexEntriesViewerEvent)="onTractIndexEntriesViewerEvent($event)">
@@ -17,7 +17,7 @@
       </emp-land-tract-index-entries-viewer>
 
 
-      <div fxFlex fxFlex.lt-lg="70" class="small-overflow-auto" [style.overflow]="'auto'"
+      <div fxFlex fxFlex.lt-lg="50" class="small-overflow-auto" [style.overflow]="'auto'"
         [empNgSpinnerHost]="spinner">
 
         <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>

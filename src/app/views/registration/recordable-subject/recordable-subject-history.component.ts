@@ -46,8 +46,8 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   @Output() recordableSubjectHistoryEvent = new EventEmitter<EventInfo>();
 
-  private displayedColumnsDefault = ['number', 'description', 'officialDocument', 'summary', 'requestedTime',
-    'status'];
+  private displayedColumnsDefault = ['rowIndex', 'issuedAndRequestedTime', 'recordingAct',
+                                     'subjectChanges', 'recordLink', 'status'];
 
   displayedColumns = [...this.displayedColumnsDefault];
 
@@ -135,9 +135,10 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   onCloseTractIndex() {
       if (this.tractIndex.actions.canBeClosed && !this.submitted) {
-      const message = `Esta operación marcará el tracto como completo.<br><br>¿Cierro el tracto?`;
+      const message = `Esta operación marcará la historia registral como completa.<br><br>` +
+                      `¿Todos los actos de la propiedad están registrados?`;
 
-      this.messageBox.confirm(message, 'Cerrar el tracto', 'AcceptCancel')
+      this.messageBox.confirm(message, 'Cerrar la historia registral', 'AcceptCancel')
         .toPromise()
         .then(x => {
           if (x) {
@@ -150,9 +151,9 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   onOpenTractIndex() {
       if (this.tractIndex.actions.canBeOpened && !this.submitted) {
-      const message = `Esta operación abrirá el tracto para su edición.<br><br>¿Abro el tracto?`;
+      const message = `Esta operación abrirá la historia registral para su edición.<br><br>¿Abro la historia?`;
 
-      this.messageBox.confirm(message, 'Abrir el tracto', 'AcceptCancel')
+      this.messageBox.confirm(message, 'Abrir la historia registral', 'AcceptCancel')
         .toPromise()
         .then(x => {
           if (x) {
@@ -165,7 +166,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   onOpenBookEntry(tractIndexEntry: TractIndexEntry) {
     if (!tractIndexEntry.officialDocument.bookEntry) {
-      this.urlViewer.openWindowCenter(tractIndexEntry.officialDocument.media.url);
+      this.urlViewer.openWindowCentered(tractIndexEntry.officialDocument.media.url);
     } else {
       this.confirmRedirectToBookEntryWindow(tractIndexEntry);
     }
@@ -215,15 +216,15 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
 
   private getConfirmMessageToRedirect(tractIndexEntry: TractIndexEntry): string {
-    return `Esta operación abrirá la inscripción ` +
+    return `Esta operación abrirá la ` +
            `<strong>${tractIndexEntry.officialDocument.description}</strong> ` +
-           `en otra pestaña <br><br>¿Continuo con la operación?`;
+           `en otra pestaña del navegador. <br><br>¿Continuo con la operación?`;
   }
 
 
   private getConfirmMessageToRemove(tractIndexEntry: TractIndexEntry): string {
     return `Esta operación eliminará el acto jurídico <strong>${tractIndexEntry.description}</strong> ` +
-           `inscrito en <strong>${tractIndexEntry.officialDocument.description}</strong>.` +
+           `registrado en <strong>${tractIndexEntry.officialDocument.description}</strong>.` +
            `<br><br>¿Elimino el acto jurídico?`;
   }
 

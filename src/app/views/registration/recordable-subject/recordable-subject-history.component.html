@@ -1,4 +1,4 @@
-<div class="section-title">Tracto jurídico</div>
+<div class="section-title">Historia registral</div>
 
 <div class="tab-container scrollable-container mat-elevation-z1" [empNgSpinnerHost]="spinner">
 
@@ -8,11 +8,21 @@
 
   <table mat-table [dataSource]="dataSource">
 
-    <ng-container matColumnDef="number">
+    <ng-container matColumnDef="rowIndex">
       <th mat-header-cell *matHeaderCellDef> # </th>
       <td mat-cell *matCellDef="let row; let i = index;"> <strong>{{i + 1}}</strong> </td>
     </ng-container>
-    <ng-container matColumnDef="description">
+
+    <ng-container matColumnDef="issuedAndRequestedTime">
+      <th mat-header-cell *matHeaderCellDef> Registrado el </th>
+      <td mat-cell *matCellDef="let row" class="nowrap">
+        R: {{ row.issueTime | dateTimeFormat }}
+        <br>
+        P: {{ row.requestedTime | dateTimeFormat }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="recordingAct">
       <th mat-header-cell *matHeaderCellDef class="nowrap"> Acto jurídico </th>
       <td mat-cell *matCellDef="let row">
         <a class="link" (click)="onOpenRecordingActEditor(row)">
@@ -20,33 +30,29 @@
         </a>
       </td>
     </ng-container>
-    <ng-container matColumnDef="officialDocument">
-      <th mat-header-cell *matHeaderCellDef> Inscrito en </th>
+
+    <ng-container matColumnDef="subjectChanges">
+      <th mat-header-cell *matHeaderCellDef> Sobre </th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.subjectChanges.summary }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="recordLink">
+      <th mat-header-cell *matHeaderCellDef> Registrado en </th>
       <td mat-cell *matCellDef="let row">
         <a class="link" (click)="onOpenBookEntry(row)">
           {{ row.officialDocument.description }}
         </a>
       </td>
     </ng-container>
-    <ng-container matColumnDef="summary">
-      <th mat-header-cell *matHeaderCellDef> Alcance </th>
-      <td mat-cell *matCellDef="let row">
-        {{ row.subjectChanges.summary }}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="requestedTime">
-      <th mat-header-cell *matHeaderCellDef> Emisión </th>
-      <td mat-cell *matCellDef="let row">
-        {{ row.requestedTime | dateTimeFormat}}
-      </td>
-    </ng-container>
+
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef> Estado </th>
       <td mat-cell *matCellDef="let row">
         {{ row.status }}
       </td>
     </ng-container>
-
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let row" class="column-action">
@@ -80,19 +86,19 @@
     <div fxFlex fxLayoutAlign="start">
       <button type="button" class="btn" *ngIf="tractIndex.actions.canBeClosed"
         (click)="onCloseTractIndex()">
-        Marcar el tracto como completo
+        Cerrar la historia registral
       </button>
 
       <button type="button" class="btn" *ngIf="tractIndex.actions.canBeOpened"
         (click)="onOpenTractIndex()">
-        Abrir el tracto
+        Editar la historia registral
       </button>
     </div>
 
     <div fxFlex fxLayoutAlign="end" *ngIf="tractIndex.actions.canBeUpdated">
       <button type="submit" class="btn-action"
        (click)="onOpenRecordingActCreator()">
-        Agregar un acto al tracto
+        Agregar un acto a la historia
       </button>
     </div>
 
