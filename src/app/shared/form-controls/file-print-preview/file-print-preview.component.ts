@@ -48,7 +48,7 @@ export class FilePrintPreviewComponent implements OnChanges {
     }
 
     if (type === MediaType.html || type === FileType.HTML) {
-      this.urlViewer.openWindowCenter(url);
+      this.urlViewer.openWindowCentered(url);
       return;
     }
 

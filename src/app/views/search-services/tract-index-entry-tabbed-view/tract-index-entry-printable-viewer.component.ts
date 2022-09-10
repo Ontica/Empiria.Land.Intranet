@@ -38,7 +38,7 @@ export class TractIndexEntryPrintableViewerComponent implements OnChanges {
 
 
   onPrintStamp() {
-    this.urlViewer.openWindowCenter(this.stampMedia.url);
+    this.urlViewer.openWindowCentered(this.stampMedia.url);
   }
 
 

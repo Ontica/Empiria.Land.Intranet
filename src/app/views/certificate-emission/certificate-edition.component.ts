@@ -96,7 +96,7 @@ export class CertificateEditionComponent implements OnChanges {
 
 
   onPrintMediaClicked() {
-    this.urlViewer.openWindowCenter(this.certificate.mediaLink.url);
+    this.urlViewer.openWindowCentered(this.certificate.mediaLink.url);
   }
 
 

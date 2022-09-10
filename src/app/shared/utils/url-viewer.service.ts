@@ -16,7 +16,7 @@ export class UrlViewerService {
 
   constructor(private router: Router){}
 
-  openWindowCenter(url: string, width: number = 900, height: number = 600) {
+  openWindowCentered(url: string, width: number = 900, height: number = 600) {
     if (StringLibrary.isValidHttpUrl(url)) {
       const top = Math.floor((screen.height / 2) - (height / 2));
       const left = Math.floor((screen.width / 2) - (width / 2));
