@@ -5,7 +5,7 @@
 
       <div fxLayout="row" fxLayout.lt-sm="column">
 
-        <div fxFlex="25">
+        <div fxFlex="15">
 
           <label>Tipo:</label>
 
@@ -19,20 +19,20 @@
 
         </div>
 
-        <div fxFlex="25" fxLayoutAlign="start end">
+        <div fxFlex="35" fxLayoutAlign="start end">
 
-        <div class="input-search-container">
+          <div class="input-search-container">
 
-          <input type="text" class="text-box" name="keywords" #keywords="ngModel" required
-            placeholder="Buscar folios..."
-            [(ngModel)]="formData.keywords"
-            [class.invalid-control]="keywords.invalid"
-            (keyup.enter)="onFilterChanges()"
-            (keyup.escape)="onClearKeywords()">
+            <input type="text" class="text-box" name="keywords" #keywords="ngModel" required
+              placeholder="Buscar por folio, descripción, palabra ..."
+              [(ngModel)]="formData.keywords"
+              [class.invalid-control]="keywords.invalid"
+              (keyup.enter)="onFilterChanges()"
+              (keyup.escape)="onClearKeywords()">
+
+          </div>
 
         </div>
-
-      </div>
 
       </div>
 

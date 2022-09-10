@@ -30,7 +30,7 @@ export class TractIndexExplorerComponent implements OnInit {
 
   @Output() closeEvent = new EventEmitter<void>();
 
-  title = 'Explorador de tracto jurídico';
+  title = 'Historia registral';
 
   hint = '';
 
@@ -80,7 +80,7 @@ export class TractIndexExplorerComponent implements OnInit {
 
 
   private initTexts(){
-    this.title = 'Explorador de tracto jurídico';
+    this.title = 'Historia registral';
 
     this.hint = `<strong>${this.tractIndex.recordableSubject.electronicID}</strong>` +
       `&nbsp; &nbsp; | &nbsp; &nbsp; <strong>${this.tractIndex.recordableSubject.recorderOffice.name}</strong>` +

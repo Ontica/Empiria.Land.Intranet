@@ -36,7 +36,7 @@ export class RecordingActEditionModalComponent  {
 
   @Output() recordingActEditionModalEvent = new EventEmitter<EventInfo>();
 
-  title = 'Agregar un acto jurídico al tracto';
+  title = 'Agregar un acto jurídico a la historia registral';
 
   hint = '';
 
