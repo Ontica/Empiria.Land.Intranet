@@ -23,8 +23,8 @@
 
       </div>
 
-      <div [fxFlex]="showRecordingBookEntryField ? 'calc(80% - 220px)': '351px'"
-           [fxFlex.lt-sm]="showRecordingBookEntryField ? 'calc(80% - 220px)' : 'calc(80% - 110px)'">
+      <div [fxFlex]="showRecordingBookEntryField ? 'calc(80% - 252px)': '351px'"
+           [fxFlex.lt-sm]="showRecordingBookEntryField ? 'calc(80% - 252px)' : 'calc(80% - 126px)'">
 
         <label>Sección:</label>
 
@@ -41,7 +41,7 @@
 
       </div>
 
-      <div fxFlex="110px">
+      <div fxFlex="126px">
 
         <label>Volumen:</label>
 
@@ -63,7 +63,7 @@
 
       </div>
 
-      <div fxFlex="110px" *ngIf="showRecordingBookEntryField">
+      <div fxFlex="126px" *ngIf="showRecordingBookEntryField">
 
         <label>Inscripción:</label>
 
@@ -86,8 +86,33 @@
           type="text" class="text-box" name="recordingNo"
           [(ngModel)]="bookEntryNo" [required]="fieldsRequired"
           [class.invalid-control]="bookEntryNo === null || bookEntryNo === ''"
-          (input)="onBookEntryNoChange(bookEntryNo)">
+          (input)="onBookEntryNoFieldsChange()">
 
+      </div>
+
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end center" *ngIf="bookEntryInput">
+
+      <div fxFlex="126px">
+        <label>Fecha de presentación:</label>
+        <emp-ng-datepicker name="presentationTime"
+          [(ngModel)]="presentationTime"
+          [disabled]="!isReadyToFilterRecordingBook"
+          (valueChange)="onBookEntryNoFieldsChange()">
+
+        </emp-ng-datepicker>
+      </div>
+
+      <div fxFlex="126px">
+        <label>Fecha de registro:</label>
+        <emp-ng-datepicker name="authorizationDate"
+          [(ngModel)]="authorizationDate"
+          [disabled]="!isReadyToFilterRecordingBook"
+          [showError]="!authorizationDate"
+          (valueChange)="onBookEntryNoFieldsChange()">
+
+        </emp-ng-datepicker>
       </div>
 
     </div>

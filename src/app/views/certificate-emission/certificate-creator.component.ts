@@ -14,12 +14,15 @@ import { Assertion, Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
+import { FormHandler, sendEvent } from '@app/shared/utils';
+
+import { MessageBoxService } from '@app/shared/containers/message-box';
+
 import { CertificationDataService } from '@app/data-services';
 
 import { CertificateRules, CertificateType, CreateCertificateCommand, CreateCertificateCommandPayload,
          EmptyCertificateRules, IssuingCommands } from '@app/models';
 
-import { FormHandler, sendEvent } from '@app/shared/utils';
 
 import {
   RecordingBookSelectorEventType
@@ -29,9 +32,11 @@ enum CertificateCreatorFormControls {
   certificateType = 'certificateType',
   registrationCommand = 'registrationCommand',
   recordableSubject = 'recordableSubject',
-  recordingBookUID = 'recordingBookUID',
-  bookEntryNo = 'bookEntryNo',
+  recordingBook = 'recordingBook',
   bookEntryUID = 'bookEntryUID',
+  bookEntryNo = 'bookEntryNo',
+  presentationTime = 'presentationTime',
+  authorizationDate = 'authorizationDate',
   personName = 'personName',
   realEstateDescription = 'realEstateDescription',
 }
@@ -70,7 +75,8 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
 
 
   constructor(private certificationData: CertificationDataService,
-              private uiLayer: PresentationLayer){
+              private uiLayer: PresentationLayer,
+              private messageBox: MessageBoxService){
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
@@ -108,6 +114,8 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
   onBookEntryCheckChanged() {
     this.formHandler.getControl(this.controls.bookEntryUID).reset();
     this.formHandler.getControl(this.controls.bookEntryNo).reset();
+    this.formHandler.getControl(this.controls.presentationTime).reset();
+    this.formHandler.getControl(this.controls.authorizationDate).reset();
 
     this.validateBookEntryFields();
   }
@@ -120,7 +128,7 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
 
         Assertion.assertValue(event.payload.recordingBook, 'event.payload.recordingBook');
 
-        this.formHandler.getControl(this.controls.recordingBookUID).setValue(event.payload.recordingBook.uid);
+        this.formHandler.getControl(this.controls.recordingBook).setValue(event.payload.recordingBook);
 
         return;
 
@@ -128,12 +136,14 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
 
         Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
 
+        const bookEntry = event.payload.bookEntry;
+
         if (this.checkBookEntryInput) {
-          this.formHandler.getControl(this.controls.bookEntryNo)
-            .setValue(event.payload.bookEntry.recordingNo);
+          this.formHandler.getControl(this.controls.bookEntryNo).setValue(bookEntry.recordingNo);
+          this.formHandler.getControl(this.controls.presentationTime).setValue(bookEntry.presentationTime);
+          this.formHandler.getControl(this.controls.authorizationDate).setValue(bookEntry.authorizationDate);
         } else {
-          this.formHandler.getControl(this.controls.bookEntryUID)
-            .setValue(event.payload.bookEntry.uid);
+          this.formHandler.getControl(this.controls.bookEntryUID).setValue(bookEntry.uid);
         }
 
         return;
@@ -145,19 +155,17 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
   }
 
 
-  onSubmitCertificate() {
+  async onSubmitCertificate() {
     if (!this.formHandler.validateReadyForSubmit()) {
       return;
     }
 
-    const command: CreateCertificateCommand = this.getCreateCertificateCommand();
-
-    const payload = {
-      transactionUID: this.transactionUID,
-      command,
-    };
-
-    sendEvent(this.certificateCreatorEvent, CertificateCreatorEventType.CREATE_CERTIFICATE, payload);
+    if (this.confirmContinueWithoutPresentationTimeRequired &&
+        !await this.confirmContinueWithoutPresentationTime()) {
+      return;
+    } else {
+      this.emitCreateCertificate();
+    }
   }
 
 
@@ -167,9 +175,11 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
         certificateType: new FormControl('', Validators.required),
         registrationCommand: new FormControl('', Validators.required),
         recordableSubject: new FormControl(''),
-        recordingBookUID: new FormControl(''),
+        recordingBook: new FormControl(''),
         bookEntryUID: new FormControl(''),
         bookEntryNo: new FormControl(''),
+        presentationTime: new FormControl(''),
+        authorizationDate: new FormControl(''),
         personName: new FormControl(''),
         realEstateDescription: new FormControl(''),
       })
@@ -213,10 +223,10 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
 
   private validateRecordingBookFields(){
     if (this.certificateRulesSelected.selectBookEntry) {
-      this.formHandler.setControlValidators(this.controls.recordingBookUID, Validators.required);
+      this.formHandler.setControlValidators(this.controls.recordingBook, Validators.required);
     } else {
-      this.formHandler.clearControlValidators(this.controls.recordingBookUID);
-      this.formHandler.getControl(this.controls.recordingBookUID).reset();
+      this.formHandler.clearControlValidators(this.controls.recordingBook);
+      this.formHandler.getControl(this.controls.recordingBook).reset();
     }
 
     this.validateBookEntryFields();
@@ -226,10 +236,12 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
   private validateBookEntryFields() {
     this.formHandler.clearControlValidators(this.controls.bookEntryUID);
     this.formHandler.clearControlValidators(this.controls.bookEntryNo);
+    this.formHandler.clearControlValidators(this.controls.authorizationDate);
 
     if (this.certificateRulesSelected.selectBookEntry) {
       if (this.checkBookEntryInput) {
         this.formHandler.setControlValidators(this.controls.bookEntryNo, Validators.required);
+        this.formHandler.setControlValidators(this.controls.authorizationDate, Validators.required);
       } else {
         this.formHandler.setControlValidators(this.controls.bookEntryUID, Validators.required);
       }
@@ -237,6 +249,7 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
       this.checkBookEntryInput = false;
       this.formHandler.getControl(this.controls.bookEntryUID).reset();
       this.formHandler.getControl(this.controls.bookEntryNo).reset();
+      this.formHandler.getControl(this.controls.authorizationDate).reset();
     }
   }
 
@@ -263,13 +276,40 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
   }
 
 
+  private get confirmContinueWithoutPresentationTimeRequired() {
+    return this.checkBookEntryInput && !this.formHandler.getControl(this.controls.presentationTime).value;
+  }
+
+
+  private confirmContinueWithoutPresentationTime(): Promise<boolean> {
+    const recordingBook = this.formHandler.getControl(this.controls.recordingBook).value;
+    const bookEntryNo = this.formHandler.getControl(this.controls.bookEntryNo).value;
+    const title = 'Se está omitiendo la fecha de presentación';
+    const message = `¿Está seguro que no hay forma de saber cuál fue la fecha de presentación de la ` +
+      `<strong>Inscripción ${bookEntryNo} - Volumen ${recordingBook.name}</strong>?`;
+    return this.messageBox.confirm(message, title).toPromise();
+  }
+
+
+  private emitCreateCertificate() {
+    const command: CreateCertificateCommand = this.getCreateCertificateCommand();
+
+    const payload = {
+      transactionUID: this.transactionUID,
+      command,
+    };
+
+    sendEvent(this.certificateCreatorEvent, CertificateCreatorEventType.CREATE_CERTIFICATE, payload);
+  }
+
+
   private getCreateCertificateCommand(): CreateCertificateCommand {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
 
     const formModel = this.formHandler.form.getRawValue();
 
-    const payload: CreateCertificateCommandPayload = this.getFormData();
+    const payload: CreateCertificateCommandPayload = this.getCreateCertificateCommandPayload();
 
     const command: CreateCertificateCommand = {
       type: formModel.registrationCommand,
@@ -280,7 +320,7 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
   }
 
 
-  private getFormData(): CreateCertificateCommandPayload {
+  private getCreateCertificateCommandPayload(): CreateCertificateCommandPayload {
     Assertion.assert(this.formHandler.form.valid,
       'Programming error: form must be validated before command execution.');
 
@@ -305,9 +345,17 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
     }
 
     if (this.certificateRulesSelected.selectBookEntry) {
-      data.recordingBookUID = formModel.recordingBookUID ?? '';
+      data.recordingBookUID = formModel.recordingBook.uid ?? '';
       data.bookEntryUID = !this.checkBookEntryInput ? formModel.bookEntryUID ?? '' : '';
-      data.bookEntryNo = this.checkBookEntryInput ? formModel.bookEntryNo ?? '' : '';
+    }
+
+    if (this.certificateRulesSelected.selectBookEntry && this.checkBookEntryInput) {
+      data.bookEntryNo = formModel.bookEntryNo ?? '';
+      data.authorizationDate = formModel.authorizationDate ?? '';
+
+      if (!!formModel.presentationTime) {
+        data.presentationTime = formModel.presentationTime ?? '';
+      }
     }
 
     if (this.certificateRulesSelected.givePersonName) {

@@ -12,7 +12,7 @@ import { combineLatest, concat, Observable, of, Subject } from 'rxjs';
 
 import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
-import { Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
+import { DateString, Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
@@ -70,7 +70,10 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
   recordingSectionSelected: Identifiable;
   recordingBookSelected: Identifiable;
   recordingBookEntrySelected: BookEntryShortModel;
+
   bookEntryNo: string;
+  presentationTime: DateString;
+  authorizationDate: DateString;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
@@ -90,6 +93,8 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
     if (changes.bookEntryInput) {
       this.recordingBookEntrySelected = null;
       this.bookEntryNo = null;
+      this.presentationTime = null;
+      this.authorizationDate = null;
     }
 
     if (changes.recorderOffice) {
@@ -139,9 +144,16 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
   }
 
 
-  onBookEntryNoChange(bookEntryNo: string) {
-    sendEvent(this.recordingBookSelectorEvent, RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED,
-      { bookEntry: { recordingNo: bookEntryNo } });
+  onBookEntryNoFieldsChange() {
+    setTimeout(() => {
+      const bookEntry = {
+        recordingNo: this.bookEntryNo,
+        presentationTime: this.presentationTime,
+        authorizationDate: this.authorizationDate,
+      };
+
+      sendEvent(this.recordingBookSelectorEvent, RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED, {bookEntry});
+    });
   }
 
 
@@ -156,6 +168,8 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
   private clearBookEntry() {
     this.recordingBookEntrySelected = null;
     this.bookEntryNo = null;
+    this.presentationTime = null;
+    this.authorizationDate = null;
     this.emitBookEntry(EmptyBookEntryShortModel);
   }
 
@@ -172,6 +186,8 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
     this.recordingBookSelected = null;
     this.recordingBookEntrySelected = null;
     this.bookEntryNo = null;
+    this.presentationTime = null;
+    this.authorizationDate = null;
   }
 
 

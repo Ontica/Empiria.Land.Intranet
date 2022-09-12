@@ -133,6 +133,8 @@ export interface RegistrationCommandPayload {
   recordingBookUID?: string;
   bookEntryUID?: string;
   bookEntryNo?: string;
+  presentationTime?: DateString;
+  authorizationDate?: DateString;
   partitionType?: string;
   partitionNo?: string;
   amendedRecordingActUID?: string;

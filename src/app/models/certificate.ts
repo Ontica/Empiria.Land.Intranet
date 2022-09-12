@@ -96,6 +96,8 @@ export interface CreateCertificateCommandPayload {
   recordingBookUID?: string;
   bookEntryUID?: string;
   bookEntryNo?: string;
+  presentationTime?: DateString;
+  authorizationDate?: DateString;
   personName?: string;
   realEstateDescription?: string;
 }
