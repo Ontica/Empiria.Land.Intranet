@@ -393,19 +393,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
         formModel.recordableSubject.uid : '';
     }
 
-    if (this.registrationCommandRules.selectBookEntry) {
-      data.recordingBookUID = formModel.recordingBook.uid ?? '';
-    }
-
-    if (this.registrationCommandRules.selectBookEntry && this.checkBookEntryInput) {
-      data.bookEntryNo = formModel.bookEntryNo ?? '';
-      data.authorizationDate = formModel.authorizationDate ?? '';
-
-      if (!!formModel.presentationTime) {
-        data.presentationTime = formModel.presentationTime ?? '';
-      }
-    }
-
     if (this.registrationCommandRules.newPartition) {
       data.partitionType = formModel.partitionType ?? '';
       data.partitionNo = formModel.partitionNo ?? '';
@@ -415,7 +402,29 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
       data.amendedRecordingActUID = formModel.amendmentRecordingActUID ?? '';
     }
 
+    this.validateSelectBookEntryRule(data);
+
     return data;
+  }
+
+
+  private validateSelectBookEntryRule(data: RegistrationCommandPayload) {
+    if (this.registrationCommandRules.selectBookEntry) {
+      const formModel = this.formHandler.form.getRawValue();
+
+      data.recordingBookUID = formModel.recordingBook.uid ?? '';
+
+      if (!this.checkBookEntryInput) {
+        data.bookEntryUID = formModel.bookEntryUID ?? '';
+      } else {
+        data.bookEntryNo = formModel.bookEntryNo ?? '';
+        data.authorizationDate = formModel.authorizationDate ?? '';
+
+        if (!!formModel.presentationTime) {
+          data.presentationTime = formModel.presentationTime ?? '';
+        }
+      }
+    }
   }
 
 }

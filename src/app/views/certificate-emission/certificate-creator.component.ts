@@ -344,26 +344,34 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
         !isEmpty(formModel.recordableSubject) ? formModel.recordableSubject.uid : '';
     }
 
-    if (this.certificateRulesSelected.selectBookEntry) {
-      data.recordingBookUID = formModel.recordingBook.uid ?? '';
-      data.bookEntryUID = !this.checkBookEntryInput ? formModel.bookEntryUID ?? '' : '';
-    }
-
-    if (this.certificateRulesSelected.selectBookEntry && this.checkBookEntryInput) {
-      data.bookEntryNo = formModel.bookEntryNo ?? '';
-      data.authorizationDate = formModel.authorizationDate ?? '';
-
-      if (!!formModel.presentationTime) {
-        data.presentationTime = formModel.presentationTime ?? '';
-      }
-    }
-
     if (this.certificateRulesSelected.givePersonName) {
       data.personName = formModel.personName ?? '';
     }
 
     if (this.certificateRulesSelected.giveRealEstateDescription) {
       data.realEstateDescription = formModel.realEstateDescription ?? '';
+    }
+
+    this.validateSelectBookEntryRule(data);
+  }
+
+
+  private validateSelectBookEntryRule(data: CreateCertificateCommandPayload) {
+    if (this.certificateRulesSelected.selectBookEntry) {
+      const formModel = this.formHandler.form.getRawValue();
+
+      data.recordingBookUID = formModel.recordingBook.uid ?? '';
+
+      if (!this.checkBookEntryInput) {
+        data.bookEntryUID = formModel.bookEntryUID ?? '';
+      } else {
+        data.bookEntryNo = formModel.bookEntryNo ?? '';
+        data.authorizationDate = formModel.authorizationDate ?? '';
+
+        if (!!formModel.presentationTime) {
+          data.presentationTime = formModel.presentationTime ?? '';
+        }
+      }
     }
   }
 
