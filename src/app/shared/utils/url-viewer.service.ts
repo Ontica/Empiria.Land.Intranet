@@ -11,6 +11,9 @@ import { Router } from '@angular/router';
 
 import { StringLibrary } from '@app/core';
 
+import { environment } from 'src/environments/environment';
+
+
 @Injectable()
 export class UrlViewerService {
 
@@ -27,7 +30,7 @@ export class UrlViewerService {
 
 
   openRouteInNewTab(route: string, queryParams) {
-    const BASE_HREF = '/intranet/';   // ToDo: Remove this hardcoded url fragment.
+    const BASE_HREF = environment.production ? '/intranet/' : ''; // ToDo: Remove this hardcoded url fragment.
 
     const url = this.router.serializeUrl(this.router.createUrlTree([BASE_HREF + route], {queryParams}));
     window.open(url, '_blank');

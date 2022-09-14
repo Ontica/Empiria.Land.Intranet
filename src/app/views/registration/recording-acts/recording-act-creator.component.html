@@ -81,33 +81,38 @@
 
         <label class="ellipsis">Acto jurídico a cancelar o modificar:</label>
 
-        <emp-ng-select [formControlName]="controls.amendmentRecordingActUID"
-          [items]="tractIndexSelected.entries"
-          [config]="{clearable: true}"
-          [placeholder]="formHandler.showInvalidControl(controls.recordableSubject) ?
-            'Seleccione el folio real' : 'Seleccione'"
-          [showError]="formHandler.showInvalidControl(controls.amendmentRecordingActUID)"
-          bindValue="uid">
+        <div fxLayout="row">
 
-            <ng-template #labelTemplate let-item="item">
-              {{item.description}}
-              {{item.requestedTime ? ', ' + ( item.requestedTime | dateTimeFormat ) : ''}}
-              {{item.officialDocument.documentID ? ', ' + item.officialDocument.documentID : ''}}
-            </ng-template>
+          <emp-ng-select fxFlex="calc(100% - 140px)"
+            [formControlName]="controls.amendmentRecordingActUID"
+            [items]="tractIndexSelected.entries"
+            [config]="{clearable: true}"
+            [placeholder]="formHandler.showInvalidControl(controls.recordableSubject) ?
+              'Seleccione el folio real' : 'Seleccione'"
+            [showError]="formHandler.showInvalidControl(controls.amendmentRecordingActUID)"
+            bindValue="uid">
 
-            <ng-template #optionTemplate let-item="item">
-              {{item.description}}
-              {{item.requestedTime ? ', ' + ( item.requestedTime | dateTimeFormat ) : ''}}
-              {{item.officialDocument.documentID ? ', ' + item.officialDocument.documentID : ''}}
-            </ng-template>
+              <ng-template #labelTemplate let-item="item">
+                {{item.description}}
+                {{item.requestedTime ? ', ' + ( item.requestedTime | dateTimeFormat ) : ''}}
+                {{item.officialDocument.documentID ? ', ' + item.officialDocument.documentID : ''}}
+              </ng-template>
 
-        </emp-ng-select>
+              <ng-template #optionTemplate let-item="item">
+                {{item.description}}
+                {{item.requestedTime ? ', ' + ( item.requestedTime | dateTimeFormat ) : ''}}
+                {{item.officialDocument.documentID ? ', ' + item.officialDocument.documentID : ''}}
+              </ng-template>
+
+          </emp-ng-select>
+
+          <emp-land-recording-views-buttons fxFlex="140px">
+
+          </emp-land-recording-views-buttons>
+
+        </div>
 
       </div>
-
-      <emp-land-recording-views-buttons [style.paddingTop.px]="16">
-
-      </emp-land-recording-views-buttons>
 
     </div>
 
