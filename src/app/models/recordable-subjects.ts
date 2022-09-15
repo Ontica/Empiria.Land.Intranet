@@ -5,7 +5,41 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Assertion, DateString, Empty, EmptyMediaBase, Identifiable, MediaBase, PartitionedType } from '@app/core';
+import { Assertion, DateString, Empty, EmptyMediaBase, Identifiable, MediaBase,
+         PartitionedType } from '@app/core';
+
+
+export enum SizeUnit {
+  Empty             = 'Empty',
+  NoRecord          = 'NoRecord',
+  SquareMeters      = 'AreaUnit.SquareMeters',
+  AproxSquareMeters = 'AreaUnit.AproxSquareMeters',
+  Hectarea          = 'AreaUnit.Hectarea',
+  AproxHectarea     = 'AreaUnit.AproxHectarea',
+}
+
+
+export function getSizeUnitNameShort(sizeUnit: Identifiable) {
+  switch (sizeUnit.uid) {
+    case SizeUnit.NoRecord:
+      return 'No consta';
+
+    case SizeUnit.SquareMeters:
+      return 'm²';
+
+    case SizeUnit.AproxSquareMeters:
+      return 'm² aprox.';
+
+    case SizeUnit.Hectarea:
+      return 'Ha';
+
+    case SizeUnit.AproxHectarea:
+      return 'Ha aprox.';
+
+    default:
+      return sizeUnit.name;
+  }
+}
 
 
 export enum RecordableSubjectType {
@@ -189,6 +223,7 @@ export interface RealEstate extends RecordableSubject {
   description: string;
   metesAndBounds: string;
 }
+
 
 export const EmptyRealEstate: RealEstate = {
   uid: '',

@@ -10,16 +10,17 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 
 import { MatTableDataSource } from '@angular/material/table';
 
-import { EventInfo } from '@app/core';
+import { EventInfo, Identifiable, isEmpty } from '@app/core';
 
-import { EmptyInstrumentRecording, getRecordableObjectStatusName, InstrumentRecording, RecordableObjectStatus,
-         RecordingActEntry, RecordingContext } from '@app/models';
+import { EmptyInstrumentRecording, getRecordableObjectStatusName, getSizeUnitNameShort, InstrumentRecording,
+         RecordableObjectStatus, RecordableSubject, RecordableSubjectType, RecordingActEntry,
+         RecordingContext, SizeUnit } from '@app/models';
 
 import { AlertService } from '@app/shared/containers/alert/alert.service';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
-import { sendEvent } from '@app/shared/utils';
+import { FormatLibrary, sendEvent } from '@app/shared/utils';
 
 export enum RecordingActsListEventType {
   REMOVE_RECORDING_ACT = 'RecordingActsListComponent.Event.RemoveRecordingAct',
@@ -66,15 +67,34 @@ export class RecordingActsListComponent implements OnChanges {
   }
 
 
-  onOpenRecordableSubjectTabbedView(recordingAct: RecordingActEntry) {
-    sendEvent(this.recordingActsListEvent, RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT,
-      this.getRecordingContext(recordingAct));
+  displayRelatedSubject(relatedSubject: RecordableSubject): boolean {
+    return !isEmpty(relatedSubject);
   }
 
 
-  onOpenRecordingActEditor(recordingAct: RecordingActEntry) {
+  displayLotSizeTotal(type: RecordableSubjectType): boolean {
+    return type === RecordableSubjectType.RealEstate;
+  }
+
+
+  getLotSizeTotal(lotSize: number, lotSizeUnit: Identifiable): string {
+    const formattedLotSize =
+      ![SizeUnit.NoRecord, SizeUnit.Empty].includes(lotSizeUnit.uid as SizeUnit) || lotSize > 0 ?
+      FormatLibrary.numberWithCommas(lotSize, '1.2-9') : '';
+
+    return formattedLotSize + ' ' + getSizeUnitNameShort(lotSizeUnit);
+  }
+
+
+  onOpenRecordableSubjectTabbedView(recordingContext: RecordingContext) {
+    sendEvent(this.recordingActsListEvent, RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT,
+      this.getRecordingContext(recordingContext));
+  }
+
+
+  onOpenRecordingActEditor(recordingContext: RecordingContext) {
     sendEvent(this.recordingActsListEvent, RecordingActsListEventType.SELECT_RECORDING_ACT,
-      this.getRecordingContext(recordingAct));
+      this.getRecordingContext(recordingContext));
   }
 
 
@@ -132,14 +152,14 @@ export class RecordingActsListComponent implements OnChanges {
   }
 
 
-  private getRecordingContext(recordingAct: RecordingActEntry): RecordingContext {
-    const recordingContext: RecordingContext = {
-      instrumentRecordingUID: this.instrumentRecording.uid,
-      recordingActUID: recordingAct.uid,
+  private getRecordingContext(recordingContext: RecordingContext): RecordingContext {
+    const context: RecordingContext = {
+      instrumentRecordingUID: recordingContext.instrumentRecordingUID,
+      recordingActUID: recordingContext.recordingActUID,
       actions: { can: { editRecordableSubject: this.instrumentRecording.actions.can.editRecordingActs} },
     };
 
-    return recordingContext;
+    return context;
   }
 
 }

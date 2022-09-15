@@ -35,6 +35,7 @@ export interface BaseRecordingAct extends Identifiable {
 
 export interface RecordingActEntry extends BaseRecordingAct {
   recordableSubject: RecordableSubject;
+  relatedSubject: RecordableSubject;
 }
 
 
@@ -80,8 +81,9 @@ export interface RecordingActFields {
 export const EmptyRecordingActEntry: RecordingActEntry = {
   uid: 'Empty',
   name: '',
+  antecedent: '',
   recordableSubject: EmptyRecordableSubject,
-  antecedent: ''
+  relatedSubject: EmptyRecordableSubject,
 };
 
 

@@ -1,4 +1,4 @@
-<div class="tab-container scrollable-container mat-elevation-z1">
+<div class="tab-container mat-elevation-z1">
 
   <table mat-table [dataSource]="dataSource">
 
@@ -9,7 +9,7 @@
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef class="nowrap"> Acto jurídico </th>
       <td mat-cell *matCellDef="let row">
-        <a class="link" (click)="onOpenRecordingActEditor(row)">
+        <a class="link" (click)="onOpenRecordingActEditor(row.recordableSubject.recordingContext)">
           {{ row.name }}
         </a>
       </td>
@@ -17,9 +17,15 @@
     <ng-container matColumnDef="electronicID">
       <th mat-header-cell *matHeaderCellDef> Folio electrónico </th>
       <td mat-cell *matCellDef="let row" [style.width.px]="170">
-        <a class="link" (click)="onOpenRecordableSubjectTabbedView(row)">
+        <a class="link" (click)="onOpenRecordableSubjectTabbedView(row.recordableSubject.recordingContext)">
           {{ row.recordableSubject.electronicID }}
         </a>
+        <ng-container *ngIf="displayRelatedSubject(row.relatedSubject)">
+          <br><br> <strong>Fracción de:</strong> <br>
+          <a class="link" (click)="onOpenRecordableSubjectTabbedView(row.relatedSubject.recordingContext)">
+            {{ row.relatedSubject.electronicID }}
+          </a>
+        </ng-container>
       </td>
     </ng-container>
     <ng-container matColumnDef="actionCopy">
@@ -35,7 +41,15 @@
     </ng-container>
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef> Tipo </th>
-      <td mat-cell *matCellDef="let row"> {{ row.recordableSubject.kind }} </td>
+      <td mat-cell *matCellDef="let row">
+        {{ !row.recordableSubject.kind ? '-' : row.recordableSubject.kind }}
+        <ng-container *ngIf="displayLotSizeTotal(row.recordableSubject.type)">
+          <span class="nowrap">
+            <br><br> <strong>Superficie total:</strong> <br>
+            {{ getLotSizeTotal(row.recordableSubject.lotSize, row.recordableSubject.lotSizeUnit) }}
+          </span>
+        </ng-container>
+      </td>
     </ng-container>
     <ng-container matColumnDef="notes">
       <th mat-header-cell *matHeaderCellDef> Antecedente </th>
