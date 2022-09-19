@@ -76,8 +76,8 @@ export class TractIndexEntriesTableComponent implements OnChanges  {
 
   private filterByKeyword(row: TractIndexEntry, keywords: string) {
     return this.filterField(row.description, keywords) ||
-           this.filterField(row.transaction.transactionID, keywords) ||
-           this.filterField(row.officialDocument.documentID, keywords)
+           this.filterField(row.recordingData.transactionID, keywords) ||
+           this.filterField(row.recordingData.recordingID, keywords)
   }
 
 

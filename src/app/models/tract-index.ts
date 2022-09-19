@@ -53,13 +53,11 @@ export interface TractIndexEntryActions {
 export interface TractIndexEntry {
   uid: string;
   entryType: TractIndexEntryType;
+  name: string;
   description: string;
-  requestedTime: DateString;
-  issueTime: DateString;
   status: string;
-  transaction: TransactionInfo,
-  officialDocument: OfficialDocument,
-  subjectChanges: RecordableSubjectChanges;
+  recordingData: RecordingData,
+  subjectSnapshot: RecordableSubject;
   actions: TractIndexEntryActions;
 }
 
@@ -76,16 +74,18 @@ export interface TransactionInfo {
 }
 
 
-export interface OfficialDocument {
+export interface RecordingData {
   uid: string;
   type: string;
-  documentID: string;
+  recordingID: string;
   description: string;
   office: Identifiable;
   bookEntry: BookEntryContext;
-  issueTime: DateString;
-  elaboratedBy: string;
+  recordingTime: DateString;
+  recordedBy: string;
   authorizedBy: string;
+  presentationTime: DateString;
+  transactionID: string;
   status: string;
   media: MediaBase;
 }
@@ -95,20 +95,6 @@ export interface BookEntryContext {
   uid: string;
   recordingBookUID: string;
   instrumentRecordingUID: string;
-}
-
-
-export interface RecordableSubjectChanges {
-  summary: string;
-  snapshot: RecordableSubject;
-  structureChanges: StructureChange[];
-}
-
-
-export interface StructureChange {
-  operation: string;
-  operationType: string;
-  relatedSubject: RecordableSubject;
 }
 
 
@@ -146,32 +132,20 @@ export const EmptyBookEntryContext: BookEntryContext = {
 }
 
 
-export const EmptyOfficialDocument: OfficialDocument = {
+export const EmptyRecordingData: RecordingData = {
   uid: '',
   type: '',
-  documentID: '',
+  recordingID: '',
   description: '',
   office: Empty,
   bookEntry: EmptyBookEntryContext,
-  issueTime: '',
-  elaboratedBy: '',
+  recordingTime: '',
+  recordedBy: '',
   authorizedBy: '',
+  presentationTime: '',
+  transactionID: '',
   status: '',
   media: EmptyMediaBase,
-}
-
-
-export const EmptyStructureChange: StructureChange = {
-  operation: '',
-  operationType: '',
-  relatedSubject: EmptyRecordableSubject,
-}
-
-
-export const EmptyRecordableSubjectChanges: RecordableSubjectChanges = {
-  summary: '',
-  snapshot: EmptyRecordableSubject,
-  structureChanges: [],
 }
 
 
@@ -186,12 +160,10 @@ export const EmptyTractIndexEntryActions: TractIndexEntryActions = {
 export const EmptyTractIndexEntry: TractIndexEntry = {
   uid: '',
   entryType: TractIndexEntryType.RecordingAct,
+  name: '',
   description: '',
-  requestedTime: '',
-  issueTime: '',
   status: '',
-  transaction: EmptyTransactionInfo,
-  officialDocument: EmptyOfficialDocument,
-  subjectChanges: EmptyRecordableSubjectChanges,
+  recordingData: EmptyRecordingData,
+  subjectSnapshot: EmptyRecordableSubject,
   actions: EmptyTractIndexEntryActions,
 };

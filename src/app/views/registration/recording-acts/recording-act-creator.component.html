@@ -94,14 +94,14 @@
 
               <ng-template #labelTemplate let-item="item">
                 {{item.description}}
-                {{item.requestedTime ? ', ' + ( item.requestedTime | dateTimeFormat ) : ''}}
-                {{item.officialDocument.documentID ? ', ' + item.officialDocument.documentID : ''}}
+                {{item.recording.requestedTime ? ', ' + ( item.recording.requestedTime | dateTimeFormat ) : ''}}
+                {{item.recording.recordingID ? ', ' + item.recording.recordingID : ''}}
               </ng-template>
 
               <ng-template #optionTemplate let-item="item">
                 {{item.description}}
-                {{item.requestedTime ? ', ' + ( item.requestedTime | dateTimeFormat ) : ''}}
-                {{item.officialDocument.documentID ? ', ' + item.officialDocument.documentID : ''}}
+                {{item.recording.requestedTime ? ', ' + ( item.recording.requestedTime | dateTimeFormat ) : ''}}
+                {{item.recording.recordingID ? ', ' + item.recording.recordingID : ''}}
               </ng-template>
 
           </emp-ng-select>

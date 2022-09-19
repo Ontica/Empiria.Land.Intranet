@@ -63,7 +63,7 @@ export function getRecordableSubjectTypeName(type: RecordableSubjectType): strin
     case RecordableSubjectType.RealEstate:
       return 'Predio';
     case RecordableSubjectType.Association:
-      return 'Asociacion';
+      return 'Asociación';
     case RecordableSubjectType.NoProperty:
       return 'Documento';
     case RecordableSubjectType.None:

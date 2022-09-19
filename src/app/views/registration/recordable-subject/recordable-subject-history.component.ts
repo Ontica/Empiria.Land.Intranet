@@ -165,8 +165,8 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
 
   onOpenBookEntry(tractIndexEntry: TractIndexEntry) {
-    if (!tractIndexEntry.officialDocument.bookEntry) {
-      this.urlViewer.openWindowCentered(tractIndexEntry.officialDocument.media.url);
+    if (!tractIndexEntry.recordingData.bookEntry) {
+      this.urlViewer.openWindowCentered(tractIndexEntry.recordingData.media.url);
     } else {
       this.confirmRedirectToBookEntryWindow(tractIndexEntry);
     }
@@ -209,7 +209,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
       .toPromise()
       .then(x => {
         if(x) {
-          this.urlViewer.openRouteInNewTab(this.bookEntryUrl, tractIndexEntry.officialDocument.bookEntry);
+          this.urlViewer.openRouteInNewTab(this.bookEntryUrl, tractIndexEntry.recordingData.bookEntry);
         }
       });
   }
@@ -217,14 +217,14 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   private getConfirmMessageToRedirect(tractIndexEntry: TractIndexEntry): string {
     return `Esta operación abrirá la ` +
-           `<strong>${tractIndexEntry.officialDocument.description}</strong> ` +
+           `<strong>${tractIndexEntry.recordingData.description}</strong> ` +
            `en otra pestaña del navegador. <br><br>¿Continuo con la operación?`;
   }
 
 
   private getConfirmMessageToRemove(tractIndexEntry: TractIndexEntry): string {
     return `Esta operación eliminará el acto jurídico <strong>${tractIndexEntry.description}</strong> ` +
-           `registrado en <strong>${tractIndexEntry.officialDocument.description}</strong>.` +
+           `registrado en <strong>${tractIndexEntry.recordingData.description}</strong>.` +
            `<br><br>¿Elimino el acto jurídico?`;
   }
 
