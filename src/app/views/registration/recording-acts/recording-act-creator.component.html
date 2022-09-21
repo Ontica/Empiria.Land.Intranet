@@ -93,15 +93,15 @@
             bindValue="uid">
 
               <ng-template #labelTemplate let-item="item">
-                {{item.description}}
-                {{item.recording.requestedTime ? ', ' + ( item.recording.requestedTime | dateTimeFormat ) : ''}}
-                {{item.recording.recordingID ? ', ' + item.recording.recordingID : ''}}
+                {{item.name}}
+                {{item.recordingData.recordingTime ? ', ' + ( item.recordingData.recordingTime | dateTimeFormat ) : ''}}
+                {{item.recordingData.recordID ? ', ' + item.recordingData.recordID : ''}}
               </ng-template>
 
               <ng-template #optionTemplate let-item="item">
-                {{item.description}}
-                {{item.recording.requestedTime ? ', ' + ( item.recording.requestedTime | dateTimeFormat ) : ''}}
-                {{item.recording.recordingID ? ', ' + item.recording.recordingID : ''}}
+                {{item.name}}
+                {{item.recordingData.recordingTime ? ', ' + ( item.recordingData.recordingTime | dateTimeFormat ) : ''}}
+                {{item.recordingData.recordID ? ', ' + item.recordingData.recordID : ''}}
               </ng-template>
 
           </emp-ng-select>
