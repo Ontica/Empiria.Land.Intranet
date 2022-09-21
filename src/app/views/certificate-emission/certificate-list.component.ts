@@ -11,7 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo } from '@app/core';
 
-import { Certificate, RecordingContext } from '@app/models';
+import { Certificate, RegistryEntryData } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
@@ -60,9 +60,11 @@ export class CertificateListComponent implements OnChanges {
 
 
   onOpenRecordableSubjectTabbedView(certificate: Certificate) {
-    const payload: RecordingContext = {
+    const payload: RegistryEntryData = {
       instrumentRecordingUID: certificate.issuingRecordingContext.instrumentRecordingUID,
       recordingActUID: certificate.issuingRecordingContext.recordingActUID,
+      title: this.getRegistryEntryDataTitle(certificate),
+      view: 'RecordableSubject',
       actions: { can: { editRecordableSubject: false} },
     };
 
@@ -101,6 +103,13 @@ export class CertificateListComponent implements OnChanges {
     return `Esta operación eliminará el certificado ` +
            `<strong>${certificate.type}: ${certificate.certificateID}</strong> ` +
            `<br><br>¿Elimino el certificado?`;
+  }
+
+
+  private getRegistryEntryDataTitle(certificate: Certificate): string {
+    const index = this.certificatesList.indexOf(certificate) + 1;
+    const certificateName = certificate.recordableSubject.electronicID;
+    return '<strong>' + index + '&nbsp; &nbsp; | &nbsp; &nbsp;' + certificateName + '</strong>';
   }
 
 }

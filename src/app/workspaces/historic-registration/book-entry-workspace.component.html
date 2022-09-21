@@ -1,7 +1,7 @@
 <div class="explorer">
 
   <div class="primary"
-    [fxHide.lt-lg]="displayRecordableSubjectTabbedView || displayRecordingActEditor">
+    [fxHide.lt-lg]="displayRegistryEntryEditor">
 
     <emp-land-book-entry-edition #bookEntryEdition
       [recordingBookUID]="bookEntryContext.recordingBookUID"
@@ -14,29 +14,14 @@
 
   </div>
 
-  <div *ngIf="displayRecordableSubjectTabbedView"
+  <div *ngIf="displayRegistryEntryEditor"
     class="secondary">
 
-    <emp-land-recordable-subject-tabbed-view
-      [instrumentRecordingUID]="selectedRecordingContext.instrumentRecordingUID"
-      [recordingActUID]="selectedRecordingContext.recordingActUID"
-      [canEditRecordableSubject]="selectedRecordingContext.actions.can.editRecordableSubject"
-      (recordableSubjectTabbedViewEvent)="onRecordableSubjectTabbedViewEvent($event)">
+    <emp-land-registry-entry-editor
+      [data]="selectedRegistryEntryData"
+      (registryEntryEditorEvent)="onRegistryEntryEditorEvent($event)">
 
-    </emp-land-recordable-subject-tabbed-view>
-
-  </div>
-
-  <div *ngIf="displayRecordingActEditor"
-    class="secondary">
-
-    <emp-land-recording-act-edition
-      [instrumentRecordingUID]="selectedRecordingContext.instrumentRecordingUID"
-      [recordingActUID]="selectedRecordingContext.recordingActUID"
-      [readonly]="!selectedRecordingContext.actions.can.editRecordableSubject"
-      (recordingActEditionEventType)="onRecordingActEditionEventType($event)">
-
-    </emp-land-recording-act-edition>
+    </emp-land-registry-entry-editor>
 
   </div>
 

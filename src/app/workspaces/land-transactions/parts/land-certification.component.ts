@@ -114,7 +114,7 @@ export class LandCertificationComponent implements OnChanges {
         Assertion.assertValue(event.payload.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
         Assertion.assertValue(event.payload.recordingActUID, 'event.payload.recordingActUID');
 
-        this.uiLayer.dispatch(RegistrationAction.SELECT_RECORDABLE_SUBJECT, event.payload );
+        this.uiLayer.dispatch(RegistrationAction.SELECT_REGISTRY_ENTRY, event.payload );
         return;
 
       default:

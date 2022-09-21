@@ -6,7 +6,7 @@
  */
 
 
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -44,6 +44,8 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   @Input() tractIndex: TractIndex = EmptyTractIndex;
 
+  @Input() isLoading = false;
+
   @Output() recordableSubjectHistoryEvent = new EventEmitter<EventInfo>();
 
   private displayedColumnsDefault = ['rowIndex', 'issuedAndRequestedTime', 'recordingAct',
@@ -73,9 +75,11 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
   }
 
 
-  ngOnChanges() {
-    this.dataSource = new MatTableDataSource(this.tractIndex.entries);
-    this.resetColumns();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.tractIndex) {
+      this.dataSource = new MatTableDataSource(this.tractIndex.entries);
+      this.resetColumns();
+    }
   }
 
 

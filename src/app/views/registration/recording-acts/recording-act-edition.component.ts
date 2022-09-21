@@ -62,7 +62,7 @@ export class RecordingActEditionComponent implements OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.instrumentRecordingUID && changes.recordingActUID) {
+    if (changes.instrumentRecordingUID || changes.recordingActUID) {
       this.getRecordingAct();
       this.resetPanelState(false);
     }

@@ -26,7 +26,6 @@ import { InstrumentBookEntryListComponent } from '../registration/instrument-boo
 import { InstrumentEditorComponent } from '../recordable-subjects/instrument/instrument-editor.component';
 import { RecordableSubjectEditorComponent } from './recordable-subject/recordable-subject-editor.component';
 import { RecordableSubjectHistoryComponent } from './recordable-subject/recordable-subject-history.component';
-import { RecordableSubjectTabbedViewComponent } from './recordable-subject/recordable-subject-tabbed-view.component';
 import { RecordingActCreatorComponent } from './recording-acts/recording-act-creator.component';
 import { RecordingActCreatorModalComponent } from './recording-acts/recording-act-creator-modal.component';
 import { RecordingActEditionComponent } from './recording-acts/recording-act-edition.component';
@@ -34,6 +33,7 @@ import { RecordingActEditionModalComponent } from './recording-acts/recording-ac
 import { RecordingActEditorComponent } from './recording-acts/recording-act-editor.component';
 import { RecordingActsListComponent } from './recording-acts/recording-acts-list.component';
 import { RecordingBookEditionComponent } from './recording-book/recording-book-edition.component';
+import { RegistryEntryEditorComponent } from './registry-entry/registry-entry-editor.component';
 
 
 @NgModule({
@@ -56,7 +56,6 @@ import { RecordingBookEditionComponent } from './recording-book/recording-book-e
     BookEntryListComponent,
     RecordableSubjectEditorComponent,
     RecordableSubjectHistoryComponent,
-    RecordableSubjectTabbedViewComponent,
     RecordingActCreatorComponent,
     RecordingActCreatorModalComponent,
     RecordingActEditionComponent,
@@ -64,6 +63,7 @@ import { RecordingBookEditionComponent } from './recording-book/recording-book-e
     RecordingActEditorComponent,
     RecordingActsListComponent,
     RecordingBookEditionComponent,
+    RegistryEntryEditorComponent,
   ],
 
   exports: [
@@ -72,11 +72,11 @@ import { RecordingBookEditionComponent } from './recording-book/recording-book-e
     InstrumentBookEntryListComponent,
     InstrumentEditorComponent,
     RecordableSubjectEditorComponent,
-    RecordableSubjectTabbedViewComponent,
     RecordingActCreatorComponent,
     RecordingActEditionComponent,
     RecordingActsListComponent,
     RecordingBookEditionComponent,
+    RegistryEntryEditorComponent,
   ]
 })
 export class RegistrationModule { }

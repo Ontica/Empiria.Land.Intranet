@@ -45,6 +45,8 @@ export class RecordableSubjectEditorComponent implements OnDestroy {
 
   @Input() readonly = true;
 
+  @Input() isLoading = false;
+
   @Output() recordableSubjectEditorEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;

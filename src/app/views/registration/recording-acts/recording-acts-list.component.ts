@@ -14,7 +14,7 @@ import { EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { EmptyInstrumentRecording, getRecordableObjectStatusName, getSizeUnitNameShort, InstrumentRecording,
          RecordableObjectStatus, RecordableSubject, RecordableSubjectType, RecordingActEntry,
-         RecordingContext, SizeUnit } from '@app/models';
+         RegistryEntryData, SizeUnit, RegistryEntryView } from '@app/models';
 
 import { AlertService } from '@app/shared/containers/alert/alert.service';
 
@@ -23,9 +23,9 @@ import { MessageBoxService } from '@app/shared/containers/message-box';
 import { FormatLibrary, sendEvent } from '@app/shared/utils';
 
 export enum RecordingActsListEventType {
-  REMOVE_RECORDING_ACT = 'RecordingActsListComponent.Event.RemoveRecordingAct',
+  REMOVE_RECORDING_ACT      = 'RecordingActsListComponent.Event.RemoveRecordingAct',
   SELECT_RECORDABLE_SUBJECT = 'RecordingActsListComponent.Event.SelectRecordableSubject',
-  SELECT_RECORDING_ACT = 'RecordingActsListComponent.Event.SelectRecordingAct',
+  SELECT_RECORDING_ACT      = 'RecordingActsListComponent.Event.SelectRecordingAct',
 }
 
 @Component({
@@ -86,15 +86,15 @@ export class RecordingActsListComponent implements OnChanges {
   }
 
 
-  onOpenRecordableSubjectTabbedView(recordingContext: RecordingContext) {
-    sendEvent(this.recordingActsListEvent, RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT,
-      this.getRecordingContext(recordingContext));
+  onOpenRecordingActEditor(entry: RecordingActEntry) {
+    sendEvent(this.recordingActsListEvent, RecordingActsListEventType.SELECT_RECORDING_ACT,
+      this.getRegistryEntryData(entry, 'RecordingAct', false));
   }
 
 
-  onOpenRecordingActEditor(recordingContext: RecordingContext) {
-    sendEvent(this.recordingActsListEvent, RecordingActsListEventType.SELECT_RECORDING_ACT,
-      this.getRecordingContext(recordingContext));
+  onOpenRecordableSubjectTabbedView(entry: RecordingActEntry, isRelatedSubject: boolean) {
+    sendEvent(this.recordingActsListEvent, RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT,
+      this.getRegistryEntryData(entry, 'RecordableSubject', isRelatedSubject));
   }
 
 
@@ -152,14 +152,41 @@ export class RecordingActsListComponent implements OnChanges {
   }
 
 
-  private getRecordingContext(recordingContext: RecordingContext): RecordingContext {
-    const context: RecordingContext = {
-      instrumentRecordingUID: recordingContext.instrumentRecordingUID,
-      recordingActUID: recordingContext.recordingActUID,
-      actions: { can: { editRecordableSubject: this.instrumentRecording.actions.can.editRecordingActs} },
+  private getRegistryEntryData(entry: RecordingActEntry,
+                               registryEntryView: RegistryEntryView,
+                               isRelatedSubject: boolean): RegistryEntryData {
+    const data: RegistryEntryData = {
+      instrumentRecordingUID: entry.recordableSubject.recordingContext.instrumentRecordingUID,
+      recordingActUID: entry.recordableSubject.recordingContext.recordingActUID,
+      title: this.getRegistryEntryDataTitle(entry, registryEntryView, isRelatedSubject),
+      view: registryEntryView,
+      actions: {
+        can: {
+          editRecordableSubject: !isRelatedSubject && this.instrumentRecording.actions.can.editRecordingActs,
+        }
+      },
     };
 
-    return context;
+    return data;
+  }
+
+
+  private getRegistryEntryDataTitle(entry: RecordingActEntry,
+                                    registryEntryView: RegistryEntryView,
+                                    isRelatedSubject: boolean): string {
+    const index = `<strong> ${(this.recordingActs.indexOf(entry) + 1) + '&nbsp; &nbsp; | &nbsp; &nbsp;'}`;
+
+    if (isRelatedSubject) {
+      return index + 'Fracción de: &nbsp; &nbsp; ' + entry.relatedSubject.electronicID + '</strong>';
+    }
+
+    if (!!entry.description) {
+      return index + entry.description + '</strong>';
+    } else {
+      const recordingActName = registryEntryView === 'RecordingAct' ?
+        entry.name + '&nbsp; &nbsp; | &nbsp; &nbsp;' : '';
+      return index + recordingActName + entry.recordableSubject.electronicID + '</strong>';
+    }
   }
 
 }

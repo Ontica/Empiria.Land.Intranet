@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RecordableSubjectTabbedViewComponent } from './recordable-subject-tabbed-view.component';
+import { RegistryEntryEditorComponent } from './registry-entry-editor.component';
 
 
-describe('RecordableSubjectTabbedViewComponent', () => {
-  let component: RecordableSubjectTabbedViewComponent;
-  let fixture: ComponentFixture<RecordableSubjectTabbedViewComponent>;
+describe('RegistryEntryEditorComponent', () => {
+  let component: RegistryEntryEditorComponent;
+  let fixture: ComponentFixture<RegistryEntryEditorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RecordableSubjectTabbedViewComponent ]
+      declarations: [ RegistryEntryEditorComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RecordableSubjectTabbedViewComponent);
+    fixture = TestBed.createComponent(RegistryEntryEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -4,7 +4,7 @@
 
   <div class="primary"
        [fxHide]="displayFileViewer"
-       [fxHide.lt-lg]="displayTransactionTabbedView || displayFileViewer || secondaryEditorDisplayed">
+       [fxHide.lt-lg]="displayTransactionTabbedView || displayFileViewer || displayRegistryEntryEditor">
 
     <emp-land-transaction-list
         [transactionList]="transactionList"
@@ -20,7 +20,7 @@
 
   <div *ngIf="displayFileViewer"
     class="primary-resizable"
-    [fxHide.lt-lg]="secondaryEditorDisplayed"
+    [fxHide.lt-lg]="displayRegistryEntryEditor"
     [ngClass.lt-lg]="'primary-resizable-disable'"
     empNgResizable>
 
@@ -35,8 +35,8 @@
 
   <div *ngIf="displayTransactionTabbedView"
     class="secondary"
-    [fxHide]="secondaryEditorDisplayed"
-    [fxHide.lt-lg]="secondaryEditorDisplayed || displayFileViewer">
+    [fxHide]="displayRegistryEntryEditor"
+    [fxHide.lt-lg]="displayRegistryEntryEditor || displayFileViewer">
 
     <emp-land-transaction-tabbed-view
         [transaction]="selectedTransaction"
@@ -46,30 +46,14 @@
   </div>
 
 
-  <div *ngIf="displayRecordableSubjectTabbedView"
+  <div *ngIf="displayRegistryEntryEditor"
     class="secondary">
 
-    <emp-land-recordable-subject-tabbed-view
-      [instrumentRecordingUID]="selectedRecordingContext.instrumentRecordingUID"
-      [recordingActUID]="selectedRecordingContext.recordingActUID"
-      [canEditRecordableSubject]="selectedRecordingContext.actions.can.editRecordableSubject"
-      (recordableSubjectTabbedViewEvent)="onRecordableSubjectTabbedViewEvent($event)">
+    <emp-land-registry-entry-editor
+      [data]="selectedRegistryEntryData"
+      (registryEntryEditorEvent)="onRegistryEntryEditorEvent($event)">
 
-    </emp-land-recordable-subject-tabbed-view>
-
-  </div>
-
-
-  <div *ngIf="displayRecordingActEditor"
-    class="secondary">
-
-    <emp-land-recording-act-edition
-      [instrumentRecordingUID]="selectedRecordingContext.instrumentRecordingUID"
-      [recordingActUID]="selectedRecordingContext.recordingActUID"
-      [readonly]="!selectedRecordingContext.actions.can.editRecordableSubject"
-      (recordingActEditionEventType)="onRecordingActEditionEventType($event)">
-
-    </emp-land-recording-act-edition>
+    </emp-land-registry-entry-editor>
 
   </div>
 

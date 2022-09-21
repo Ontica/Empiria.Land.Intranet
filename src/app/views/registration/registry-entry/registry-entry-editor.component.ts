@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 
 import { Assertion, EventInfo } from '@app/core';
 
@@ -15,43 +15,46 @@ import { sendEvent } from '@app/shared/utils';
 
 import { RecordingDataService } from '@app/data-services';
 
-import { EmptyTractIndex, RealEstate, RecordableSubjectType, TractIndex } from '@app/models';
+import { EmptyRegistryEntryData, EmptyTractIndex, RealEstate, RecordableSubjectType, RegistryEntryData,
+         TractIndex } from '@app/models';
 
 import { RecordableSubjectEditorEventType } from '../recordable-subject/recordable-subject-editor.component';
 
-import { RecordableSubjectHistoryEventType } from './recordable-subject-history.component';
+import {
+  RecordableSubjectHistoryEventType
+} from '../recordable-subject/recordable-subject-history.component';
 
-export enum RecordableSubjectTabbedViewEventType {
-  RECORDABLE_SUBJECT_UPDATED = 'RecordableSubjectTabbedViewComponent.Event.RecordableSubjectUpdated',
-  CLOSE_BUTTON_CLICKED       = 'RecordableSubjectTabbedViewComponent.Event.CloseButtonClicked',
+import { RecordingActEditionEventType } from '../recording-acts/recording-act-edition.component';
+
+export enum RegistryEntryEditorEventType {
+  RECORDABLE_SUBJECT_UPDATED = 'RegistryEntryEditorComponent.Event.RecordableSubjectUpdated',
+  RECORDING_ACT_UPDATED      = 'RegistryEntryEditorComponent.Event.RecordingActUpdated',
+  CLOSE_BUTTON_CLICKED       = 'RegistryEntryEditorComponent.Event.CloseButtonClicked',
 }
 
 
 @Component({
-  selector: 'emp-land-recordable-subject-tabbed-view',
-  templateUrl: './recordable-subject-tabbed-view.component.html',
+  selector: 'emp-land-registry-entry-editor',
+  templateUrl: './registry-entry-editor.component.html',
 })
-export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestroy {
+export class  RegistryEntryEditorComponent implements OnChanges, OnDestroy {
 
-  @Input() instrumentRecordingUID = '';
+  @Input() data: RegistryEntryData = EmptyRegistryEntryData;
 
-  @Input() recordingActUID = '';
+  @Input() cardFloatingEffect = false;
 
-  @Input() canEditRecordableSubject = false;
-
-  @Output() recordableSubjectTabbedViewEvent = new EventEmitter<EventInfo>();
+  @Output() registryEntryEditorEvent = new EventEmitter<EventInfo>();
 
   tractIndex: TractIndex = EmptyTractIndex;
 
-  helper: SubscriptionHelper;
+  cardTitle = 'Editor...';
 
-  cardTitle = 'Visor y editor';
-
-  cardHint: string;
+  tabEditorLabel = 'Datos';
 
   isLoading = false;
 
-  tabEditorLabel = 'Datos del predio';
+  helper: SubscriptionHelper;
+
 
   constructor(private uiLayer: PresentationLayer,
               private recordingDataService: RecordingDataService) {
@@ -59,15 +62,18 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
   }
 
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.instrumentRecordingUID && changes.recordingActUID) {
-      this.getTractIndex();
-    }
+  ngOnChanges() {
+    this.getTractIndex();
   }
 
 
   ngOnDestroy() {
     this.helper.destroy();
+  }
+
+
+  get displayRecordingAct(): boolean {
+    return this.data.view === 'RecordingAct';
   }
 
 
@@ -92,8 +98,21 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
 
   onClose() {
-    sendEvent(this.recordableSubjectTabbedViewEvent,
-      RecordableSubjectTabbedViewEventType.CLOSE_BUTTON_CLICKED);
+    sendEvent(this.registryEntryEditorEvent, RegistryEntryEditorEventType.CLOSE_BUTTON_CLICKED);
+  }
+
+
+  onRecordingActEditionEventType(event: EventInfo) {
+    switch (event.type as RecordingActEditionEventType) {
+
+      case RecordingActEditionEventType.RECORDING_ACT_UPDATED:
+        sendEvent(this.registryEntryEditorEvent, RegistryEntryEditorEventType.RECORDING_ACT_UPDATED);
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
   }
 
 
@@ -102,8 +121,8 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
       case RecordableSubjectEditorEventType.RECORDABLE_SUBJECT_UPDATED:
         Assertion.assertValue(event.payload.instrumentRecording, 'event.payload.instrumentRecording');
         this.refreshTractIndex();
-        sendEvent(this.recordableSubjectTabbedViewEvent,
-          RecordableSubjectTabbedViewEventType.RECORDABLE_SUBJECT_UPDATED, event.payload)
+        sendEvent(this.registryEntryEditorEvent, RegistryEntryEditorEventType.RECORDABLE_SUBJECT_UPDATED,
+          event.payload)
         return;
 
       default:
@@ -130,15 +149,15 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
 
   private getTractIndex() {
-    if (!this.instrumentRecordingUID || !this.recordingActUID) {
+    if (!this.data.instrumentRecordingUID || !this.data.recordingActUID) {
       this.setTractIndex(EmptyTractIndex);
       return;
     }
 
     this.isLoading = true;
 
-    this.recordingDataService.getTractIndex(this.instrumentRecordingUID,
-                                            this.recordingActUID)
+    this.recordingDataService.getTractIndex(this.data.instrumentRecordingUID,
+                                            this.data.recordingActUID)
       .toPromise()
       .then(x => this.setTractIndex(x))
       .catch(() => this.onClose())
@@ -158,45 +177,23 @@ export class RecordableSubjectTabbedViewComponent implements OnChanges, OnDestro
 
 
   private initTexts(){
-    this.cardTitle = 'Visor y editor de predios';
-    this.setTitleText();
-    this.setCardHint();
-    this.setTextTabs();
-  }
+    this.cardTitle = this.displayRecordingAct ? 'Editor del acto jurídico' : 'Editor ';
+    this.tabEditorLabel = 'Datos ';
 
-
-  private setTitleText(){
-    this.cardTitle = 'Visor y editor de predios';
+    if (this.isRealEstate) {
+      this.cardTitle += this.displayRecordingAct ? '' : 'del predio';
+      this.tabEditorLabel += 'del predio';
+    }
 
     if (this.isAssociation) {
-      this.cardTitle = 'Visor y editor de asociaciones';
-      return;
+      this.cardTitle += this.displayRecordingAct ? '' : 'de la asociación';
+      this.tabEditorLabel += 'de la asociación';
     }
 
     if (this.isNoProperty) {
-      this.cardTitle = 'Visor y editor de documentos';
-      return;
+      this.cardTitle += this.displayRecordingAct ? '' : 'del documento';
+      this.tabEditorLabel += 'del documento';
     }
-  }
-
-
-  private setCardHint() {
-    this.cardHint = `<strong>${this.tractIndex.recordableSubject.electronicID}</strong>`;
-  }
-
-
-  private setTextTabs(){
-    if (this.isRealEstate) {
-      this.tabEditorLabel = 'Datos del predio';
-      return;
-    }
-
-    if (this.isAssociation) {
-      this.tabEditorLabel = 'Información de la asociación';
-      return;
-    }
-
-    this.tabEditorLabel = 'Información';
   }
 
 }

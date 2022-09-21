@@ -1,19 +1,27 @@
-<emp-land-real-estate-editor *ngIf="isRealEstate"
-  [instrumentRecordingUID]="instrumentRecordingUID"
-  [recordingActUID]="recordingActUID"
-  [realEstate]="realEstate"
-  [readonly]="readonly"
-  [showElectronicHistoryButton]="!readonly"
-  (realEstateEditorEvent)="onRealEstateEditorEvent($event)">
-</emp-land-real-estate-editor>
+<div [empNgSpinnerHost]="spinner" [style.minHeight.px]="150">
 
-<emp-land-no-property-editor *ngIf="isAssociation || isNoProperty"
-  [instrumentRecordingUID]="instrumentRecordingUID"
-  [recordingActUID]="recordingActUID"
-  [recordableSubject]="recordableSubject"
-  [isAssociation]="isAssociation"
-  [readonly]="readonly"
-  [showElectronicHistoryButton]="!readonly"
-  (noPropertyEditorEvent)="onNoPropertyEditorEvent($event)">
+  <emp-ng-spinner #spinner [visible]="isLoading">
 
-</emp-land-no-property-editor>
+  </emp-ng-spinner>
+
+  <emp-land-real-estate-editor *ngIf="isRealEstate"
+    [instrumentRecordingUID]="instrumentRecordingUID"
+    [recordingActUID]="recordingActUID"
+    [realEstate]="realEstate"
+    [readonly]="readonly"
+    [showElectronicHistoryButton]="!readonly"
+    (realEstateEditorEvent)="onRealEstateEditorEvent($event)">
+  </emp-land-real-estate-editor>
+
+  <emp-land-no-property-editor *ngIf="isAssociation || isNoProperty"
+    [instrumentRecordingUID]="instrumentRecordingUID"
+    [recordingActUID]="recordingActUID"
+    [recordableSubject]="recordableSubject"
+    [isAssociation]="isAssociation"
+    [readonly]="readonly"
+    [showElectronicHistoryButton]="!readonly"
+    (noPropertyEditorEvent)="onNoPropertyEditorEvent($event)">
+
+  </emp-land-no-property-editor>
+
+</div>

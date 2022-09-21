@@ -11,24 +11,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Assertion, EventInfo, SessionService } from '@app/core';
 
-import { BookEntryContext, EmptyBookEntryContext, EmptyRecordingContext,
-         RecordingContext } from '@app/models';
+import { BookEntryContext, EmptyBookEntryContext, EmptyRegistryEntryData,
+         isRegistryEntryDataValid, RegistryEntryData } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
-
-import {
-  RecordableSubjectTabbedViewEventType
-} from '@app/views/registration/recordable-subject/recordable-subject-tabbed-view.component';
-
-import {
-  RecordingActEditionEventType
-} from '@app/views/registration/recording-acts/recording-act-edition.component';
 
 import {
   BookEntryEditionComponent,
   BookEntryEditionEventType
 } from '@app/views/registration/recording-book/book-entry-edition.component';
 
+import {
+  RegistryEntryEditorEventType
+} from '@app/views/registration/registry-entry/registry-entry-editor.component';
 
 @Component({
   selector: 'emp-land-book-entry',
@@ -40,11 +35,9 @@ export class BookEntryWorkspaceComponent {
 
   bookEntryContext: BookEntryContext = EmptyBookEntryContext;
 
-  selectedRecordingContext: RecordingContext = EmptyRecordingContext;
+  selectedRegistryEntryData: RegistryEntryData = EmptyRegistryEntryData;
 
-  displayRecordingActEditor = false;
-
-  displayRecordableSubjectTabbedView = false;
+  displayRegistryEntryEditor = false;
 
 
   constructor(private route: ActivatedRoute,
@@ -59,25 +52,10 @@ export class BookEntryWorkspaceComponent {
     switch (event.type as BookEntryEditionEventType) {
 
       case BookEntryEditionEventType.RECORDING_ACT_SELECTED:
-        Assertion.assertValue(event.payload.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
-        Assertion.assertValue(event.payload.recordingActUID, 'event.payload.recordingActUID');
-
-        this.unselectSecondaryEditors();
-
-        this.selectedRecordingContext = event.payload as RecordingContext;
-        this.displayRecordingActEditor = this.isRecordingContextValid();
-
-        return;
-
       case BookEntryEditionEventType.RECORDABLE_SUBJECT_SELECTED:
         Assertion.assertValue(event.payload.instrumentRecordingUID, 'event.payload.instrumentRecordingUID');
         Assertion.assertValue(event.payload.recordingActUID, 'event.payload.recordingActUID');
-
-        this.unselectSecondaryEditors();
-
-        this.selectedRecordingContext = event.payload as RecordingContext;
-        this.displayRecordableSubjectTabbedView = this.isRecordingContextValid();
-
+        this.setRegistryEntryData(event.payload as RegistryEntryData);
         return;
 
       default:
@@ -87,32 +65,15 @@ export class BookEntryWorkspaceComponent {
   }
 
 
-  onRecordableSubjectTabbedViewEvent(event: EventInfo) {
-    switch (event.type as RecordableSubjectTabbedViewEventType) {
+  onRegistryEntryEditorEvent(event: EventInfo) {
+    switch (event.type as RegistryEntryEditorEventType) {
 
-      case RecordableSubjectTabbedViewEventType.CLOSE_BUTTON_CLICKED:
-        this.unselectSecondaryEditors();
+      case RegistryEntryEditorEventType.CLOSE_BUTTON_CLICKED:
+        this.setRegistryEntryData(EmptyRegistryEntryData);
         return;
 
-      case RecordableSubjectTabbedViewEventType.RECORDABLE_SUBJECT_UPDATED:
-        this.refreshSelectedBookEntry();
-        return;
-
-      default:
-        console.log(`Unhandled user interface event ${event.type}`);
-        return;
-    }
-  }
-
-
-  onRecordingActEditionEventType(event: EventInfo) {
-    switch (event.type as RecordingActEditionEventType) {
-
-      case RecordingActEditionEventType.CLOSE_BUTTON_CLICKED:
-        this.unselectSecondaryEditors();
-        return;
-
-      case RecordingActEditionEventType.RECORDING_ACT_UPDATED:
+      case RegistryEntryEditorEventType.RECORDABLE_SUBJECT_UPDATED:
+      case RegistryEntryEditorEventType.RECORDING_ACT_UPDATED:
         this.refreshSelectedBookEntry();
         return;
 
@@ -141,16 +102,9 @@ export class BookEntryWorkspaceComponent {
   }
 
 
-  private unselectSecondaryEditors() {
-    this.selectedRecordingContext = EmptyRecordingContext;
-    this.displayRecordingActEditor = false;
-    this.displayRecordableSubjectTabbedView = false;
-  }
-
-
-  private isRecordingContextValid() {
-    return !!this.selectedRecordingContext.instrumentRecordingUID &&
-           !!this.selectedRecordingContext.recordingActUID;
+  private setRegistryEntryData(data: RegistryEntryData) {
+    this.selectedRegistryEntryData = data;
+    this.displayRegistryEntryEditor = isRegistryEntryDataValid(this.selectedRegistryEntryData);
   }
 
 

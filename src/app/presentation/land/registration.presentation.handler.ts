@@ -13,8 +13,8 @@ import { Assertion, Command, toObservable, toPromise } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { EmptyBookEntry, EmptyInstrumentRecording, EmptyRecordingContext, EmptyRecordingBook,
-         InstrumentRecording } from '@app/models';
+import { EmptyBookEntry, EmptyInstrumentRecording, EmptyRecordingBook,
+         InstrumentRecording, EmptyRegistryEntryData } from '@app/models';
 
 import { RecordingDataService } from '@app/data-services';
 
@@ -22,21 +22,18 @@ import { RecordingDataService } from '@app/data-services';
 export enum ActionType {
   SELECT_TRANSACTION_INSTRUMENT_RECORDING   =  'Land.Registration.Action.SelectTransactionInstrumentRecording',
   UNSELECT_TRANSACTION_INSTRUMENT_RECORDING = 'Land.Registration.Action.UnselectTransactionInstrumentRecording',
-  SELECT_RECORDABLE_SUBJECT   = 'Land.Registration.Action.SelectRecordableSubject',
-  UNSELECT_RECORDABLE_SUBJECT = 'Land.Registration.Action.UnselectRecordableSubject',
-  SELECT_RECORDING_ACT        = 'Land.Registration.Action.SelectRecordingAct',
-  UNSELECT_RECORDING_ACT      = 'Land.Registration.Action.UnselectRecordingAct',
-  SELECT_RECORDING_BOOK       = 'Land.Registration.Action.SelectRecordingBook',
-  UNSELECT_RECORDING_BOOK     = 'Land.Registration.Action.UnselectRecordingBook',
-  SELECT_BOOK_ENTRY           = 'Land.Registration.Action.SelectBookEntry',
-  UNSELECT_BOOK_ENTRY         = 'Land.Registration.Action.UnselectBookEntry',
+  SELECT_REGISTRY_ENTRY   = 'Land.Registration.Action.SelectRegistryEntry',
+  UNSELECT_REGISTRY_ENTRY = 'Land.Registration.Action.UnselectRegistryEntry',
+  SELECT_RECORDING_BOOK   = 'Land.Registration.Action.SelectRecordingBook',
+  UNSELECT_RECORDING_BOOK = 'Land.Registration.Action.UnselectRecordingBook',
+  SELECT_BOOK_ENTRY       = 'Land.Registration.Action.SelectBookEntry',
+  UNSELECT_BOOK_ENTRY     = 'Land.Registration.Action.UnselectBookEntry',
 }
 
 
 export enum SelectorType {
   TRANSACTION_INSTRUMENT_RECORDING = 'Land.Registration.Selector.TransactionInstrumentRecording',
-  SELECTED_RECORDABLE_SUBJECT      = 'Land.Registration.Selector.SelectedRecordableSubject',
-  SELECTED_RECORDING_ACT           = 'Land.Registration.Selector.SelectedRecordingAct',
+  SELECTED_REGISTRY_ENTRY          = 'Land.Registration.Selector.SelectedRegistryEntry',
   SELECTED_RECORDING_BOOK          = 'Land.Registration.Selector.SelectedRecordingBook',
   SELECTED_BOOK_ENTRY              = 'Land.Registration.Selector.SelectedBookEntry',
   INSTRUMENT_RECORDING             = 'Land.Registration.Selector.InstrumentRecording',
@@ -79,8 +76,7 @@ export enum EffectType {
 
 const initialState: StateValues = [
   { key: SelectorType.TRANSACTION_INSTRUMENT_RECORDING, value: EmptyInstrumentRecording },
-  { key: SelectorType.SELECTED_RECORDABLE_SUBJECT, value: EmptyRecordingContext },
-  { key: SelectorType.SELECTED_RECORDING_ACT, value: EmptyRecordingContext },
+  { key: SelectorType.SELECTED_REGISTRY_ENTRY, value: EmptyRegistryEntryData },
   { key: SelectorType.SELECTED_RECORDING_BOOK, value: EmptyRecordingBook },
   { key: SelectorType.SELECTED_BOOK_ENTRY, value: EmptyBookEntry },
 ];
@@ -227,24 +223,14 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
         this.setValue(SelectorType.TRANSACTION_INSTRUMENT_RECORDING, EmptyInstrumentRecording);
         return;
 
-      case ActionType.SELECT_RECORDABLE_SUBJECT:
+      case ActionType.SELECT_REGISTRY_ENTRY:
         Assertion.assertValue(params.instrumentRecordingUID, 'payload.instrumentRecordingUID');
         Assertion.assertValue(params.recordingActUID, 'payload.recordingActUID');
-        this.setValue(SelectorType.SELECTED_RECORDABLE_SUBJECT, params);
+        this.setValue(SelectorType.SELECTED_REGISTRY_ENTRY, params);
         return;
 
-      case ActionType.UNSELECT_RECORDABLE_SUBJECT:
-        this.setValue(SelectorType.SELECTED_RECORDABLE_SUBJECT, EmptyRecordingContext);
-        return;
-
-      case ActionType.SELECT_RECORDING_ACT:
-        Assertion.assertValue(params.instrumentRecordingUID, 'payload.instrumentRecordingUID');
-        Assertion.assertValue(params.recordingActUID, 'payload.recordingActUID');
-        this.setValue(SelectorType.SELECTED_RECORDING_ACT, params);
-        return;
-
-      case ActionType.UNSELECT_RECORDING_ACT:
-        this.setValue(SelectorType.SELECTED_RECORDING_ACT, EmptyRecordingContext);
+      case ActionType.UNSELECT_REGISTRY_ENTRY:
+        this.setValue(SelectorType.SELECTED_REGISTRY_ENTRY, EmptyRegistryEntryData);
         return;
 
       case ActionType.SELECT_RECORDING_BOOK:

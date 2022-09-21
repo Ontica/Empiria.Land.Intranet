@@ -1,0 +1,57 @@
+<div [style.height.%]="100" [ngClass.gt-md]="{'card-floating-container': cardFloatingEffect}">
+
+  <emp-ng-card
+    [title]="cardTitle"
+    [hint]="data.title"
+    [ngClass.gt-md]="{'card-floating-secondary': cardFloatingEffect}"
+    (cardClose)="onClose()">
+
+    <mat-tab-group>
+
+      <mat-tab label="Acto Jurídico" *ngIf="displayRecordingAct">
+
+        <emp-land-recording-act-edition
+          [instrumentRecordingUID]="data.instrumentRecordingUID"
+          [recordingActUID]="data.recordingActUID"
+          [readonly]="!data.actions.can.editRecordableSubject"
+          [displayFlat]="true"
+          (recordingActEditionEventType)="onRecordingActEditionEventType($event)">
+
+        </emp-land-recording-act-edition>
+
+      </mat-tab>
+
+      <mat-tab [label]="tabEditorLabel">
+
+        <emp-land-recordable-subject-editor
+          [instrumentRecordingUID]="data.instrumentRecordingUID"
+          [recordingActUID]="data.recordingActUID"
+          [recordableSubject]="tractIndex.recordableSubject"
+          [readonly]="!data.actions.can.editRecordableSubject"
+          [isLoading]="isLoading"
+          (recordableSubjectEditorEvent)="onRecordableSubjectEditorEvent($event)">
+
+        </emp-land-recordable-subject-editor>
+
+      </mat-tab>
+
+      <mat-tab label="Estructura" disabled *ngIf="isRealEstate">
+
+      </mat-tab>
+
+      <mat-tab label="Historia registral">
+
+        <emp-land-recordable-subject-history
+          [tractIndex]="tractIndex"
+          [isLoading]="isLoading"
+          (recordableSubjectHistoryEvent)="onRecordableSubjectHistoryEvent($event)">
+
+        </emp-land-recordable-subject-history>
+
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </emp-ng-card>
+
+</div>

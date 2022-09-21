@@ -50,7 +50,6 @@ export enum RecordableSubjectType {
 }
 
 
-
 export const RecordableSubjectTypeList: Identifiable[] = [
   {uid: RecordableSubjectType.RealEstate,  name: 'Predios'},
   {uid: RecordableSubjectType.Association, name: 'Asociaciones'},
@@ -141,31 +140,54 @@ export interface NoPropertyFields extends RecordableSubjectFields {
 }
 
 
-export interface RecordingContextActions {
+export type RegistryEntryView = 'RecordingAct' | 'RecordableSubject';
+
+
+export interface RegistryEntryActions {
   can: {
     editRecordableSubject: boolean;
   }
 }
 
 
-export const EmptyRecordingContextActions: RecordingContextActions = {
+export const EmptyRegistryEntryActions: RegistryEntryActions = {
   can: {
     editRecordableSubject: false,
   }
 }
 
 
+export interface RegistryEntryData {
+  instrumentRecordingUID: string;
+  recordingActUID: string;
+  title?: string;
+  view?: RegistryEntryView;
+  actions?: RegistryEntryActions;
+}
+
+
+export const EmptyRegistryEntryData: RegistryEntryData = {
+  instrumentRecordingUID: '',
+  recordingActUID: '',
+  title: '',
+  actions: EmptyRegistryEntryActions,
+};
+
+
+export function isRegistryEntryDataValid(data: RegistryEntryData): boolean {
+    return !!data.instrumentRecordingUID && !!data.recordingActUID;
+}
+
+
 export interface RecordingContext {
   instrumentRecordingUID: string;
   recordingActUID: string;
-  actions?: RecordingContextActions;
 }
 
 
 export const EmptyRecordingContext: RecordingContext = {
   instrumentRecordingUID: '',
   recordingActUID: '',
-  actions: EmptyRecordingContextActions,
 };
 
 

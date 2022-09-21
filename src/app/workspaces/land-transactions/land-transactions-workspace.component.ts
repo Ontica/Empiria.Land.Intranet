@@ -17,20 +17,19 @@ import { MainUIStateSelector, RegistrationAction, RegistrationStateSelector, Tra
 import { View } from '@app/main-layout';
 
 import { TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
-         mapTransactionStageFromViewName, mapTransactionStatusFromViewName, EmptyRecordingContext,
-         RecordingContext } from '@app/models';
+         mapTransactionStageFromViewName, mapTransactionStatusFromViewName, RegistryEntryData,
+         EmptyRegistryEntryData, isRegistryEntryDataValid } from '@app/models';
 
-import { EmptyFileViewerData, FileViewerData} from '@app/shared/form-controls/file-control/file-control-data';
+import {
+  EmptyFileViewerData,
+  FileViewerData
+} from '@app/shared/form-controls/file-control/file-control-data';
+
+import {
+  RegistryEntryEditorEventType
+} from '@app/views/registration/registry-entry/registry-entry-editor.component';
 
 import { TransactionListEventType} from '@app/views/transactions/transaction-list/transaction-list.component';
-
-import {
-  RecordableSubjectTabbedViewEventType
-} from '@app/views/registration/recordable-subject/recordable-subject-tabbed-view.component';
-
-import {
-  RecordingActEditionEventType
-} from '@app/views/registration/recording-acts/recording-act-edition.component';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
@@ -45,20 +44,18 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   currentView: View;
 
-  transactionList: TransactionShortModel[] = [];
   filter: TransactionFilter = EmptyTransactionFilter;
+  transactionList: TransactionShortModel[] = [];
 
-  selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedTransaction: Transaction = EmptyTransaction;
-  selectedRecordingContext: RecordingContext = EmptyRecordingContext;
-
-  displayOptionModalSelected: TransactionModalOptions = null;
   selectedTransactions: TransactionShortModel[] = [];
+  selectedFileViewerData: FileViewerData = EmptyFileViewerData;
+  selectedRegistryEntryData: RegistryEntryData = EmptyRegistryEntryData;
 
-  displayFileViewer = false;
-  displayRecordableSubjectTabbedView = false;
-  displayRecordingActEditor = false;
   displayTransactionTabbedView = false;
+  displayOptionModalSelected: TransactionModalOptions = null;
+  displayFileViewer = false;
+  displayRegistryEntryEditor = false;
 
   isLoading = false;
   isLoadingTransaction = false;
@@ -78,11 +75,6 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptionHelper.destroy();
-  }
-
-
-  get secondaryEditorDisplayed(){
-    return this.displayRecordableSubjectTabbedView || this.displayRecordingActEditor;
   }
 
 
@@ -124,25 +116,11 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
-  onRecordableSubjectTabbedViewEvent(event: EventInfo) {
-    switch (event.type as RecordableSubjectTabbedViewEventType) {
+  onRegistryEntryEditorEvent(event: EventInfo) {
+    switch (event.type as RegistryEntryEditorEventType) {
 
-      case RecordableSubjectTabbedViewEventType.CLOSE_BUTTON_CLICKED:
-        this.unselectSecondaryEditors();
-        return;
-
-      default:
-        console.log(`Unhandled user interface event ${event.type}`);
-        return;
-    }
-  }
-
-
-  onRecordingActEditionEventType(event: EventInfo) {
-    switch (event.type as RecordingActEditionEventType) {
-
-      case RecordingActEditionEventType.CLOSE_BUTTON_CLICKED:
-        this.unselectSecondaryEditors();
+      case RegistryEntryEditorEventType.CLOSE_BUTTON_CLICKED:
+        this.unselectRegistryEntryEditor();
         return;
 
       default:
@@ -166,7 +144,6 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
     this.unselectCurrentFile();
   }
 
-  // private methods
 
   private subscribeToDataInit() {
     this.subscriptionHelper.select<TransactionShortModel[]>(TransactionStateSelector.TRANSACTION_LIST)
@@ -193,23 +170,11 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
 
   private suscribeToSelectedData() {
-    this.subscriptionHelper.select<RecordingContext>(RegistrationStateSelector.SELECTED_RECORDABLE_SUBJECT)
-      .subscribe(x => {
-        this.selectedRecordingContext = x;
-        this.displayRecordableSubjectTabbedView = this.isRecordingContextValid();
-      });
-
-    this.subscriptionHelper.select<RecordingContext>(RegistrationStateSelector.SELECTED_RECORDING_ACT)
-      .subscribe(x => {
-        this.selectedRecordingContext = x;
-        this.displayRecordingActEditor = this.isRecordingContextValid();
-      });
+    this.subscriptionHelper.select<RegistryEntryData>(RegistrationStateSelector.SELECTED_REGISTRY_ENTRY)
+      .subscribe(x => this.setRegistryEntryData(x));
 
     this.subscriptionHelper.select<FileViewerData>(TransactionStateSelector.SELECTED_FILE_LIST)
-      .subscribe(x => {
-        this.selectedFileViewerData = x;
-        this.displayFileViewer = this.selectedFileViewerData.fileList.length > 0;
-      });
+      .subscribe(x => this.setFileViewerData(x));
   }
 
 
@@ -235,6 +200,18 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
+  private setRegistryEntryData(data: RegistryEntryData) {
+    this.selectedRegistryEntryData = data;
+    this.displayRegistryEntryEditor = isRegistryEntryDataValid(this.selectedRegistryEntryData);
+  }
+
+
+  private setFileViewerData(data: FileViewerData) {
+    this.selectedFileViewerData = data;
+    this.displayFileViewer = this.selectedFileViewerData.fileList.length > 0;
+  }
+
+
   private unselectCurrentTransaction() {
     this.uiLayer.dispatch(TransactionAction.UNSELECT_TRANSACTION);
   }
@@ -247,19 +224,12 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
   private unselectCurrentSelections(){
     this.unselectCurrentFile();
-    this.unselectSecondaryEditors();
+    this.unselectRegistryEntryEditor();
   }
 
 
-  private unselectSecondaryEditors() {
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDABLE_SUBJECT);
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_RECORDING_ACT);
-  }
-
-
-  private isRecordingContextValid() {
-    return !!this.selectedRecordingContext.instrumentRecordingUID &&
-           !!this.selectedRecordingContext.recordingActUID;
+  private unselectRegistryEntryEditor() {
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_REGISTRY_ENTRY);
   }
 
 }
