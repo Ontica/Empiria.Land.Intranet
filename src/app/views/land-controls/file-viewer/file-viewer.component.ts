@@ -30,6 +30,8 @@ export class FileViewerComponent implements OnChanges {
 
   @Input() showCloseButton = true;
 
+  @Input() cardOnTopEffect = false;
+
   @Output() closeEvent = new EventEmitter<void>();
 
   selectedFile: FileData = null;

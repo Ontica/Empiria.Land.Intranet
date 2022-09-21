@@ -1,82 +1,88 @@
-<div class="card card-border card-shadow">
+<div [style.height.%]="100"
+  [ngClass.gt-md]="{'card-floating-container': cardOnTopEffect}">
 
-  <div class="card-header card-header-flat">
+  <div class="card card-border card-shadow"
+    [ngClass.gt-md]="{'card-floating-primary': cardOnTopEffect}">
 
-    <div class="card-title">
+    <div class="card-header card-header-flat">
 
-      {{ fileViewerData.title ? fileViewerData.title : 'Visor de archivos' }}
+      <div class="card-title">
 
-      <div class="card-hint" [innerHTML]="getHintText() | safeHtml">
+        {{ fileViewerData.title ? fileViewerData.title : 'Visor de archivos' }}
 
+        <div class="card-hint" [innerHTML]="getHintText() | safeHtml">
+
+        </div>
       </div>
+
+      <div class="card-header-options">
+        <mat-icon *ngIf="showCloseButton" (click)="onClose()">close</mat-icon>
+      </div>
+
     </div>
 
-    <div class="card-header-options">
-      <mat-icon *ngIf="showCloseButton" (click)="onClose()">close</mat-icon>
-    </div>
+    <div class="card-body" [empNgSpinnerHost]="spinner" [style.marginTop.px]="4">
 
-  </div>
+      <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
-  <div class="card-body" [empNgSpinnerHost]="spinner" [style.marginTop.px]="4">
+      <ng-container *ngIf="showFileContainer">
 
-    <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
+        <emp-land-file-viewer-navigator *ngIf="showNavigatorTool"
+          [selectedIndex]="selectedFileIndex"
+          [pagesTotal]="fileViewerData.fileList.length"
+          [showFileTool]="multiple"
+          [showZoom]="showZoom"
+          [zoom]="imageZoom"
+          (zoomChange)="onZoomChanged($event)"
+          (selectedIndexChange)="onSelectedIndexChanged($event)">
 
-    <ng-container *ngIf="showFileContainer">
-
-      <emp-land-file-viewer-navigator *ngIf="showNavigatorTool"
-        [selectedIndex]="selectedFileIndex"
-        [pagesTotal]="fileViewerData.fileList.length"
-        [showFileTool]="multiple"
-        [showZoom]="showZoom"
-        [zoom]="imageZoom"
-        (zoomChange)="onZoomChanged($event)"
-        (selectedIndexChange)="onSelectedIndexChanged($event)">
-
-      </emp-land-file-viewer-navigator>
+        </emp-land-file-viewer-navigator>
 
 
-      <div class="file-container"
-        [class.height-container-single]="!showNavigatorTool"
-        [class.height-container-with-navigator]="showNavigatorTool">
+        <div class="file-container"
+          [class.height-container-single]="!showNavigatorTool"
+          [class.height-container-with-navigator]="showNavigatorTool">
 
-        <ng-container *ngFor="let file of fileViewerData.fileList">
+          <ng-container *ngFor="let file of fileViewerData.fileList">
 
-          <ng-container *ngIf="!file.type.includes('image') && file === selectedFile">
+            <ng-container *ngIf="!file.type.includes('image') && file === selectedFile">
 
-            <object [data]="file.url | safeUrl" type="{{file.type}}" class="object-file"
-              [style.width.%]="100"
-              [style.height.%]="100"
-              (load)="onLoad()">
+              <object [data]="file.url | safeUrl" type="{{file.type}}" class="object-file"
+                [style.width.%]="100"
+                [style.height.%]="100"
+                (load)="onLoad()">
 
-            </object>
+              </object>
+
+            </ng-container>
+
+
+            <ng-container *ngIf="file.type.includes('image') && file === this.selectedFile">
+
+              <div #imageContainer class="image-container">
+
+                  <img #imageFile class="image-file" *ngIf="isImageModeContainerSize"
+                    cdkDrag cdkDragBoundary=".image-file"
+                    [style.width.%]="imageZoom"
+                    [src]="file.url | safeUrl"
+                    (load)="onLoad()">
+
+                  <img #imageFile class="image-file" *ngIf="isImageModeOriginalSize"
+                    [style.width.px]="imageWidthZoomed"
+                    [src]="file.url | safeUrl"
+                    (load)="onLoad()">
+
+              </div>
+
+            </ng-container>
 
           </ng-container>
 
+        </div>
 
-          <ng-container *ngIf="file.type.includes('image') && file === this.selectedFile">
+      </ng-container>
 
-            <div #imageContainer class="image-container">
-
-                <img #imageFile class="image-file" *ngIf="isImageModeContainerSize"
-                  cdkDrag cdkDragBoundary=".image-file"
-                  [style.width.%]="imageZoom"
-                  [src]="file.url | safeUrl"
-                  (load)="onLoad()">
-
-                <img #imageFile class="image-file" *ngIf="isImageModeOriginalSize"
-                  [style.width.px]="imageWidthZoomed"
-                  [src]="file.url | safeUrl"
-                  (load)="onLoad()">
-
-            </div>
-
-          </ng-container>
-
-        </ng-container>
-
-      </div>
-
-    </ng-container>
+    </div>
 
   </div>
 

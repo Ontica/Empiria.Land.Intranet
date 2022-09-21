@@ -53,6 +53,10 @@
     margin: auto;
   }
 
+  .primary-resizable.primary-floating::after {
+    margin-right: -15px;
+  }
+
   .primary-resizable-disable {
     flex: 1 1 600px;
     min-width: 400px;
