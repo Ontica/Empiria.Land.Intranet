@@ -19,13 +19,14 @@
 
 
   <div *ngIf="displayFileViewer"
-    class="primary-resizable"
+    class="primary-resizable primary-floating"
     [fxHide.lt-lg]="displayRegistryEntryEditor"
     [ngClass.lt-lg]="'primary-resizable-disable'"
     empNgResizable>
 
     <emp-land-file-viewer
       [fileViewerData]="selectedFileViewerData"
+      [cardFloatingEffect]="true"
       (closeEvent)="onCloseFileViewer()">
 
     </emp-land-file-viewer>
@@ -51,6 +52,7 @@
 
     <emp-land-registry-entry-editor
       [data]="selectedRegistryEntryData"
+      [cardFloatingEffect]="true"
       (registryEntryEditorEvent)="onRegistryEntryEditorEvent($event)">
 
     </emp-land-registry-entry-editor>
