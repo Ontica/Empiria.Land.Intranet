@@ -55,7 +55,7 @@ $logo-padding: 20px;
   padding: 30px $logo-padding;
   font-size: 14.5pt;
   text-transform: uppercase;
-  color: $layout-secondary-color-dark;
+  color: $layout-secondary-color;
   line-height: 16pt;
 }
 
@@ -66,6 +66,10 @@ $logo-padding: 20px;
   .login-field-container {
     position: relative;
     padding-bottom: 10px;
+
+    .invalid-control {
+      border-left: 5px solid $secondary-color  !important;
+    }
   }
 
   .footer-submit-container {

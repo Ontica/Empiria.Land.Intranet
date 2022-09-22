@@ -20,14 +20,14 @@
 
           <form autocomplete="off" [formGroup]="form">
 
-            <label for="userID">Username:</label>
+            <label for="userID">Usuario:</label>
             <div class="login-field-container">
               <input type="text" class="text-box" id="userID" autocomplete="username" autofocus
                 formControlName="userID"
                 [class.invalid-control]="form.get('userID').invalid && form.get('userID').touched">
             </div>
 
-            <label for="password">Password:</label>
+            <label for="password">Contraseña:</label>
             <div class="login-field-container">
               <input [type]="showPassword ? 'text' : 'password'" class="text-box"
                 id="password" autocomplete="current-password"
@@ -49,7 +49,7 @@
                 (click)="$event.stopPropagation"
                 (change)="toggleShowPassword()"
                 class="mat-checkbox-warning">
-                Show password
+                Mostrar contraseña
               </mat-checkbox>
 
               <div></div>
@@ -60,7 +60,7 @@
                 [class.spinner]="submitted"
                 [style.marginRight.px]="8"
                 (click)="login()">
-                Log In
+                Iniciar sesión
               </button>
             </div>
 
