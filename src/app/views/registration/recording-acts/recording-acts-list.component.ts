@@ -156,8 +156,10 @@ export class RecordingActsListComponent implements OnChanges {
                                registryEntryView: RegistryEntryView,
                                isRelatedSubject: boolean): RegistryEntryData {
     const data: RegistryEntryData = {
-      instrumentRecordingUID: entry.recordableSubject.recordingContext.instrumentRecordingUID,
-      recordingActUID: entry.recordableSubject.recordingContext.recordingActUID,
+      instrumentRecordingUID: isRelatedSubject ? entry.relatedSubject.recordingContext.instrumentRecordingUID
+                                               : entry.recordableSubject.recordingContext.instrumentRecordingUID,
+      recordingActUID: isRelatedSubject ? entry.relatedSubject.recordingContext.recordingActUID
+                                        : entry.recordableSubject.recordingContext.recordingActUID,
       title: this.getRegistryEntryDataTitle(entry, registryEntryView, isRelatedSubject),
       view: registryEntryView,
       actions: {
