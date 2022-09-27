@@ -83,11 +83,12 @@ export class TractIndexEntryTabbedViewComponent implements OnChanges, OnDestroy 
 
 
   private initTexts(){
-    this.cardTitle = `${this.tractIndexEntry.description}`;
+    this.cardTitle = !!this.tractIndexEntry.description ?
+      this.tractIndexEntry.description : this.tractIndexEntry.name;
 
-    this.cardHint = !this.tractIndexEntry.recordingData.recordingID ?
-      'Información del acto jurídico seleccionado' :
-      `<strong>${this.tractIndexEntry.recordingData.recordingID }</strong>`;
+    this.cardHint = !!this.tractIndexEntry.recordingData.recordingID ?
+      `<strong>${this.tractIndexEntry.recordingData.recordingID}</strong>` :
+      'Información del acto jurídico seleccionado';
 
     if (!!this.tractIndexEntry.recordingData.presentationTime) {
       this.cardHint += `&nbsp; &nbsp; | &nbsp; &nbsp;` +
