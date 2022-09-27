@@ -50,13 +50,6 @@ export enum RecordableSubjectType {
 }
 
 
-export const RecordableSubjectTypeList: Identifiable[] = [
-  {uid: RecordableSubjectType.RealEstate,  name: 'Predios'},
-  {uid: RecordableSubjectType.Association, name: 'Asociaciones'},
-  {uid: RecordableSubjectType.NoProperty,  name: 'Documentos'},
-];
-
-
 export function getRecordableSubjectTypeName(type: RecordableSubjectType): string {
     switch (type) {
     case RecordableSubjectType.RealEstate:
@@ -218,20 +211,6 @@ export const EmptyRecordableSubject: RecordableSubject = {
 export interface RecordableSubjectShortModel extends Identifiable, PartitionedType {
   electronicID: string;
   kind: string;
-}
-
-
-export interface RecordableSubjectData {
-  queryExecuted: boolean;
-  recordableSubjectFilter: RecordableSubjectFilter;
-  recordableSubjects: RecordableSubjectShortModel[];
-}
-
-
-export const EmptyRecordableSubjectData: RecordableSubjectData = {
-  queryExecuted: false,
-  recordableSubjectFilter: EmptyRecordableSubjectFilter,
-  recordableSubjects: [],
 }
 
 

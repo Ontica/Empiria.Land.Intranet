@@ -16,9 +16,11 @@ import { SharedModule } from '@app/shared/shared.module';
 import { LandControlsModule } from '../land-controls/land.controls.module';
 import { RegistrationModule } from '../registration/registration.module';
 
-import { RecordableSubjectsFilterComponent } from './recordable-subjects-searcher/recordable-subjects-filter.component';
-import { RecordableSubjectsSearcherComponent } from './recordable-subjects-searcher/recordable-subjects-searcher.component';
-import { RecordableSubjectsTableComponent } from './recordable-subjects-searcher/recordable-subjects-table.component';
+import { RecordSearchComponent } from './record-search/record-search.component';
+import { RecordSearchFilterComponent } from './record-search/record-search-filter.component';
+import { RecordSearchListComponent } from './record-search/record-search-list.component';
+import { RecordSearchListItemComponent } from './record-search/record-search-list-item.component';
+
 import { TractIndexEntriesFilterComponent } from './tract-index-explorer/tract-index-entries-filter.component';
 import { TractIndexEntriesTableComponent } from './tract-index-explorer/tract-index-entries-table.component';
 import { TractIndexEntriesViewerComponent } from './tract-index-explorer/tract-index-entries-viewer.component';
@@ -41,9 +43,10 @@ import { TractIndexExplorerComponent } from './tract-index-explorer/tract-index-
     RegistrationModule,
   ],
   declarations: [
-    RecordableSubjectsFilterComponent,
-    RecordableSubjectsSearcherComponent,
-    RecordableSubjectsTableComponent,
+    RecordSearchComponent,
+    RecordSearchFilterComponent,
+    RecordSearchListComponent,
+    RecordSearchListItemComponent,
     TractIndexEntriesFilterComponent,
     TractIndexEntriesTableComponent,
     TractIndexEntriesViewerComponent,
@@ -52,7 +55,7 @@ import { TractIndexExplorerComponent } from './tract-index-explorer/tract-index-
     TractIndexExplorerComponent,
   ],
   exports: [
-    RecordableSubjectsSearcherComponent,
+    RecordSearchComponent,
   ]
 })
 export class SearchServicesModule { }

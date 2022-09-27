@@ -1,0 +1,73 @@
+<form #form="ngForm" empNgFormKeyDownEnter autocomplete="off" class="form-section form-container">
+
+  <div fxLayout="column" fxLayoutGap="0.5rem" fxLayoutGap.lt-sm="0.5rem">
+
+      <div fxLayout="row" fxLayout.lt-sm="column">
+
+        <div fxFlex="20">
+
+          <label>Oficialía:</label>
+
+          <emp-ng-select name="municipality"
+            [(ngModel)]="formData.municipality"
+            [items]="municipalityList"
+            [config]="{clearable: true}"
+            placeholder="Todas"
+            disabled
+            (changes)="onFilterChanges()">
+          </emp-ng-select>
+
+        </div>
+
+        <div fxFlex="20">
+
+          <label>Buscar:</label>
+
+          <emp-ng-select name="type" required
+            [(ngModel)]="formData.type"
+            [items]="recordSearchTypeList"
+            [showError]="!formData.type"
+            placeholder="Todos"
+            (changes)="onFilterChanges()">
+          </emp-ng-select>
+
+        </div>
+
+
+        <div fxFlex="20">
+
+          <label>Filtrar por:</label>
+
+          <emp-ng-select name="filterBy"
+            [(ngModel)]="formData.filterBy"
+            [items]="filterByList"
+            [config]="{clearable: true}"
+            placeholder="Todos"
+            disabled
+            (changes)="onFilterChanges()">
+          </emp-ng-select>
+
+        </div>
+
+        <div fxFlex="40" fxLayoutAlign="start end">
+
+          <div class="input-search-container">
+
+            <input type="text" class="text-box" name="keywords" #keywords="ngModel" required
+              placeholder="Buscar por folio, descripción, palabra ..."
+              [(ngModel)]="formData.keywords"
+              [class.invalid-control]="keywords.invalid"
+              (keyup.enter)="onFilterChanges()"
+              (keyup.escape)="onClearKeywords()"
+              [style.marginRight]="0"
+              [style.width.%]="100">
+
+          </div>
+
+        </div>
+
+      </div>
+
+  </div>
+
+</form>

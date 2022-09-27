@@ -26,4 +26,6 @@ export * from './recordable-subjects.data.service';
 
 export * from './recording.data.service';
 
+export * from './search-services.data.service';
+
 export * from './transaction.data.service';

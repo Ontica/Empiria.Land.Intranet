@@ -124,15 +124,6 @@ export class RecordableSubjectsDataService {
   }
 
 
-  searchRecordableSubject(filter: RecordableSubjectFilter): Observable<RecordableSubjectShortModel[]> {
-    Assertion.assertValue(filter, 'filter');
-
-    const path = `v5/land/internal-search-services/recordable-subjects`;
-
-    return this.http.post<RecordableSubjectShortModel[]>(path, filter);
-  }
-
-
   getFullTractIndex(recordableSubjectUID: string): Observable<TractIndex> {
     Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
 

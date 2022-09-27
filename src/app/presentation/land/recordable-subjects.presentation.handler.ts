@@ -13,31 +13,30 @@ import { Assertion, Cache, toObservable } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
-import { EmptyRecordableSubjectData, EmptyTractIndex, IssuersFilter, RecordableSubjectFilter } from '@app/models';
+import { EmptyRecordSearchData, EmptyTractIndex, IssuersFilter } from '@app/models';
 
 import { RecordableSubjectsDataService } from '@app/data-services';
 
 
 export enum ActionType {
-  SET_RECORDABLE_SUBJECTS_EXPLORER_DATA = 'Land.RecordableSubjects.Action.SetRecordableSubjectsExplorerData',
+  SET_RECORD_SEARCH_DATA = 'Land.RecordableSubjects.Action.SetRecordSearchData',
 }
 
 
 export enum SelectorType {
-  AMENDABLE_RECORDING_ACTS          = 'Land.RecordableSubjects.Selector.AmendableRecordingActs.List',
-  ASSOCIATION_KIND_LIST             = 'Land.RecordableSubjects.Selector.AssociationKind.List',
-  INSTRUMENT_KIND_LIST              = 'Land.RecordableSubjects.Selector.InstrumentKind.List',
-  INSTRUMENT_TYPE_ISSUERS_LIST      = 'Land.RecordableSubjects.Selector.InstrumentTypeIssuers.List',
-  NO_PROPERTY_KIND_LIST             = 'Land.RecordableSubjects.Selector.NoPropertyKind.List',
-  RECORDER_OFFICE_LIST              = 'Land.RecordableSubjects.Selector.RecorderOffice.List',
-  REAL_ESTATE_KIND_LIST             = 'Land.RecordableSubjects.Selector.RealEstateKind.List',
-  REAL_ESTATE_PARTITION_KIND_LIST   = 'Land.RecordableSubjects.Selector.RealEstatePartitionKind.List',
-  REAL_ESTATE_LOT_SIZE_UNIT_LIST    = 'Land.RecordableSubjects.Selector.RealEstateLoteSizeUnit.List',
-  RECORDING_BOOKS_LIST              = 'Land.RecordableSubjects.Selector.RecordingBooks.List',
-  RECORDING_BOOK_ENTRIES_LIST       = 'Land.RecordableSubjects.Selector.RecordingBookEntries.List',
-  RECORDABLE_SUBJECTS_LIST          = 'Land.RecordableSubjects.Selector.RecordableSubjects.List',
-  RECORDABLE_SUBJECTS_EXPLORER_DATA = 'Land.RecordableSubjects.Selector.RecordableSubjectsExplorerData.Data',
-  TRACT_INDEX                       = 'Land.RecordableSubjects.Selector.TractIndex',
+  AMENDABLE_RECORDING_ACTS        = 'Land.RecordableSubjects.Selector.AmendableRecordingActs.List',
+  ASSOCIATION_KIND_LIST           = 'Land.RecordableSubjects.Selector.AssociationKind.List',
+  INSTRUMENT_KIND_LIST            = 'Land.RecordableSubjects.Selector.InstrumentKind.List',
+  INSTRUMENT_TYPE_ISSUERS_LIST    = 'Land.RecordableSubjects.Selector.InstrumentTypeIssuers.List',
+  NO_PROPERTY_KIND_LIST           = 'Land.RecordableSubjects.Selector.NoPropertyKind.List',
+  RECORDER_OFFICE_LIST            = 'Land.RecordableSubjects.Selector.RecorderOffice.List',
+  REAL_ESTATE_KIND_LIST           = 'Land.RecordableSubjects.Selector.RealEstateKind.List',
+  REAL_ESTATE_PARTITION_KIND_LIST = 'Land.RecordableSubjects.Selector.RealEstatePartitionKind.List',
+  REAL_ESTATE_LOT_SIZE_UNIT_LIST  = 'Land.RecordableSubjects.Selector.RealEstateLoteSizeUnit.List',
+  RECORDING_BOOKS_LIST            = 'Land.RecordableSubjects.Selector.RecordingBooks.List',
+  RECORDING_BOOK_ENTRIES_LIST     = 'Land.RecordableSubjects.Selector.RecordingBookEntries.List',
+  RECORD_SEARCH_DATA              = 'Land.RecordableSubjects.Selector.RecordSearch.Data',
+  TRACT_INDEX                     = 'Land.RecordableSubjects.Selector.TractIndex',
 }
 
 
@@ -50,7 +49,7 @@ const initialState: StateValues = [
   { key: SelectorType.REAL_ESTATE_PARTITION_KIND_LIST, value: [] },
   { key: SelectorType.REAL_ESTATE_LOT_SIZE_UNIT_LIST, value: [] },
   { key: SelectorType.RECORDER_OFFICE_LIST, value: [] },
-  { key: SelectorType.RECORDABLE_SUBJECTS_EXPLORER_DATA, value: EmptyRecordableSubjectData },
+  { key: SelectorType.RECORD_SEARCH_DATA, value: EmptyRecordSearchData },
 ];
 
 
@@ -146,9 +145,6 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
 
         return toObservable<U>(this.data.getRecordingBookEntries(params.recordingBookUID));
 
-      case SelectorType.RECORDABLE_SUBJECTS_LIST:
-        return toObservable<U>(this.data.searchRecordableSubject(params as RecordableSubjectFilter));
-
       case SelectorType.TRACT_INDEX:
         Assertion.assertValue(params.recordableSubjectUID, 'params.recordableSubjectUID');
 
@@ -164,13 +160,12 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
   dispatch(actionType: ActionType, params?: any): void {
     switch (actionType) {
 
-      case ActionType.SET_RECORDABLE_SUBJECTS_EXPLORER_DATA:
-        Assertion.assertValue(params.recordableSubjectData, 'payload.recordableSubjectData');
+      case ActionType.SET_RECORD_SEARCH_DATA:
+        Assertion.assertValue(params.recordSearchData, 'payload.recordSearchData');
 
-        const recordableSubjectData = params.recordableSubjectData ||
-          this.getValue(SelectorType.RECORDABLE_SUBJECTS_EXPLORER_DATA);
+        const recordSearchData = params.recordSearchData || this.getValue(SelectorType.RECORD_SEARCH_DATA);
 
-        this.setValue(SelectorType.RECORDABLE_SUBJECTS_EXPLORER_DATA, recordableSubjectData);
+        this.setValue(SelectorType.RECORD_SEARCH_DATA, recordSearchData);
 
         return;
 

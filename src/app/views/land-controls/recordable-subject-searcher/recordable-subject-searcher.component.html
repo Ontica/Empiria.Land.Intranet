@@ -1,6 +1,4 @@
-<emp-ng-select [fxFlex]="allWidth ? 'calc(100% - 140px)' : 100/3"
-  [ngModel]="recordableSubject"
-  (ngModelChange)="selectRecordableSubject($event)"
+<emp-ng-select [ngModel]="recordableSubject"
   [config]="{ clearable: true,
               bindByValue: false,
               minTermLength: recordableSubjectMinTermLength,
@@ -8,10 +6,12 @@
   [items]="recordableSubjectList$ | async"
   [typeahead]="recordableSubjectInput$"
   [loading]="recordableSubjectLoading"
-  placeholder="Buscar"
   [disabled]="disabled"
   [showError]="showError"
-  [style.width.%]="100">
+  [fxFlex]="allWidth ? 'calc(100% - 140px)' : 100/3"
+  [style.width.%]="100"
+  placeholder="Buscar"
+  (ngModelChange)="selectRecordableSubject($event)">
 
   <ng-template #labelTemplate let-item="item">
     {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}

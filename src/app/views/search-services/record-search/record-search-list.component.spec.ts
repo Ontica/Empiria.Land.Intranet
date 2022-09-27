@@ -7,21 +7,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RecordableSubjectsSearcherComponent } from './recordable-subjects-searcher.component';
+import { RecordSearchListComponent } from './record-search-list.component';
 
-describe('RecordableSubjectsSearcherComponent', () => {
-  let component: RecordableSubjectsSearcherComponent;
-  let fixture: ComponentFixture<RecordableSubjectsSearcherComponent>;
+describe('RecordSearchListComponent', () => {
+  let component: RecordSearchListComponent;
+  let fixture: ComponentFixture<RecordSearchListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RecordableSubjectsSearcherComponent ]
+      declarations: [ RecordSearchListComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RecordableSubjectsSearcherComponent);
+    fixture = TestBed.createComponent(RecordSearchListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

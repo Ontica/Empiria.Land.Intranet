@@ -7,7 +7,7 @@
       <div class="card-header card-header-flat">
 
         <div class="card-title">
-          Búsqueda de propiedades
+          Búsqueda de registros
 
           <div class="card-hint" empNgProgressText
             loadingText="Cargando"
@@ -19,7 +19,7 @@
 
       </div>
 
-      <div class="card-body" [style.padding.px]="8">
+      <div class="card-body">
 
         <div fxLayout="column" fxFlexFill [empNgSpinnerHost]="spinner">
 
@@ -27,20 +27,20 @@
 
           </emp-ng-spinner>
 
-          <emp-land-recordable-subjects-filter fxFlex="none"
-            [filter]="filter"
-            (recordableSubjectsFilterEvent)="onRecordableSubjectsFilterEvent($event)">
+          <emp-land-record-search-filter fxFlex="none"
+            [query]="data.recordSearchQuery"
+            (recordSearchFilterEvent)="onRecordSearchFilterEvent($event)">
 
-          </emp-land-recordable-subjects-filter>
+          </emp-land-record-search-filter>
 
-          <emp-land-recordable-subjects-table fxFlex
-            [recordableSubjectsList]="recordableSubjectsList"
-            [selectedRecordableSubject]="selectedRecordableSubject"
-            [queryExecuted]="queryExecuted"
+          <emp-land-record-search-list fxFlex
+            [recordsList]="data.records"
+            [recordSearchType]="data.recordSearchQuery.type"
+            [queryExecuted]="data.queryExecuted"
             [isLoading]="isLoading"
-            (recordableSubjectsTableEvent)="onRecordableSubjectsTableEvent($event)">
+            (recordSearchListEvent)="onRecordSearchListEvent($event)">
 
-          </emp-land-recordable-subjects-table>
+          </emp-land-record-search-list>
 
         </div>
 

@@ -1,0 +1,169 @@
+<div #RecordableSubjectType *ngIf="isSearchTypeByRecordableSubject"
+  fxLayout="row" fxLayout.lt-sm="column"
+  fxLayoutGap="32px" fxLayoutGap.lt-sm="16px"
+  [style.padding]="'8px'">
+
+  <ng-container [ngTemplateOutlet]="recordableSubjectSection">
+
+  </ng-container>
+
+  <ng-container [ngTemplateOutlet]="recordingSection">
+
+  </ng-container>
+
+  <ng-template [ngTemplateOutlet]="recordSection">
+
+  </ng-template>
+
+</div>
+
+
+<div #PartyType *ngIf="isSearchTypeByParty"
+  fxLayout="column" [style.padding]="'8px'">
+
+  <div fxLayout="row" [style.paddingBottom]="'8px'">
+    <span class="bold-text" [style.fontSize]="'10pt'">{{party.party.fullName}}</span>
+  </div>
+
+  <div fxLayout="row" fxLayout="row" fxLayout.lt-sm="column"
+    fxLayoutGap="32px" fxLayoutGap.lt-sm="16px">
+
+    <ng-container [ngTemplateOutlet]="partySection">
+
+    </ng-container>
+
+    <ng-container [ngTemplateOutlet]="recordableSubjectSection">
+
+    </ng-container>
+
+    <ng-template [ngTemplateOutlet]="recordSection">
+
+    </ng-template>
+
+  </div>
+
+</div>
+
+
+<ng-template #recordableSubjectSection>
+
+  <div fxFlex="50%" fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px">
+
+    <div fxLayout="row" fxLayoutAlign="space-between">
+      <a class="link bold-text nowrap" (click)="onRecordableSubjectClicked()">
+        {{item.recordableSubject.electronicID}}
+      </a>
+
+      <span class="bold-text nowrap">{{item.recordableSubject.kind}}</span>
+    </div>
+
+    <span fxFlex>{{displayRealEstate ? item.recordableSubject.description : item.recordableSubject.name}}</span>
+
+    <div fxLayout="row" fxLayoutAlign="space-between" class="bold-text nowrap">
+      {{item.recordableSubject.recorderOffice.name}}
+      <a class="link" *ngIf="displayCadastralData" (click)="onCadastralClicked()">Catastro: {{realEstate.cadastralID}}</a>
+    </div>
+
+  </div>
+
+</ng-template>
+
+
+<ng-template #recordingSection>
+
+  <div fxFlex="25%" fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px">
+
+    <div fxFlex="none">
+      <div class="label nowrap">Último movimiento:</div>
+      <div class="bold-text">-</div>
+    </div>
+
+    <div fxFlex="none">
+      <div class="label nowrap">Involucrados:</div>
+      <div *ngFor="let related of relatedParties">- {{related.party.fullName}}</div>
+      <div *ngIf="!relatedParties || relatedParties.length === 0" fxLayout="row">-</div>
+    </div>
+
+  </div>
+
+</ng-template>
+
+<ng-template #recordSection>
+
+  <div fxFlex="25%" fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px">
+
+    <div fxLayout="column">
+      <a class="link bold-text nowrap" (click)="onRecordClicked()">{{item.record.recordID}}</a>
+      <span class="bold-text">{{item.record.instrument}}</span>
+      {{!!item.record.bookEntry ? item.record.bookEntry : '-'}}
+    </div>
+
+    <div fxLayout="column">
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <span class="label nowrap">Fecha de registro:</span>
+        <span class="bold-text">{{!!item.record.recordingTime ? (item.record.recordingTime | dateTimeFormat) : '-'}}</span>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="end">
+        {{item.record.recordedBy}}
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="space-between" class="nowrap">
+      <div fxLayout="column">
+        <span class="label nowrap">Trámite:</span>
+        <a class="link bold-text" (click)="onTransactionClicked()">{{item.record.transaction.transactionID}}</a>
+      </div>
+      <div fxLayout="column" class="bold-text text-align-right">
+        {{!!item.record.presentationTime ? ( item.record.presentationTime  | dateTimeFormat ) : '-'}} <br>
+        {{!!item.record.transaction.internalControlNo ? '(' + item.record.transaction.internalControlNo + ')' : '-'}}
+      </div>
+    </div>
+
+  </div>
+
+</ng-template>
+
+
+<ng-template #partySection>
+
+  <div fxFlex="25%" fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px">
+
+    <div fxLayout="row" class="bold-text">{{!!party.party.curp ? party.party.curp : '-' }}</div>
+
+    <div fxLayout="column">
+
+      <div fxLayout="row" class="label nowrap">Acto y rol en el que participa:</div>
+
+      <div fxLayout="row" fxLayoutAlign="space-between" class="nowrap">
+        <div fxLayout="column">
+          <a class="bold-text">{{party.recordingActType}}</a>
+        </div>
+        <div fxLayout="column" class="text-align-right">
+          ({{party.role}})
+        </div>
+      </div>
+
+    </div>
+
+    <div fxLayout="column">
+
+      <div fxLayout="row" class="label nowrap">Otros involucrados en el acto:</div>
+
+      <div *ngFor="let related of relatedParties;"
+        fxLayout="row" fxLayoutAlign="space-between">
+        <div fxLayout="column">
+          {{related.party.fullName}}
+        </div>
+        <div fxLayout="column" class="text-align-right nowrap">
+          ({{related.role.name}})
+        </div>
+      </div>
+
+      <div *ngIf="!relatedParties || relatedParties.length === 0" fxLayout="row">-</div>
+
+    </div>
+
+  </div>
+
+</ng-template>

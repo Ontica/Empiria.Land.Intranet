@@ -12,6 +12,7 @@ import { FileDownloadService } from './file-services/file-download.service';
 import { CertificationDataService } from './certification.data.service';
 import { RecordableSubjectsDataService } from './recordable-subjects.data.service';
 import { RecordingDataService } from './recording.data.service';
+import { SearchServicesDataService } from './search-services.data.service';
 import { TransactionDataService } from './transaction.data.service';
 
 import { getSaver, SAVER } from './file-services/saver.provider';
@@ -24,6 +25,7 @@ import { getSaver, SAVER } from './file-services/saver.provider';
     CertificationDataService,
     RecordableSubjectsDataService,
     RecordingDataService,
+    SearchServicesDataService,
     TransactionDataService,
 
     { provide: SAVER, useFactory: getSaver }

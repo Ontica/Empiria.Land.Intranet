@@ -28,6 +28,8 @@ export * from './party';
 
 export * from './preprocessing-data';
 
+export * from './record-search';
+
 export * from './recordable-subjects';
 
 export * from './recording-act';

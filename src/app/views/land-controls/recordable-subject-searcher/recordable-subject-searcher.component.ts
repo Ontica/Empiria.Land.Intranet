@@ -15,9 +15,9 @@ import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap 
 
 import { isEmpty } from '@app/core';
 
-import { RecordableSubjectsDataService } from '@app/data-services';
+import { SearchServicesDataService } from '@app/data-services';
 
-import { RecordableSubjectFilter, RecordableSubjectShortModel, RecordableSubjectType } from '@app/models';
+import { RecordableSubjectShortModel, RecordableSubjectType, RecordSearchQuery } from '@app/models';
 
 @Component({
   selector: 'emp-land-recordable-subject-searcher',
@@ -57,7 +57,7 @@ export class RecordableSubjectSearcherComponent implements OnInit, ControlValueA
   recordableSubjectLoading = false;
 
 
-  constructor(private data: RecordableSubjectsDataService) { }
+  constructor(private data: SearchServicesDataService) { }
 
 
   ngOnInit(): void {
@@ -116,13 +116,13 @@ export class RecordableSubjectSearcherComponent implements OnInit, ControlValueA
   }
 
 
-  private buildRecordableSubjectFilter(keywords: string): RecordableSubjectFilter {
-    const recordableSubjectFilter: RecordableSubjectFilter = {
+  private buildRecordableSubjectFilter(keywords: string): RecordSearchQuery {
+    const query: RecordSearchQuery = {
       type: this.type,
       keywords
     };
 
-    return recordableSubjectFilter;
+    return query;
   }
 
 }
