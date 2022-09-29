@@ -4,7 +4,7 @@
 
     <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between">
 
-      <div [fxFlex]="100/3" [fxFlex.lt-md]="100">
+      <div [fxFlex]="30" [fxFlex.lt-md]="100">
 
         <label>Tipo de acto jurídico:</label>
 
@@ -15,7 +15,7 @@
 
       </div>
 
-      <div [fxFlex]="100/3" [fxFlex.lt-md]="100">
+      <div [fxFlex]="30" [fxFlex.lt-md]="100">
 
         <label>Clasificación del acto jurídico:</label>
 
@@ -33,7 +33,7 @@
 
       <div fxFlex></div>
 
-      <div [fxFlex]="100/3">
+      <div [fxFlex]="40">
 
         <div fxLayout="row">
 
@@ -43,7 +43,7 @@
 
         <div fxLayout="row">
 
-          <div [fxFlex]="40" [fxFlex.lt-md]="100">
+          <div [fxFlex]="50" [fxFlex.lt-md]="100">
 
             <input [formControlName]="controls.operationAmount" empNgCurrency
               [empNgCurrencyCode]="getCurrencyCode()"
@@ -53,7 +53,7 @@
 
           </div>
 
-          <div [fxFlex]="60" [fxFlex.lt-md]="100" fxLayoutAlign="start end">
+          <div [fxFlex]="50" [fxFlex.lt-md]="100" fxLayoutAlign="start end">
 
             <emp-ng-select [formControlName]="controls.currencyUID"
               [items]="recordingAct.actions.editionValues.currencies"
