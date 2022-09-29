@@ -73,8 +73,13 @@
 
           <div fxFlex="20" *ngIf="validatePartUnitUIDWithAmount(partUnitUID.value)">
             <label>Cantidad:</label>
-            <input formControlName="partAmount"
+            <input formControlName="partAmount" *ngIf="!isPartAmountFraction"
               type="number"
+              class="text-box"
+              [class.invalid-control]="partAmount.touched && partAmount.errors">
+            <input formControlName="partAmount" *ngIf="isPartAmountFraction"
+              empNgFraction
+              type="text"
               class="text-box"
               [class.invalid-control]="partAmount.touched && partAmount.errors">
           </div>

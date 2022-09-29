@@ -9,9 +9,9 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { EventInfo, Identifiable, isEmpty } from '@app/core';
+import { EventInfo, Identifiable, isEmpty, Validate } from '@app/core';
 
-import { EmptyParty, Party, RecordingActPartyFields, RecordingActPartyType } from '@app/models';
+import { EmptyParty, PartUnit, Party, RecordingActPartyFields, RecordingActPartyType } from '@app/models';
 
 import { sendEvent } from '@app/shared/utils';
 
@@ -59,6 +59,12 @@ export class PartyEditorComponent implements OnChanges {
 
   get isPerson() { return this.partySelected?.type === 'Person'; }
 
+
+  get isPartAmountFraction() {
+    return this.form.get('partUnitUID').value === 'Unit.Fraction';
+  }
+
+
   get fullName(): any { return this.form.get('fullName'); }
   get curp(): any { return this.form.get('curp'); }
   get rfc(): any { return this.form.get('rfc'); }
@@ -96,19 +102,21 @@ export class PartyEditorComponent implements OnChanges {
 
   onPartUnitChanges(partUnit: Identifiable) {
     this.partAmount.setValue('');
+    this.partAmount.clearValidators();
 
-    if (this.validatePartUnitUIDWithAmount(partUnit?.uid)) {
-      this.partAmount.setValidators([Validators.required]);
-    } else {
-      this.partAmount.clearValidators();
+    if (this.validatePartUnitUIDWithAmount(partUnit?.uid as PartUnit)) {
+      const validators = this.isPartAmountFraction ?
+        [Validators.required, Validate.fractionValue] : [Validators.required];
+
+      this.partAmount.setValidators(validators);
     }
 
     this.partAmount.updateValueAndValidity();
   }
 
 
-  validatePartUnitUIDWithAmount(value) {
-    return ['Unit.Percentage', 'AreaUnit.SquareMeters', 'AreaUnit.Hectarea'].includes(value);
+  validatePartUnitUIDWithAmount(value: PartUnit) {
+    return ['Unit.Percentage', 'AreaUnit.SquareMeters', 'AreaUnit.Hectarea', 'Unit.Fraction'].includes(value);
   }
 
 
@@ -233,7 +241,7 @@ export class PartyEditorComponent implements OnChanges {
       },
       roleUID: formModel.roleUID ?? '',
       notes: formModel.notes ?? '',
-      partAmount: formModel.partAmount ?? 0,
+      partAmount: !!formModel.partAmount ? formModel.partAmount.toString() : '',
       partUnitUID: formModel.partUnitUID ?? '',
       associatedWithUID: formModel.associatedWithUID,
     };

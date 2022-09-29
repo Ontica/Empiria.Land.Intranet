@@ -9,7 +9,7 @@ import { Empty, Identifiable } from '@app/core';
 
 
 export type PartUnit = 'Unit.Full' | 'Unit.Undivided' | 'Unit.Percentage' |
-                       'AreaUnit.SquareMeters' | 'AreaUnit.Hectarea';
+                       'AreaUnit.SquareMeters' | 'AreaUnit.Hectarea' | 'Unit.Fraction';
 
 
 export type RecordingActPartyType  = 'Primary' | 'Secondary';
@@ -20,7 +20,7 @@ export interface RecordingActPartyFields {
   type: RecordingActPartyType;
   party: PartyFields;
   roleUID: string;
-  partAmount: number;
+  partAmount: string;
   partUnitUID: string;
   associatedWithUID: string;
   notes: string;

@@ -68,6 +68,9 @@ export class PartyListComponent implements OnChanges {
       case 'AreaUnit.Hectarea':
         return party.partAmount + ' ' + party.partUnit.name;
 
+      case 'Unit.Fraction':
+        return party.partAmount;
+
       default:
         return party.partUnit.name;
     }
