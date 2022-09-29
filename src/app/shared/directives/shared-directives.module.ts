@@ -12,6 +12,7 @@ import { EmpBreakpointDirective } from './notebook-breakpoint.directive';
 import { EmpContextMenuDisabledDirective } from './context-menu-disabled.directive';
 import { EmpCurrencyDirective } from './currency.directive';
 import { EmpFormKeyDownEnterDirective } from './form-keydown-enter.directive';
+import { EmpFractionDirective } from './fraction.directive';
 import { EmpHasPermissionDirective } from './has-permission.directive';
 import { EmpIntegerDirective } from './integer.directive';
 import { EmpNumerationDirective } from './numeration.directive';
@@ -32,6 +33,7 @@ import { EmpNotebookBreakPointsProvider } from './notebook-breakpoint';
     EmpContextMenuDisabledDirective,
     EmpCurrencyDirective,
     EmpFormKeyDownEnterDirective,
+    EmpFractionDirective,
     EmpHasPermissionDirective,
     EmpIntegerDirective,
     EmpNumerationDirective,
@@ -44,6 +46,7 @@ import { EmpNotebookBreakPointsProvider } from './notebook-breakpoint';
     EmpContextMenuDisabledDirective,
     EmpCurrencyDirective,
     EmpFormKeyDownEnterDirective,
+    EmpFractionDirective,
     EmpHasPermissionDirective,
     EmpIntegerDirective,
     EmpNumerationDirective,

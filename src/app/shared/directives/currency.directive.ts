@@ -19,7 +19,7 @@ export class EmpCurrencyDirective implements OnChanges {
 
   @Input() empNgCurrencyCode = 'MXN';
 
-  @Input() empNgCurrencyDisplaySymbol = 'symbol-narrow';
+  @Input() empNgCurrencyDisplaySymbol: 'symbol-narrow' | '' = '';
 
   @Input() empNgCurrencyFractionDigit = 2;
 

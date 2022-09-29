@@ -63,6 +63,15 @@ export class Validate {
   }
 
 
+  static fractionValue(control: AbstractControl): ValidationErrors | null {
+    const fractionRegex: RegExp = /[1-9][0-9]*\/[1-9][0-9]*/g;
+    if (!fractionRegex.test(control.value)) {
+      return { fractionValue: true };
+    }
+    return null;
+  }
+
+
   static maxCurrencyValue(max: number): ValidationErrors | null {
     return (control: AbstractControl): ValidationErrors | null => {
       if (control.value && ( FormatLibrary.stringToNumber(control.value) > max )) {
