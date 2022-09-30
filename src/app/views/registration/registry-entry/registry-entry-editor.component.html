@@ -6,7 +6,7 @@
     [ngClass.gt-md]="{'card-floating-secondary': cardFloatingEffect}"
     (cardClose)="onClose()">
 
-    <mat-tab-group>
+    <mat-tab-group (selectedTabChange)="onSelectedTabChange($event)">
 
       <mat-tab label="Acto Jurídico" *ngIf="displayRecordingAct">
 
@@ -23,7 +23,7 @@
 
       <mat-tab [label]="tabEditorLabel">
 
-        <emp-land-recordable-subject-editor
+        <emp-land-recordable-subject-editor *ngIf="displayRecordableSubjectEditor"
           [instrumentRecordingUID]="data.instrumentRecordingUID"
           [recordingActUID]="data.recordingActUID"
           [recordableSubject]="tractIndex.recordableSubject"

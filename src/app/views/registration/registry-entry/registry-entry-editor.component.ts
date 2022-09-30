@@ -7,6 +7,8 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 
+import { MatTabChangeEvent } from '@angular/material/tabs';
+
 import { Assertion, EventInfo } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
@@ -55,6 +57,8 @@ export class  RegistryEntryEditorComponent implements OnChanges, OnDestroy {
 
   helper: SubscriptionHelper;
 
+  displayRecordableSubjectEditor = false;
+
 
   constructor(private uiLayer: PresentationLayer,
               private recordingDataService: RecordingDataService) {
@@ -64,6 +68,7 @@ export class  RegistryEntryEditorComponent implements OnChanges, OnDestroy {
 
   ngOnChanges() {
     this.getTractIndex();
+    this.setDisplayRecordableSubjectEditor(!this.displayRecordingAct);
   }
 
 
@@ -94,6 +99,13 @@ export class  RegistryEntryEditorComponent implements OnChanges, OnDestroy {
 
   get realEstate(): RealEstate {
     return this.tractIndex.recordableSubject as RealEstate;
+  }
+
+
+  onSelectedTabChange(tab: MatTabChangeEvent) {
+    if (this.displayRecordingAct && tab.index === 1) {
+      this.setDisplayRecordableSubjectEditor(true);
+    }
   }
 
 
@@ -194,6 +206,11 @@ export class  RegistryEntryEditorComponent implements OnChanges, OnDestroy {
       this.cardTitle += this.displayRecordingAct ? '' : 'del documento';
       this.tabEditorLabel += 'del documento';
     }
+  }
+
+
+  private setDisplayRecordableSubjectEditor(display: boolean) {
+    this.displayRecordableSubjectEditor = display;
   }
 
 }
