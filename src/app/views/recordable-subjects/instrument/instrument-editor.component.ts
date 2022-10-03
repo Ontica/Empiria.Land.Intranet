@@ -62,7 +62,7 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
   @Input() showStatusField = false;
 
-  @Input() title = 'Documento a inscribir';
+  @Input() title = 'Instrumento jurídico a inscribir';
 
   @Input() submitButtonText = 'Guardar los Cambios';
 
