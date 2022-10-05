@@ -1,4 +1,4 @@
-<form [formGroup]="form" empNgFormKeyDownEnter
+<form [formGroup]="formHandler.form" empNgFormKeyDownEnter
   fxLayout="column" autocomplete="off" class="form-section">
 
   <mat-divider class="divider-padding">
@@ -9,28 +9,28 @@
     <div fxLayout="row" fxLayout.lt-md="column">
       <div fxFlex="100">
         <label>{{ isPerson ? 'Nombre Completo:' : 'Nombre o razón social' }}</label>
-        <input formControlName='fullName'
+        <input [formControlName]="controls.fullName"
           type="text"
           class="text-box uppercase"
-          [class.invalid-control]="fullName.touched && fullName.errors">
+          [class.invalid-control]="formHandler.showInvalidControl(controls.fullName)">
       </div>
     </div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
       <div *ngIf="isPerson" fxFlex="50">
         <label>CURP:</label>
-        <input formControlName='curp'
+        <input [formControlName]="controls.curp"
           type="text"
           class="text-box uppercase"
-          [class.invalid-control]="curp.touched && curp.errors">
+          [class.invalid-control]="formHandler.showInvalidControl(controls.curp)">
       </div>
 
       <div fxFlex="50">
         <label>RFC:</label>
-        <input formControlName='rfc'
+        <input [formControlName]="controls.rfc"
           type="text"
           class="text-box uppercase"
-          [class.invalid-control]="rfc.touched && rfc.errors">
+          [class.invalid-control]="formHandler.showInvalidControl(controls.rfc)">
       </div>
     </div>
 
@@ -38,7 +38,7 @@
       <div fxFlex="100">
         <label>Otra información:</label>
         <textarea class="text-area uppercase" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
-          formControlName="partyNotes">
+          [formControlName]="controls.partyNotes">
 
         </textarea>
       </div>
@@ -51,8 +51,8 @@
           [config]="{groupBy: 'items'}"
           [placeholder]="'( Seleccionar rol )'"
           [items]="rolesList"
-          [showError]="roleUID.touched && roleUID.errors"
-          formControlName="roleUID"
+          [showError]="formHandler.showInvalidControl(controls.roleUID)"
+          [formControlName]="controls.roleUID"
           (changes)="onRoleChanges($event)">
         </emp-ng-select>
       </div>
@@ -65,23 +65,23 @@
               [items]="partUnits"
               [config]="{clearable: true}"
               [placeholder]="'( U de M )'"
-              [showError]="partUnitUID.touched && partUnitUID.errors"
-              formControlName="partUnitUID"
+              [showError]="formHandler.showInvalidControl(controls.partUnitUID)"
+              [formControlName]="controls.partUnitUID"
               (changes)="onPartUnitChanges($event)">
             </emp-ng-select>
           </div>
 
-          <div fxFlex="20" *ngIf="validatePartUnitUIDWithAmount(partUnitUID.value)">
+          <div fxFlex="20" *ngIf="validatePartUnitUIDWithAmount()">
             <label>Cantidad:</label>
-            <input formControlName="partAmount" *ngIf="!isPartAmountFraction"
+            <input [formControlName]="controls.partAmount" *ngIf="!isPartAmountFraction"
               type="number"
               class="text-box"
-              [class.invalid-control]="partAmount.touched && partAmount.errors">
-            <input formControlName="partAmount" *ngIf="isPartAmountFraction"
+              [class.invalid-control]="formHandler.showInvalidControl(controls.partAmount)">
+            <input [formControlName]="controls.partAmount" *ngIf="isPartAmountFraction"
               empNgFraction
               type="text"
               class="text-box"
-              [class.invalid-control]="partAmount.touched && partAmount.errors">
+              [class.invalid-control]="formHandler.showInvalidControl(controls.partAmount)">
           </div>
         </ng-container>
         <ng-container *ngSwitchCase="'Secondary'">
@@ -91,8 +91,8 @@
               bindLabel="fullName"
               [placeholder]="'Seleccionar una persona u organización'"
               [items]="partiesInRecordingActList"
-              [showError]="associatedWithUID.touched && associatedWithUID.errors"
-              formControlName="associatedWithUID">
+              [showError]="formHandler.showInvalidControl(controls.associatedWithUID)"
+              [formControlName]="controls.associatedWithUID">
             </emp-ng-select>
           </div>
         </ng-container>
@@ -108,7 +108,7 @@
       <div fxFlex="100">
         <label>Observaciones:</label>
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
-          formControlName="notes">
+          [formControlName]="controls.notes">
 
         </textarea>
       </div>
@@ -125,8 +125,8 @@
 
       <button
         (click)="submit()"
-        [class.btn]="form?.invalid"
-        [class.btn-action]="form?.valid">
+        [class.btn]="!formHandler.isValid"
+        [class.btn-action]="formHandler.isValid">
         Agregar
       </button>
 

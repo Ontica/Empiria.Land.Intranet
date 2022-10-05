@@ -9,11 +9,23 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { EventInfo, Identifiable, isEmpty, Validate } from '@app/core';
+import { Assertion, EventInfo, Identifiable, isEmpty, Validate } from '@app/core';
 
-import { EmptyParty, PartUnit, Party, RecordingActPartyFields, RecordingActPartyType } from '@app/models';
+import { EmptyParty, Party, PartyFields, RecordingActPartyFields, RecordingActPartyType } from '@app/models';
 
-import { sendEvent } from '@app/shared/utils';
+import { FormHandler, sendEvent } from '@app/shared/utils';
+
+enum PartyFormControls {
+  fullName = 'fullName',
+  curp = 'curp',
+  rfc = 'rfc',
+  partyNotes = 'partyNotes',
+  roleUID = 'roleUID',
+  partUnitUID = 'partUnitUID',
+  partAmount = 'partAmount',
+  notes = 'notes',
+  associatedWithUID = 'associatedWithUID',
+}
 
 export enum PartyEditorEventType {
   ADD_PARTY = 'PartyEditorComponent.Event.AddParty',
@@ -37,14 +49,16 @@ export class PartyEditorComponent implements OnChanges {
 
   @Output() partyEditorEvent = new EventEmitter<EventInfo>();
 
-  form: FormGroup;
+  formHandler: FormHandler;
+
+  controls = PartyFormControls;
 
   rolesList: any[] = [];
 
   typeRoleSelected: RecordingActPartyType = null;
 
   constructor() {
-    this.initFormControls();
+    this.initForm();
   }
 
 
@@ -61,23 +75,13 @@ export class PartyEditorComponent implements OnChanges {
 
 
   get isPartAmountFraction() {
-    return this.form.get('partUnitUID').value === 'Unit.Fraction';
+    return this.formHandler.getControl(this.controls.partUnitUID).value === 'Unit.Fraction';
   }
 
 
-  get fullName(): any { return this.form.get('fullName'); }
-  get curp(): any { return this.form.get('curp'); }
-  get rfc(): any { return this.form.get('rfc'); }
-  get partyNotes(): any { return this.form.get('partyNotes'); }
-  get roleUID(): any { return this.form.get('roleUID'); }
-  get partUnitUID(): any { return this.form.get('partUnitUID'); }
-  get partAmount(): any { return this.form.get('partAmount'); }
-  get notes(): any { return this.form.get('notes'); }
-  get associatedWithUID(): any { return this.form.get('associatedWithUID'); }
-
-
   getRoleTypeSelected() {
-    const roleType = this.rolesList.filter(x => x.items.filter(y => y.uid === this.roleUID.value).length > 0);
+    const roleType = this.rolesList.filter(x =>
+      !!x.items.find(y => y.uid === this.formHandler.getControl(this.controls.roleUID).value));
 
     if (roleType.length > 0) {
       return roleType[0].uid;
@@ -101,28 +105,31 @@ export class PartyEditorComponent implements OnChanges {
 
 
   onPartUnitChanges(partUnit: Identifiable) {
-    this.partAmount.setValue('');
-    this.partAmount.clearValidators();
+    this.formHandler.getControl(this.controls.partAmount).reset();
+    this.formHandler.clearControlValidators(this.controls.partAmount);
 
-    if (this.validatePartUnitUIDWithAmount(partUnit?.uid as PartUnit)) {
+    if (this.validatePartUnitUIDWithAmount()) {
       const validators = this.isPartAmountFraction ?
         [Validators.required, Validate.fractionValue] : [Validators.required];
 
-      this.partAmount.setValidators(validators);
+      this.formHandler.setControlValidators(this.controls.partAmount, validators);
     }
-
-    this.partAmount.updateValueAndValidity();
   }
 
 
-  validatePartUnitUIDWithAmount(value: PartUnit) {
-    return ['Unit.Percentage', 'AreaUnit.SquareMeters', 'AreaUnit.Hectarea', 'Unit.Fraction'].includes(value);
+  validatePartUnitUIDWithAmount() {
+    const partUnit = this.formHandler.getControl(this.controls.partUnitUID).value;
+
+    return ['Unit.Percentage',
+            'AreaUnit.SquareMeters',
+            'AreaUnit.Hectarea',
+            'Unit.Fraction'].includes(partUnit);
   }
 
 
   submit() {
-    if (!this.form.valid) {
-      this.invalidateForm();
+    if (!this.formHandler.validateReadyForSubmit()) {
+      this.formHandler.invalidateForm();
       return;
     }
 
@@ -130,52 +137,46 @@ export class PartyEditorComponent implements OnChanges {
   }
 
 
-  private initFormControls = () => {
-    this.form = new FormGroup({
-      fullName: new FormControl({ value: '', disabled: false }, Validators.required),
-      curp: new FormControl({ value: '', disabled: false }, [Validators.minLength(18),
+  private initForm() {
+    this.formHandler = new FormHandler(
+      new FormGroup({
+        fullName: new FormControl({value: '', disabled: false}, Validators.required),
+        curp: new FormControl({value: '', disabled: false}, [Validators.minLength(18),
                                                              Validators.maxLength(18)]),
-      rfc: new FormControl({ value: '', disabled: false }),
-      partyNotes: new FormControl(''),
-      roleUID: new FormControl(null, Validators.required),
-      partUnitUID: new FormControl(''),
-      partAmount: new FormControl(''),
-      notes: new FormControl(''),
-      associatedWithUID: new FormControl([]),
-    });
+        rfc: new FormControl({ value: '', disabled: false }),
+        partyNotes: new FormControl(''),
+        roleUID: new FormControl(null, Validators.required),
+        partUnitUID: new FormControl(''),
+        partAmount: new FormControl(''),
+        notes: new FormControl(''),
+        associatedWithUID: new FormControl([]),
+      }));
   }
 
 
   private setFormData() {
-    this.form.reset();
-
-    if (!isEmpty(this.partySelected)) {
-      this.form.patchValue({
-        uid: this.partySelected.uid,
-        type: this.partySelected.type,
-        fullName: this.partySelected.fullName,
-        curp: this.partySelected.curp,
-        rfc: this.partySelected.rfc
-      });
-    } else {
-      this.form.patchValue({ fullName: this.partySelected.fullName });
-    }
-
+    this.formHandler.form.reset();
+    this.setPartyFields();
     this.setRfcValidators();
-    this.disablePartyFields(!isEmpty(this.partySelected));
   }
 
 
-  private disablePartyFields(disable: boolean) {
-    if (disable) {
-      this.fullName.disable();
-      this.curp.disable();
-      this.rfc.disable();
-    } else {
-      this.fullName.enable();
-      this.curp.enable();
-      this.rfc.enable();
-    }
+  private setPartyFields() {
+    const partySaved = !isEmpty(this.partySelected);
+
+    const partyFields = {
+      uid: partySaved ? this.partySelected.uid : '',
+      type: partySaved ? this.partySelected.type : '',
+      fullName: this.partySelected.fullName,
+      curp: partySaved ? this.partySelected.curp : '',
+      rfc: partySaved ? this.partySelected.rfc : '',
+    };
+
+    this.formHandler.form.reset(partyFields);
+
+    this.formHandler.disableControl(this.controls.fullName, partySaved);
+    this.formHandler.disableControl(this.controls.curp, partySaved);
+    this.formHandler.disableControl(this.controls.rfc, partySaved);
   }
 
 
@@ -193,67 +194,64 @@ export class PartyEditorComponent implements OnChanges {
 
 
   private setRfcValidators(){
-    this.rfc.clearValidators();
+    const validators = this.isPerson ? [Validators.minLength(13), Validators.maxLength(13)] :
+      [Validators.minLength(12), Validators.maxLength(12)];
 
-    if (this.isPerson) {
-      this.rfc.setValidators([Validators.minLength(13), Validators.maxLength(13)]);
-    } else {
-      this.rfc.setValidators([Validators.minLength(12), Validators.maxLength(12)]);
-    }
-
-    this.rfc.updateValueAndValidity();
+    this.formHandler.setControlValidators(this.controls.rfc, validators);
   }
 
 
   private setRoleValidators(){
-    this.partUnitUID.setValue('');
-    this.partAmount.setValue('');
-    this.associatedWithUID.setValue('');
+    this.formHandler.getControl(this.controls.partUnitUID).reset();
+    this.formHandler.getControl(this.controls.partAmount).reset();
+    this.formHandler.getControl(this.controls.associatedWithUID).reset();
 
     if (this.typeRoleSelected === 'Primary') {
-      this.partUnitUID.setValidators([Validators.required]);
-      this.partAmount.clearValidators();
-      this.associatedWithUID.clearValidators();
+      this.formHandler.setControlValidators(this.controls.partUnitUID, [Validators.required]);
+      this.formHandler.clearControlValidators(this.controls.partAmount);
+      this.formHandler.clearControlValidators(this.controls.associatedWithUID);
     } else if (this.typeRoleSelected === 'Secondary') {
-      this.partUnitUID.clearValidators();
-      this.partAmount.clearValidators();
-      this.associatedWithUID.setValidators([Validators.required]);
+      this.formHandler.clearControlValidators(this.controls.partUnitUID);
+      this.formHandler.clearControlValidators(this.controls.partAmount);
+      this.formHandler.setControlValidators(this.controls.associatedWithUID, [Validators.required]);
     }
-
-    this.partUnitUID.updateValueAndValidity();
-    this.partAmount.updateValueAndValidity();
-    this.associatedWithUID.updateValueAndValidity();
   }
 
 
   private getFormData(): RecordingActPartyFields {
-    const formModel = this.form.getRawValue();
+    Assertion.assert(this.formHandler.form.valid,
+      'Programming error: form must be validated before command execution.');
+
+    const formModel = this.formHandler.form.getRawValue();
+
     const data: RecordingActPartyFields = {
       uid: '',
       type: this.typeRoleSelected,
-      party: {
-        uid: isEmpty(this.partySelected) ? '' : this.partySelected.uid,
-        type: this.partySelected.type,
-        fullName: formModel.fullName.toString().toUpperCase(),
-        curp: formModel.curp ? formModel.curp.toString().toUpperCase() : '',
-        rfc: formModel.rfc ? formModel.rfc.toString().toUpperCase() : '',
-        notes: formModel.partyNotes ?? ''
-      },
+      party: this.getPartyFields(),
       roleUID: formModel.roleUID ?? '',
       notes: formModel.notes ?? '',
       partAmount: !!formModel.partAmount ? formModel.partAmount.toString() : '',
       partUnitUID: formModel.partUnitUID ?? '',
       associatedWithUID: formModel.associatedWithUID,
     };
+
     return data;
   }
 
 
-  private invalidateForm = () => {
-    Object.keys(this.form.controls).forEach(field => {
-      const control = this.form.get(field);
-      control.markAsTouched({ onlySelf: true });
-    });
+  private getPartyFields(): PartyFields {
+    const formModel = this.formHandler.form.getRawValue();
+
+    const party: PartyFields = {
+      uid: isEmpty(this.partySelected) ? '' : this.partySelected.uid,
+      type: this.partySelected.type,
+      fullName: formModel.fullName.toString().toUpperCase(),
+      curp: formModel.curp ? formModel.curp.toString().toUpperCase() : '',
+      rfc: formModel.rfc ? formModel.rfc.toString().toUpperCase() : '',
+      notes: formModel.partyNotes ?? ''
+    };
+
+    return party;
   }
 
 }
