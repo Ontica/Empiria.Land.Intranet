@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
-import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
+import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { ManualBookEntryFields, EmptyRecordingBook,
          RecordingBook, BookEntry, EmptyBookEntry } from '@app/models';
@@ -68,9 +68,9 @@ export class RecordingBookEditionComponent implements OnInit {
 
         Assertion.assertValue(event.payload.recordingBook, 'event.payload.recordingBook');
 
-        this.resetPanelState();
+        this.setSelectedRecordingBook(EmptyRecordingBook);
 
-        this.loadRecordingBookData(event.payload.recordingBook);
+        this.loadRecordingBookData(event.payload.recordingBook.uid);
 
         return;
 
@@ -165,39 +165,35 @@ export class RecordingBookEditionComponent implements OnInit {
   }
 
 
-  private loadRecordingBookData(recordingBook: Identifiable){
-    if (isEmpty(recordingBook)) {
-      this.selectedRecordingBook = EmptyRecordingBook;
-      this.displayRecordingBookEdition = false;
-      this.initTexts();
+  private setSelectedRecordingBook(recordingBook: RecordingBook) {
+    this.selectedRecordingBook = recordingBook;
+    this.initTexts();
+    this.panelAddState = false;
+    this.displayRecordingBookEdition = !isEmpty(this.selectedRecordingBook) &&
+      this.selectedRecordingBook.status !== 'Closed';
+  }
 
+
+  private loadRecordingBookData(recordingBookUID: string){
+    if (!recordingBookUID) {
       return;
     }
 
     this.setSubmitted(true);
 
-    this.recordingData.getRecordingBook(recordingBook.uid)
+    this.recordingData.getRecordingBook(recordingBookUID)
       .toPromise()
-      .then(x => {
-        this.selectedRecordingBook = x;
-        this.displayRecordingBookEdition = !isEmpty(this.selectedRecordingBook) &&
-                                           this.selectedRecordingBook.status !== 'Closed';
-        this.initTexts();
-      })
+      .then(x => this.setSelectedRecordingBook(x))
       .finally(() => this.setSubmitted(false));
   }
 
 
   private createBookEntry(bookEntryFields: ManualBookEntryFields){
-
     this.setSubmitted(true);
 
     this.recordingData.createBookEntry(this.selectedRecordingBook.uid, bookEntryFields)
       .toPromise()
-      .then(x => {
-        this.selectedRecordingBook = x;
-        this.resetPanelState();
-      })
+      .then(x => this.setSelectedRecordingBook(x))
       .finally(() => this.setSubmitted(false));
   }
 
@@ -214,11 +210,6 @@ export class RecordingBookEditionComponent implements OnInit {
           {bookEntry: EmptyBookEntry});
       })
       .finally(() => this.setSubmitted(false));
-  }
-
-
-  private resetPanelState() {
-    this.panelAddState = false;
   }
 
 
