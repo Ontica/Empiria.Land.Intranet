@@ -85,10 +85,13 @@
           <label class="ellipsis">Superficie total:</label>
 
           <div fxLayout="row">
-            <input type="number" class="text-box" [formControlName]="controls.lotSize" fxFlex="50"
-              [class.invalid-control]="formHandler.showInvalidControl(controls.lotSize)">
 
-            <div fxFlex="50" fxFlex.lt-md="none">
+            <div fxFlex="50" fxFlex.lt-md="50">
+              <input type="number" class="text-box" [formControlName]="controls.lotSize"
+                [class.invalid-control]="formHandler.showInvalidControl(controls.lotSize)">
+            </div>
+
+            <div fxFlex="50" fxFlex.lt-md="50">
               <emp-ng-select [formControlName]="controls.lotSizeUnitUID"
                 [items]="lotSizeUnitList"
                 [showError]="formHandler.showInvalidControl(controls.lotSizeUnitUID)"
@@ -97,6 +100,7 @@
             </div>
 
           </div>
+
         </div>
 
         <div [fxFlex]="25">
@@ -113,6 +117,28 @@
 
       </div>
 
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div fxFlex="255px" fxFlex.lt-md="none">
+        <label>Sección:</label>
+        <input type="text" class="text-box" [formControlName]="controls.section">
+      </div>
+
+      <div fxFlex="calc(100% - 255px)">
+
+        <div [fxFlex]="25">
+          <label class="ellipsis">Manzana:</label>
+          <input type="text" class="text-box" [formControlName]="controls.block">
+        </div>
+
+        <div [fxFlex]="25">
+          <label class="ellipsis">Lote:</label>
+          <input type="text" class="text-box" [formControlName]="controls.lot">
+        </div>
+
+      </div>
 
     </div>
 
