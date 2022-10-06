@@ -7,44 +7,48 @@
 
     <div fxLayout="row" fxLayout.lt-md="column">
 
-      <div fxFlex="290px" fxFlex.lt-md="none">
+      <div fxFlex="255px" fxFlex.lt-md="none">
         <label>Folio real:</label>
 
         <div fxLayout="row">
-          <input type="text" class="text-box" [fxFlex]="showElectronicHistoryButton ? '182px' : '282px'"
+          <input type="text" class="text-box" [fxFlex]="showElectronicHistoryButton ? '159px': '247px'"
             [formControlName]="controls.electronicID">
-          <button type="button" class="btn" fxFlex="92px" *ngIf="showElectronicHistoryButton"
+          <button type="button" class="btn" fxFlex="80px" *ngIf="showElectronicHistoryButton"
             [style.marginTop.px]="2" (click)="onElectronicHistoryClicked()">Historia</button>
         </div>
       </div>
 
-      <div fxFlex>
-        <label>Clave catastral:</label>
-        <input type="text" class="text-box" [formControlName]="controls.cadastralID"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.cadastralID)">
-      </div>
+      <div fxFlex="calc(100% - 255px)">
 
-      <div [fxFlex]="readonly ? '175px' : '92px'" fxFlex.lt-md="none">
-        <label>Vinculado el:</label>
-        <input type="text" class="text-box" [formControlName]="controls.cadastreLinkingDate">
-      </div>
+        <div fxFlex>
+          <label>Clave catastral:</label>
+          <input type="text" class="text-box" [formControlName]="controls.cadastralID"
+            [class.invalid-control]="formHandler.showInvalidControl(controls.cadastralID)">
+        </div>
 
-      <div fxFlex="119px" fxFlex.lt-md="none" *ngIf="!readonly">
-        <label>
-          <a class="link" (click)="onCadastralCertificateClicked()">Cédula catastral</a>
-        </label>
-        <button type="button" class="btn" disabled
-          [style.marginTop.px]="2" [style.width.px]="111"
-          (click)="onCadastralClicked()">
-          {{realEstate.cadastralID ? 'Desvincular' : 'Vincular'}}
-        </button>
+        <div fxFlex="100px" fxFlex.lt-md="none">
+          <label>Vinculado el:</label>
+          <input type="text" class="text-box" [formControlName]="controls.cadastreLinkingDate">
+        </div>
+
+        <div fxFlex="none" fxFlex.lt-md="none" *ngIf="!readonly">
+          <label>
+            <a class="link" (click)="onCadastralCertificateClicked()">Cédula catastral:</a>
+          </label>
+          <button type="button" class="btn" disabled
+            [style.marginTop.px]="2"
+            (click)="onCadastralClicked()">
+            {{realEstate.cadastralID ? 'Desvincular' : 'Vincular'}}
+          </button>
+        </div>
+
       </div>
 
     </div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
 
-      <div fxFlex="290px" fxFlex.lt-md="none">
+      <div fxFlex="255px" fxFlex.lt-md="none">
         <label>Distrito:</label>
         <emp-ng-select #districtControl [formControlName]="controls.recorderOfficeUID"
           [items]="recorderOfficeList"
@@ -53,7 +57,7 @@
         </emp-ng-select>
       </div>
 
-      <div fxFlex="70">
+      <div fxFlex="calc(100% - 255px)">
         <label>Municipio:</label>
         <emp-ng-select [formControlName]="controls.municipalityUID"
           [items]="municipalityList"
@@ -66,7 +70,7 @@
 
     <div fxLayout="row" fxLayout.lt-md="column">
 
-      <div fxFlex="290px" fxFlex.lt-md="none">
+      <div fxFlex="255px" fxFlex.lt-md="none">
         <label>Tipo de predio:</label>
         <emp-ng-select [formControlName]="controls.kind"
           [bindValue]="'name'"
@@ -75,19 +79,40 @@
         </emp-ng-select>
       </div>
 
-      <div fxFlex>
-        <label>Superficie total:</label>
-        <input type="number" class="text-box" [formControlName]="controls.lotSize"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.lotSize)">
+      <div fxFlex="calc(100% - 255px)">
+
+        <div [fxFlex]="50">
+          <label class="ellipsis">Superficie total:</label>
+
+          <div fxLayout="row">
+            <input type="number" class="text-box" [formControlName]="controls.lotSize" fxFlex="50"
+              [class.invalid-control]="formHandler.showInvalidControl(controls.lotSize)">
+
+            <div fxFlex="50" fxFlex.lt-md="none">
+              <emp-ng-select [formControlName]="controls.lotSizeUnitUID"
+                [items]="lotSizeUnitList"
+                [showError]="formHandler.showInvalidControl(controls.lotSizeUnitUID)"
+                [style.width.%]="100">
+              </emp-ng-select>
+            </div>
+
+          </div>
+        </div>
+
+        <div [fxFlex]="25">
+          <label class="ellipsis">Superficie construida (m2):</label>
+          <input type="number" class="text-box" [formControlName]="controls.buildingArea"
+            [class.invalid-control]="formHandler.showInvalidControl(controls.buildingArea)">
+        </div>
+
+        <div [fxFlex]="25">
+          <label class="ellipsis">Indiviso (%):</label>
+          <input type="number" class="text-box" [formControlName]="controls.undividedPct"
+            [class.invalid-control]="formHandler.showInvalidControl(controls.undividedPct)">
+        </div>
+
       </div>
 
-      <div fxFlex="175px" fxFlex.lt-md="none" fxLayoutAlign="start end">
-        <emp-ng-select [formControlName]="controls.lotSizeUnitUID"
-          [items]="lotSizeUnitList"
-          [showError]="formHandler.showInvalidControl(controls.lotSizeUnitUID)"
-          [style.width.%]="100">
-        </emp-ng-select>
-      </div>
 
     </div>
 
@@ -139,8 +164,8 @@
             bindValue="status"
             [items]="statusList"
             [showError]="formHandler.showInvalidControl(controls.status)"
-            (changes)="onStatusChange($event)"
-            [style.width.px]="125">
+            [style.width.px]="125"
+            (changes)="onStatusChange($event)">
           </emp-ng-select>
 
         </ng-container>
@@ -149,13 +174,16 @@
 
       <div fxFlex fxLayoutAlign="end center">
 
-        <button *ngIf="!readonly && !editionMode" (click)="enableEditor(true)"
-          class="btn-action">
+        <button *ngIf="!readonly && !editionMode"
+          class="btn-action"
+          (click)="enableEditor(true)">
           Editar
         </button>
 
-        <button *ngIf="editionMode" (click)="submitForm()" [class.btn]="!formHandler.isValid"
-          [class.btn-action]="formHandler.isValid">
+        <button *ngIf="editionMode"
+          [class.btn]="!formHandler.isValid"
+          [class.btn-action]="formHandler.isValid"
+          (click)="onSubmitForm()">
           Guardar
         </button>
 

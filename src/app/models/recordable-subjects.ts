@@ -221,6 +221,8 @@ export interface RealEstate extends RecordableSubject {
   municipality: Identifiable;
   lotSize: number;
   lotSizeUnit: Identifiable;
+  buildingArea: number;
+  undividedPct: number;
   description: string;
   metesAndBounds: string;
 }
@@ -240,6 +242,8 @@ export const EmptyRealEstate: RealEstate = {
   municipality: Empty,
   lotSize: -1,
   lotSizeUnit: Empty,
+  buildingArea: -1,
+  undividedPct: -1,
   description: '',
   metesAndBounds: '',
   status: 'Incomplete',
@@ -253,6 +257,8 @@ export interface RealEstateFields extends RecordableSubjectFields {
   metesAndBounds: string;
   lotSize: number;
   lotSizeUnitUID: string;
+  buildingArea: number;
+  undividedPct: number;
 }
 
 
@@ -300,6 +306,8 @@ export const EmptyRealEstateFields: RealEstateFields = {
   cadastralID: '',
   lotSize: -1,
   lotSizeUnitUID: '',
+  buildingArea: -1,
+  undividedPct: -1,
   description: '',
   metesAndBounds: '',
   status: 'Incomplete',
