@@ -95,12 +95,14 @@
               <ng-template #labelTemplate let-item="item">
                 {{item.name}}
                 {{item.recordingData.recordingTime ? ', ' + ( item.recordingData.recordingTime | dateTimeFormat ) : ''}}
+                {{item.description ? ', ' + item.description : ''}}
                 {{item.recordingData.recordID ? ', ' + item.recordingData.recordID : ''}}
               </ng-template>
 
               <ng-template #optionTemplate let-item="item">
                 {{item.name}}
                 {{item.recordingData.recordingTime ? ', ' + ( item.recordingData.recordingTime | dateTimeFormat ) : ''}}
+                {{item.description ? ', ' + item.description : ''}}
                 {{item.recordingData.recordID ? ', ' + item.recordingData.recordID : ''}}
               </ng-template>
 
