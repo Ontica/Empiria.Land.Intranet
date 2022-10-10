@@ -122,8 +122,8 @@
     <div fxLayout="row" fxLayout.lt-md="column">
 
       <div fxFlex="255px" fxFlex.lt-md="none">
-        <label>Sección:</label>
-        <input type="text" class="text-box" [formControlName]="controls.section">
+        <label class="ellipsis">Lote:</label>
+        <input type="text" class="text-box" [formControlName]="controls.lot">
       </div>
 
       <div fxFlex="calc(100% - 255px)">
@@ -134,8 +134,8 @@
         </div>
 
         <div [fxFlex]="25">
-          <label class="ellipsis">Lote:</label>
-          <input type="text" class="text-box" [formControlName]="controls.lot">
+          <label class="ellipsis">Sección:</label>
+          <input type="text" class="text-box" [formControlName]="controls.section">
         </div>
 
       </div>
