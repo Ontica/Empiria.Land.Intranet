@@ -15,7 +15,8 @@ import { SharedModule } from '@app/shared/shared.module';
 
 import { FileViewerComponent } from './file-viewer/file-viewer.component';
 import { FileViewerNavigatorComponent } from './file-viewer/file-viewer-navigator.component';
-import { RecordableSubjectSearcherComponent } from './recordable-subject-searcher/recordable-subject-searcher.component';
+import { RecordableSubjectSearcherComponent } from './recordable-subject/recordable-subject-searcher.component';
+import { RecordableSubjectViewComponent } from './recordable-subject/recordable-subject-view.component';
 import { RecordingBookSelectorComponent } from './recording-book-selector/recording-book-selector.component';
 import { RecordingViewsButtonsComponent } from './recording-views-buttons/recording-views-buttons.component';
 
@@ -36,6 +37,7 @@ import { RecordingViewsButtonsComponent } from './recording-views-buttons/record
     FileViewerComponent,
     FileViewerNavigatorComponent,
     RecordableSubjectSearcherComponent,
+    RecordableSubjectViewComponent,
     RecordingBookSelectorComponent,
     RecordingViewsButtonsComponent,
   ],
@@ -43,6 +45,7 @@ import { RecordingViewsButtonsComponent } from './recording-views-buttons/record
   exports: [
     FileViewerComponent,
     RecordableSubjectSearcherComponent,
+    RecordableSubjectViewComponent,
     RecordingBookSelectorComponent,
     RecordingViewsButtonsComponent,
   ]

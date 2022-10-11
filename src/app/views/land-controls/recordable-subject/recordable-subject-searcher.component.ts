@@ -17,7 +17,7 @@ import { isEmpty } from '@app/core';
 
 import { SearchServicesDataService } from '@app/data-services';
 
-import { RecordableSubjectShortModel, RecordableSubjectType, RecordSearchQuery } from '@app/models';
+import { RecordableSubjectQueryResult, RecordableSubjectType, RecordSearchQuery } from '@app/models';
 
 @Component({
   selector: 'emp-land-recordable-subject-searcher',
@@ -28,7 +28,13 @@ import { RecordableSubjectShortModel, RecordableSubjectType, RecordSearchQuery }
       useExisting: forwardRef(() => RecordableSubjectSearcherComponent),
       multi: true
     }
-  ]
+  ],
+  styles: [`
+    .searcher-item-container {
+      font-size: 8pt;
+      padding: 8px 4px 0 4px;
+    }`
+  ],
 })
 export class RecordableSubjectSearcherComponent implements OnInit, ControlValueAccessor {
 
@@ -42,7 +48,7 @@ export class RecordableSubjectSearcherComponent implements OnInit, ControlValueA
 
   @Output() changes = new EventEmitter<any>();
 
-  recordableSubject: RecordableSubjectShortModel;
+  recordableSubject: RecordableSubjectQueryResult;
 
   onChange: (value: any) => void;
 
@@ -50,7 +56,7 @@ export class RecordableSubjectSearcherComponent implements OnInit, ControlValueA
 
   disabled: boolean;
 
-  recordableSubjectList$: Observable<RecordableSubjectShortModel[]>;
+  recordableSubjectList$: Observable<RecordableSubjectQueryResult[]>;
 
   recordableSubjectInput$ = new Subject<string>();
 
@@ -65,7 +71,7 @@ export class RecordableSubjectSearcherComponent implements OnInit, ControlValueA
   }
 
 
-  selectRecordableSubject(recordableSubject: RecordableSubjectShortModel) {
+  selectRecordableSubject(recordableSubject: RecordableSubjectQueryResult) {
     this.onTouched();
     this.recordableSubject = recordableSubject;
     this.onChange(recordableSubject);
@@ -73,7 +79,7 @@ export class RecordableSubjectSearcherComponent implements OnInit, ControlValueA
   }
 
 
-  writeValue(value: RecordableSubjectShortModel): void {
+  writeValue(value: RecordableSubjectQueryResult): void {
     this.recordableSubject = !isEmpty(value) ? value : null;
   }
 

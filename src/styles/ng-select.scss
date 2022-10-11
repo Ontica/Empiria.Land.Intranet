@@ -93,6 +93,10 @@ $font-size-xsmall: 9pt;
   background-color: rgba($primary-color, 0.2);
 }
 
+.ng-dropdown-panel .ng-dropdown-panel-items {
+  max-height: 300px !important
+}
+
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
   color: $control-color;
   font-family: $primary-font-family;

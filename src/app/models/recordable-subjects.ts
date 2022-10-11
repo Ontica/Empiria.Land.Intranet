@@ -208,12 +208,6 @@ export const EmptyRecordableSubject: RecordableSubject = {
 };
 
 
-export interface RecordableSubjectShortModel extends Identifiable, PartitionedType {
-  electronicID: string;
-  kind: string;
-}
-
-
 export interface RealEstate extends RecordableSubject {
   cadastralID: string;
   cadastreLinkingDate?: DateString;

@@ -49,20 +49,11 @@
 
   <div fxFlex="50%" fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px">
 
-    <div fxLayout="row" fxLayoutAlign="space-between">
-      <a class="link bold-text nowrap" (click)="onRecordableSubjectClicked()">
-        {{item.recordableSubject.electronicID}}
-      </a>
+    <emp-land-recordable-subject-view [style.height.%]="100"
+      [recordableSubject]="item.recordableSubject"
+      (recordableSubjectViewEvent)="onRecordableSubjectViewEvent($event)">
 
-      <span class="bold-text nowrap">{{item.recordableSubject.kind}}</span>
-    </div>
-
-    <span fxFlex>{{displayRealEstate ? item.recordableSubject.description : item.recordableSubject.name}}</span>
-
-    <div fxLayout="row" fxLayoutAlign="space-between" class="bold-text nowrap">
-      {{item.recordableSubject.recorderOffice.name}}
-      <a class="link" *ngIf="displayCadastralData" (click)="onCadastralClicked()">Catastro: {{realEstate.cadastralID}}</a>
-    </div>
+    </emp-land-recordable-subject-view>
 
   </div>
 

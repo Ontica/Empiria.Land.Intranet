@@ -17,7 +17,7 @@ import { RecordableSubjectsStateSelector } from '@app/presentation/exported.pres
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
-import { EmptyRegistrationCommandRule, EmptyTractIndex, RecordableSubjectShortModel, RecordableSubjectType,
+import { EmptyRegistrationCommandRule, EmptyTractIndex, RecordableSubject, RecordableSubjectType,
          RecordingActType, RecordingActTypeGroup, RegistrationCommand, RegistrationCommandConfig,
          RegistrationCommandPayload, RegistrationCommandRule, TractIndex } from '@app/models';
 
@@ -135,7 +135,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  onRecordableSubjectChange(recordableSubject: RecordableSubjectShortModel) {
+  onRecordableSubjectChange(recordableSubject: RecordableSubject) {
     this.validateAmendmentRecordingActFields();
 
     if (isEmpty(recordableSubject)) {

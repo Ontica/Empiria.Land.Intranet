@@ -9,10 +9,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { EventInfo } from '@app/core';
 
-import { isRecordableSubjectType, RealEstate, RecordableSubjectQueryResult, RecordableSubjectType,
-         RecordingActPartyQueryResult, RecordSearchResult, RecordSearchType } from '@app/models';
+import { isRecordableSubjectType, RecordableSubjectQueryResult, RecordingActPartyQueryResult,
+         RecordSearchResult, RecordSearchType } from '@app/models';
 
 import { sendEvent } from '@app/shared/utils';
+
+import {
+  RecordableSubjectViewEventType
+} from '@app/views/land-controls/recordable-subject/recordable-subject-view.component';
 
 export enum RecordSearchListItemEventType {
   RECORDABLE_SUBJECT_CLICKED = 'RecordSearchListItemComponent.Event.RecordableSubjectClicked',
@@ -50,23 +54,8 @@ export class RecordSearchListItemComponent {
   }
 
 
-  get realEstate(): RealEstate {
-    return this.item.recordableSubject as RealEstate;
-  }
-
-
   get party(): RecordingActPartyQueryResult {
     return this.record as RecordingActPartyQueryResult;
-  }
-
-
-  get displayRealEstate(): boolean {
-    return this.item.recordableSubject.type === RecordableSubjectType.RealEstate;
-  }
-
-
-  get displayCadastralData(): boolean {
-    return this.displayRealEstate && !!this.realEstate.cadastralID;
   }
 
 
@@ -75,15 +64,22 @@ export class RecordSearchListItemComponent {
   }
 
 
-  onRecordableSubjectClicked() {
-    sendEvent(this.recordSearchListItemEvent,
-      RecordSearchListItemEventType.RECORDABLE_SUBJECT_CLICKED, {record: this.record});
-  }
+  onRecordableSubjectViewEvent(event: EventInfo) {
+    switch (event.type as RecordableSubjectViewEventType) {
+      case RecordableSubjectViewEventType.RECORDABLE_SUBJECT_CLICKED:
+        sendEvent(this.recordSearchListItemEvent,
+          RecordSearchListItemEventType.RECORDABLE_SUBJECT_CLICKED, {record: this.record});
+        return;
 
+      case RecordableSubjectViewEventType.CADASTRAL_CLICKED:
+        sendEvent(this.recordSearchListItemEvent,
+          RecordSearchListItemEventType.CADASTRAL_CLICKED, {record: this.record});
+        break;
 
-  onCadastralClicked() {
-    sendEvent(this.recordSearchListItemEvent,
-      RecordSearchListItemEventType.CADASTRAL_CLICKED, {record: this.record});
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
   }
 
 

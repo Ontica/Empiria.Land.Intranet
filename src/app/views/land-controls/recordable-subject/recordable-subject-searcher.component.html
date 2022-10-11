@@ -18,7 +18,21 @@
   </ng-template>
 
   <ng-template #optionTemplate let-item="item">
-    {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
+
+    <div class="searcher-item-container">
+
+      <emp-land-recordable-subject-view
+        [recordableSubject]="item.recordableSubject">
+
+      </emp-land-recordable-subject-view>
+
+      <mat-divider [style.marginTop.px]="8">
+
+      </mat-divider>
+
+    </div>
+
+
   </ng-template>
 
 </emp-ng-select>

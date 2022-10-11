@@ -1,0 +1,41 @@
+<div fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px" [style.height.%]="100">
+
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <div class="nowrap" fxLayoutAlign="start center">
+      <a class="link bold-text" (click)="onRecordableSubjectClicked()">
+        {{recordableSubject.electronicID}}
+      </a>
+
+      <a [style.marginLeft.px]="8">
+        <mat-icon title="Copiar folio electrónico" class="mat-icon-sm" *ngIf="showCopyPaste"
+          matRipple [matRippleCentered]="true" [matRippleUnbounded]="true"
+          [cdkCopyToClipboard]="recordableSubject.electronicID"
+          (cdkCopyToClipboardCopied)="showAlertTextCopied($event);"
+          (click)="$event.stopPropagation();">
+          bookmark
+        </mat-icon>
+      </a>
+
+    </div>
+
+    <div class="bold-text nowrap">
+      <span>{{recordableSubject.kind}}</span>
+      <ng-container *ngIf="!!realEstate.lot || !!realEstate.block || !!realEstate.section">
+        &nbsp;&nbsp; | &nbsp;&nbsp;
+        <span *ngIf="!!realEstate.lot">Lote: {{realEstate.lot}} &nbsp;</span>
+        <span *ngIf="!!realEstate.block">Manzana: {{realEstate.block}} &nbsp;</span>
+        <span *ngIf="!!realEstate.section">Sección: {{realEstate.section}} &nbsp;</span>
+      </ng-container>
+    </div>
+  </div>
+
+  <div fxLayout="row" [style.white-space]="'normal'">
+    <span fxFlex="100">{{displayRealEstate ? recordableSubject.description : recordableSubject.name}}</span>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between" class="bold-text nowrap">
+    {{recordableSubject.recorderOffice.name}}
+    <a class="link" *ngIf="displayCadastralData" (click)="onCadastralClicked()">Catastro: {{realEstate.cadastralID}}</a>
+  </div>
+
+</div>

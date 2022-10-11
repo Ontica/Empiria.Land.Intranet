@@ -11,8 +11,8 @@ import { Observable } from 'rxjs';
 
 import { Assertion, DateStringLibrary, HttpService, Identifiable } from '@app/core';
 
-import { BookEntryShortModel, InstrumentType, Issuer, IssuersFilter, RecordableSubjectFilter,
-         RecordableSubjectShortModel, RecorderOffice, TractIndex } from '@app/models';
+import { BookEntryShortModel, InstrumentType, Issuer, IssuersFilter, RecorderOffice,
+         TractIndex } from '@app/models';
 
 
 @Injectable()
