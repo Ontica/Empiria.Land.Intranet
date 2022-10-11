@@ -147,16 +147,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  onBookEntryCheckChanged() {
-    this.formHandler.getControl(this.controls.bookEntryUID).reset();
-    this.formHandler.getControl(this.controls.bookEntryNo).reset();
-    this.formHandler.getControl(this.controls.presentationTime).reset();
-    this.formHandler.getControl(this.controls.authorizationDate).reset();
-
-    this.validateBookEntryFields();
-  }
-
-
   onRecordingBookSelectorEvent(event){
     switch (event.type as RecordingBookSelectorEventType) {
 
@@ -181,6 +171,14 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
         } else {
           this.formHandler.getControl(this.controls.bookEntryUID).setValue(bookEntry.uid);
         }
+
+        return;
+
+      case RecordingBookSelectorEventType.BOOK_ENTRY_CHECK_CHANGED:
+
+        Assertion.assertValue(event.payload.checkBookEntryInput, 'event.payload.checkBookEntryInput');
+
+        this.setCheckBookEntryInput(event.payload.checkBookEntryInput)
 
         return;
 
@@ -330,6 +328,18 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     } else {
       this.formHandler.clearControlValidators(this.controls.amendmentRecordingActUID);
     }
+  }
+
+
+  private setCheckBookEntryInput(checkBookEntryInput: boolean) {
+    this.checkBookEntryInput = checkBookEntryInput;
+
+    this.formHandler.getControl(this.controls.bookEntryUID).reset();
+    this.formHandler.getControl(this.controls.bookEntryNo).reset();
+    this.formHandler.getControl(this.controls.presentationTime).reset();
+    this.formHandler.getControl(this.controls.authorizationDate).reset();
+
+    this.validateBookEntryFields();
   }
 
 

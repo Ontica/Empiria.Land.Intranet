@@ -148,6 +148,14 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
 
         return;
 
+      case RecordingBookSelectorEventType.BOOK_ENTRY_CHECK_CHANGED:
+
+        Assertion.assertValue(event.payload.checkBookEntryInput, 'event.payload.checkBookEntryInput');
+
+        this.setCheckBookEntryInput(event.payload.checkBookEntryInput)
+
+        return;
+
       default:
         console.log(`Unhandled user interface event ${event.type}`);
         return;
@@ -273,6 +281,18 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
     } else {
       this.formHandler.clearControlValidators(this.controls.realEstateDescription);
     }
+  }
+
+
+  private setCheckBookEntryInput(checkBookEntryInput: boolean) {
+    this.checkBookEntryInput = checkBookEntryInput;
+
+    this.formHandler.getControl(this.controls.bookEntryUID).reset();
+    this.formHandler.getControl(this.controls.bookEntryNo).reset();
+    this.formHandler.getControl(this.controls.presentationTime).reset();
+    this.formHandler.getControl(this.controls.authorizationDate).reset();
+
+    this.validateBookEntryFields();
   }
 
 

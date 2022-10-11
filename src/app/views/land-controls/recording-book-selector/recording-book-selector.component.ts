@@ -27,6 +27,7 @@ import { sendEvent } from '@app/shared/utils';
 export enum RecordingBookSelectorEventType {
   RECORDING_BOOK_CHANGED = 'RecordingBookSelectorComponent.Event.RecordingBookChanged',
   BOOK_ENTRY_CHANGED = 'RecordingBookSelectorComponent.Event.BookEntryChanged',
+  BOOK_ENTRY_CHECK_CHANGED = 'RecordingBookSelectorComponent.Event.BookEntryCheckChanged',
 }
 
 
@@ -36,19 +37,15 @@ export enum RecordingBookSelectorEventType {
 })
 export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDestroy {
 
-  @Input() bookEntryButtonText = 'Editar';
-
-  @Input() bookEntryInput = false;
-
-  @Input() fieldsRequired = false;
-
-  @Input() selectorPosition: 'auto' | 'top' | 'bottom' = 'auto';
-
-  @Input() showRecordingBookEntryField = false;
-
-  @Input() recordingBookButtonText = 'Ver';
+  @Input() checkBookEntryInput: boolean = false
 
   @Input() recorderOffice: Identifiable = Empty;
+
+  @Input() fieldsRequired = true;
+
+  @Input() showRecordingBookEntryField = true;
+
+  @Input() selectorPosition: 'auto' | 'top' | 'bottom' = 'auto';
 
   @Output() recordingBookSelectorEvent = new EventEmitter<EventInfo>();
 
@@ -75,6 +72,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
   presentationTime: DateString;
   authorizationDate: DateString;
 
+
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
@@ -90,7 +88,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.bookEntryInput) {
+    if (changes.checkBookEntryInput) {
       this.recordingBookEntrySelected = null;
       this.bookEntryNo = null;
       this.presentationTime = null;
@@ -154,6 +152,12 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
       sendEvent(this.recordingBookSelectorEvent, RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED, {bookEntry});
     });
+  }
+
+
+  onCheckBookEntryInputChanged() {
+    sendEvent(this.recordingBookSelectorEvent, RecordingBookSelectorEventType.BOOK_ENTRY_CHECK_CHANGED,
+      { checkBookEntryInput: this.checkBookEntryInput });
   }
 
 

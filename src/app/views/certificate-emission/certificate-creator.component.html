@@ -49,30 +49,13 @@
 
       <div fxlayout="row">
 
-        <emp-land-recording-book-selector fxFlex="calc(100% - 140px)"
+        <emp-land-recording-book-selector fxFlex="100"
           [recorderOffice]="recorderOffice"
-          [showRecordingBookEntryField]="true"
-          [bookEntryInput]="checkBookEntryInput"
-          [fieldsRequired]="true"
+          [checkBookEntryInput]="checkBookEntryInput"
+          selectorPosition="top"
           (recordingBookSelectorEvent)="onRecordingBookSelectorEvent($event)">
 
         </emp-land-recording-book-selector>
-
-        <div fxflex="140px">
-
-          <mat-checkbox fxlayout="row"
-            [(ngModel)]="checkBookEntryInput"
-            [ngModelOptions]="{standalone: true}"
-            (change)="onBookEntryCheckChanged()"
-            style="display: block; margin-top: -3px;">
-            Agregar inscripción
-          </mat-checkbox>
-
-          <emp-land-recording-views-buttons fxlayout="row">
-
-          </emp-land-recording-views-buttons>
-
-        </div>
 
       </div>
 

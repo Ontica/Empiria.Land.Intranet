@@ -83,7 +83,7 @@
 
         <div fxLayout="row">
 
-          <emp-ng-select fxFlex="calc(100% - 140px)"
+          <emp-ng-select fxFlex="calc(100% - 70px)"
             [formControlName]="controls.amendmentRecordingActUID"
             [items]="tractIndexSelected.entries"
             [config]="{clearable: true}"
@@ -108,7 +108,7 @@
 
           </emp-ng-select>
 
-          <emp-land-recording-views-buttons fxFlex="140px">
+          <emp-land-recording-views-buttons fxFlex="70px">
 
           </emp-land-recording-views-buttons>
 
@@ -133,31 +133,13 @@
 
       <div fxlayout="row" >
 
-        <emp-land-recording-book-selector fxFlex="calc(100% - 140px)"
+        <emp-land-recording-book-selector fxFlex="100"
           [recorderOffice]="recorderOffice"
-          [showRecordingBookEntryField]="true"
-          [bookEntryInput]="checkBookEntryInput"
-          [fieldsRequired]="true"
+          [checkBookEntryInput]="checkBookEntryInput"
           selectorPosition="top"
           (recordingBookSelectorEvent)="onRecordingBookSelectorEvent($event)">
 
         </emp-land-recording-book-selector>
-
-        <div fxflex="140px">
-
-          <mat-checkbox fxlayout="row"
-            [(ngModel)]="checkBookEntryInput"
-            [ngModelOptions]="{standalone: true}"
-            (change)="onBookEntryCheckChanged()"
-            style="display: block; margin-top: -3px;">
-            Agregar inscripción
-          </mat-checkbox>
-
-          <emp-land-recording-views-buttons fxlayout="row">
-
-          </emp-land-recording-views-buttons>
-
-        </div>
 
       </div>
 
@@ -216,7 +198,7 @@
 
       </div>
 
-      <div fxFlex="140px" fxFlex.lt-md="0" *ngIf="registrationCommandRules.selectSubject">
+      <div fxFlex="70px" fxFlex.lt-md="0" *ngIf="registrationCommandRules.selectSubject">
 
       </div>
 

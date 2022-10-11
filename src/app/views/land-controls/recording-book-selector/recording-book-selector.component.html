@@ -23,8 +23,8 @@
 
       </div>
 
-      <div [fxFlex]="showRecordingBookEntryField ? 'calc(80% - 252px)': '351px'"
-           [fxFlex.lt-sm]="showRecordingBookEntryField ? 'calc(80% - 252px)' : 'calc(80% - 126px)'">
+      <div [fxFlex]="showRecordingBookEntryField ? 'calc(80% - 322px)': '351px'"
+           [fxFlex.lt-sm]="showRecordingBookEntryField ? 'calc(80% - 322px)' : 'calc(80% - 126px)'">
 
         <label>Sección:</label>
 
@@ -67,7 +67,7 @@
 
         <label>Inscripción:</label>
 
-        <emp-ng-select name="recordingBookEntry" *ngIf="!bookEntryInput"
+        <emp-ng-select name="recordingBookEntry" *ngIf="!checkBookEntryInput"
           [(ngModel)]="recordingBookEntrySelected"
           [config]="{ clearable: true,
                       bindByValue: false,
@@ -81,7 +81,7 @@
           (changes)="onBookEntryChange($event)">
         </emp-ng-select>
 
-        <input *ngIf="bookEntryInput"
+        <input *ngIf="checkBookEntryInput"
           [disabled]="!isReadyToFilterRecordingBook"
           type="text" class="text-box" name="recordingNo"
           [(ngModel)]="bookEntryNo" [required]="fieldsRequired"
@@ -90,9 +90,32 @@
 
       </div>
 
+      <emp-land-recording-views-buttons fxflex="70px" *ngIf="showRecordingBookEntryField"
+        [style.marginTop.px]="16">
+
+      </emp-land-recording-views-buttons>
+
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="end center" *ngIf="bookEntryInput">
+    <div fxLayout="row" fxLayoutAlign="end center" *ngIf="showRecordingBookEntryField">
+
+      <div fxFlex="252px">
+
+        <mat-checkbox fxlayout="row"
+          [(ngModel)]="checkBookEntryInput"
+          [ngModelOptions]="{standalone: true}"
+          (change)="onCheckBookEntryInputChanged()"
+          style="display: block; margin-top: -3px;">
+          Agregar inscripción
+        </mat-checkbox>
+
+      </div>
+
+      <div fxFlex="70px"></div>
+
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end center" *ngIf="checkBookEntryInput">
 
       <div fxFlex="126px">
         <label>Fecha de presentación:</label>
@@ -114,6 +137,8 @@
 
         </emp-ng-datepicker>
       </div>
+
+      <div fxFlex="70px"></div>
 
     </div>
 
