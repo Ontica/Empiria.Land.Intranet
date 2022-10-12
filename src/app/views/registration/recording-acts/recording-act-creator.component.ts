@@ -17,9 +17,10 @@ import { RecordableSubjectsStateSelector } from '@app/presentation/exported.pres
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
-import { EmptyRegistrationCommandRule, EmptyTractIndex, RecordableSubject, RecordableSubjectType,
-         RecordingActType, RecordingActTypeGroup, RegistrationCommand, RegistrationCommandConfig,
-         RegistrationCommandPayload, RegistrationCommandRule, TractIndex } from '@app/models';
+import { EmptyRegistrationCommandRule, EmptyTractIndex, EmptyTractIndexEntry, RecordableSubject,
+         RecordableSubjectType, RecordingActType, RecordingActTypeGroup, RegistrationCommand,
+         RegistrationCommandConfig, RegistrationCommandPayload, RegistrationCommandRule, TractIndex,
+         TractIndexEntry } from '@app/models';
 
 import { FormHandler, sendEvent } from '@app/shared/utils';
 
@@ -49,6 +50,12 @@ enum RecordingActCreatorFormControls {
 @Component({
   selector: 'emp-land-recording-act-creator',
   templateUrl: './recording-act-creator.component.html',
+  styles: [`
+    .searcher-item-container {
+      font-size: 8pt;
+      padding: 8px 4px 0 4px;
+    }`
+  ],
 })
 export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
@@ -74,6 +81,8 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   partitionKindList: string[] = [];
   tractIndexSelected: TractIndex = EmptyTractIndex;
+
+  amendmentRecordingActSelected: TractIndexEntry = EmptyTractIndexEntry;
 
   checkBookEntryInput = false;
 
@@ -144,6 +153,11 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     }
 
     this.getAmendmentRecordingActs();
+  }
+
+
+  onAmendmentRecordingActChange(recordingAct: TractIndexEntry) {
+    this.amendmentRecordingActSelected = isEmpty(recordingAct) ? EmptyTractIndexEntry : recordingAct;
   }
 
 
@@ -322,6 +336,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   private validateAmendmentRecordingActFields(){
     this.formHandler.getControl(this.controls.amendmentRecordingActUID).reset();
+    this.amendmentRecordingActSelected = EmptyTractIndexEntry;
 
     if (this.registrationCommandRules.selectTargetAct) {
       this.formHandler.setControlValidators(this.controls.amendmentRecordingActUID, Validators.required);

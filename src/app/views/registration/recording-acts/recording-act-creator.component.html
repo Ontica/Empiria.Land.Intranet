@@ -90,20 +90,49 @@
             [placeholder]="formHandler.showInvalidControl(controls.recordableSubject) ?
               'Seleccione el folio real' : 'Seleccione'"
             [showError]="formHandler.showInvalidControl(controls.amendmentRecordingActUID)"
-            bindValue="uid">
+            bindValue="uid"
+            (changes)="onAmendmentRecordingActChange($event)">
 
               <ng-template #labelTemplate let-item="item">
+
                 {{item.name}}
-                {{item.recordingData.recordingTime ? ', ' + ( item.recordingData.recordingTime | dateTimeFormat ) : ''}}
-                {{item.description ? ', ' + item.description : ''}}
-                {{item.recordingData.recordID ? ', ' + item.recordingData.recordID : ''}}
+                <span *ngIf="!!item.recordingData.recordingTime">
+                  &nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordingData.recordingTime | dateTimeFormat}}
+                </span>
+                <span *ngIf="!!item.recordingData.recordID">
+                  &nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordingData.recordID}}
+                </span>
+
               </ng-template>
 
               <ng-template #optionTemplate let-item="item">
-                {{item.name}}
-                {{item.recordingData.recordingTime ? ', ' + ( item.recordingData.recordingTime | dateTimeFormat ) : ''}}
-                {{item.description ? ', ' + item.description : ''}}
-                {{item.recordingData.recordID ? ', ' + item.recordingData.recordID : ''}}
+
+                <div class="searcher-item-container">
+
+                  <div fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px" [style.height.%]="100">
+
+                    <div fxLayout="row" class="bold-text">
+                      {{item.name}}
+                      <span *ngIf="!!item.recordingData.recordingTime">
+                        &nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordingData.recordingTime | dateTimeFormat}}
+                      </span>
+                      <span *ngIf="!!item.recordingData.recordID">
+                        &nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordingData.recordID}}
+                      </span>
+                    </div>
+
+                    <div *ngIf="!!item.description" fxLayout="row" [style.white-space]="'normal'">
+                      {{item.description}}
+                    </div>
+
+                  </div>
+
+                  <mat-divider [style.marginTop.px]="8">
+
+                  </mat-divider>
+
+                </div>
+
               </ng-template>
 
           </emp-ng-select>
