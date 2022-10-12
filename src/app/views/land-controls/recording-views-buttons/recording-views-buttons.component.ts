@@ -7,23 +7,30 @@
 
 import { Component, Input } from '@angular/core';
 
+import { EmptyMediaBase, MediaBase } from '@app/core';
+
+import { UrlViewerService } from '@app/shared/services';
+
 @Component({
   selector: 'emp-land-recording-views-buttons',
   templateUrl: './recording-views-buttons.component.html',
 })
 export class RecordingViewsButtonsComponent {
 
-  @Input() recordingMedia;
+  @Input() recordingMedia: MediaBase = EmptyMediaBase;
 
-  @Input() stampMedia;
 
-  onRecordingMediaClicked() {
-    console.log('Recording Media Clicked: ', this.recordingMedia);
+  constructor(private urlViewer: UrlViewerService) {
+
   }
 
 
-  onStampMediaClicked() {
-    console.log('Stamp Media Clicked: ', this.stampMedia);
+  onRecordingMediaClicked() {
+    if (!this.recordingMedia.url) {
+      return;
+    }
+
+    this.urlViewer.openWindowCentered(this.recordingMedia.url);
   }
 
 }
