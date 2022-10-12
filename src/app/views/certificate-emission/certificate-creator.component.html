@@ -29,7 +29,9 @@
 
     <div fxLayout="row" *ngIf="certificateRulesSelected.selectSubject">
 
-        <div fxFlex="100">
+        <div [fxFlex]="100/3"></div>
+
+        <div [fxFlex]="200/3">
           <label class="ellipsis"> Buscar y seleccionar el folio real: </label>
           <emp-land-recordable-subject-searcher
             [formControlName]="controls.recordableSubject"

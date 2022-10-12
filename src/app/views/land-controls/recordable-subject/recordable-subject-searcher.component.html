@@ -8,13 +8,15 @@
   [loading]="recordableSubjectLoading"
   [disabled]="disabled"
   [showError]="showError"
-  [fxFlex]="allWidth ? 'calc(100% - 70px)' : 100/3"
+  [fxFlex]="allWidth ? 100 : 100/3"
   [style.width.%]="100"
   placeholder="Buscar"
   (ngModelChange)="selectRecordableSubject($event)">
 
   <ng-template #labelTemplate let-item="item">
-    {{item.electronicID}} {{item.name ? ' | ' + item.name : ''}}
+    {{item.recordableSubject.electronicID}}
+    <span *ngIf="!!item.recordableSubject.kind">&nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordableSubject.kind}}</span>
+    <span *ngIf="!!item.name">&nbsp;&nbsp; | &nbsp;&nbsp; {{item.name}}</span>
   </ng-template>
 
   <ng-template #optionTemplate let-item="item">
@@ -36,7 +38,3 @@
   </ng-template>
 
 </emp-ng-select>
-
-<emp-land-recording-views-buttons>
-
-</emp-land-recording-views-buttons>

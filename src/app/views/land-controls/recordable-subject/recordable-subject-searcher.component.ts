@@ -40,7 +40,7 @@ export class RecordableSubjectSearcherComponent implements OnInit, ControlValueA
 
   @Input() recordableSubjectMinTermLength = 5;
 
-  @Input() allWidth = false;
+  @Input() allWidth = true;
 
   @Input() type: RecordableSubjectType = null;
 
