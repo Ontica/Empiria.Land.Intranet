@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 
 import { Assertion, DateStringLibrary, HttpService, Identifiable } from '@app/core';
 
-import { BookEntryShortModel, InstrumentType, Issuer, IssuersFilter, RecorderOffice,
+import { BookEntryShortModel, InstrumentType, Issuer, IssuersFilter, RecorderOffice, RecordingActSearchQuery,
          TractIndex } from '@app/models';
 
 
@@ -39,12 +39,20 @@ export class RecordableSubjectsDataService {
   }
 
 
-  getAmendableRecordingActs(recordableSubjectUID: string,
-                            instrumentRecordingUID: string,
-                            amendmentRecordingActTypeUID: string): Observable<TractIndex> {
-    const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}`
-      + `/amendable-recording-acts/?instrumentRecordingUID=${instrumentRecordingUID}`
-      + `&amendmentRecordingActTypeUID=${amendmentRecordingActTypeUID}`;
+  getAmendableRecordingActs(query: RecordingActSearchQuery): Observable<TractIndex> {
+    Assertion.assertValue(query.recordableSubjectUID, 'query.recordableSubjectUID');
+    Assertion.assertValue(query.amendmentRecordingActTypeUID, 'query.amendmentRecordingActTypeUID');
+
+    let path = `v5/land/registration/recordable-subjects/${query.recordableSubjectUID}/amendable-recording-acts/?`
+      + `amendmentRecordingActTypeUID=${query.amendmentRecordingActTypeUID}`;
+
+    if (!!query.authorizationDate && DateStringLibrary.isDate(query.authorizationDate)) {
+      path += `&date=${query.authorizationDate}`;
+    }
+
+    if (!!query.instrumentRecordingUID) {
+      path += `&instrumentRecordingUID=${query.instrumentRecordingUID}`;
+    }
 
     return this.http.get<TractIndex>(path);
   }

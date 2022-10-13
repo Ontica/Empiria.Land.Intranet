@@ -279,13 +279,17 @@ export interface BookEntryFields {
 
 export interface BookEntryShortModel {
   uid: string;
-  recordingNo: string;
-  instrumentRecordingUID: string;
+  recordingNo?: string;
+  instrumentRecordingUID?: string;
+  authorizationDate?: DateString;
+  presentationTime?: DateString;
 }
 
 
 export const EmptyBookEntryShortModel: BookEntryShortModel = {
   uid: '',
-  recordingNo: '',
   instrumentRecordingUID: '',
+  recordingNo: '',
+  authorizationDate: '',
+  presentationTime: '',
 };

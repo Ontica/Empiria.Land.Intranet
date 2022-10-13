@@ -144,13 +144,15 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
   onBookEntryNoFieldsChange() {
     setTimeout(() => {
-      const bookEntry = {
+      const bookEntry: BookEntryShortModel = {
+        uid: null,
         recordingNo: this.bookEntryNo,
         presentationTime: this.presentationTime,
         authorizationDate: this.authorizationDate,
       };
 
-      sendEvent(this.recordingBookSelectorEvent, RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED, {bookEntry});
+      sendEvent(this.recordingBookSelectorEvent, RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED,
+        {bookEntry});
     });
   }
 
@@ -180,7 +182,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
   private emitBookEntry(bookEntry: BookEntryShortModel) {
     sendEvent(this.recordingBookSelectorEvent, RecordingBookSelectorEventType.BOOK_ENTRY_CHANGED,
-      { bookEntry });
+      {bookEntry});
   }
 
 

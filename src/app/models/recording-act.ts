@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Empty, Identifiable, PartitionedType } from '@app/core';
+import { DateString, Empty, Identifiable, PartitionedType } from '@app/core';
 
 import { RecordingActParty } from './party';
 
@@ -76,6 +76,14 @@ export interface RecordingActFields {
   operationAmount?: number;
   currencyUID?: string;
   status: RecordableObjectStatus;
+}
+
+
+export interface RecordingActSearchQuery {
+  recordableSubjectUID: string;
+  amendmentRecordingActTypeUID: string;
+  authorizationDate: DateString;
+  instrumentRecordingUID: string;
 }
 
 

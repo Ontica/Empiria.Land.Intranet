@@ -74,9 +74,37 @@
     </div>
 
 
+    <ng-container *ngIf="registrationCommandRules.selectBookEntry">
+
+      <div class="section-title" *ngIf="!recordableSubjectUID">
+        {{ registrationCommandRules.newPartition ?
+          'Antecedente registral del predio del cual se va a desprender la fracción' :
+          'Antecedente registral:' }}
+      </div>
+
+      <div class="section-title" *ngIf="recordableSubjectUID">
+        Inscripción donde está registrado el acto jurídico
+      </div>
+
+      <div fxlayout="row" >
+
+        <emp-land-recording-book-selector fxFlex="100"
+          [recorderOffice]="recorderOffice"
+          [checkBookEntryInput]="checkBookEntryInput"
+          selectorPosition="top"
+          (recordingBookSelectorEvent)="onRecordingBookSelectorEvent($event)">
+
+        </emp-land-recording-book-selector>
+
+      </div>
+
+    </ng-container>
+
     <div fxLayout="row" *ngIf="registrationCommandRules.selectTargetAct">
 
-      <div [fxFlexOffset]="widthFirstColumn" fxFlex="calc(100% - {{widthFirstColumn}})">
+      <div *ngIf="!registrationCommandRules.selectBookEntry" [fxFlex]="widthFirstColumn"></div>
+
+      <div [fxFlex]="registrationCommandRules.selectBookEntry ?'auto' : 'calc(100% - {{widthFirstColumn}})'">
 
         <label class="ellipsis">Acto jurídico a cancelar o modificar:</label>
 
@@ -86,8 +114,8 @@
             [formControlName]="controls.amendmentRecordingActUID"
             [items]="tractIndexSelected.entries"
             [config]="{clearable: true}"
-            [placeholder]="formHandler.showInvalidControl(controls.recordableSubject) ?
-              'Seleccione el folio real' : 'Seleccione'"
+            [placeholder]="amendmentRecordingActPlaceholder"
+            [loading]="isLoadingAmendmentRecordingActs"
             [showError]="formHandler.showInvalidControl(controls.amendmentRecordingActUID)"
             bindValue="uid"
             (changes)="onAmendmentRecordingActChange($event)">
@@ -145,34 +173,9 @@
 
       </div>
 
+      <div *ngIf="registrationCommandRules.selectBookEntry" fxFlex="322px"></div>
+
     </div>
-
-
-    <ng-container *ngIf="registrationCommandRules.selectBookEntry">
-
-      <div class="section-title" *ngIf="!recordableSubjectUID">
-        {{ registrationCommandRules.newPartition ?
-          'Antecedente registral del predio del cual se va a desprender la fracción' :
-          'Antecedente registral:' }}
-      </div>
-
-      <div class="section-title" *ngIf="recordableSubjectUID">
-        Inscripción donde está registrado el acto jurídico que se desea agregar
-      </div>
-
-      <div fxlayout="row" >
-
-        <emp-land-recording-book-selector fxFlex="100"
-          [recorderOffice]="recorderOffice"
-          [checkBookEntryInput]="checkBookEntryInput"
-          selectorPosition="top"
-          (recordingBookSelectorEvent)="onRecordingBookSelectorEvent($event)">
-
-        </emp-land-recording-book-selector>
-
-      </div>
-
-    </ng-container>
 
     <ng-container *ngIf="registrationCommandRules.newPartition && registrationCommandRules.selectSubject">
 

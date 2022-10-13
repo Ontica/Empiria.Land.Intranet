@@ -17,10 +17,10 @@ import { RecordableSubjectsStateSelector } from '@app/presentation/exported.pres
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
-import { EmptyRegistrationCommandRule, EmptyTractIndex, EmptyTractIndexEntry, RecordableSubject,
-         RecordableSubjectType, RecordingActType, RecordingActTypeGroup, RegistrationCommand,
-         RegistrationCommandConfig, RegistrationCommandPayload, RegistrationCommandRule, TractIndex,
-         TractIndexEntry } from '@app/models';
+import { BookEntryShortModel, EmptyRegistrationCommandRule, EmptyTractIndex, EmptyTractIndexEntry,
+         RecordableSubject, RecordableSubjectType, RecordingActSearchQuery, RecordingActType, RecordingActTypeGroup,
+         RegistrationCommand, RegistrationCommandConfig, RegistrationCommandPayload, RegistrationCommandRule,
+         TractIndex, TractIndexEntry } from '@app/models';
 
 import { FormHandler, sendEvent } from '@app/shared/utils';
 
@@ -86,6 +86,8 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   checkBookEntryInput = false;
 
+  isLoadingAmendmentRecordingActs = false;
+
   widthFirstColumn = '320px';
 
   constructor(private uiLayer: PresentationLayer,
@@ -120,6 +122,26 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
+  get amendmentRecordingActPlaceholder(): string {
+    if (this.registrationCommandRules.selectSubject &&
+        this.formHandler.showInvalidControl(this.controls.recordableSubject)) {
+      return 'Seleccione el folio real';
+    }
+
+    if (this.registrationCommandRules.selectBookEntry) {
+      if (!this.checkBookEntryInput && !this.formHandler.getControl(this.controls.bookEntryUID).value) {
+        return 'Seleccione la inscripción';
+      }
+
+      if (this.checkBookEntryInput && !this.formHandler.getControl(this.controls.authorizationDate).value) {
+        return 'Seleccione la fecha de la inscripción';
+      }
+    }
+
+    return 'Seleccione';
+  }
+
+
   onRecordingActTypeGroupChange(recordingActTypeGroup: RecordingActTypeGroup) {
     this.recordingActTypeList = recordingActTypeGroup.recordingActTypes ?? [];
     this.registrationCommands = [];
@@ -146,12 +168,6 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   onRecordableSubjectChange(recordableSubject: RecordableSubject) {
     this.validateAmendmentRecordingActFields();
-
-    if (isEmpty(recordableSubject)) {
-      this.setTractIndexSelected(EmptyTractIndex);
-      return;
-    }
-
     this.getAmendmentRecordingActs();
   }
 
@@ -161,7 +177,8 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  onRecordingBookSelectorEvent(event){
+  onRecordingBookSelectorEvent(event: EventInfo){
+
     switch (event.type as RecordingBookSelectorEventType) {
 
       case RecordingBookSelectorEventType.RECORDING_BOOK_CHANGED:
@@ -176,7 +193,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
         Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
 
-        const bookEntry = event.payload.bookEntry;
+        const bookEntry: BookEntryShortModel= event.payload.bookEntry as BookEntryShortModel;
 
         if (this.checkBookEntryInput) {
           this.formHandler.getControl(this.controls.bookEntryNo).setValue(bookEntry.recordingNo);
@@ -184,7 +201,10 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
           this.formHandler.getControl(this.controls.authorizationDate).setValue(bookEntry.authorizationDate);
         } else {
           this.formHandler.getControl(this.controls.bookEntryUID).setValue(bookEntry.uid);
+          this.formHandler.getControl(this.controls.authorizationDate).setValue(bookEntry.authorizationDate);
         }
+
+        this.getAmendmentRecordingActs();
 
         return;
 
@@ -192,7 +212,9 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
         Assertion.assertValue(event.payload.checkBookEntryInput, 'event.payload.checkBookEntryInput');
 
-        this.setCheckBookEntryInput(event.payload.checkBookEntryInput)
+        this.setCheckBookEntryInput(event.payload.checkBookEntryInput);
+
+        this.resetAmendmentRecordingActData();
 
         return;
 
@@ -244,15 +266,46 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   private getAmendmentRecordingActs() {
-    const payload = {
-      instrumentRecordingUID: this.instrumentRecordingUID,
-      recordableSubjectUID: this.formHandler.getControl(this.controls.recordableSubject).value.uid,
-      amendmentRecordingActTypeUID: this.formHandler.getControl(this.controls.recordingActType).value,
+    const query = this.buildAmendmentRecordingActQuery();
+
+    if (!query.recordableSubjectUID || !query.amendmentRecordingActTypeUID ||
+        !(query.authorizationDate || query.instrumentRecordingUID)) {
+      this.resetAmendmentRecordingActData();
+      return;
+    }
+
+    this.isLoadingAmendmentRecordingActs = true;
+
+    this.helper.select<TractIndex>(RecordableSubjectsStateSelector.AMENDABLE_RECORDING_ACTS, {query})
+      .toPromise()
+      .then(x => this.tractIndexSelected = x)
+      .finally(() => this.isLoadingAmendmentRecordingActs = false);
+  }
+
+
+  private buildAmendmentRecordingActQuery(): RecordingActSearchQuery {
+    const recordableSubject: RecordableSubject =
+      this.formHandler.getControl(this.controls.recordableSubject).value as RecordableSubject;
+
+    const recordableSubjectUID = this.recordableSubjectUID || recordableSubject?.uid;
+    const amendmentRecordingActTypeUID = this.formHandler.getControl(this.controls.recordingActType).value;
+    const authorizationDate = this.formHandler.getControl(this.controls.authorizationDate).value;
+    const instrumentRecordingUID = this.instrumentRecordingUID ?? '';
+
+    const query: RecordingActSearchQuery = {
+      recordableSubjectUID,
+      amendmentRecordingActTypeUID,
+      authorizationDate,
+      instrumentRecordingUID,
     };
 
-    this.helper.select<TractIndex>(RecordableSubjectsStateSelector.AMENDABLE_RECORDING_ACTS, payload)
-      .toPromise()
-      .then(x => this.tractIndexSelected = x);
+    return query;
+  }
+
+
+  private resetAmendmentRecordingActData() {
+    this.formHandler.getControl(this.controls.amendmentRecordingActUID).reset();
+    this.setTractIndexSelected(EmptyTractIndex);
   }
 
 
