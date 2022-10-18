@@ -44,6 +44,8 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   @Input() tractIndex: TractIndex = EmptyTractIndex;
 
+  @Input() recordingActUID = '';
+
   @Input() isLoading = false;
 
   @Output() recordableSubjectHistoryEvent = new EventEmitter<EventInfo>();

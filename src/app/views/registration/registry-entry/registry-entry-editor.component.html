@@ -43,6 +43,7 @@
 
         <emp-land-recordable-subject-history
           [tractIndex]="tractIndex"
+          [recordingActUID]="displayRecordingAct ? data.recordingActUID : null"
           [isLoading]="isLoading"
           (recordableSubjectHistoryEvent)="onRecordableSubjectHistoryEvent($event)">
 

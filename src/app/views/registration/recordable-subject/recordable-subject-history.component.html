@@ -69,7 +69,9 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        [class.row-selected]="row.uid === recordingActUID"
+        [title]="row.uid === recordingActUID ? 'Acto jurídico seleccionado' : ''"></tr>
     </table>
 
     <div *ngIf="!dataSource?.data || dataSource?.data.length === 0" class="text-not-found">
@@ -80,8 +82,8 @@
 
 
   <ng-container *ngIf="tractIndex.actions.canBeClosed ||
-                      tractIndex.actions.canBeOpened ||
-                      tractIndex.actions.canBeUpdated">
+                       tractIndex.actions.canBeOpened ||
+                       tractIndex.actions.canBeUpdated">
 
     <mat-divider class="divider-padding"></mat-divider>
 

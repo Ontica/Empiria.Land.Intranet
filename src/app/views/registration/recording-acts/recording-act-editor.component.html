@@ -4,7 +4,7 @@
 
     <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between">
 
-      <div [fxFlex]="30" [fxFlex.lt-md]="100">
+      <div fxFlex="30" fxFlex.lt-md="100">
 
         <label>Tipo de acto jurídico:</label>
 
@@ -15,7 +15,7 @@
 
       </div>
 
-      <div [fxFlex]="30" [fxFlex.lt-md]="100">
+      <div fxFlex="30" fxFlex.lt-md="100">
 
         <label>Clasificación del acto jurídico:</label>
 
@@ -31,19 +31,17 @@
 
       </div>
 
-      <div fxFlex></div>
-
-      <div [fxFlex]="40">
+      <div fxFlex="40">
 
         <div fxLayout="row">
 
-          <label [fxFlex]="100">Monto de la operación:</label>
+          <label fxFlex="100">Monto de la operación:</label>
 
         </div>
 
         <div fxLayout="row">
 
-          <div [fxFlex]="50" [fxFlex.lt-md]="100">
+          <div fxFlex="50" fxFlex.lt-md="100">
 
             <input [formControlName]="controls.operationAmount" empNgCurrency
               [empNgCurrencyCode]="getCurrencyCode()"
@@ -53,7 +51,7 @@
 
           </div>
 
-          <div [fxFlex]="50" [fxFlex.lt-md]="100" fxLayoutAlign="start end">
+          <div fxFlex="50" fxFlex.lt-md="100" fxLayoutAlign="start end">
 
             <emp-ng-select [formControlName]="controls.currencyUID"
               [items]="recordingAct.actions.editionValues.currencies"
@@ -81,6 +79,47 @@
           [formControlName]="controls.description"
           [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
         </textarea>
+
+      </div>
+
+    </div>
+
+
+    <div *ngIf="displayAmendedAct" class="list-selection-header slim">
+
+      <div class="list-item slim">
+
+        <div class="list-container">
+
+          <div fxLayout="row" class="uppercase bold-text" [style.marginBottom.px]="8">
+            Acto jurídico a modificar o cancelar:
+          </div>
+
+          <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="2rem" fxLayoutGap.lt-md="0.75rem">
+
+            <div fxFlex="none">
+              <div class="label nowrap">Acto jurídico:</div>
+              <div class="nowrap">{{recordingAct.amendedAct.name}}</div>
+            </div>
+
+            <div fxFlex="none">
+              <div class="label nowrap">Fecha de registro:</div>
+              <div class="nowrap">{{recordingAct.amendedAct.recordingData.recordingTime | dateTimeFormat}}</div>
+            </div>
+
+            <div fxFlex="none">
+              <div class="label nowrap">Fecha de presentación:</div>
+              <div class="nowrap">{{recordingAct.amendedAct.recordingData.recordingTime | dateTimeFormat}}</div>
+            </div>
+
+            <div fxFlex>
+              <div class="label">Descripción:</div>
+              <div>{{recordingAct.amendedAct.description}}</div>
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
 

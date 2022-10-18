@@ -51,6 +51,11 @@ export class RecordingActEditorComponent implements OnChanges {
   }
 
 
+  get displayAmendedAct(): boolean {
+    return !isEmpty(this.recordingAct.amendedAct);
+  }
+
+
   ngOnChanges() {
     if (!isEmpty(this.recordingAct)) {
       this.enableEditor(false);

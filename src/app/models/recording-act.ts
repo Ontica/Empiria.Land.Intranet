@@ -13,6 +13,8 @@ import { EmptyRecordableSubject, RecordableObjectStatus, RecordableSubject } fro
 
 import { RegistrationCommandConfig } from './registration';
 
+import { EmptyTractIndexEntry, TractIndexEntry } from './tract-index';
+
 export interface RecordingActTypeGroup extends Identifiable {
   recordingActTypes: RecordingActType[];
 }
@@ -51,6 +53,7 @@ export interface RecordingAct extends Identifiable, PartitionedType {
   recordableSubject: Identifiable;
   parties: RecordingActParty[];
   status: RecordableObjectStatus;
+  amendedAct: TractIndexEntry;
   actions: RecordingActActions;
 }
 
@@ -122,5 +125,6 @@ export const EmptyRecordingAct: RecordingAct = {
   recordableSubject: Empty,
   parties: [],
   status: 'Incomplete',
+  amendedAct: EmptyTractIndexEntry,
   actions: EmptyRecordingActActions,
 };
