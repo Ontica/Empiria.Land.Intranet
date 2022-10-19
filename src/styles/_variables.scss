@@ -20,12 +20,12 @@ $warning-color: hsl(357, 47%, 51%) !default;
 $warning-color-light: hsl(357, 47%, 65%);
 $warning-color-dark: hsl(357, 47%, 35%) !default;
 
-$title-color: $primary-color  !default;
-$title-border-color: $primary-color  !default;
+$title-color: $primary-color !default;
+$title-border-color: $primary-color !default;
 
-$text-color: $secondary-color  !default;
-$text-color-light: $secondary-color-light  !default;
-$text-color-dark: $secondary-color-dark  !default;
+$text-color: $secondary-color !default;
+$text-color-light: $secondary-color-light !default;
+$text-color-dark: $secondary-color-dark !default;
 
 $background-color-work-area: #f4f6f6 !default;
 $background-color: #fff !default;
@@ -36,7 +36,7 @@ $border-color-dark: #909090 !default;
 
 $disabled-color: #edeef0 !default;
 
-$secondary-text-color: $white  !default;
+$secondary-text-color: $white !default;
 $action-color: $primary-color;
 $action-selected-color: $primary-color-dark;
 
@@ -146,8 +146,8 @@ $date-picker-width: 90px;
 //
 // grid
 //
-$grid-header-background-color: $primary-color  !default;
-$grid-header-color: $secondary-text-color  !default;
+$grid-header-background-color: $primary-color !default;
+$grid-header-color: $secondary-text-color !default;
 $grid-footer-background-color: $disabled-color;
 $grid-border: 0;
 $grid-even-background-color: $white;
@@ -155,6 +155,8 @@ $grid-odd-background-color: #f4f4f4 !default;
 $grid-hover-background-color: #f5f8fa;
 $grid-selected-background-color: #f0f3f5;
 $grid-selected-hover-background-color: #edf0f3;
+$grid-nested-background-color: #e0e6eb;
+$grid-nested-border: 2px solid #859cad;
 $grid-row-height: 35px;
 
 //
@@ -162,7 +164,7 @@ $grid-row-height: 35px;
 //
 $designer-bar-background: #f0f0f0 !default;
 $designer-border-color: #d2d2d2 !default;
-$designer-row-selected-border-color: $primary-color  !default;
+$designer-row-selected-border-color: $primary-color !default;
 
 $designer-primary-color: #e5f6ff !default;
 $designer-secondary-color: #fff8dd !default;

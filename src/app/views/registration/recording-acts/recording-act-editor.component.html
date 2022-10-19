@@ -104,12 +104,18 @@
 
             <div fxFlex="none">
               <div class="label nowrap">Fecha de registro:</div>
-              <div class="nowrap">{{recordingAct.amendedAct.recordingData.recordingTime | dateTimeFormat}}</div>
+              <div class="nowrap">
+                {{!recordingAct.amendedAct.recordingData.recordingTime ? '-' :
+                   recordingAct.amendedAct.recordingData.recordingTime | dateTimeFormat}}
+              </div>
             </div>
 
             <div fxFlex="none">
               <div class="label nowrap">Fecha de presentación:</div>
-              <div class="nowrap">{{recordingAct.amendedAct.recordingData.recordingTime | dateTimeFormat}}</div>
+              <div class="nowrap">
+                {{!recordingAct.amendedAct.recordingData.recordingTime ? '-' :
+                   recordingAct.amendedAct.recordingData.recordingTime | dateTimeFormat}}
+              </div>
             </div>
 
             <div fxFlex>

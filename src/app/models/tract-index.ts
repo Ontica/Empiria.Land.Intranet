@@ -58,6 +58,7 @@ export interface TractIndexEntry {
   status: string;
   recordingData: RecordingData,
   subjectSnapshot: RecordableSubject;
+  amendedAct: TractIndexEntry;
   actions: TractIndexEntryActions;
 }
 
@@ -165,5 +166,6 @@ export const EmptyTractIndexEntry: TractIndexEntry = {
   status: '',
   recordingData: EmptyRecordingData,
   subjectSnapshot: EmptyRecordableSubject,
+  amendedAct: null,
   actions: EmptyTractIndexEntryActions,
 };

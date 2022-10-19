@@ -36,6 +36,12 @@ export enum RecordableSubjectHistoryEventType {
 }
 
 
+interface TractIndexEntryDataTable extends TractIndexEntry {
+  number?: string;
+  isChild?: boolean;
+}
+
+
 @Component({
   selector: 'emp-land-recordable-subject-history',
   templateUrl: './recordable-subject-history.component.html',
@@ -55,7 +61,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   displayedColumns = [...this.displayedColumnsDefault];
 
-  dataSource: MatTableDataSource<TractIndexEntry>;
+  dataSource: MatTableDataSource<TractIndexEntryDataTable>;
 
   submitted = false;
 
@@ -63,11 +69,15 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   displayRecordingActEdition = false;
 
-  tractIndexEntrySelected: TractIndexEntry = EmptyTractIndexEntry;
+  tractIndexEntrySelected: TractIndexEntryDataTable = EmptyTractIndexEntry;
 
   helper: SubscriptionHelper;
 
   bookEntryUrl = ROUTES_LIBRARY.historic_registration_book_entry.fullpath;
+
+  hasNestedEntries = false;
+
+  checkNestedEntries = false;
 
   constructor(private uiLayer: PresentationLayer,
               private recordingData: RecordingDataService,
@@ -79,8 +89,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.tractIndex) {
-      this.dataSource = new MatTableDataSource(this.tractIndex.entries);
-      this.resetColumns();
+      this.setDataSource();
     }
   }
 
@@ -191,6 +200,63 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
           }
         });
     }
+  }
+
+
+  onCheckNestedEntriesClicked() {
+    this.buildDataSource();
+  }
+
+
+  private setDataSource() {
+    this.setHasNestedEntries();
+    this.buildDataSource();
+    this.resetColumns();
+  }
+
+
+  private setHasNestedEntries() {
+    this.hasNestedEntries = this.tractIndex.entries.filter(x => !isEmpty(x.amendedAct)).length > 0;
+  }
+
+
+  private buildDataSource() {
+    let entries: TractIndexEntryDataTable[] = [];
+
+    if (this.checkNestedEntries) {
+
+      const childs: TractIndexEntryDataTable[] =
+        [...[], ...this.tractIndex.entries.filter(e => !isEmpty(e.amendedAct))];
+
+      const parents: TractIndexEntryDataTable[] =
+        [...[], ...this.tractIndex.entries.filter(e => !childs.find(c => e.uid === c.uid))];
+
+      parents.forEach((p, pi) => {
+        this.pushEntryToDataSource(entries, p, (pi + 1).toString(), false);
+
+        childs.filter(c => p.uid === c.amendedAct.uid)
+              .forEach((c, ci) => this.pushEntryToDataSource(entries, c, (pi + 1) + '.' + (ci + 1), true));
+      });
+
+    } else {
+
+      this.tractIndex.entries.forEach((entry, index) =>
+        this.pushEntryToDataSource(entries, entry, (index + 1).toString(), false)
+      );
+
+    }
+
+    this.dataSource = new MatTableDataSource(entries);
+  }
+
+
+  private pushEntryToDataSource(entries: TractIndexEntryDataTable[],
+                                entry: TractIndexEntryDataTable,
+                                index: string,
+                                isChild: boolean) {
+    entry.isChild = isChild;
+    entry.number = index;
+    entries.push(entry);
   }
 
 
