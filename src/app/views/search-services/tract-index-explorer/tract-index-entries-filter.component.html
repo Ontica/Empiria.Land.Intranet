@@ -21,18 +21,31 @@
 
         <div fxFlex="50" fxLayoutAlign="start end">
 
-        <div class="input-search-container">
+          <div class="input-search-container">
 
-          <input type="text" class="text-box" name="keywords" #keywords="ngModel"
-            placeholder="Buscar..."
-            [(ngModel)]="formData.keywords"
-            [style.marginRight]="0" [style.width.%]="100"
-            (keyup.enter)="onFilterChanges()"
-            (keyup.escape)="onClearKeywords()">
+            <input type="text" class="text-box" name="keywords" #keywords="ngModel"
+              placeholder="Buscar..."
+              [(ngModel)]="formData.keywords"
+              [style.width.%]="hasNestedEntries ? null : 100"
+              (keyup.enter)="onFilterChanges()"
+              (keyup.escape)="onClearKeywords()">
+
+          </div>
 
         </div>
 
-      </div>
+        <div fxFlex="none" fxLayoutAlign="start end" *ngIf="hasNestedEntries"
+          [style.paddingBottom.px]="6">
+
+          <mat-checkbox
+            [(ngModel)]="formData.checkNestedEntries"
+            [ngModelOptions]="{standalone: true}"
+            (click)="$event.stopPropagation"
+            (change)="onFilterChanges()">
+            Anidar actos modificados
+          </mat-checkbox>
+
+        </div>
 
       </div>
 

@@ -5,9 +5,9 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 
-import { Assertion, EventInfo } from '@app/core';
+import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
@@ -18,7 +18,7 @@ import { EmptyTractIndex, EmptyTractIndexEntry, TractIndex, TractIndexEntry,
 
 import { TractIndexEntriesFilterEventType } from './tract-index-entries-filter.component';
 
-import { TractIndexEntriesTableEventType } from './tract-index-entries-table.component';
+import { TractIndexEntriesHistoryEventType } from './tract-index-entries-history.component';
 
 
 export enum TractIndexEntriesViewerEventType {
@@ -35,7 +35,7 @@ export enum TractIndexEntriesViewerEventType {
     }
   `]
 })
-export class TractIndexEntriesViewerComponent implements OnDestroy {
+export class TractIndexEntriesViewerComponent implements OnChanges, OnDestroy {
 
   @Input() tractIndex: TractIndex = EmptyTractIndex;
 
@@ -53,11 +53,20 @@ export class TractIndexEntriesViewerComponent implements OnDestroy {
 
   filter: any = null;
 
+  hasNestedEntries = false;
+
   helper: SubscriptionHelper;
 
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
+  }
+
+
+  ngOnChanges(changes: SimpleChanges){
+    if (changes.tractIndex) {
+      this.setHasNestedEntries();
+    }
   }
 
 
@@ -80,10 +89,10 @@ export class TractIndexEntriesViewerComponent implements OnDestroy {
   }
 
 
-  onTractIndexEntriesTableEvent(event: EventInfo) {
-    switch (event.type as TractIndexEntriesTableEventType) {
+  onTractIndexEntriesHistoryEvent(event: EventInfo) {
+    switch (event.type as TractIndexEntriesHistoryEventType) {
 
-      case TractIndexEntriesTableEventType.TRACT_INDEX_ENTRY_CLICKED:
+      case TractIndexEntriesHistoryEventType.TRACT_INDEX_ENTRY_CLICKED:
         sendEvent(this.tractIndexEntriesViewerEvent, TractIndexEntriesViewerEventType.SELECT_TRACT_INDEX_ENTRY,
           event.payload);
 
@@ -93,6 +102,11 @@ export class TractIndexEntriesViewerComponent implements OnDestroy {
         console.log(`Unhandled user interface event ${event.type}`);
         return;
     }
+  }
+
+
+  private setHasNestedEntries() {
+    this.hasNestedEntries = this.tractIndex.entries.filter(x => !isEmpty(x.amendedAct)).length > 0;
   }
 
 }

@@ -2,16 +2,17 @@
 
   <emp-land-tract-index-entries-filter fxFlex="none"
     [tractIndexEntryType]="tractIndexEntryType"
+    [hasNestedEntries]="hasNestedEntries"
     (tractIndexEntriesFilterEvent)="onTractIndexEntriesFilterEvent($event)">
 
   </emp-land-tract-index-entries-filter>
 
-  <emp-land-tract-index-entries-table fxFlex
+  <emp-land-tract-index-entries-history fxFlex
     [tractIndexEntriesList]="tractIndex.entries"
     [filter]="filter"
     [selectedTractIndexEntry]="selectedTractIndexEntry"
-    (tractIndexEntriesTableEvent)="onTractIndexEntriesTableEvent($event)">
+    (tractIndexEntriesHistoryEvent)="onTractIndexEntriesHistoryEvent($event)">
 
-  </emp-land-tract-index-entries-table>
+  </emp-land-tract-index-entries-history>
 
 </div>

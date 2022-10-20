@@ -8,9 +8,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 
-import { MatTableDataSource } from '@angular/material/table';
-
-import { EventInfo, isEmpty } from '@app/core';
+import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
@@ -25,6 +23,10 @@ import { MessageBoxService } from '@app/shared/containers/message-box';
 import { UrlViewerService } from '@app/shared/services';
 
 import { sendEvent } from '@app/shared/utils';
+
+import {
+  TractIndexEntriesTableEventType
+} from '@app/views/land-controls/tract-index/tract-index-entries-table.component';
 
 import { RecordingActCreatorModalEventType } from '../recording-acts/recording-act-creator-modal.component';
 
@@ -56,13 +58,6 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   @Output() recordableSubjectHistoryEvent = new EventEmitter<EventInfo>();
 
-  private displayedColumnsDefault = ['rowIndex', 'issuedAndRequestedTime', 'recordingAct',
-                                     'subjectChanges', 'recordLink', 'status'];
-
-  displayedColumns = [...this.displayedColumnsDefault];
-
-  dataSource: MatTableDataSource<TractIndexEntryDataTable>;
-
   submitted = false;
 
   displayRecordingActCreator = false;
@@ -89,7 +84,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.tractIndex) {
-      this.setDataSource();
+      this.setHasNestedEntries();
     }
   }
 
@@ -99,11 +94,43 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
   }
 
 
+  onTractIndexEntriesTableEvent(event: EventInfo) {
+    switch (event.type as TractIndexEntriesTableEventType) {
+
+      case TractIndexEntriesTableEventType.RECORDING_ACT_CLICKED:
+        Assertion.assertValue(event.payload.tractIndexEntry, 'event.payload.tractIndexEntry');
+        this.setTractIndexEntrySelected(event.payload.tractIndexEntry as TractIndexEntry);
+        return;
+
+      case TractIndexEntriesTableEventType.BOOK_ENTRY_CLICKED:
+        Assertion.assertValue(event.payload.tractIndexEntry, 'event.payload.tractIndexEntry');
+        this.validateOpenBookEntry(event.payload.tractIndexEntry as TractIndexEntry);
+        return;
+
+      case TractIndexEntriesTableEventType.REMOVE_RECORDING_ACT_CLICKED:
+        if (this.submitted) {
+          return;
+        }
+
+        Assertion.assertValue(event.payload.tractIndexEntry.uid, 'event.payload.tractIndexEntry.uid');
+        this.removeRecordingActFromTractIndex(this.tractIndex.recordableSubject.uid,
+                                              event.payload.tractIndexEntry.uid);
+
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
+  }
+
+
   onOpenRecordingActCreator() {
     if (this.tractIndex.actions.canBeUpdated) {
       this.displayRecordingActCreator = true;
     }
   }
+
 
   onRecordingActCreatorModalEvent(event: EventInfo) {
     switch (event.type as RecordingActCreatorModalEventType) {
@@ -121,11 +148,6 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
         console.log(`Unhandled user interface event ${event.type}`);
         return;
     }
-  }
-
-
-  onOpenRecordingActEditor(tractIndexEntry: TractIndexEntry) {
-    this.setTractIndexEntrySelected(tractIndexEntry);
   }
 
 
@@ -179,7 +201,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
   }
 
 
-  onOpenBookEntry(tractIndexEntry: TractIndexEntry) {
+  private validateOpenBookEntry(tractIndexEntry: TractIndexEntry) {
     if (!tractIndexEntry.recordingData.bookEntry) {
       this.urlViewer.openWindowCentered(tractIndexEntry.recordingData.media.url);
     } else {
@@ -188,84 +210,9 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
   }
 
 
-  onRemoveRecordingActClicked(recordingAct: TractIndexEntry) {
-    if (recordingAct.actions.canBeDeleted && !this.submitted) {
-      const message = this.getConfirmMessageToRemove(recordingAct);
-
-      this.messageBox.confirm(message, 'Eliminar acto jurídico', 'DeleteCancel')
-        .toPromise()
-        .then(x => {
-          if (x) {
-            this.removeRecordingActFromTractIndex(this.tractIndex.recordableSubject.uid, recordingAct.uid);
-          }
-        });
-    }
-  }
-
-
-  onCheckNestedEntriesClicked() {
-    this.buildDataSource();
-  }
-
-
-  private setDataSource() {
-    this.setHasNestedEntries();
-    this.buildDataSource();
-    this.resetColumns();
-  }
-
-
   private setHasNestedEntries() {
     this.hasNestedEntries = this.tractIndex.entries.filter(x => !isEmpty(x.amendedAct)).length > 0;
-  }
-
-
-  private buildDataSource() {
-    let entries: TractIndexEntryDataTable[] = [];
-
-    if (this.checkNestedEntries) {
-
-      const childs: TractIndexEntryDataTable[] =
-        [...[], ...this.tractIndex.entries.filter(e => !isEmpty(e.amendedAct))];
-
-      const parents: TractIndexEntryDataTable[] =
-        [...[], ...this.tractIndex.entries.filter(e => !childs.find(c => e.uid === c.uid))];
-
-      parents.forEach((p, pi) => {
-        this.pushEntryToDataSource(entries, p, (pi + 1).toString(), false);
-
-        childs.filter(c => p.uid === c.amendedAct.uid)
-              .forEach((c, ci) => this.pushEntryToDataSource(entries, c, (pi + 1) + '.' + (ci + 1), true));
-      });
-
-    } else {
-
-      this.tractIndex.entries.forEach((entry, index) =>
-        this.pushEntryToDataSource(entries, entry, (index + 1).toString(), false)
-      );
-
-    }
-
-    this.dataSource = new MatTableDataSource(entries);
-  }
-
-
-  private pushEntryToDataSource(entries: TractIndexEntryDataTable[],
-                                entry: TractIndexEntryDataTable,
-                                index: string,
-                                isChild: boolean) {
-    entry.isChild = isChild;
-    entry.number = index;
-    entries.push(entry);
-  }
-
-
-  private resetColumns() {
-    this.displayedColumns = [...[], ...this.displayedColumnsDefault];
-
-    if (this.tractIndex.entries.filter(x => x.actions.canBeDeleted).length > 0) {
-      this.displayedColumns.push('action');
-    }
+    this.checkNestedEntries = false;
   }
 
 
@@ -291,13 +238,6 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
     return `Esta operación abrirá la ` +
            `<strong>${tractIndexEntry.recordingData.description}</strong> ` +
            `en otra pestaña del navegador. <br><br>¿Continuo con la operación?`;
-  }
-
-
-  private getConfirmMessageToRemove(tractIndexEntry: TractIndexEntry): string {
-    return `Esta operación eliminará el acto jurídico <strong>${tractIndexEntry.description}</strong> ` +
-           `registrado en <strong>${tractIndexEntry.recordingData.description}</strong>.` +
-           `<br><br>¿Elimino el acto jurídico?`;
   }
 
 

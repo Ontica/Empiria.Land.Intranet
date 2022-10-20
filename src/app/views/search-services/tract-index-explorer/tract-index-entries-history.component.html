@@ -1,0 +1,14 @@
+<div #tableContainer fxFlex="100" class="fill-table-container">
+
+  <emp-land-tract-index-entries-table
+    [tractIndexEntriesList]="tractIndexEntriesList"
+    [filter]="filter"
+    [rowClickeable]="true"
+    [tractIndexEntryUID]="selectedTractIndexEntry.uid"
+    [hasNestedEntries]="hasNestedEntries"
+    [checkNestedEntries]="filter?.checkNestedEntries ?? false"
+    (tractIndexEntriesTableEvent)="onTractIndexEntriesTableEvent($event)">
+
+  </emp-land-tract-index-entries-table>
+
+</div>

@@ -25,11 +25,14 @@ export class TractIndexEntriesFilterComponent implements OnInit {
 
   @Input() tractIndexEntryType: TractIndexEntryType = TractIndexEntryType.RecordingAct;
 
+  @Input() hasNestedEntries = false;
+
   @Output() tractIndexEntriesFilterEvent = new EventEmitter<EventInfo>();
 
   formData = {
     entryType: '',
     keywords: '',
+    checkNestedEntries: false,
   };
 
   tractIndexEntryTypeList: Identifiable[] = TractIndexEntryTypeList ?? [];
@@ -49,6 +52,7 @@ export class TractIndexEntriesFilterComponent implements OnInit {
     const filter = {
       entryType: this.formData.entryType,
       keywords: this.formData.keywords,
+      checkNestedEntries: this.formData.checkNestedEntries,
     };
 
     sendEvent(this.tractIndexEntriesFilterEvent, TractIndexEntriesFilterEventType.FILTER_CHANGED, {filter});
@@ -59,6 +63,7 @@ export class TractIndexEntriesFilterComponent implements OnInit {
     this.formData = {
       entryType: this.tractIndexEntryType,
       keywords: '',
+      checkNestedEntries: false,
     };
   }
 

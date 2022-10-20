@@ -22,7 +22,7 @@ import { RecordSearchListComponent } from './record-search/record-search-list.co
 import { RecordSearchListItemComponent } from './record-search/record-search-list-item.component';
 
 import { TractIndexEntriesFilterComponent } from './tract-index-explorer/tract-index-entries-filter.component';
-import { TractIndexEntriesTableComponent } from './tract-index-explorer/tract-index-entries-table.component';
+import { TractIndexEntriesHistoryComponent } from './tract-index-explorer/tract-index-entries-history.component';
 import { TractIndexEntriesViewerComponent } from './tract-index-explorer/tract-index-entries-viewer.component';
 import { TractIndexEntryPrintableViewerComponent } from './tract-index-entry-tabbed-view/tract-index-entry-printable-viewer.component';
 import { TractIndexEntryTabbedViewComponent } from './tract-index-entry-tabbed-view/tract-index-entry-tabbed-view.component';
@@ -48,7 +48,7 @@ import { TractIndexExplorerComponent } from './tract-index-explorer/tract-index-
     RecordSearchListComponent,
     RecordSearchListItemComponent,
     TractIndexEntriesFilterComponent,
-    TractIndexEntriesTableComponent,
+    TractIndexEntriesHistoryComponent,
     TractIndexEntriesViewerComponent,
     TractIndexEntryPrintableViewerComponent,
     TractIndexEntryTabbedViewComponent,

@@ -67,6 +67,10 @@ table.mat-table tr.mat-row {
     td {
       border-bottom: $grid-nested-border;
     }
+
+    &:hover {
+      background-color: $grid-nested-hover-background-color;
+    }
   }
 
   &.child {

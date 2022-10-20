@@ -19,6 +19,7 @@ import { RecordableSubjectSearcherComponent } from './recordable-subject/recorda
 import { RecordableSubjectViewComponent } from './recordable-subject/recordable-subject-view.component';
 import { RecordingBookSelectorComponent } from './recording-book-selector/recording-book-selector.component';
 import { RecordingViewsButtonsComponent } from './recording-views-buttons/recording-views-buttons.component';
+import { TractIndexEntriesTableComponent } from './tract-index/tract-index-entries-table.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { RecordingViewsButtonsComponent } from './recording-views-buttons/record
     RecordableSubjectViewComponent,
     RecordingBookSelectorComponent,
     RecordingViewsButtonsComponent,
+    TractIndexEntriesTableComponent,
   ],
 
   exports: [
@@ -48,6 +50,7 @@ import { RecordingViewsButtonsComponent } from './recording-views-buttons/record
     RecordableSubjectViewComponent,
     RecordingBookSelectorComponent,
     RecordingViewsButtonsComponent,
+    TractIndexEntriesTableComponent,
   ]
 
 })
