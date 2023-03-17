@@ -68,7 +68,7 @@ export class TransactionSubmitterComponent implements OnChanges {
 
 
   ngOnChanges() {
-    this.formHandler.setFormModel({
+    this.formHandler.form.reset({
       paymentReceiptNo: this.payment?.receiptNo,
       total: this.payment?.total ? this.currencyPipe.transform(this.payment.total) : null
     });
