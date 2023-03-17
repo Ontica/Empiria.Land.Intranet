@@ -10,6 +10,8 @@ import { Injectable } from '@angular/core';
 import { APP_CONFIG, DEFAULT_ROUTE, DEFAULT_URL, getAllPermissions, ROUTES_LIST,
          UNAUTHORIZED_ROUTE } from '@app/main-layout';
 
+import { ACCESS_PROBLEM_MESSAGE, INVALID_CREDENTIALS_MESSAGE } from '../errors/error-messages';
+
 import { Assertion } from '../general/assertion';
 
 import { SessionService } from '../general/session.service';
@@ -64,12 +66,12 @@ export class AuthenticationService {
   }
 
 
-  private setSession(sessionToken: SessionToken, principalData: PrincipalData){
+  private setSession(sessionToken: SessionToken, principalData: PrincipalData) {
     if (!APP_CONFIG.layout.enablePermissions) {
       principalData.permissions = getAllPermissions();
     }
 
-    const defaultRoute =  this.getDefaultRoute(principalData.permissions);
+    const defaultRoute = this.getDefaultRoute(principalData.permissions);
 
     const principal = new Principal(sessionToken,
                                     principalData.identity,
@@ -81,10 +83,9 @@ export class AuthenticationService {
 
   private handleAuthenticationError(error): Promise<never> {
     if (error.status === 401) {
-      return Promise.reject(new Error('El nombre de usuario o contraseña no coinciden con los registrados. ' +
-                                      'Favor de intentar nuevamente.'));
+      return Promise.reject(new Error(INVALID_CREDENTIALS_MESSAGE));
     } else {
-      return Promise.reject(new Error(`Tuve un problema al intentar acceder al sistema: ` +
+      return Promise.reject(new Error(`${ACCESS_PROBLEM_MESSAGE}: ` +
         `${error.status} ${error.statusText} ${error.message}`));
     }
   }
