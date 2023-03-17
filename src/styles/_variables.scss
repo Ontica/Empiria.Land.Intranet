@@ -29,6 +29,7 @@ $text-color-dark: $secondary-color-dark !default;
 
 $background-color-work-area: #f4f6f6 !default;
 $background-color: #fff !default;
+$background-color-highlight: #fbfefd !default;
 
 $border-color: #e8e8e8 !default;
 $border-color-light: #edeef0 !default;
@@ -143,6 +144,8 @@ $checkbox-background-color: $primary-color-light;
 $checkbox-warning-background-color: $layout-secondary-color;
 $date-picker-width: 90px;
 
+$tag-background-color: #eef7f5;
+
 //
 // grid
 //
@@ -163,9 +166,13 @@ $grid-row-height: 35px;
 //
 // Designer
 //
-$designer-bar-background: #f0f0f0 !default;
 $designer-border-color: #d2d2d2 !default;
-$designer-row-selected-border-color: $primary-color !default;
+$designer-bar-background: #f0f0f0 !default;
+$designer-bar-selected-border-color: #32816e !default;
+$designer-bar-selected-background-color: #b3dbd3 !default;
+$designer-bar-selected-hover-background-color: #97cec3 !default;
+$designer-cell-selected-background-color: #eef7f5 !default;
+$designer-cell-selected-hover-background-color: #dcefeb !default;
 
 $designer-primary-color: #e5f6ff !default;
 $designer-secondary-color: #fff8dd !default;

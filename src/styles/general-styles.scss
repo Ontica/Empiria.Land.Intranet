@@ -184,6 +184,12 @@ button.btn-icon-action {
   }
 }
 
+button.btn-icon-active {
+  .mat-icon {
+    color: $action-color;
+  }
+}
+
 button.btn-base:hover {
   background-color: $button-selected-color;
   color: $text-color-dark;
@@ -206,6 +212,12 @@ button.btn-icon:hover {
 button.btn-icon-action:hover {
   background-color: $action-selected-color;
   transition: 0.3s ease-out;
+}
+
+button.btn-icon-active:hover {
+  .mat-icon {
+    color: $action-selected-color;
+  }
 }
 
 button.btn-margin-right {
@@ -272,7 +284,7 @@ input:focus {
 }
 
 input::placeholder {
-  color: $border-color-dark;
+  color: $control-disabled-color;
 }
 
 .input-search-container {
@@ -344,7 +356,7 @@ textarea:focus {
 }
 
 .text-not-found {
-  font-size: 1em;
+  font-size: 0.75em;
   text-align: center;
   padding: 1rem;
 }
@@ -528,54 +540,57 @@ i.disabled {
 
 // tags
 
-@mixin tag {
-  font-size: 8pt;
+.tag {
+  background-color: $tag-background-color;
   border-radius: 10px;
-  color: white;
+  color: $primary-color-light;
   padding: 4px 8px;
   width: fit-content;
-}
 
-.tag-info {
-  @include tag;
-  background-color: $primary-color-light;
+  &.tag-info {
+    background-color: $primary-color-light;
+    color: $white;
+  }
 
-  &:hover {
-    background-color: darken($primary-color-light, 4%);
+  &.tag-error {
+    background-color: $warning-color-light;
+    color: $white;
+  }
+
+  &.tag-warning {
+    background-color: $title-color;
+    color: $white;
+  }
+
+  &.tag-small {
+    font-size: 8px;
+    margin: 0 8px;
   }
 }
 
-.tag-error {
-  @include tag;
-  background-color: $warning-color-light;
-
-  &:hover {
-    background-color: darken($warning-color-light, 4%);
-  }
-}
-
-.tag-warning {
-  @include tag;
-  background-color: $title-color;
-
-  &:hover {
-    background-color: darken($title-color, 4%);
-  }
-}
-
-a.tag-info,
-a.tag-error,
-a.tag-warning {
+a.tag {
   text-decoration: underline;
 
   &:hover {
-    color: $white;
+    background-color: darken($tag-background-color, 4%);
+    color: $primary-color-light;
     cursor: pointer;
-  }
-}
 
-.tag-small {
-  font-size: 8px;
+    &.tag-info {
+      background-color: darken($primary-color-light, 4%);
+      color: $white;
+    }
+
+    &.tag-error {
+      background-color: darken($warning-color-light, 4%);
+      color: $white;
+    }
+
+    &.tag-warning {
+      background-color: darken($title-color, 4%);
+      color: $white;
+    }
+  }
 }
 
 // blink
@@ -634,6 +649,8 @@ pre {
   display: none;
 }
 
+// list
+
 ul.info-list {
   padding: 0 1.5em;
 
@@ -642,23 +659,54 @@ ul.info-list {
   }
 }
 
+ul.default-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+
+    &.limit-list {
+      font-weight: 600;
+      font-size: 8.5pt;
+      margin-left: 1.25rem;
+    }
+
+    &:not(.limit-list)::before {
+      content: "-";
+      color: $primary-color;
+      font-weight: 600;
+      padding-right: 0.75rem;
+    }
+
+    &:not(:last-child) {
+      padding-bottom: 0.5rem;
+    }
+  }
+}
+
 // card-info
 
 .card-info-container {
-  padding: 16px;
+  padding: 1rem;
 }
 
 .card-info {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
-  background-color: #fafafa;
-  padding: 16px;
+  background-color: $background-color-highlight;
+  padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 3px;
 }
 
+.card-info-selected {
+  background-color: $grid-selected-background-color;
+  border-left: 3px solid darken($grid-selected-background-color, 50%);
+}
+
 .card-info-title {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 0.5rem;
   color: $primary-color;
   font-size: 12pt;
   font-weight: 600;
@@ -668,4 +716,10 @@ ul.info-list {
   color: #808080;
   font-size: 9pt;
   font-weight: 400;
+}
+
+.card-info-subtitle {
+  color: $primary-color;
+  font-style: $text-italic;
+  padding: 1rem 0 0.5rem 0;
 }
