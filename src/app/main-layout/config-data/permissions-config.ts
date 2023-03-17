@@ -7,6 +7,8 @@
 
 
 export enum PermissionsLibrary {
+  NOT_REQUIRED = 'permission-not-required',
+
   MODULE_TRANSACTIONS = 'menu-transactions',
   MODULE_HISTORIC_REGISTRATION = 'menu-historic-registration',
   MODULE_SEARCH_RECORDABLE_SUBJECTS = 'menu-search-recordable-subjects',
@@ -120,6 +122,9 @@ export const DEFAULT_URL = ( DEFAULT_ROUTE.parent ? DEFAULT_ROUTE.parent + '/' :
 
 
 export const UNAUTHORIZED_ROUTE = ROUTES_LIBRARY.unauthorized.path;
+
+
+export const PERMISSION_NOT_REQUIRED = PermissionsLibrary.NOT_REQUIRED;
 
 
 export const ROUTES_LIST = Object.keys(ROUTES_LIBRARY)
