@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import { FormatLibrary } from '@app/shared/utils';
 
@@ -119,6 +119,81 @@ export class Validate {
       }
     }
     return periodRequired ? { periodRequired } : null;
+  }
+
+
+  static changeRequired(initialValue: any): ValidationErrors | null {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (typeof control.value === 'boolean' && control.value === initialValue) {
+        return { changeRequired: true };
+      }
+
+      if (control.value && control.value === initialValue) {
+        return { changeRequired: true };
+      }
+
+      if (Array.isArray(control.value) && Array.isArray(initialValue) &&
+        initialValue.length === control.value.length &&
+        initialValue.every(x => control.value.includes(x))) {
+        return { changeRequired: true };
+      }
+
+      return null;
+    };
+  }
+
+
+  static matchOther(controlName: string, matchingControlName: string): ValidatorFn {
+    return (formGroup: FormGroup) => {
+      const control = formGroup.get(controlName);
+      const matchingControl = formGroup.get(matchingControlName);
+
+      if (!control || !matchingControl || !matchingControl.value) {
+        return null;
+      }
+
+      if (control.value !== matchingControl.value) {
+        return { matchOther: true };
+      }
+
+      return null;
+    };
+  }
+
+
+  static hasNumber(control: AbstractControl): ValidationErrors | null {
+    const hasNumber = /\d/.test(control.value);
+    if (!hasNumber) {
+      return { hasNumber: true };
+    }
+    return null;
+  }
+
+
+  static hasUpper(control: AbstractControl): ValidationErrors | null {
+    const hasUpper = /[A-Z]/.test(control.value);
+    if (!hasUpper) {
+      return { hasUpper: true };
+    }
+    return null;
+  }
+
+
+  static hasLower(control: AbstractControl): ValidationErrors | null {
+    const hasLower = /[a-z]/.test(control.value);
+    if (!hasLower) {
+      return { hasLower: true };
+    }
+    return null;
+  }
+
+
+  static hasSpecialCharacters(control: AbstractControl): ValidationErrors | null {
+    const hasSpecialCharacters = /[-+=_.,:;~`!@#$%^&*(){}<>\[\]"'\/\\]/.test(control.value);
+    if (!hasSpecialCharacters) {
+      return { hasSpecialCharacters: true };
+    }
+    return null;
   }
 
 }
