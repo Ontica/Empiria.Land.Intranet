@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { combineLatest } from 'rxjs';
 
@@ -134,13 +134,13 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.formHandler = new FormHandler(
-      new FormGroup({
-        electronicID: new FormControl(''),
-        recorderOfficeUID: new FormControl(''),
-        kind: new FormControl(''),
-        name: new FormControl(''),
-        description: new FormControl(''),
-        status: new FormControl(''),
+      new UntypedFormGroup({
+        electronicID: new UntypedFormControl(''),
+        recorderOfficeUID: new UntypedFormControl(''),
+        kind: new UntypedFormControl(''),
+        name: new UntypedFormControl(''),
+        description: new UntypedFormControl(''),
+        status: new UntypedFormControl(''),
       })
     );
   }

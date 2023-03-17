@@ -8,7 +8,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,
          SimpleChanges } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { combineLatest } from 'rxjs';
 
@@ -181,23 +181,23 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.formHandler = new FormHandler(
-      new FormGroup({
-        electronicID: new FormControl(''),
-        cadastralID: new FormControl(''),
-        cadastreLinkingDate: new FormControl(''),
-        recorderOfficeUID: new FormControl(''),
-        municipalityUID: new FormControl(''),
-        kind: new FormControl(''),
-        lotSizeUnitUID: new FormControl(''),
-        lotSize: new FormControl('', Validators.min(0)),
-        buildingArea: new FormControl('', Validators.min(0)),
-        undividedPct: new FormControl('', Validators.min(0)),
-        section: new FormControl(''),
-        block: new FormControl(''),
-        lot: new FormControl(''),
-        description: new FormControl(''),
-        metesAndBounds: new FormControl(''),
-        status: new FormControl(''),
+      new UntypedFormGroup({
+        electronicID: new UntypedFormControl(''),
+        cadastralID: new UntypedFormControl(''),
+        cadastreLinkingDate: new UntypedFormControl(''),
+        recorderOfficeUID: new UntypedFormControl(''),
+        municipalityUID: new UntypedFormControl(''),
+        kind: new UntypedFormControl(''),
+        lotSizeUnitUID: new UntypedFormControl(''),
+        lotSize: new UntypedFormControl('', Validators.min(0)),
+        buildingArea: new UntypedFormControl('', Validators.min(0)),
+        undividedPct: new UntypedFormControl('', Validators.min(0)),
+        section: new UntypedFormControl(''),
+        block: new UntypedFormControl(''),
+        lot: new UntypedFormControl(''),
+        description: new UntypedFormControl(''),
+        metesAndBounds: new UntypedFormControl(''),
+        status: new UntypedFormControl(''),
       })
     );
   }

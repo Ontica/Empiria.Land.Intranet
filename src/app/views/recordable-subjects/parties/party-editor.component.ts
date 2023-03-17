@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { Assertion, EventInfo, Identifiable, isEmpty, Validate } from '@app/core';
 
@@ -139,17 +139,17 @@ export class PartyEditorComponent implements OnChanges {
 
   private initForm() {
     this.formHandler = new FormHandler(
-      new FormGroup({
-        fullName: new FormControl({value: '', disabled: false}, Validators.required),
-        curp: new FormControl({value: '', disabled: false}, [Validators.minLength(18),
+      new UntypedFormGroup({
+        fullName: new UntypedFormControl({value: '', disabled: false}, Validators.required),
+        curp: new UntypedFormControl({value: '', disabled: false}, [Validators.minLength(18),
                                                              Validators.maxLength(18)]),
-        rfc: new FormControl({ value: '', disabled: false }),
-        partyNotes: new FormControl(''),
-        roleUID: new FormControl(null, Validators.required),
-        partUnitUID: new FormControl(''),
-        partAmount: new FormControl(''),
-        notes: new FormControl(''),
-        associatedWithUID: new FormControl([]),
+        rfc: new UntypedFormControl({ value: '', disabled: false }),
+        partyNotes: new UntypedFormControl(''),
+        roleUID: new UntypedFormControl(null, Validators.required),
+        partUnitUID: new UntypedFormControl(''),
+        partAmount: new UntypedFormControl(''),
+        notes: new UntypedFormControl(''),
+        associatedWithUID: new UntypedFormControl([]),
       }));
   }
 

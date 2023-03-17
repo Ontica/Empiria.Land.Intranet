@@ -7,7 +7,7 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { combineLatest } from 'rxjs';
 
@@ -78,9 +78,9 @@ export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
 
   private initForm() {
     this.formHandler = new FormHandler(
-      new FormGroup({
-        recorderOffice: new FormControl('', Validators.required),
-        recordingSection: new FormControl('', Validators.required),
+      new UntypedFormGroup({
+        recorderOffice: new UntypedFormControl('', Validators.required),
+        recordingSection: new UntypedFormControl('', Validators.required),
       })
     );
   }

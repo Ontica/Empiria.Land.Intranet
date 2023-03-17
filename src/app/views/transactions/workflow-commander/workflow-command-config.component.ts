@@ -6,7 +6,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { Assertion } from '@app/core';
 
@@ -88,12 +88,12 @@ export class WorkflowCommandConfigComponent implements OnInit {
 
   private initForm() {
     this.formHandler = new FormHandler(
-      new FormGroup({
-        command: new FormControl('', Validators.required),
-        nextStatus: new FormControl(''),
-        nextUser: new FormControl(''),
-        note: new FormControl(''),
-        authorization: new FormControl(''),
+      new UntypedFormGroup({
+        command: new UntypedFormControl('', Validators.required),
+        nextStatus: new UntypedFormControl(''),
+        nextUser: new UntypedFormControl(''),
+        note: new UntypedFormControl(''),
+        authorization: new UntypedFormControl(''),
       })
     );
 

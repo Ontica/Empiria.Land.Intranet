@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { Assertion, Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
 
@@ -241,19 +241,19 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   private initForm() {
     this.formHandler = new FormHandler(
-      new FormGroup({
-        recordingActTypeGroup: new FormControl('', Validators.required),
-        recordingActType: new FormControl('', Validators.required),
-        registrationCommand: new FormControl('', Validators.required),
-        recordableSubject: new FormControl(''),
-        recordingBook: new FormControl(''),
-        bookEntryUID: new FormControl(''),
-        bookEntryNo: new FormControl(''),
-        presentationTime: new FormControl(''),
-        authorizationDate: new FormControl(''),
-        partitionType: new FormControl(''),
-        partitionNo: new FormControl(''),
-        amendmentRecordingActUID: new FormControl(''),
+      new UntypedFormGroup({
+        recordingActTypeGroup: new UntypedFormControl('', Validators.required),
+        recordingActType: new UntypedFormControl('', Validators.required),
+        registrationCommand: new UntypedFormControl('', Validators.required),
+        recordableSubject: new UntypedFormControl(''),
+        recordingBook: new UntypedFormControl(''),
+        bookEntryUID: new UntypedFormControl(''),
+        bookEntryNo: new UntypedFormControl(''),
+        presentationTime: new UntypedFormControl(''),
+        authorizationDate: new UntypedFormControl(''),
+        partitionType: new UntypedFormControl(''),
+        partitionNo: new UntypedFormControl(''),
+        amendmentRecordingActUID: new UntypedFormControl(''),
       })
     );
   }

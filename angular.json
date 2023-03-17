@@ -1,5 +1,11 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "f697c100-514b-4fcd-ab83-0fb8bbbf553d",
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -128,10 +134,5 @@
         }
       }
     }
-  },
-  "defaultProject": "land-intranet",
-  "cli": {
-    "analytics": "f697c100-514b-4fcd-ab83-0fb8bbbf553d",
-    "defaultCollection": "@angular-eslint/schematics"
   }
 }

@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { EventInfo, Identifiable, isEmpty } from '@app/core';
 
@@ -102,13 +102,13 @@ export class RecordingActEditorComponent implements OnChanges {
 
   private initForm() {
     this.formHandler = new FormHandler(
-      new FormGroup({
-        typeUID: new FormControl(''),
-        kind: new FormControl(''),
-        operationAmount: new FormControl(''),
-        currencyUID: new FormControl(''),
-        description: new FormControl(''),
-        status: new FormControl(''),
+      new UntypedFormGroup({
+        typeUID: new UntypedFormControl(''),
+        kind: new UntypedFormControl(''),
+        operationAmount: new UntypedFormControl(''),
+        currencyUID: new UntypedFormControl(''),
+        description: new UntypedFormControl(''),
+        status: new UntypedFormControl(''),
       }));
   }
 

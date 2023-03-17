@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { Assertion, EventInfo, Validate } from '@app/core';
 
@@ -113,14 +113,14 @@ export class RequestedServiceEditorComponent implements OnInit {
     }
 
     this.formHandler = new FormHandler(
-      new FormGroup({
-        serviceType: new FormControl('', Validators.required),
-        service: new FormControl('', Validators.required),
-        feeConcept: new FormControl('', Validators.required),
-        taxableBase: new FormControl('', Validate.isPositive),
-        quantity: new FormControl('', [Validators.required, Validators.min(1)]),
-        unit: new FormControl({ value: '', disabled: true }),
-        notes: new FormControl(''),
+      new UntypedFormGroup({
+        serviceType: new UntypedFormControl('', Validators.required),
+        service: new UntypedFormControl('', Validators.required),
+        feeConcept: new UntypedFormControl('', Validators.required),
+        taxableBase: new UntypedFormControl('', Validate.isPositive),
+        quantity: new UntypedFormControl('', [Validators.required, Validators.min(1)]),
+        unit: new UntypedFormControl({ value: '', disabled: true }),
+        notes: new UntypedFormControl(''),
       })
     );
   }

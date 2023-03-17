@@ -11,7 +11,7 @@ import { CurrencyPipe } from '@angular/common';
 
 import { Assertion, EventInfo, Validate } from '@app/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { EmptyPayment, PaymentFields, PaymentOrder } from '@app/models';
 
@@ -59,9 +59,9 @@ export class TransactionSubmitterComponent implements OnChanges {
   constructor(private messageBox: MessageBoxService,
               private currencyPipe: CurrencyPipe) {
     this.formHandler = new FormHandler(
-      new FormGroup({
-        paymentReceiptNo: new FormControl('', Validators.required),
-        total: new FormControl('', Validators.required),
+      new UntypedFormGroup({
+        paymentReceiptNo: new UntypedFormControl('', Validators.required),
+        total: new UntypedFormControl('', Validators.required),
       })
     );
   }

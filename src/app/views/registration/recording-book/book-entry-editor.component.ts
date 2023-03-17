@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { EventInfo, isEmpty } from '@app/core';
 
@@ -111,10 +111,10 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
 
   private initForm() {
     this.formHandler = new FormHandler(
-      new FormGroup({
-        recordingNo: new FormControl('', Validators.required),
-        presentationTime: new FormControl(''),
-        authorizationDate: new FormControl('', Validators.required)
+      new UntypedFormGroup({
+        recordingNo: new UntypedFormControl('', Validators.required),
+        presentationTime: new UntypedFormControl(''),
+        authorizationDate: new UntypedFormControl('', Validators.required)
       }));
   }
 

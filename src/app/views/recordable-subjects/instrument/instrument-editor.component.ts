@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { concat, of, Subject, Observable } from 'rxjs';
 
@@ -161,18 +161,18 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
   private initForm() {
     this.formHandler = new FormHandler(
-      new FormGroup({
-        type: new FormControl('', Validators.required),
-        sheetsCount: new FormControl(''),
-        kind: new FormControl(''),
-        issueDate: new FormControl(''),
-        issuer: new FormControl(''),
-        instrumentNo: new FormControl(''),
-        binderNo: new FormControl(''),
-        folio: new FormControl(''),
-        endFolio: new FormControl(''),
-        summary: new FormControl(''),
-        status: new FormControl(''),
+      new UntypedFormGroup({
+        type: new UntypedFormControl('', Validators.required),
+        sheetsCount: new UntypedFormControl(''),
+        kind: new UntypedFormControl(''),
+        issueDate: new UntypedFormControl(''),
+        issuer: new UntypedFormControl(''),
+        instrumentNo: new UntypedFormControl(''),
+        binderNo: new UntypedFormControl(''),
+        folio: new UntypedFormControl(''),
+        endFolio: new UntypedFormControl(''),
+        summary: new UntypedFormControl(''),
+        status: new UntypedFormControl(''),
       }));
   }
 

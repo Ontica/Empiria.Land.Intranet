@@ -9,7 +9,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 
 import { CurrencyPipe } from '@angular/common';
 
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 
 import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 
@@ -183,14 +183,14 @@ export class TransactionHeaderComponent implements OnChanges {
     }
 
     this.formHandler = new FormHandler(
-      new FormGroup({
-        type: new FormControl('', Validators.required),
-        subtype: new FormControl('', Validators.required),
-        name: new FormControl('', Validators.required),
-        email: new FormControl('', Validators.email),
-        instrumentNo: new FormControl(''),
-        agency: new FormControl('', Validators.required),
-        filingOffice: new FormControl('', Validators.required)
+      new UntypedFormGroup({
+        type: new UntypedFormControl('', Validators.required),
+        subtype: new UntypedFormControl('', Validators.required),
+        name: new UntypedFormControl('', Validators.required),
+        email: new UntypedFormControl('', Validators.email),
+        instrumentNo: new UntypedFormControl(''),
+        agency: new UntypedFormControl('', Validators.required),
+        filingOffice: new UntypedFormControl('', Validators.required)
       })
     );
   }

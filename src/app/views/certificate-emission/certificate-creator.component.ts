@@ -8,7 +8,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,
          SimpleChanges } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { Assertion, Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
 
@@ -179,17 +179,17 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
 
   private initForm() {
     this.formHandler = new FormHandler(
-      new FormGroup({
-        certificateType: new FormControl('', Validators.required),
-        registrationCommand: new FormControl('', Validators.required),
-        recordableSubject: new FormControl(''),
-        recordingBook: new FormControl(''),
-        bookEntryUID: new FormControl(''),
-        bookEntryNo: new FormControl(''),
-        presentationTime: new FormControl(''),
-        authorizationDate: new FormControl(''),
-        personName: new FormControl(''),
-        realEstateDescription: new FormControl(''),
+      new UntypedFormGroup({
+        certificateType: new UntypedFormControl('', Validators.required),
+        registrationCommand: new UntypedFormControl('', Validators.required),
+        recordableSubject: new UntypedFormControl(''),
+        recordingBook: new UntypedFormControl(''),
+        bookEntryUID: new UntypedFormControl(''),
+        bookEntryNo: new UntypedFormControl(''),
+        presentationTime: new UntypedFormControl(''),
+        authorizationDate: new UntypedFormControl(''),
+        personName: new UntypedFormControl(''),
+        realEstateDescription: new UntypedFormControl(''),
       })
     );
   }

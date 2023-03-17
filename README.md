@@ -14,13 +14,13 @@ If you are interested in the former intranet version based on ASP .NET, please [
 
 ## Quick start
 
-This project is being built with Angular 13 and TypeScript 4.
+This project is being built with Angular 14 and TypeScript 4.7.
 
-It uses [Angular CLI](https://github.com/angular/angular-cli), so both the CLI and generated project, have dependencies that require Node 12 or higher, together with NPM 6 or higher.
+It uses [Angular CLI](https://github.com/angular/angular-cli), so both the CLI and generated project, have dependencies that require Node 14.15.0 or higher, together with NPM 6 or higher.
 
-**Make sure you have Node version >= 12 and NPM >= 6**
+**Make sure you have Node version >= 14.15.0 and NPM >= 6**
 
-**Then install [Angular CLI](https://github.com/angular/angular-cli)** (globally if possible), ensuring that you have installed **version 13** or higher.
+**Then install [Angular CLI](https://github.com/angular/angular-cli)** (globally if possible), ensuring that you have installed **version 14** or higher.
 
 ```bash
 # install Angular CLI globally
@@ -77,5 +77,5 @@ e internacionales de derechos de autor.
 
 ## Copyright
 
-Copyright © 2009-2022. La Vía Óntica SC, Ontica LLC y autores.
+Copyright © 2009-2023. La Vía Óntica SC, Ontica LLC y autores.
 Todos los derechos reservados.
