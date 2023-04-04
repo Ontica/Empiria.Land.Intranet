@@ -24,7 +24,7 @@
             <div class="login-field-container">
               <input type="text" class="text-box" id="userID" autocomplete="username" autofocus
                 formControlName="userID"
-                [class.invalid-control]="form.get('userID').invalid && form.get('userID').touched">
+                [class.invalid-control]="form.controls.userID.invalid && form.controls.userID.touched">
             </div>
 
             <label for="password">Contraseña:</label>
@@ -32,7 +32,7 @@
               <input [type]="showPassword ? 'text' : 'password'" class="text-box"
                 id="password" autocomplete="current-password"
                 formControlName="password"
-                [class.invalid-control]="form.get('password').invalid && form.get('password').touched">
+                [class.invalid-control]="form.controls.password.invalid && form.controls.password.touched">
               <mat-icon class="input-icon" *ngIf="showPasswordModeSelected === 'icon'"
                 (click)="toggleShowPassword()">
                 {{showPassword ? 'visibility_off' : 'visibility'}}

@@ -71,7 +71,7 @@ export interface Instrument {
 
 export const EmptyInstrument: Instrument = {
   uid: '',
-  type: 'Empty',
+  type: null,
   typeName: '',
   kind: '',
   issueDate: '',
@@ -88,31 +88,33 @@ export const EmptyInstrument: Instrument = {
 };
 
 
-export const InstrumentTypesList: any[] = [
-  { type: 'EscrituraPublica', typeName: 'Escritura pública' },
-  { type: 'OficioNotaria', typeName: 'Oficio de notaría' },
-  { type: 'DocumentoJuzgado', typeName: 'Documento de juzgado' },
-  { type: 'TituloPropiedad', typeName: 'Título de propiedad' },
-  { type: 'DocumentoTerceros', typeName: 'Documento de terceros' },
-  { type: 'Resumen', typeName: 'Resumen' },
-];
-
-
-export enum InstrumentTypeEnum {
-  EscrituraPublica = 'EscrituraPublica',
-  OficioNotaria = 'OficioNotaria',
-  TituloPropiedad = 'TituloPropiedad',
-  DocumentoJuzgado = 'DocumentoJuzgado',
+export enum InstrumentType {
+  EscrituraPublica  = 'EscrituraPublica',
+  OficioNotaria     = 'OficioNotaria',
+  TituloPropiedad   = 'TituloPropiedad',
+  DocumentoJuzgado  = 'DocumentoJuzgado',
   DocumentoTerceros = 'DocumentoTerceros',
-  Resumen = 'Resumen',
+  Resumen           = 'Resumen',
 }
 
 
-export type InstrumentType = 'EscrituraPublica' | 'OficioNotaria' | 'TituloPropiedad' |
-                             'DocumentoJuzgado' | 'DocumentoTerceros' | 'Resumen' | 'Empty';
+export interface InstrumentTypeItem {
+  type: InstrumentType;
+  typeName: string;
+}
 
 
-export interface InstrumentFields  {
+export const InstrumentTypesList: InstrumentTypeItem[] = [
+  { type: InstrumentType.EscrituraPublica,  typeName: 'Escritura pública' },
+  { type: InstrumentType.OficioNotaria,     typeName: 'Oficio de notaría' },
+  { type: InstrumentType.DocumentoJuzgado,  typeName: 'Documento de juzgado' },
+  { type: InstrumentType.TituloPropiedad,   typeName: 'Título de propiedad' },
+  { type: InstrumentType.DocumentoTerceros, typeName: 'Documento de terceros' },
+  { type: InstrumentType.Resumen,           typeName: 'Resumen' },
+];
+
+
+export interface InstrumentFields {
   uid?: string;
   type?: InstrumentType;
   kind?: string;

@@ -1,4 +1,4 @@
-<form [formGroup]="formHandler.form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
+<form [formGroup]="form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
 
   <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
 
@@ -6,36 +6,37 @@
 
       <div [fxFlex]="100/3">
         <label>Operación:</label>
-        <emp-ng-select [formControlName]="controls.command"
+        <emp-ng-select formControlName="command"
           [items]="applicableCommandsList"
-          [bindValue]="'type'"
-          [showError]="formHandler.showInvalidControl(controls.command)"
-          (changes)="commandChange($event)">
+          [showError]="formHelper.isControlInvalid(form.controls.command)"
+          bindValue="type"
+          (changes)="onCommandChanges($event)">
         </emp-ng-select>
       </div>
 
       <div *ngIf="requiredNextStatusField" [fxFlex]="100/3">
         <label>Nuevo estado:</label>
-        <emp-ng-select [formControlName]="controls.nextStatus"
-          [items]="commandSelected.nextStatus" [showError]="formHandler.showInvalidControl(controls.nextStatus)"
-          [bindValue]="'type'"
-          (changes)="statusChange($event)">
+        <emp-ng-select formControlName="nextStatus"
+          [items]="commandSelected.nextStatus"
+          [showError]="formHelper.isControlInvalid(form.controls.nextStatus)"
+          bindValue="type"
+          (changes)="onStatusChanges($event)">
         </emp-ng-select>
       </div>
 
       <div *ngIf="requiredNextUserField" [fxFlex]="100/3">
         <label>{{labelNextUser}}</label>
-        <emp-ng-select [formControlName]="controls.nextUser"
+        <emp-ng-select formControlName="nextUser"
           [items]="statusSelected.users"
           [placeholder]="statusSelected.type === 'None' ? 'Seleccione el nuevo estado' : 'Seleccione'"
-          [showError]="formHandler.showInvalidControl(controls.nextUser)">
+          [showError]="formHelper.isControlInvalid(form.controls.nextUser)">
         </emp-ng-select>
       </div>
 
       <div *ngIf="requiredAuthorizationField" [fxFlex]="100/3">
         <label>Firma electrónica:</label>
-        <input [formControlName]="controls.authorization" class="text-box" type="password" autocomplete="new-password"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.authorization)">
+        <input formControlName="authorization" class="text-box" type="password" autocomplete="new-password"
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.authorization)">
       </div>
 
     </div>
@@ -46,9 +47,7 @@
 
         <div fxFlex>
           <label>Observaciones:</label>
-          <textarea [formControlName]="controls.note" empNgTextareaAutoresize
-            rows="1" class="text-area">
-          </textarea>
+          <textarea formControlName="note" empNgTextareaAutoresize rows="1" class="text-area"></textarea>
         </div>
 
       </div>

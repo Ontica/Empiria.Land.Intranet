@@ -11,13 +11,13 @@ import { CurrencyPipe } from '@angular/common';
 
 import { Assertion, EventInfo, Validate } from '@app/core';
 
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { EmptyPayment, PaymentFields, PaymentOrder } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
-import { FormatLibrary, FormHandler, sendEvent } from '@app/shared/utils';
+import { FormatLibrary, FormHelper, sendEvent } from '@app/shared/utils';
 
 export enum TransactionSubmitterEventType {
   SET_PAYMENT_CLICKED        = 'TransactionSubmitterComponent.Event.SetPaymentClicked',
@@ -25,10 +25,10 @@ export enum TransactionSubmitterEventType {
   SUBMIT_TRANSACTION_CLICKED = 'TransactionSubmitterComponent.Event.SubmitTransactionClicked',
 }
 
-enum TransactionSubmitterFormControls {
-  paymentReceiptNo = 'paymentReceiptNo',
-  total = 'total',
-}
+interface TransactionSubmitterFormModel extends FormGroup<{
+  paymentReceiptNo: FormControl<string>;
+  total: FormControl<string>;
+}> {}
 
 @Component({
   selector: 'emp-land-transaction-submitter',
@@ -50,45 +50,35 @@ export class TransactionSubmitterComponent implements OnChanges {
 
   @Output() transactionSubmittertEvent = new EventEmitter<EventInfo>();
 
-  formHandler: FormHandler;
+  form: TransactionSubmitterFormModel;
 
-  controls = TransactionSubmitterFormControls;
+  formHelper = FormHelper;
 
   eventType = TransactionSubmitterEventType;
 
+
   constructor(private messageBox: MessageBoxService,
               private currencyPipe: CurrencyPipe) {
-    this.formHandler = new FormHandler(
-      new UntypedFormGroup({
-        paymentReceiptNo: new UntypedFormControl('', Validators.required),
-        total: new UntypedFormControl('', Validators.required),
-      })
-    );
+    this.initForm();
   }
 
 
   ngOnChanges() {
-    this.formHandler.form.reset({
-      paymentReceiptNo: this.payment?.receiptNo,
-      total: this.payment?.total ? this.currencyPipe.transform(this.payment.total) : null
-    });
-
-    // this.validateTotalField();
-    this.formHandler.disableForm(!this.canEdit);
+    this.setFormData();
+    // this.setTotalValidators();
+    this.formHelper.setDisableForm(this.form, !this.canEdit);
   }
 
 
-  setPayment() {
-    if (!this.formHandler.validateReadyForSubmit()) {
-      return;
+  onSetPaymentClicked() {
+    if (this.formHelper.isFormReadyAndInvalidate(this.form)) {
+      sendEvent(this.transactionSubmittertEvent,
+        TransactionSubmitterEventType.SET_PAYMENT_CLICKED, this.getFormData());
     }
-
-    sendEvent(this.transactionSubmittertEvent,
-      TransactionSubmitterEventType.SET_PAYMENT_CLICKED, this.getFormData());
   }
 
 
-  cancelPayment() {
+  onCancelPaymentClicked() {
     const message = `Esta operación cancelará el registro del recibo de pago
       <strong> ${this.payment.receiptNo} </strong>
       con total de ${this.currencyPipe.transform(this.payment.total)}.
@@ -104,7 +94,7 @@ export class TransactionSubmitterComponent implements OnChanges {
   }
 
 
-  submitTransaction() {
+  onSubmitTransactionClicked() {
     const message = `Esta operación cambiara el estatus del trámite a
     <strong> recibido </strong>.
     <br><br>¿Recibo este trámite?`;
@@ -120,21 +110,38 @@ export class TransactionSubmitterComponent implements OnChanges {
   }
 
 
-  private validateTotalField() {
+  private initForm() {
+    const fb = new FormBuilder();
+
+    this.form = fb.group({
+      paymentReceiptNo: ['', Validators.required],
+      total: ['', Validators.required],
+    });
+  }
+
+
+  private setFormData() {
+    this.form.reset({
+      paymentReceiptNo: this.payment?.receiptNo,
+      total: this.payment?.total ? this.currencyPipe.transform(this.payment.total) : null
+    });
+  }
+
+
+  private setTotalValidators() {
     if (this.paymentOrder?.total) {
-      this.formHandler.setControlValidators(this.controls.total,
-        [Validators.required, Validate.maxCurrencyValue(this.paymentOrder.total)]);
+      const validators = [Validators.required, Validate.maxCurrencyValue(this.paymentOrder.total)];
+      this.formHelper.setControlValidators(this.form.controls.total, validators);
     } else {
-      this.formHandler.clearControlValidators(this.controls.total);
+      this.formHelper.clearControlValidators(this.form.controls.total);
     }
   }
 
 
   private getFormData(): PaymentFields {
-    Assertion.assert(this.formHandler.form.valid,
-      'Programming error: form must be validated before command execution.');
+    Assertion.assert(this.form.valid, 'Programming error: form must be validated before command execution.');
 
-    const formModel = this.formHandler.form.getRawValue();
+    const formModel = this.form.getRawValue();
 
     const data: PaymentFields = {
       receiptNo: formModel.paymentReceiptNo,

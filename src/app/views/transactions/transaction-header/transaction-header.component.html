@@ -1,4 +1,4 @@
-<form [formGroup]="formHandler.form" [empNgSpinnerHost]="spinner" empNgFormKeyDownEnter
+<form [formGroup]="form" [empNgSpinnerHost]="spinner" empNgFormKeyDownEnter
   autocomplete="off" class="form-section">
 
   <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
@@ -11,18 +11,18 @@
 
       <div fxFlex>
         <label>Interesado:</label>
-        <input [formControlName]="controls.name"
+        <input formControlName="name"
           type="text"
           class="text-box uppercase"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.name)">
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.name)">
       </div>
 
       <div [fxFlex]="100/3">
         <label>Correo electrónico:</label>
-        <input [formControlName]="controls.email"
+        <input formControlName="email"
           type="text"
           class="text-box lowercase"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.email)">
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.email)">
       </div>
 
     </div>
@@ -33,25 +33,25 @@
 
       <div [fxFlex]="100/3">
         <label>Tipo de trámite:</label>
-        <emp-ng-select [formControlName]="controls.type"
+        <emp-ng-select formControlName="type"
           [items]="transactionTypeList"
-          [showError]="formHandler.showInvalidControl(controls.type)"
-          (changes)="transactionTypeChange($event)">
+          [showError]="formHelper.isControlInvalid(form.controls.type)"
+          (changes)="onTransactionTypeChange($event)">
         </emp-ng-select>
       </div>
 
       <div [fxFlex]="100/3">
         <label>Tipo de documento:</label>
-        <emp-ng-select [formControlName]="controls.subtype"
-          [placeholder]="formHandler.getControl(controls.type).invalid ? 'Seleccione el tipo de trámite' : 'Seleccione'"
-          [showError]="formHandler.showInvalidControl(controls.subtype)"
+        <emp-ng-select formControlName="subtype"
+          [placeholder]="form.controls.type.invalid ? 'Seleccione el tipo de trámite' : 'Seleccione'"
+          [showError]="formHelper.isControlInvalid(form.controls.subtype)"
           [items]="transactionSubtypeList">
         </emp-ng-select>
       </div>
 
       <div [fxFlex]="100/3">
         <label>No. Instrumento:</label>
-        <input [formControlName]="controls.instrumentNo"
+        <input formControlName="instrumentNo"
           type="text"
           class="text-box uppercase">
       </div>
@@ -62,18 +62,18 @@
 
       <div fxFlex>
         <label>Tramitado por:</label>
-        <emp-ng-select [formControlName]="controls.agency"
+        <emp-ng-select formControlName="agency"
           [config]="{clearable: true}"
-          [showError]="formHandler.showInvalidControl(controls.agency)"
+          [showError]="formHelper.isControlInvalid(form.controls.agency)"
           [items]="agencyList">
         </emp-ng-select>
       </div>
 
       <div [fxFlex]="100/3">
         <label>Distrito:</label>
-        <emp-ng-select [formControlName]="controls.filingOffice"
+        <emp-ng-select formControlName="filingOffice"
           [items]="filingOfficeList"
-          [showError]="formHandler.showInvalidControl(controls.filingOffice)">
+          [showError]="formHelper.isControlInvalid(form.controls.filingOffice)">
         </emp-ng-select>
       </div>
 
@@ -81,10 +81,10 @@
 
     <mat-divider class="divider-padding"></mat-divider>
 
-    <div fxLayout="row" *ngIf="readonly && editionMode">
+    <div fxLayout="row" *ngIf="isSaved && !editionMode">
 
       <div fxFlex="25" fxLayoutAlign="start">
-        <button (click)="submitClone()" type="button" class="btn-action">
+        <button (click)="onCloneButtonClicked()" type="button" class="btn-action">
           Crear una copia
         </button>
       </div>
@@ -93,31 +93,31 @@
 
         <button *ngIf="transaction.actions.can.printControlVoucher"
           type="submit" class="btn-action"
-          (click)="submitPrintControlVoucher()">
+          (click)="onPrintControlVoucherButtonClicked()">
           Boleta de control
         </button>
 
         <button *ngIf="transaction.actions.can.generatePaymentOrder"
           type="submit" class="btn-action"
-          (click)="submitGeneratePaymentOrder()">
+          (click)="onGeneratePaymentOrderButtonClicked()">
           Generar orden de pago
         </button>
 
         <button *ngIf="transaction.actions.can.editPayment && transaction.paymentOrder?.media.url"
            type="submit" class="btn-action"
-           (click)="submitPrintPaymentOrder()">
+           (click)="onPrintPaymentOrderButtonClicked()">
           Orden de pago
         </button>
 
         <button *ngIf="transaction.actions.can.cancelPaymentOrder"
           type="submit" class="btn-warning"
-          (click)="submitCancelPaymentOrder()">
+          (click)="onCancelPaymentOrderButtonClicked()">
           Cancelar orden de pago
         </button>
 
         <button *ngIf="transaction.actions.can.printSubmissionReceipt"
            type="submit" class="btn-action"
-           (click)="submitPrintSubmissionReceipt()">
+           (click)="onPrintSubmissionReceiptButtonClicked()">
           Boleta de recepción
         </button>
 
@@ -132,7 +132,7 @@
 
           <button
             type="button" class="btn-action"
-            (click)="toggleReadonly()">
+            (click)="enableEditor(true)">
             Editar
           </button>
 
@@ -142,13 +142,13 @@
 
     </div>
 
-    <div fxLayout="row" *ngIf="!readonly">
+    <div fxLayout="row" *ngIf="editionMode">
 
       <div fxFlex="25" fxLayoutAlign="start">
 
-        <button *ngIf="editionMode && transaction.actions.can.delete"
+        <button *ngIf="transaction.actions.can.delete"
            type="button" class="btn-warning"
-           (click)="submitDelete()">
+           (click)="onDeleteButtonClicked()">
           Eliminar
         </button>
 
@@ -156,16 +156,16 @@
 
       <div fxFlex="75" fxLayoutAlign="end">
 
-        <button *ngIf="!editionMode || (editionMode && transaction.actions.can.edit)" type="submit"
-          (click)="submit()"
-          [class.btn]="!formHandler.isValid"
-          [class.btn-action]="formHandler.isValid">
-          {{editionMode ? 'Guardar la solicitud' : 'Crear la solicitud'}}
+        <button *ngIf="!isSaved || (isSaved && transaction.actions.can.edit)" type="submit"
+          [class.btn]="!formHelper.isFormReady(form)"
+          [class.btn-action]="formHelper.isFormReady(form)"
+          (click)="onSubmitClicked()">
+          {{isSaved ? 'Guardar la solicitud' : 'Crear la solicitud'}}
         </button>
 
-        <button *ngIf="editionMode"
+        <button *ngIf="isSaved"
           type="button" class="btn"
-          (click)="discardChanges()">
+          (click)="enableEditor(false)">
           Descartar Cambios
         </button>
 

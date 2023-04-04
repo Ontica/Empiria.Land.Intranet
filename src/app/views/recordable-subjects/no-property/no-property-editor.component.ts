@@ -7,36 +7,33 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { combineLatest } from 'rxjs';
 
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 
+import { FormHelper, sendEvent } from '@app/shared/utils';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-
-import { RecorderOffice } from '@app/models';
-
-import { RecordableObjectStatusItem, RecordableObjectStatusList,
-         RecordableSubject  } from '@app/models/recordable-subjects';
 
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
-import { FormHandler, sendEvent } from '@app/shared/utils';
+import { EmptyNoProperty, NoProperty, NoPropertyFields, RecordableObjectStatus, RecordableObjectStatusItem,
+         RecordableObjectStatusList, RecordableSubject, RecorderOffice } from '@app/models';
 
 export enum NoPropertyEditorComponentEventType {
   UPDATE_NO_PROPERTY = 'NoPropertyEditorComponent.Event.UpdateNoProperty',
 }
 
-enum NoPropertyEditorFormControls {
-  electronicID = 'electronicID',
-  recorderOfficeUID = 'recorderOfficeUID',
-  kind = 'kind',
-  name = 'name',
-  description = 'description',
-  status = 'status',
-}
-
+interface NoPropertyFormModel extends FormGroup<{
+  electronicID: FormControl<string>;
+  recorderOfficeUID: FormControl<string>;
+  kind: FormControl<string>;
+  name: FormControl<string>;
+  description: FormControl<string>;
+  status: FormControl<RecordableObjectStatus>;
+}> {}
 
 @Component({
   selector: 'emp-land-no-property-editor',
@@ -45,40 +42,51 @@ enum NoPropertyEditorFormControls {
 export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() instrumentRecordingUID = '';
+
   @Input() recordingActUID = '';
+
   @Input() recordableSubject: RecordableSubject;
+
   @Input() isAssociation: boolean;
+
   @Input() readonly = false;
+
   @Input() showElectronicHistoryButton = true;
+
   @Output() noPropertyEditorEvent = new EventEmitter<EventInfo>();
 
-  noProperty: any = {};
+  noProperty: NoProperty = EmptyNoProperty;
 
   helper: SubscriptionHelper;
 
-  formHandler: FormHandler;
-  controls = NoPropertyEditorFormControls;
+  form: NoPropertyFormModel;
+
+  formHelper = FormHelper;
+
   editionMode = false;
+
   isLoading = false;
 
   recorderOfficeList: RecorderOffice[] = [];
+
   kindsList: string[] = [];
+
   statusList: RecordableObjectStatusItem[] = RecordableObjectStatusList;
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
+    this.initForm();
   }
 
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadDataLists();
   }
 
 
   ngOnChanges() {
     if (this.recordableSubject) {
-      Object.assign(this.noProperty, this.recordableSubject);
-      this.initForm();
+      this.setNoProperty();
       this.enableEditor(false);
     }
   }
@@ -89,7 +97,7 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  enableEditor(enable) {
+  enableEditor(enable: boolean) {
     this.editionMode = enable;
 
     if (!this.editionMode) {
@@ -97,7 +105,13 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.setRequiredFormFields(this.noProperty.status === 'Registered');
-    this.disableForm(!this.editionMode);
+    this.setDisableForm(!this.editionMode);
+  }
+
+
+  onStatusChanges(change: RecordableObjectStatusItem) {
+    this.setRequiredFormFields(change.status === 'Registered');
+    this.formHelper.markFormControlsAsTouched(this.form);
   }
 
 
@@ -106,54 +120,38 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  onStatusChange(change){
-    this.setRequiredFormFields(change.status === 'Registered');
-    this.formHandler.invalidateForm();
-  }
+  onSubmitClicked() {
+    if (this.formHelper.isFormReadyAndInvalidate(this.form)) {
+      const payload = {
+        instrumentRecordingUID: this.instrumentRecordingUID,
+        recordingActUID: this.recordingActUID,
+        recordableSubjectFields: this.getFormData()
+      };
 
-
-  submitForm() {
-    if (!this.formHandler.validateReadyForSubmit()) {
-      this.formHandler.invalidateForm();
-      return;
+      sendEvent(this.noPropertyEditorEvent, NoPropertyEditorComponentEventType.UPDATE_NO_PROPERTY, payload);
     }
-
-    const payload = {
-      instrumentRecordingUID: this.instrumentRecordingUID,
-      recordingActUID: this.recordingActUID,
-      recordableSubjectFields: this.getFormData()
-    };
-
-    sendEvent(this.noPropertyEditorEvent, NoPropertyEditorComponentEventType.UPDATE_NO_PROPERTY, payload);
   }
 
 
   private initForm() {
-    if (this.formHandler) {
-      return;
-    }
+    const fb = new FormBuilder();
 
-    this.formHandler = new FormHandler(
-      new UntypedFormGroup({
-        electronicID: new UntypedFormControl(''),
-        recorderOfficeUID: new UntypedFormControl(''),
-        kind: new UntypedFormControl(''),
-        name: new UntypedFormControl(''),
-        description: new UntypedFormControl(''),
-        status: new UntypedFormControl(''),
-      })
-    );
+    this.form = fb.group({
+      electronicID: [''],
+      recorderOfficeUID: [''],
+      kind: [''],
+      name: [''],
+      description: [''],
+      status: [null],
+    });
   }
 
 
   private loadDataLists() {
     this.isLoading = true;
 
-    let selector = RecordableSubjectsStateSelector.ASSOCIATION_KIND_LIST;
-
-    if (!this.isAssociation) {
-      selector = RecordableSubjectsStateSelector.NO_PROPERTY_KIND_LIST;
-    }
+    const selector = this.isAssociation ? RecordableSubjectsStateSelector.ASSOCIATION_KIND_LIST :
+      RecordableSubjectsStateSelector.NO_PROPERTY_KIND_LIST;
 
     combineLatest([
       this.helper.select<string[]>(selector),
@@ -167,13 +165,18 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
+  private setNoProperty() {
+    this.noProperty = Object.assign({}, EmptyNoProperty, this.recordableSubject);
+  }
+
+
   private setFormData() {
-    if (!this.noProperty) {
-      this.formHandler.form.reset();
+    if (isEmpty(this.noProperty)) {
+      this.form.reset();
       return;
     }
 
-    this.formHandler.form.reset({
+    this.form.reset({
       electronicID: this.noProperty.electronicID || '',
       recorderOfficeUID: isEmpty(this.noProperty.recorderOffice) ? '' : this.noProperty.recorderOffice.uid,
       kind: this.noProperty.kind || '',
@@ -184,32 +187,31 @@ export class NoPropertyEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  private disableForm(disable) {
-    this.formHandler.disableForm(disable);
-    this.formHandler.disableControl(this.controls.electronicID);
+  private setDisableForm(disable: boolean) {
+    this.formHelper.setDisableForm(this.form, disable);
+    this.formHelper.setDisableControl(this.form.controls.electronicID);
   }
 
 
-  private setRequiredFormFields(required: boolean){
+  private setRequiredFormFields(required: boolean) {
     if (required) {
-      this.formHandler.setControlValidators('recorderOfficeUID', Validators.required);
-      this.formHandler.setControlValidators('kind', Validators.required);
-      this.formHandler.setControlValidators('name', Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.recorderOfficeUID, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.kind, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.name, Validators.required);
     } else {
-      this.formHandler.setControlValidators('recorderOfficeUID', Validators.required);
-      this.formHandler.clearControlValidators('kind');
-      this.formHandler.clearControlValidators('name');
+      this.formHelper.setControlValidators(this.form.controls.recorderOfficeUID, Validators.required);
+      this.formHelper.clearControlValidators(this.form.controls.kind);
+      this.formHelper.clearControlValidators(this.form.controls.name);
     }
   }
 
 
-  private getFormData(): any {
-    Assertion.assert(this.formHandler.form.valid,
-      'Programming error: form must be validated before command execution.');
+  private getFormData(): NoPropertyFields {
+    Assertion.assert(this.form.valid, 'Programming error: form must be validated before command execution.');
 
-    const formModel = this.formHandler.form.getRawValue();
+    const formModel = this.form.getRawValue();
 
-    const data: any = {
+    const data: NoPropertyFields = {
       uid: this.recordableSubject.uid,
       type: this.recordableSubject.type,
       electronicID: formModel.electronicID ?? '',

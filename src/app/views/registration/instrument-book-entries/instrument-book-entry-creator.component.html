@@ -1,4 +1,4 @@
-<form [formGroup]="formHandler.form" autocomplete="off" class="form-section">
+<form [formGroup]="form" autocomplete="off" class="form-section">
 
   <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
 
@@ -6,25 +6,25 @@
 
       <div [fxFlex]="100/3">
         <label>Registrar en:</label>
-        <emp-ng-select [formControlName]="controls.recorderOffice"
+        <emp-ng-select formControlName="recorderOffice"
           [items]="recorderOfficeList"
-          [showError]="formHandler.showInvalidControl(controls.recorderOffice)">
+          [showError]="formHelper.isControlInvalid(form.controls.recorderOffice)">
         </emp-ng-select>
       </div>
       <div [fxFlex]="100/3">
         <label>Sección/Libro:</label>
-        <emp-ng-select [formControlName]="controls.recordingSection"
+        <emp-ng-select formControlName="recordingSection"
           [items]="recordingSectionList"
-          [showError]="formHandler.showInvalidControl(controls.recordingSection)">
+          [showError]="formHelper.isControlInvalid(form.controls.recordingSection)">
         </emp-ng-select>
       </div>
 
       <div fxFlex fxLayoutAlign="end end" style="padding-bottom: 2px;">
 
         <button type="submit"
-          (click)="createBookEntry()"
-          [class.btn]="!formHandler.isValid"
-          [class.btn-action]="formHandler.isValid">
+          [class.btn]="!formHelper.isFormReady(form)"
+          [class.btn-action]="formHelper.isFormReady(form)"
+          (click)="onSubmitClicked()">
           Registrar
         </button>
 
@@ -33,4 +33,5 @@
     </div>
 
   </div>
+
 </form>

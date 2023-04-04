@@ -81,7 +81,7 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
     switch (event.type as TransactionHeaderEventType) {
 
-      case TransactionHeaderEventType.SAVE_TRANSACTION_CLICKED:
+      case TransactionHeaderEventType.SAVE_TRANSACTION:
 
         payload = {
           transactionUID: this.transaction.uid,
@@ -92,13 +92,13 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
 
         return;
 
-      case TransactionHeaderEventType.CLONE_TRANSACTION_CLICKED:
+      case TransactionHeaderEventType.CLONE_TRANSACTION:
 
         this.executeCommand(TransactionCommandType.CLONE_TRANSACTION, payload);
 
         return;
 
-      case TransactionHeaderEventType.DELETE_TRANSACTION_CLICKED:
+      case TransactionHeaderEventType.DELETE_TRANSACTION:
 
         this.executeCommand(TransactionCommandType.DELETE_TRANSACTION, payload);
 

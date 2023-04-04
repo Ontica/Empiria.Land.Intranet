@@ -1,6 +1,6 @@
 <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
-<form [formGroup]="formHandler.form" [empNgSpinnerHost]="spinner" empNgFormKeyDownEnter
+<form [formGroup]="form" [empNgSpinnerHost]="spinner" empNgFormKeyDownEnter
   autocomplete="off" class="form-section">
 
   <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
@@ -12,7 +12,7 @@
 
         <div fxLayout="row">
           <input type="text" class="text-box"  [fxFlex]="showElectronicHistoryButton ? '182px' : '282px'"
-            [formControlName]="controls.electronicID">
+            formControlName="electronicID">
           <button type="button" class="btn" fxFlex="92px" *ngIf="showElectronicHistoryButton"
             [style.marginTop.px]="2" (click)="onElectronicHistoryClicked()">Historia</button>
         </div>
@@ -20,9 +20,9 @@
 
       <div fxFlex>
         <label>Distrito:</label>
-        <emp-ng-select [formControlName]="controls.recorderOfficeUID"
+        <emp-ng-select formControlName="recorderOfficeUID"
           [items]="recorderOfficeList"
-          [showError]="formHandler.showInvalidControl(controls.recorderOfficeUID)">
+          [showError]="formHelper.isControlInvalid(form.controls.recorderOfficeUID)">
         </emp-ng-select>
       </div>
     </div>
@@ -33,10 +33,10 @@
       <div fxFlex="290px" fxFlex.lt-md="none">
         <label>Tipo:</label>
         <emp-ng-select
-          [formControlName]="controls.kind"
+          formControlName="kind"
           [bindValue]="'name'"
           [items]="kindsList"
-          [showError]="formHandler.showInvalidControl(controls.kind)">
+          [showError]="formHelper.isControlInvalid(form.controls.kind)">
         </emp-ng-select>
       </div>
 
@@ -44,8 +44,8 @@
         <label>Nombre o denominación:</label>
 
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
-          [formControlName]="controls.name"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.name)">
+          formControlName="name"
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.name)">
         </textarea>
       </div>
 
@@ -56,8 +56,8 @@
         <label *ngIf="!isAssociation">Descripción (opcional):</label>
 
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
-          [formControlName]="controls.description"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
+          formControlName="description"
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.description)">
         </textarea>
 
       </div>
@@ -80,12 +80,12 @@
           <span class="pr-1">{{editionMode ? 'Marcar como:' : 'Marcado como:'}}</span>
 
           <emp-ng-select
-            [formControlName]="controls.status"
+            formControlName="status"
             bindLabel="statusName"
             bindValue="status"
             [items]="statusList"
-            [showError]="formHandler.showInvalidControl(controls.status)"
-            (changes)="onStatusChange($event)"
+            [showError]="formHelper.isControlInvalid(form.controls.status)"
+            (changes)="onStatusChanges($event)"
             [style.width.px]="125">
           </emp-ng-select>
 
@@ -95,12 +95,15 @@
 
       <div fxFlex fxLayoutAlign="end center">
 
-        <button *ngIf="!readonly && !editionMode" (click)="enableEditor(true)" class="btn-action">
+        <button *ngIf="!readonly && !editionMode" class="btn-action"
+          (click)="enableEditor(true)">
           Editar
         </button>
 
-        <button *ngIf="editionMode" (click)="submitForm()" [class.btn]="!formHandler.isValid"
-          [class.btn-action]="formHandler.isValid">
+        <button *ngIf="editionMode"
+          [class.btn]="!formHelper.isFormReady(form)"
+          [class.btn-action]="formHelper.isFormReady(form)"
+          (click)="onSubmitClicked()" >
           Guardar
         </button>
 

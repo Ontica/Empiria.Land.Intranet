@@ -8,89 +8,96 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,
          SimpleChanges } from '@angular/core';
 
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { combineLatest } from 'rxjs';
 
-import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
+import { Assertion, DateString, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { EmptyRealEstate, RealEstate, RecorderOffice } from '@app/models';
-
-import { RealEstateFields, RecordableObjectStatusItem, RecordableObjectStatusList,
-         RecordableSubjectType} from '@app/models/recordable-subjects';
-
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
-import { ArrayLibrary, FormHandler, sendEvent } from '@app/shared/utils';
+import { EmptyRealEstate, RealEstate, RealEstateFields, RecordableObjectStatus, RecordableObjectStatusItem,
+         RecordableObjectStatusList, RecordableSubjectType, RecorderOffice } from '@app/models';
+
+import { ArrayLibrary, FormHelper, sendEvent } from '@app/shared/utils';
 
 export enum RealEstateEditorComponentEventType {
   UPDATE_REAL_ESTATE = 'RealEstateEditorComponent.Event.UpdateRealEstate',
 }
 
-enum RealEstateEditorFormControls {
-  electronicID = 'electronicID',
-  cadastralID = 'cadastralID',
-  cadastreLinkingDate = 'cadastreLinkingDate',
-  recorderOfficeUID = 'recorderOfficeUID',
-  municipalityUID = 'municipalityUID',
-  kind = 'kind',
-  lotSizeUnitUID = 'lotSizeUnitUID',
-  lotSize = 'lotSize',
-  buildingArea = 'buildingArea',
-  undividedPct = 'undividedPct',
-  section = 'section',
-  block = 'block',
-  lot = 'lot',
-  description = 'description',
-  metesAndBounds = 'metesAndBounds',
-  status = 'status',
-}
-
+interface RealEstateFormModel extends FormGroup<{
+  electronicID: FormControl<string>;
+  cadastralID: FormControl<string>;
+  cadastreLinkingDate: FormControl<DateString>;
+  recorderOfficeUID: FormControl<string>;
+  municipalityUID: FormControl<string>;
+  kind: FormControl<string>;
+  lotSizeUnitUID: FormControl<string>;
+  lotSize: FormControl<number>;
+  buildingArea: FormControl<number>;
+  undividedPct: FormControl<number>;
+  section: FormControl<string>;
+  block: FormControl<string>;
+  lot: FormControl<string>;
+  description: FormControl<string>;
+  metesAndBounds: FormControl<string>;
+  status: FormControl<RecordableObjectStatus>;
+}> { }
 
 @Component({
   selector: 'emp-land-real-estate-editor',
-  templateUrl: './real-estate-editor.component.html',
-  styles: [
-  ]
+  templateUrl: './real-estate-editor.component.html'
 })
 export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() instrumentRecordingUID = '';
+
   @Input() recordingActUID = '';
+
   @Input() realEstate: RealEstate = EmptyRealEstate;
+
   @Input() readonly = false;
+
   @Input() showElectronicHistoryButton = true;
+
   @Output() realEstateEditorEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;
 
-  formHandler: FormHandler;
-  controls = RealEstateEditorFormControls;
+  form: RealEstateFormModel;
+
+  formHelper = FormHelper;
+
   editionMode = false;
+
   isLoading = false;
 
   recorderOfficeList: RecorderOffice[] = [];
+
   municipalityList: Identifiable[] = [];
+
   realEstateKindList: string[] = [];
+
   lotSizeUnitList: Identifiable[] = [];
+
   statusList: RecordableObjectStatusItem[] = RecordableObjectStatusList;
 
 
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
+    this.initForm();
   }
 
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadDataLists();
   }
 
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.realEstate) {
-      this.initForm();
       this.enableEditor(false);
     }
   }
@@ -101,7 +108,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  enableEditor(enable) {
+  enableEditor(enable: boolean) {
     this.editionMode = enable;
 
     if (!this.editionMode) {
@@ -110,13 +117,19 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
 
     this.setRecorderOfficeAndMunicipalityDataList();
     this.setRequiredFormFields(this.realEstate.status === 'Registered');
-    this.disableForm(!this.editionMode);
+    this.setDisableForm(!this.editionMode);
   }
 
 
-  onRecorderOfficeChange(recorderOffice: RecorderOffice) {
+  onRecorderOfficeChanges(recorderOffice: RecorderOffice) {
     this.municipalityList = recorderOffice?.municipalities ?? [];
-    this.formHandler.getControl(this.controls.municipalityUID).reset();
+    this.form.controls.municipalityUID.reset();
+  }
+
+
+  onStatusChanges(change: RecordableObjectStatusItem) {
+    this.setRequiredFormFields(change.status === 'Registered');
+    this.formHelper.markFormControlsAsTouched(this.form);
   }
 
 
@@ -143,73 +156,50 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  onStatusChange(change) {
-    this.setRequiredFormFields(change.status === 'Registered');
-    this.formHandler.invalidateForm();
-  }
+  onSubmitClicked() {
+    if (this.formHelper.isFormReadyAndInvalidate(this.form)) {
+      const payload = {
+        instrumentRecordingUID: this.instrumentRecordingUID,
+        recordingActUID: this.recordingActUID,
+        recordableSubjectFields: this.getFormData(),
+      };
 
-
-  onSubmitForm() {
-    if (!this.formHandler.validateReadyForSubmit()) {
-      this.formHandler.invalidateForm();
-      return;
+      sendEvent(this.realEstateEditorEvent, RealEstateEditorComponentEventType.UPDATE_REAL_ESTATE, payload);
     }
-
-    const payload = {
-      instrumentRecordingUID: this.instrumentRecordingUID,
-      recordingActUID: this.recordingActUID,
-      recordableSubjectFields: this.getFormData()
-    };
-
-    sendEvent(this.realEstateEditorEvent, RealEstateEditorComponentEventType.UPDATE_REAL_ESTATE, payload);
-  }
-
-
-  private linkCadastralId() {
-    console.log('Vincular clave catastral: ', this.formHandler.getControl(this.controls.cadastralID).value);
-  }
-
-
-  private unlinkCadastralId() {
-    console.log('Desvincular clave catastral: ', this.realEstate.cadastralID);
   }
 
 
   private initForm() {
-    if (this.formHandler) {
-      return;
-    }
+    const fb = new FormBuilder();
 
-    this.formHandler = new FormHandler(
-      new UntypedFormGroup({
-        electronicID: new UntypedFormControl(''),
-        cadastralID: new UntypedFormControl(''),
-        cadastreLinkingDate: new UntypedFormControl(''),
-        recorderOfficeUID: new UntypedFormControl(''),
-        municipalityUID: new UntypedFormControl(''),
-        kind: new UntypedFormControl(''),
-        lotSizeUnitUID: new UntypedFormControl(''),
-        lotSize: new UntypedFormControl('', Validators.min(0)),
-        buildingArea: new UntypedFormControl('', Validators.min(0)),
-        undividedPct: new UntypedFormControl('', Validators.min(0)),
-        section: new UntypedFormControl(''),
-        block: new UntypedFormControl(''),
-        lot: new UntypedFormControl(''),
-        description: new UntypedFormControl(''),
-        metesAndBounds: new UntypedFormControl(''),
-        status: new UntypedFormControl(''),
-      })
-    );
+    this.form = fb.group({
+      electronicID: ['', Validators.required],
+      cadastralID: [''],
+      cadastreLinkingDate: [null],
+      recorderOfficeUID: [''],
+      municipalityUID: [''],
+      kind: [''],
+      lotSizeUnitUID: [''],
+      lotSize: [0, Validators.min(0)],
+      buildingArea: [0, Validators.min(0) ],
+      undividedPct: [0, Validators.min(0)],
+      section: [''],
+      block: [''],
+      lot: [''],
+      description: [''],
+      metesAndBounds: [''],
+      status: [null],
+    });
   }
 
 
   private setFormData() {
     if (!this.realEstate) {
-      this.formHandler.form.reset();
+      this.form.reset();
       return;
     }
 
-    this.formHandler.form.reset({
+    this.form.reset({
       electronicID: this.realEstate.electronicID || '',
       cadastralID: this.realEstate.cadastralID || '',
       cadastreLinkingDate: this.realEstate.cadastreLinkingDate || '',
@@ -225,7 +215,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       lot: this.realEstate.lot || '',
       description: this.realEstate.description || '',
       metesAndBounds: this.realEstate.metesAndBounds || '',
-      status: this.realEstate.status
+      status: this.realEstate.status,
     });
   }
 
@@ -271,41 +261,50 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  private disableForm(disable) {
-    this.formHandler.disableForm(disable);
-    this.formHandler.disableControl(this.controls.electronicID);
-    this.formHandler.disableControl(this.controls.cadastreLinkingDate);
+  private setDisableForm(disable: boolean) {
+    this.formHelper.setDisableForm(this.form, disable);
+    this.formHelper.setDisableControl(this.form.controls.electronicID);
+    this.formHelper.setDisableControl(this.form.controls.cadastreLinkingDate);
   }
 
 
   private setRequiredFormFields(required: boolean) {
     if (required) {
-      this.formHandler.setControlValidators('cadastralID', Validators.required);
-      this.formHandler.setControlValidators('recorderOfficeUID', Validators.required);
-      this.formHandler.setControlValidators('municipalityUID', Validators.required);
-      this.formHandler.setControlValidators('kind', Validators.required);
-      this.formHandler.setControlValidators('lotSizeUnitUID', Validators.required);
-      this.formHandler.setControlValidators('lotSize', [Validators.required, Validators.min(0)]);
-      this.formHandler.setControlValidators('description', Validators.required);
-      this.formHandler.setControlValidators('metesAndBounds', Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.cadastralID, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.recorderOfficeUID, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.municipalityUID, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.kind, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.lotSizeUnitUID, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.lotSize, [Validators.required, Validators.min(0)]);
+      this.formHelper.setControlValidators(this.form.controls.description, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.metesAndBounds, Validators.required);
     } else {
-      this.formHandler.setControlValidators('recorderOfficeUID', Validators.required);
-      this.formHandler.setControlValidators('municipalityUID', Validators.required);
-      this.formHandler.setControlValidators('lotSizeUnitUID', Validators.required);
-      this.formHandler.setControlValidators('lotSize', Validators.min(0));
-      this.formHandler.clearControlValidators('cadastralID');
-      this.formHandler.clearControlValidators('kind');
-      this.formHandler.clearControlValidators('description');
-      this.formHandler.clearControlValidators('metesAndBounds');
+      this.formHelper.setControlValidators(this.form.controls.recorderOfficeUID, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.municipalityUID, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.lotSizeUnitUID, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.lotSize, Validators.min(0));
+      this.formHelper.clearControlValidators(this.form.controls.cadastralID);
+      this.formHelper.clearControlValidators(this.form.controls.kind);
+      this.formHelper.clearControlValidators(this.form.controls.description);
+      this.formHelper.clearControlValidators(this.form.controls.metesAndBounds);
     }
   }
 
 
-  private getFormData(): RealEstateFields {
-    Assertion.assert(this.formHandler.form.valid,
-      'Programming error: form must be validated before command execution.');
+  private linkCadastralId() {
+    console.log('Vincular clave catastral: ', this.form.value.cadastralID);
+  }
 
-    const formModel = this.formHandler.form.getRawValue();
+
+  private unlinkCadastralId() {
+    console.log('Desvincular clave catastral: ', this.realEstate.cadastralID);
+  }
+
+
+  private getFormData(): RealEstateFields {
+    Assertion.assert(this.form.valid, 'Programming error: form must be validated before command execution.');
+
+    const formModel = this.form.getRawValue();
 
     const data: RealEstateFields = {
       uid: this.realEstate.uid,
@@ -324,7 +323,7 @@ export class RealEstateEditorComponent implements OnInit, OnChanges, OnDestroy {
       lot: formModel.lot ?? '',
       description: formModel.description ?? '',
       metesAndBounds: formModel.metesAndBounds ?? '',
-      status: formModel.status
+      status: formModel.status,
     };
 
     return data;

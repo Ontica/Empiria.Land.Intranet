@@ -7,7 +7,7 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { combineLatest } from 'rxjs';
 
@@ -15,18 +15,16 @@ import { Assertion, Command, Identifiable } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { RegistrationCommandType,
-         TransactionStateSelector } from '@app/core/presentation/presentation-types';
+import { RegistrationCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
 import { InstrumentBookEntryFields, RecordingSection } from '@app/models';
 
-import { FormHandler } from '@app/shared/utils';
+import { FormHelper } from '@app/shared/utils';
 
-
-enum InstrumentBookEntryCreatorFormControls {
-  recorderOffice = 'recorderOffice',
-  recordingSection = 'recordingSection',
-}
+interface InstrumentBookEntryFormModel extends FormGroup<{
+  recorderOffice: FormControl<string>;
+  recordingSection: FormControl<string>;
+}> { }
 
 
 @Component({
@@ -43,33 +41,37 @@ export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
 
   helper: SubscriptionHelper;
 
-  formHandler: FormHandler;
+  form: InstrumentBookEntryFormModel;
 
-  controls = InstrumentBookEntryCreatorFormControls;
+  formHelper = FormHelper;
 
   submitted = false;
 
+
   constructor(private uiLayer: PresentationLayer) {
     this.helper = uiLayer.createSubscriptionHelper();
+    this.initForm();
   }
 
-  ngOnInit(): void {
-    this.initForm();
+
+  ngOnInit() {
     this.loadDataList();
   }
+
 
   ngOnDestroy() {
     this.helper.destroy();
   }
 
-  createBookEntry() {
-    if (this.submitted || !this.formHandler.validateReadyForSubmit()) {
+
+  onSubmitClicked() {
+    if (this.submitted || !this.formHelper.isFormReadyAndInvalidate(this.form)) {
       return;
     }
 
     const payload = {
       instrumentRecordingUID: this.instrumentRecordingUID,
-      bookEntryFields: this.getFormData()
+      bookEntryFields: this.getFormData(),
     };
 
     this.executeCommand(RegistrationCommandType.CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY, payload);
@@ -77,12 +79,12 @@ export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
 
 
   private initForm() {
-    this.formHandler = new FormHandler(
-      new UntypedFormGroup({
-        recorderOffice: new UntypedFormControl('', Validators.required),
-        recordingSection: new UntypedFormControl('', Validators.required),
-      })
-    );
+    const fb = new FormBuilder();
+
+    this.form = fb.group({
+      recorderOffice: ['', Validators.required],
+      recordingSection: ['', Validators.required],
+    });
   }
 
 
@@ -99,10 +101,9 @@ export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
 
 
   private getFormData(): InstrumentBookEntryFields {
-    Assertion.assert(this.formHandler.form.valid,
-      'Programming error: form must be validated before command execution.');
+    Assertion.assert(this.form.valid, 'Programming error: form must be validated before command execution.');
 
-    const formModel = this.formHandler.form.getRawValue();
+    const formModel = this.form.getRawValue();
 
     const data: InstrumentBookEntryFields = {
       recorderOfficeUID: formModel.recorderOffice ?? '',

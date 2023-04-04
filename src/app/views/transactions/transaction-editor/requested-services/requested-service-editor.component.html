@@ -1,90 +1,106 @@
-<form [formGroup]="formHandler.form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
+<form [formGroup]="form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
 
   <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
 
     <div fxLayout="row" fxLayout.lt-md="column">
+
       <div [fxFlex]="100/4">
         <label>Tipo:</label>
-        <emp-ng-select [formControlName]="controls.serviceType"
+        <emp-ng-select formControlName="serviceType"
           [items]="providedServiceTypeList"
-          [showError]="formHandler.showInvalidControl(controls.serviceType)"
-          (changes)="serviceTypeChange($event)">
+          [showError]="formHelper.isControlInvalid(form.controls.serviceType)"
+          (changes)="onServiceTypeChanges($event)">
         </emp-ng-select>
       </div>
+
       <div [fxFlex]="100/2">
         <label>Concepto:</label>
-        <emp-ng-select [formControlName]="controls.service"
+        <emp-ng-select formControlName="service"
           [items]="providedServiceList"
-          [placeholder]="formHandler.getControl(controls.serviceType).invalid ? 'Seleccione el tipo de concepto' : 'Seleccione'"
-          [showError]="formHandler.showInvalidControl(controls.service)"
-          (changes)="serviceChange($event)">
+          [placeholder]="form.controls.serviceType.invalid ? 'Seleccione el tipo de concepto' : 'Seleccione'"
+          [showError]="formHelper.isControlInvalid(form.controls.service)"
+          (changes)="onServiceChanges($event)">
         </emp-ng-select>
       </div>
+
       <div [fxFlex]="100/4">
         <label>Fundamento:</label>
-        <emp-ng-select [formControlName]="controls.feeConcept"
+        <emp-ng-select formControlName="feeConcept"
           [bindLabel]="'legalBasis'"
           [config]="{ autoSelect: true }"
           [items]="serviceSelected.feeConcepts"
-          [placeholder]="formHandler.getControl(controls.service).invalid ? 'Seleccione el concepto' : 'Seleccione'"
-          [showError]="formHandler.showInvalidControl(controls.feeConcept)"
-          (changes)="feeConceptChange($event)">
+          [placeholder]="form.controls.service.invalid ? 'Seleccione el concepto' : 'Seleccione'"
+          [showError]="formHelper.isControlInvalid(form.controls.feeConcept)"
+          (changes)="onFeeConceptChanges($event)">
         </emp-ng-select>
       </div>
+
     </div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
+
       <div [fxFlex]="100/4">
         <label>Unidad:</label>
-        <input [formControlName]="controls.unit"
+        <input formControlName="unit"
           type="text"
           class="text-box"
           placeholder="Seleccione el concepto">
       </div>
+
       <div [fxFlex]="100/2">
+
         <div fxLayout="row">
+
           <div [fxFlex]="60" *ngIf="feeConceptSelected.requiresTaxableBase">
             <label>Base gravable:</label>
-            <input [formControlName]="controls.taxableBase" empNgCurrency
+            <input formControlName="taxableBase" empNgCurrency
               type="text"
               class="text-box"
-              [class.invalid-control]="formHandler.showInvalidControl(controls.taxableBase)">
+              [class.invalid-control]="formHelper.isControlInvalid(form.controls.taxableBase)">
           </div>
 
           <div [fxFlex]="40">
             <label>Cantidad:</label>
-            <input [formControlName]="controls.quantity" empNgInteger
+            <input formControlName="quantity" empNgInteger
               type="text"
               class="text-box"
-              [class.invalid-control]="formHandler.showInvalidControl(controls.quantity)">
+              [class.invalid-control]="formHelper.isControlInvalid(form.controls.quantity)">
           </div>
+
         </div>
 
       </div>
+
     </div>
 
     <div fxLayout="row" fxLayout.lt-md="column">
+
       <div fxFlex>
         <label>Observaciones:</label>
-        <textarea [formControlName]="controls.notes" empNgTextareaAutoresize
+        <textarea formControlName="notes" empNgTextareaAutoresize
           rows="1"
           class="text-area uppercase">
         </textarea>
       </div>
+
     </div>
 
     <mat-divider class="divider-padding"></mat-divider>
 
     <div fxLayout="row">
+
       <div fxFlex fxLayoutAlign="end">
-        <button (click)="submit()" type="submit"
-          [class.btn]="!formHandler.isValid"
-          [class.btn-action]="formHandler.isValid">
+
+        <button (click)="onSubmitClicked()" type="submit"
+          [class.btn]="!formHelper.isFormReady(form)"
+          [class.btn-action]="formHelper.isFormReady(form)">
           Agregar concepto
         </button>
+
       </div>
 
     </div>
 
   </div>
+
 </form>

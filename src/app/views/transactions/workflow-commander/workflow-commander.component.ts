@@ -8,14 +8,19 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { Command, EventInfo } from '@app/core';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
 import { TransactionShortModel, ApplicableCommand, WorkflowCommand } from '@app/models';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
+
 import { ArrayLibrary } from '@app/shared/utils';
+
 import { TransactionListEditorEventType } from '../transaction-list/transaction-list-editor.component';
+
 import { FormDataEmitted } from './workflow-command-config.component';
 
 
@@ -47,13 +52,14 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
 
   submitted = false;
 
+
   constructor(private uiLayer: PresentationLayer,
               private messageBox: MessageBoxService) {
     this.helper = uiLayer.createSubscriptionHelper();
   }
 
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.validateAllCommandsMode();
     this.loadCommandList();
   }
@@ -77,13 +83,16 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
       });
   }
 
+
   onClose() {
     this.closeEvent.emit();
   }
 
+
   setFormData(event: FormDataEmitted) {
     this.formWorkflow = event;
   }
+
 
   submitCommand() {
     if (this.submitted || !this.formWorkflow.isValid || this.transactionList.length === 0) {
@@ -111,6 +120,7 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
         }
       });
   }
+
 
   onTransactionListEditorEventEvent(event: EventInfo): void {
     switch (event.type as TransactionListEditorEventType) {
@@ -161,7 +171,7 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
     const nextStatus = !this.formWorkflow.formData.nextStatus ? null :
       commandType.nextStatus.filter(x => x.type === this.formWorkflow.formData.nextStatus)[0];
 
-    const nextUser = !this.formWorkflow.formData.nextUser ? null : nextStatus.users
+    const nextUser = !this.formWorkflow.formData.assignToUID ? null : nextStatus.users
       .filter(x => x.uid === this.formWorkflow.formData.assignToUID)[0];
 
     const labelNextUser = commandType.type === 'Receive' ? 'De:' : 'Asignar a:';
@@ -190,6 +200,7 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
     return this.uiLayer.execute<T>(command)
       .finally(() => this.submitted = false);
   }
+
 
   private handleTransactionDuplicate(keyword: string, transactionUID: string) {
     if (this.transactionList.filter(t => t.uid === transactionUID).length > 0) {

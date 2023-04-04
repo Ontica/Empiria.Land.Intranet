@@ -7,31 +7,31 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { EventInfo, isEmpty } from '@app/core';
+import { DateString, EventInfo, isEmpty } from '@app/core';
 
 import { BookEntry, ManualBookEntryFields, EmptyBookEntry, EmptyInstrument,
          EmptyInstrumentRecordingActions, Instrument, InstrumentFields,
-         InstrumentRecordingActions } from '@app/models';
+         InstrumentRecordingActions,
+         InstrumentType} from '@app/models';
 
-import { FormHandler, sendEvent } from '@app/shared/utils';
+import { FormHelper, sendEvent } from '@app/shared/utils';
 
 import {
   InstrumentEditorEventType
 } from '@app/views/recordable-subjects/instrument/instrument-editor.component';
-
-enum BookEntryEditorControls {
-  recordingNo = 'recordingNo',
-  authorizationDate = 'authorizationDate',
-  presentationTime = 'presentationTime',
-}
 
 export enum BookEntryEditorEventType {
   CREATE_BOOK_ENTRY = 'BookEntryEditorComponent.Event.CreateBookEntry',
   UPDATE_BOOK_ENTRY = 'BookEntryEditorComponent.Event.UpdateBookEntry',
 }
 
+interface BookEntryFormModel extends FormGroup<{
+  recordingNo: FormControl<string>;
+  authorizationDate: FormControl<DateString>;
+  presentationTime: FormControl<DateString>;
+}> { }
 
 @Component({
   selector: 'emp-land-book-entry-editor',
@@ -48,56 +48,52 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
 
   @Output() bookEntryEditorEvent = new EventEmitter<EventInfo>();
 
-  formHandler: FormHandler;
-
-  controls = BookEntryEditorControls;
+  form: BookEntryFormModel;
 
   editionMode = false;
+
+  defaultInstrumentType = InstrumentType.Resumen;
 
   constructor() {
     this.initForm();
   }
 
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.setEditionMode(!isEmpty(this.bookEntry));
   }
 
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.bookEntry) {
-      this.resetFormModel();
+      this.setFormData();
     }
   }
 
 
-  onInstrumentEditorEvent(event) {
-
+  onInstrumentEditorEvent(event: EventInfo) {
     switch (event.type as InstrumentEditorEventType) {
 
       case InstrumentEditorEventType.CREATE_INSTRUMENT:
 
-        if (!this.formHandler.isValid) {
-          return;
+        if (FormHelper.isFormReady(this.form)) {
+          sendEvent(this.bookEntryEditorEvent, BookEntryEditorEventType.CREATE_BOOK_ENTRY,
+            this.getFormData(event.payload.instrumentFields as InstrumentFields));
         }
-
-        sendEvent(this.bookEntryEditorEvent, BookEntryEditorEventType.CREATE_BOOK_ENTRY,
-          this.getFormData(event.payload.instrumentFields as InstrumentFields));
 
         return;
 
       case InstrumentEditorEventType.UPDATE_INSTRUMENT:
 
-        if (this.formHandler.form.invalid) {
-          return;
+        if (this.form.valid) {
+          sendEvent(this.bookEntryEditorEvent, BookEntryEditorEventType.UPDATE_BOOK_ENTRY,
+            this.getFormData(event.payload.instrumentFields as InstrumentFields));
         }
-
-        sendEvent(this.bookEntryEditorEvent, BookEntryEditorEventType.UPDATE_BOOK_ENTRY,
-          this.getFormData(event.payload.instrumentFields as InstrumentFields));
 
         return;
 
       case InstrumentEditorEventType.EDITION_MODE_CHANGED:
+
         this.setEditionMode(event.payload);
 
         return;
@@ -110,17 +106,18 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
 
 
   private initForm() {
-    this.formHandler = new FormHandler(
-      new UntypedFormGroup({
-        recordingNo: new UntypedFormControl('', Validators.required),
-        presentationTime: new UntypedFormControl(''),
-        authorizationDate: new UntypedFormControl('', Validators.required)
-      }));
+    const fb = new FormBuilder();
+
+    this.form = fb.group({
+      recordingNo: ['', Validators.required],
+      presentationTime: [null],
+      authorizationDate: [null as DateString, [Validators.required]],
+    });
   }
 
 
-  private resetFormModel() {
-    this.formHandler.form.reset({
+  private setFormData() {
+    this.form.reset({
       recordingNo: this.bookEntry.recordingNo,
       presentationTime: this.bookEntry.presentationTime,
       authorizationDate: this.bookEntry.authorizationDate,
@@ -131,8 +128,8 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
   private setEditionMode(editionMode: boolean) {
     setTimeout(() => {
       this.editionMode = editionMode;
-      this.resetFormModel();
-      this.formHandler.disableForm(!this.editionMode);
+      this.setFormData();
+      FormHelper.setDisableForm(this.form, !this.editionMode);
     });
   }
 
@@ -140,9 +137,9 @@ export class BookEntryEditorComponent implements OnInit, OnChanges {
   private getFormData(instrument: InstrumentFields): ManualBookEntryFields {
     const bookEntryFields: ManualBookEntryFields = {
       bookEntry : {
-        recordingNo: this.formHandler.getControl(this.controls.recordingNo).value,
-        presentationTime: this.formHandler.getControl(this.controls.presentationTime).value,
-        authorizationDate: this.formHandler.getControl(this.controls.authorizationDate).value
+        recordingNo: this.form.value.recordingNo,
+        presentationTime: this.form.value.presentationTime,
+        authorizationDate: this.form.value.authorizationDate
       },
       instrument
     };

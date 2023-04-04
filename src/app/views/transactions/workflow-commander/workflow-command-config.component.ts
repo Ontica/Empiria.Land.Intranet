@@ -6,34 +6,31 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Assertion } from '@app/core';
 
-import {
-  EmptyApplicableCommand, EmptyWorkflowStatus,
-  ApplicableCommand, WorkflowPayload, WorkflowStatus, WorkflowCommandType
-} from '@app/models';
-
-import { FormHandler } from '@app/shared/utils';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
+import { EmptyApplicableCommand, EmptyWorkflowStatus, ApplicableCommand, WorkflowPayload, WorkflowStatus,
+         WorkflowCommandType } from '@app/models';
 
-enum WorkflowCommandConfigControls {
-  command = 'command',
-  nextStatus = 'nextStatus',
-  nextUser = 'nextUser',
-  note = 'note',
-  authorization = 'authorization',
-}
+import { FormHelper } from '@app/shared/utils';
 
+interface WorkflowCommandConfigFormModel extends FormGroup<{
+  command: FormControl<string>;
+  nextStatus: FormControl<string>;
+  nextUser: FormControl<string>;
+  note: FormControl<string>;
+  authorization: FormControl<string>;
+}> {}
 
 export interface FormDataEmitted {
   commandType: WorkflowCommandType;
-  formData: any;
+  formData: WorkflowPayload;
   isValid: boolean;
 }
-
 
 @Component({
   selector: 'emp-land-workflow-command-config',
@@ -46,99 +43,104 @@ export class WorkflowCommandConfigComponent implements OnInit {
   @Output() formData = new EventEmitter<FormDataEmitted>();
 
   commandSelected: ApplicableCommand = EmptyApplicableCommand;
+
   statusSelected: WorkflowStatus = EmptyWorkflowStatus;
 
-  formHandler: FormHandler;
-  controls = WorkflowCommandConfigControls;
+  form: WorkflowCommandConfigFormModel;
+
+  formHelper = FormHelper;
+
   labelNextUser: string;
 
-  ngOnInit(): void {
+
+  ngOnInit() {
     this.initForm();
   }
 
-  get requiredNextStatusField() {
+
+  get requiredNextStatusField(): boolean {
     return ['AssignTo', 'SetNextStatus'].includes(this.commandSelected.type);
   }
 
-  get requiredNextUserField() {
-    return false;
-    // return ['AssignTo', 'Receive'].includes(this.commandSelected.type);
+
+  get requiredNextUserField(): boolean {
+    return false; // ['AssignTo', 'Receive'].includes(this.commandSelected.type);
   }
 
-  get requiredAuthorizationField() {
-    return false;
-    // return ['Sign', 'Unsign'].includes(this.commandSelected.type);
+
+  get requiredAuthorizationField(): boolean {
+    return false; // ['Sign', 'Unsign'].includes(this.commandSelected.type);
   }
 
-  commandChange(change: ApplicableCommand) {
+
+  onCommandChanges(change: ApplicableCommand) {
     this.commandSelected = change;
-
     this.statusSelected = EmptyWorkflowStatus;
-
     this.labelNextUser = this.commandSelected.type === 'Receive' ? 'De:' : 'Asignar a:';
-
     this.setControlsValidators();
-
-    this.formHandler.invalidateForm();
+    this.formHelper.markFormControlsAsTouched(this.form);
   }
 
-  statusChange(change: WorkflowStatus) {
+  onStatusChanges(change: WorkflowStatus) {
     this.statusSelected = change;
   }
 
-  private initForm() {
-    this.formHandler = new FormHandler(
-      new UntypedFormGroup({
-        command: new UntypedFormControl('', Validators.required),
-        nextStatus: new UntypedFormControl(''),
-        nextUser: new UntypedFormControl(''),
-        note: new UntypedFormControl(''),
-        authorization: new UntypedFormControl(''),
-      })
-    );
 
-    this.onFormValueChanges();
+  private initForm() {
+    const fb = new FormBuilder();
+
+    this.form = fb.group({
+      command: ['', Validators.required],
+      nextStatus: [''],
+      nextUser: [''],
+      note: [''],
+      authorization: [''],
+    });
+
+    this.onSuscribeToFormValueChanges();
   }
 
-  private onFormValueChanges(): void {
-    this.formHandler.form.valueChanges
+
+  private onSuscribeToFormValueChanges(): void {
+    this.form.valueChanges
       .pipe(distinctUntilChanged(), debounceTime(100))
       .subscribe(value => {
         this.formData.emit({
-          commandType: this.formHandler.getControl(this.controls.command).value,
-          formData: this.formHandler.isValid ? this.getFormData() : {},
-          isValid: this.formHandler.isValid
+          commandType: this.form.value.command as WorkflowCommandType,
+          formData: this.formHelper.isFormReady(this.form) ? this.getFormData() : {},
+          isValid: this.formHelper.isFormReady(this.form)
         });
       });
   }
 
-  private setControlsValidators() {
-    this.formHandler.getControl(this.controls.nextStatus).reset();
-    this.formHandler.getControl(this.controls.nextUser).reset();
-    this.formHandler.getControl(this.controls.authorization).reset();
 
-    this.formHandler.clearControlValidators(this.controls.nextStatus);
-    this.formHandler.clearControlValidators(this.controls.nextUser);
-    this.formHandler.clearControlValidators(this.controls.authorization);
+  private setControlsValidators() {
+    this.form.controls.nextStatus.reset();
+    this.form.controls.nextUser.reset();
+    this.form.controls.authorization.reset();
+
+    this.formHelper.clearControlValidators(this.form.controls.nextStatus);
+    this.formHelper.clearControlValidators(this.form.controls.nextUser);
+    this.formHelper.clearControlValidators(this.form.controls.authorization);
 
     if (this.requiredNextStatusField) {
-      this.formHandler.setControlValidators(this.controls.nextStatus, [Validators.required]);
+      this.formHelper.setControlValidators(this.form.controls.nextStatus, [Validators.required]);
     }
 
     if (this.requiredNextUserField) {
-      this.formHandler.setControlValidators(this.controls.nextUser, [Validators.required]);
+      this.formHelper.setControlValidators(this.form.controls.nextUser, [Validators.required]);
     }
 
     if (this.requiredAuthorizationField) {
-      this.formHandler.setControlValidators(this.controls.authorization, [Validators.required]);
+      this.formHelper.setControlValidators(this.form.controls.authorization, [Validators.required]);
     }
   }
 
-  private getFormData(): WorkflowPayload {
-    Assertion.assert(this.formHandler.form.valid,
-      'Programming error: form must be validated before command execution.');
 
-    const formModel = this.formHandler.form.getRawValue();
+  private getFormData(): WorkflowPayload {
+    Assertion.assert(this.form.valid, 'Programming error: form must be validated before command execution.');
+
+    const formModel = this.form.getRawValue();
 
     const data: WorkflowPayload = {
       transactionUID: [],

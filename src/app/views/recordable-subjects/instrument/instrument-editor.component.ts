@@ -7,23 +7,23 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { concat, of, Subject, Observable } from 'rxjs';
 
 import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
-import { EventInfo, isEmpty, Validate } from '@app/core';
+import { DateString, EventInfo, isEmpty, Validate } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { RecordableSubjectsStateSelector } from '@app/core/presentation/presentation-types';
 
-import { Instrument, InstrumentFields, InstrumentTypeEnum, InstrumentTypesList, Issuer, IssuersFilter,
-         EmptyInstrument, InstrumentRecordingActions, EmptyInstrumentRecordingActions,
-         InstrumentType} from '@app/models';
+import { Instrument, InstrumentFields, InstrumentTypesList, Issuer, IssuersFilter, EmptyInstrument,
+         InstrumentRecordingActions, EmptyInstrumentRecordingActions, InstrumentType,
+         InstrumentTypeItem } from '@app/models';
 
-import { FormHandler, sendEvent } from '@app/shared/utils';
+import { FormHelper, sendEvent } from '@app/shared/utils';
 
 export enum InstrumentEditorEventType {
   CREATE_INSTRUMENT = 'InstrumentEditorEventType.Event.CreateInstrument',
@@ -34,19 +34,19 @@ export enum InstrumentEditorEventType {
   OPEN_REGISTRATION = 'InstrumentEditorEventType.Event.OpenRegistration'
 }
 
-enum InstrumentFormControls {
-  type = 'type',
-  sheetsCount = 'sheetsCount',
-  kind = 'kind',
-  issueDate = 'issueDate',
-  issuer = 'issuer',
-  instrumentNo = 'instrumentNo',
-  binderNo = 'binderNo',
-  folio = 'folio',
-  endFolio = 'endFolio',
-  summary = 'summary',
-  status = 'status',
-}
+interface InstrumentFormModel extends FormGroup<{
+  type: FormControl<InstrumentType | string>;
+  sheetsCount: FormControl<number>;
+  kind: FormControl<string>;
+  issueDate: FormControl<DateString>;
+  issuer: FormControl<string>;
+  instrumentNo: FormControl<string>;
+  binderNo: FormControl<string>;
+  folio: FormControl<string>;
+  endFolio: FormControl<string>;
+  summary: FormControl<string>;
+  status: FormControl<string>;
+}> {}
 
 @Component({
   selector: 'emp-land-instrument-editor',
@@ -70,22 +70,28 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
   @Output() instrumentEditorEvent = new EventEmitter<EventInfo>();
 
-  InstrumentType = InstrumentTypeEnum;
+  InstrumentTypes = InstrumentType;
 
-  instrumentTypesList = InstrumentTypesList;
+  instrumentTypesList: InstrumentTypeItem[] = InstrumentTypesList;
 
   helper: SubscriptionHelper;
 
-  formHandler: FormHandler;
-  controls = InstrumentFormControls;
+  form: InstrumentFormModel;
+
+  formHelper = FormHelper;
+
   editionMode = false;
+
   isLoading = false;
 
   instrumentKindsList: any[] = [];
 
   issuerList$: Observable<Issuer[]>;
+
   issuerInput$ = new Subject<string>();
+
   issuerLoading = false;
+
   issuerMinTermLength = 5;
 
   statusList = [];
@@ -107,8 +113,8 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
   }
 
 
-  get typeSelected() {
-    return this.formHandler.getControl(this.controls.type).value;
+  get typeSelected(): InstrumentType {
+    return this.form.value.type as InstrumentType;
   }
 
 
@@ -116,72 +122,71 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
     this.editionMode = enable;
     this.setFormModel();
     this.setFormValidatorsByType();
-    this.formHandler.disableForm(!this.editionMode);
+    this.formHelper.setDisableForm(this.form, !this.editionMode);
     sendEvent(this.instrumentEditorEvent, InstrumentEditorEventType.EDITION_MODE_CHANGED, this.editionMode);
   }
 
 
-  validateTypeSelected(instrumentTypesArray: InstrumentTypeEnum[]) {
+  validateTypeSelected(instrumentTypesArray: InstrumentType[]) {
     return instrumentTypesArray.includes(this.typeSelected);
   }
 
 
-  onInstrumentTypeChange(change) {
+  onInstrumentTypeChanges(change: InstrumentTypeItem) {
     this.loadInstrumentKindList(change.type);
     this.resetForm(change.type === this.instrument.type);
     this.setFormValidatorsByType();
   }
 
 
-  closeRegistration() {
+  onCloseRegistrationClicked() {
     sendEvent(this.instrumentEditorEvent, InstrumentEditorEventType.CLOSE_REGISTRATION);
   }
 
-  openRegistration() {
+  onOpenRegistrationClicked() {
     sendEvent(this.instrumentEditorEvent, InstrumentEditorEventType.OPEN_REGISTRATION);
   }
 
 
-  submit() {
-    if (!this.formHandler.form.valid) {
-      this.formHandler.invalidateForm();
-      return;
-    }
+  onSubmitClicked() {
+    if (this.formHelper.isFormReadyAndInvalidate(this.form)) {
+      const eventType = this.addMode ?
+        InstrumentEditorEventType.CREATE_INSTRUMENT : InstrumentEditorEventType.UPDATE_INSTRUMENT;
 
-    sendEvent(this.instrumentEditorEvent, this.addMode ?
-      InstrumentEditorEventType.CREATE_INSTRUMENT : InstrumentEditorEventType.UPDATE_INSTRUMENT,
-      {instrumentFields: this.getFormData()});
+      sendEvent(this.instrumentEditorEvent, eventType, {instrumentFields: this.getFormData()});
+    }
   }
 
 
-  submitPrintRegistrationStampMedia() {
+  onPrintRegistrationStampMediaClicked() {
     sendEvent(this.instrumentEditorEvent, InstrumentEditorEventType.PRINT_REGISTRATION_STAMP_MEDIA);
   }
 
 
   private initForm() {
-    this.formHandler = new FormHandler(
-      new UntypedFormGroup({
-        type: new UntypedFormControl('', Validators.required),
-        sheetsCount: new UntypedFormControl(''),
-        kind: new UntypedFormControl(''),
-        issueDate: new UntypedFormControl(''),
-        issuer: new UntypedFormControl(''),
-        instrumentNo: new UntypedFormControl(''),
-        binderNo: new UntypedFormControl(''),
-        folio: new UntypedFormControl(''),
-        endFolio: new UntypedFormControl(''),
-        summary: new UntypedFormControl(''),
-        status: new UntypedFormControl(''),
-      }));
+    const fb = new FormBuilder();
+
+    this.form = fb.group({
+      type: ['', Validators.required],
+      sheetsCount: [null],
+      kind: [''],
+      issueDate: [null],
+      issuer: [''],
+      instrumentNo: [''],
+      binderNo: [''],
+      folio: [''],
+      endFolio: [''],
+      summary: [''],
+      status: [''],
+    });
   }
 
 
   private setFormModel() {
-    this.formHandler.form.reset({
-      type: this.instrument.type && this.instrument.type !== 'Empty' ?
+    this.form.reset({
+      type: this.instrument.type && this.instrument.type !== 'Empty' as InstrumentType ?
         this.instrument.type : this.defaultType,
-      sheetsCount: this.instrument.sheetsCount >= 0 ? this.instrument.sheetsCount : '',
+      sheetsCount: this.instrument.sheetsCount >= 0 ? this.instrument.sheetsCount : null,
       kind: this.instrument.kind,
       issueDate: this.instrument.issueDate,
       issuer: isEmpty(this.instrument.issuer) ? null : this.instrument.issuer.uid,
@@ -199,7 +204,7 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
   private resetForm(resetModel) {
     if (resetModel) {
-      this.formHandler.form.patchValue({
+      this.form.patchValue({
         kind: this.instrument.kind,
         issuer: isEmpty(this.instrument.issuer) ? null : this.instrument.issuer.uid,
         instrumentNo: this.instrument.instrumentNo,
@@ -210,42 +215,43 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
       });
       this.subscribeIssuerList();
     } else {
-      this.formHandler.getControl(this.controls.kind).reset();
-      this.formHandler.getControl(this.controls.issuer).reset();
-      this.formHandler.getControl(this.controls.instrumentNo).reset();
-      this.formHandler.getControl(this.controls.binderNo).reset();
-      this.formHandler.getControl(this.controls.folio).reset();
-      this.formHandler.getControl(this.controls.endFolio).reset();
-      this.formHandler.getControl(this.controls.status).reset();
+      this.form.controls.kind.reset();
+      this.form.controls.issuer.reset();
+      this.form.controls.instrumentNo.reset();
+      this.form.controls.binderNo.reset();
+      this.form.controls.folio.reset();
+      this.form.controls.endFolio.reset();
+      this.form.controls.status.reset();
     }
   }
 
 
   private setFormValidatorsByType(){
     if (this.showStatusField) {
-      // this.formHandler.setControlValidators('status', Validators.required);
+      // this.formHelper.setControlValidators(this.form.controls.status, Validators.required);
     }
 
     switch (this.typeSelected) {
       case 'Resumen':
-        this.formHandler.clearControlValidators('sheetsCount');
-        this.formHandler.setControlValidators('kind', Validators.required);
+        this.formHelper.clearControlValidators(this.form.controls.sheetsCount);
+        this.formHelper.setControlValidators(this.form.controls.kind, Validators.required);
         return;
 
       default:
-        this.formHandler.clearControlValidators('kind');
-        this.formHandler.setControlValidators('sheetsCount', [Validators.required, Validate.isPositive]);
+        this.formHelper.clearControlValidators(this.form.controls.kind);
+        this.formHelper.setControlValidators(this.form.controls.sheetsCount,
+          [Validators.required, Validate.isPositive]);
         return;
     }
   }
 
 
   private getFormData(): InstrumentFields {
-    const formModel = this.formHandler.form.getRawValue();
+    const formModel = this.form.getRawValue();
 
     const data: InstrumentFields = {
       uid: this.instrument.uid,
-      type: formModel.type,
+      type: formModel.type as InstrumentType,
       kind: formModel.kind ?? '',
       sheetsCount: formModel.sheetsCount,
       issueDate: formModel.issueDate,
@@ -261,11 +267,11 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
   }
 
 
-  private loadInstrumentKindList(instrumentType) {
+  private loadInstrumentKindList(instrumentType: InstrumentType) {
     this.isLoading = true;
 
-    if (!instrumentType || [InstrumentTypeEnum.EscrituraPublica,
-                            InstrumentTypeEnum.TituloPropiedad].includes(instrumentType)) {
+    if (!instrumentType || [InstrumentType.EscrituraPublica,
+                            InstrumentType.TituloPropiedad].includes(instrumentType)) {
       this.instrumentKindsList = [];
       this.isLoading = false;
       return;
@@ -301,9 +307,9 @@ export class InstrumentEditorComponent implements OnChanges, OnDestroy {
 
   private buildIssuerFilter(keywords: string): IssuersFilter {
     const issuerFilter = {
-      instrumentType: this.formHandler.getControl(this.controls.type).value,
-      instrumentKind: this.formHandler.getControl(this.controls.kind).value,
-      onDate: this.formHandler.getControl(this.controls.issueDate).value.value,
+      instrumentType: this.form.value.type,
+      instrumentKind: this.form.value.kind,
+      onDate: this.form.value.issueDate,
       keywords
     };
 

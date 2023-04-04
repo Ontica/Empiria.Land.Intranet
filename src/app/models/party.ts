@@ -74,13 +74,10 @@ export interface Party {
 }
 
 
-export interface Party {
+export interface RoleItem extends Identifiable {
   uid: string;
-  type: PartyType;
-  fullName: string;
-  curp: string;
-  rfc: string;
-  notes: string;
+  name: string;
+  items: Identifiable[];
 }
 
 

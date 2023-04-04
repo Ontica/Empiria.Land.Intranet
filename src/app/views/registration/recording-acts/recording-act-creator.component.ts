@@ -7,9 +7,9 @@
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Assertion, Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
+import { Assertion, DateString, Empty, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
@@ -18,11 +18,11 @@ import { RecordableSubjectsStateSelector } from '@app/presentation/exported.pres
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 import { BookEntryShortModel, EmptyRegistrationCommandRule, EmptyTractIndex, EmptyTractIndexEntry,
-         RecordableSubject, RecordableSubjectType, RecordingActSearchQuery, RecordingActType, RecordingActTypeGroup,
-         RegistrationCommand, RegistrationCommandConfig, RegistrationCommandPayload, RegistrationCommandRule,
-         TractIndex, TractIndexEntry } from '@app/models';
+         RecordableSubject, RecordableSubjectType, RecordingActSearchQuery, RecordingActType,
+         RecordingActTypeGroup, RegistrationCommand, RegistrationCommandConfig, RegistrationCommandPayload,
+         RegistrationCommandRule, TractIndex, TractIndexEntry } from '@app/models';
 
-import { FormHandler, sendEvent } from '@app/shared/utils';
+import { FormHelper, sendEvent } from '@app/shared/utils';
 
 import {
   RecordingBookSelectorEventType
@@ -32,20 +32,20 @@ export enum RecordingActCreatorEventType {
   APPEND_RECORDING_ACT = 'RecordingActCreatorComponent.Event.AppendRecordingAct',
 }
 
-enum RecordingActCreatorFormControls {
-  recordingActTypeGroup = 'recordingActTypeGroup',
-  recordingActType = 'recordingActType',
-  registrationCommand = 'registrationCommand',
-  recordableSubject = 'recordableSubject',
-  recordingBook = 'recordingBook',
-  bookEntryUID = 'bookEntryUID',
-  bookEntryNo = 'bookEntryNo',
-  presentationTime = 'presentationTime',
-  authorizationDate = 'authorizationDate',
-  partitionType = 'partitionType',
-  partitionNo = 'partitionNo',
-  amendmentRecordingActUID = 'amendmentRecordingActUID',
-}
+interface RecordingActFormModel extends FormGroup<{
+  recordingActTypeGroup: FormControl<string>;
+  recordingActType: FormControl<string>;
+  registrationCommand: FormControl<string>;
+  recordableSubject: FormControl<RecordableSubject>;
+  recordingBook: FormControl<Identifiable>;
+  bookEntryUID: FormControl<string>;
+  bookEntryNo: FormControl<string>;
+  presentationTime: FormControl<DateString>;
+  authorizationDate: FormControl<DateString>;
+  partitionType: FormControl<string>;
+  partitionNo: FormControl<string>;
+  amendmentRecordingActUID: FormControl<string>;
+}> { }
 
 @Component({
   selector: 'emp-land-recording-act-creator',
@@ -71,15 +71,18 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   helper: SubscriptionHelper;
 
-  formHandler: FormHandler;
-  controls = RecordingActCreatorFormControls;
+  form: RecordingActFormModel;
+
+  formHelper = FormHelper;
 
   recordingActTypeList: RecordingActType[] = [];
+
   registrationCommands: RegistrationCommandConfig[] = [];
 
   registrationCommandRules: RegistrationCommandRule = EmptyRegistrationCommandRule;
 
   partitionKindList: string[] = [];
+
   tractIndexSelected: TractIndex = EmptyTractIndex;
 
   amendmentRecordingActSelected: TractIndexEntry = EmptyTractIndexEntry;
@@ -96,7 +99,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.initForm();
     this.loadDataLists();
   }
@@ -124,16 +127,16 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   get amendmentRecordingActPlaceholder(): string {
     if (this.registrationCommandRules.selectSubject &&
-        this.formHandler.showInvalidControl(this.controls.recordableSubject)) {
+      this.formHelper.isControlInvalid(this.form.controls.recordableSubject)) {
       return 'Seleccione el folio real';
     }
 
     if (this.registrationCommandRules.selectBookEntry) {
-      if (!this.checkBookEntryInput && !this.formHandler.getControl(this.controls.bookEntryUID).value) {
+      if (!this.checkBookEntryInput && !this.form.value.bookEntryUID) {
         return 'Seleccione la inscripción';
       }
 
-      if (this.checkBookEntryInput && !this.formHandler.getControl(this.controls.authorizationDate).value) {
+      if (this.checkBookEntryInput && !this.form.value.authorizationDate) {
         return 'Seleccione la fecha de la inscripción';
       }
     }
@@ -146,8 +149,8 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     this.recordingActTypeList = recordingActTypeGroup.recordingActTypes ?? [];
     this.registrationCommands = [];
 
-    this.formHandler.getControl(this.controls.recordingActType).reset();
-    this.formHandler.getControl(this.controls.registrationCommand).reset();
+    this.form.controls.recordingActType.reset();
+    this.form.controls.registrationCommand.reset();
 
     this.resetRegistrationCommandRules(EmptyRegistrationCommandRule);
   }
@@ -155,14 +158,14 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   onRecordingActTypeChange(recordingActType: RecordingActType) {
     this.registrationCommands = recordingActType.registrationCommands ?? [];
-    this.formHandler.getControl(this.controls.registrationCommand).reset();
+    this.form.controls.registrationCommand.reset();
     this.resetRegistrationCommandRules(EmptyRegistrationCommandRule);
   }
 
 
   onRegistrationCommandChange(registrationCommand: RegistrationCommandConfig){
     this.resetRegistrationCommandRules(registrationCommand.rules);
-    this.formHandler.invalidateForm();
+    this.formHelper.markFormControlsAsTouched(this.form);
   }
 
 
@@ -185,7 +188,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
         Assertion.assertValue(event.payload.recordingBook, 'event.payload.recordingBook');
 
-        this.formHandler.getControl(this.controls.recordingBook).setValue(event.payload.recordingBook);
+        this.form.controls.recordingBook.setValue(event.payload.recordingBook);
 
         return;
 
@@ -193,15 +196,15 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
         Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
 
-        const bookEntry: BookEntryShortModel= event.payload.bookEntry as BookEntryShortModel;
+        const bookEntry = event.payload.bookEntry as BookEntryShortModel;
 
         if (this.checkBookEntryInput) {
-          this.formHandler.getControl(this.controls.bookEntryNo).setValue(bookEntry.recordingNo);
-          this.formHandler.getControl(this.controls.presentationTime).setValue(bookEntry.presentationTime);
-          this.formHandler.getControl(this.controls.authorizationDate).setValue(bookEntry.authorizationDate);
+          this.form.controls.bookEntryNo.setValue(bookEntry.recordingNo);
+          this.form.controls.presentationTime.setValue(bookEntry.presentationTime);
+          this.form.controls.authorizationDate.setValue(bookEntry.authorizationDate);
         } else {
-          this.formHandler.getControl(this.controls.bookEntryUID).setValue(bookEntry.uid);
-          this.formHandler.getControl(this.controls.authorizationDate).setValue(bookEntry.authorizationDate);
+          this.form.controls.bookEntryUID.setValue(bookEntry.uid);
+          this.form.controls.authorizationDate.setValue(bookEntry.authorizationDate);
         }
 
         this.getAmendmentRecordingActs();
@@ -225,8 +228,8 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  async submitRecordingAct() {
-    if (!this.formHandler.validateReadyForSubmit()) {
+  async onSubmitClicked() {
+    if (!this.formHelper.isFormReadyAndInvalidate(this.form)) {
       return;
     }
 
@@ -240,22 +243,22 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   private initForm() {
-    this.formHandler = new FormHandler(
-      new UntypedFormGroup({
-        recordingActTypeGroup: new UntypedFormControl('', Validators.required),
-        recordingActType: new UntypedFormControl('', Validators.required),
-        registrationCommand: new UntypedFormControl('', Validators.required),
-        recordableSubject: new UntypedFormControl(''),
-        recordingBook: new UntypedFormControl(''),
-        bookEntryUID: new UntypedFormControl(''),
-        bookEntryNo: new UntypedFormControl(''),
-        presentationTime: new UntypedFormControl(''),
-        authorizationDate: new UntypedFormControl(''),
-        partitionType: new UntypedFormControl(''),
-        partitionNo: new UntypedFormControl(''),
-        amendmentRecordingActUID: new UntypedFormControl(''),
-      })
-    );
+    const fb = new FormBuilder();
+
+    this.form = fb.group({
+      recordingActTypeGroup: ['', Validators.required],
+      recordingActType: ['', Validators.required],
+      registrationCommand: ['', Validators.required],
+      recordableSubject: [null],
+      recordingBook: [null],
+      bookEntryUID: [''],
+      bookEntryNo: [''],
+      presentationTime: ['' as DateString],
+      authorizationDate: ['' as DateString],
+      partitionType: [''],
+      partitionNo: [''],
+      amendmentRecordingActUID: [''],
+    });
   }
 
 
@@ -284,19 +287,11 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   private buildAmendmentRecordingActQuery(): RecordingActSearchQuery {
-    const recordableSubject: RecordableSubject =
-      this.formHandler.getControl(this.controls.recordableSubject).value as RecordableSubject;
-
-    const recordableSubjectUID = this.recordableSubjectUID || recordableSubject?.uid;
-    const amendmentRecordingActTypeUID = this.formHandler.getControl(this.controls.recordingActType).value;
-    const authorizationDate = this.formHandler.getControl(this.controls.authorizationDate).value;
-    const instrumentRecordingUID = this.instrumentRecordingUID ?? '';
-
     const query: RecordingActSearchQuery = {
-      recordableSubjectUID,
-      amendmentRecordingActTypeUID,
-      authorizationDate,
-      instrumentRecordingUID,
+      recordableSubjectUID: this.recordableSubjectUID || this.form.value.recordableSubject?.uid,
+      amendmentRecordingActTypeUID: this.form.value.recordingActType,
+      authorizationDate: this.form.value.authorizationDate,
+      instrumentRecordingUID: this.instrumentRecordingUID ?? '',
     };
 
     return query;
@@ -304,7 +299,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   private resetAmendmentRecordingActData() {
-    this.formHandler.getControl(this.controls.amendmentRecordingActUID).reset();
+    this.form.controls.amendmentRecordingActUID.reset();
     this.setTractIndexSelected(EmptyTractIndex);
   }
 
@@ -330,36 +325,36 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   private validateRecordableSubjectField(){
-    this.formHandler.getControl(this.controls.recordableSubject).reset();
+    this.form.controls.recordableSubject.reset();
 
     if (this.registrationCommandRules.selectSubject) {
-      this.formHandler.setControlValidators(this.controls.recordableSubject, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.recordableSubject, Validators.required);
     } else {
-      this.formHandler.clearControlValidators(this.controls.recordableSubject);
+      this.formHelper.clearControlValidators(this.form.controls.recordableSubject);
     }
   }
 
 
   private validatePartitionField(){
-    this.formHandler.getControl(this.controls.partitionNo).reset();
-    this.formHandler.getControl(this.controls.partitionType).reset();
+    this.form.controls.partitionNo.reset();
+    this.form.controls.partitionType.reset();
 
     if (this.registrationCommandRules.newPartition) {
-      this.formHandler.setControlValidators(this.controls.partitionType, Validators.required);
-      this.formHandler.setControlValidators(this.controls.partitionNo, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.partitionType, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.partitionNo, Validators.required);
     } else {
-      this.formHandler.clearControlValidators(this.controls.partitionType);
-      this.formHandler.clearControlValidators(this.controls.partitionNo);
+      this.formHelper.clearControlValidators(this.form.controls.partitionType);
+      this.formHelper.clearControlValidators(this.form.controls.partitionNo);
     }
   }
 
 
   private validateRecordingBookFields(){
     if (this.registrationCommandRules.selectBookEntry) {
-      this.formHandler.setControlValidators(this.controls.recordingBook, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.recordingBook, Validators.required);
     } else {
-      this.formHandler.clearControlValidators(this.controls.recordingBook);
-      this.formHandler.getControl(this.controls.recordingBook).reset();
+      this.formHelper.clearControlValidators(this.form.controls.recordingBook);
+      this.form.controls.recordingBook.reset();
     }
 
     this.validateBookEntryFields();
@@ -367,34 +362,34 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   private validateBookEntryFields() {
-    this.formHandler.clearControlValidators(this.controls.bookEntryUID);
-    this.formHandler.clearControlValidators(this.controls.bookEntryNo);
-    this.formHandler.clearControlValidators(this.controls.authorizationDate);
+    this.formHelper.clearControlValidators(this.form.controls.bookEntryUID);
+    this.formHelper.clearControlValidators(this.form.controls.bookEntryNo);
+    this.formHelper.clearControlValidators(this.form.controls.authorizationDate);
 
     if (this.registrationCommandRules.selectBookEntry) {
       if (this.checkBookEntryInput) {
-        this.formHandler.setControlValidators(this.controls.bookEntryNo, Validators.required);
-        this.formHandler.setControlValidators(this.controls.authorizationDate, Validators.required);
+        this.formHelper.setControlValidators(this.form.controls.bookEntryNo, Validators.required);
+        this.formHelper.setControlValidators(this.form.controls.authorizationDate, Validators.required);
       } else {
-        this.formHandler.setControlValidators(this.controls.bookEntryUID, Validators.required);
+        this.formHelper.setControlValidators(this.form.controls.bookEntryUID, Validators.required);
       }
     } else {
       this.checkBookEntryInput = false;
-      this.formHandler.getControl(this.controls.bookEntryUID).reset();
-      this.formHandler.getControl(this.controls.bookEntryNo).reset();
-      this.formHandler.getControl(this.controls.authorizationDate).reset();
+      this.form.controls.bookEntryUID.reset();
+      this.form.controls.bookEntryNo.reset();
+      this.form.controls.authorizationDate.reset();
     }
   }
 
 
   private validateAmendmentRecordingActFields(){
-    this.formHandler.getControl(this.controls.amendmentRecordingActUID).reset();
+    this.form.controls.amendmentRecordingActUID.reset();
     this.amendmentRecordingActSelected = EmptyTractIndexEntry;
 
     if (this.registrationCommandRules.selectTargetAct) {
-      this.formHandler.setControlValidators(this.controls.amendmentRecordingActUID, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.amendmentRecordingActUID, Validators.required);
     } else {
-      this.formHandler.clearControlValidators(this.controls.amendmentRecordingActUID);
+      this.formHelper.clearControlValidators(this.form.controls.amendmentRecordingActUID);
     }
   }
 
@@ -402,26 +397,26 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
   private setCheckBookEntryInput(checkBookEntryInput: boolean) {
     this.checkBookEntryInput = checkBookEntryInput;
 
-    this.formHandler.getControl(this.controls.bookEntryUID).reset();
-    this.formHandler.getControl(this.controls.bookEntryNo).reset();
-    this.formHandler.getControl(this.controls.presentationTime).reset();
-    this.formHandler.getControl(this.controls.authorizationDate).reset();
+    this.form.controls.bookEntryUID.reset();
+    this.form.controls.bookEntryNo.reset();
+    this.form.controls.presentationTime.reset();
+    this.form.controls.authorizationDate.reset();
 
     this.validateBookEntryFields();
   }
 
 
   private get confirmContinueWithoutPresentationTimeRequired() {
-    return this.checkBookEntryInput && !this.formHandler.getControl(this.controls.presentationTime).value;
+    return this.checkBookEntryInput && !this.form.value.presentationTime;
   }
 
 
   private confirmContinueWithoutPresentationTime(): Promise<boolean> {
-    const recordingBook = this.formHandler.getControl(this.controls.recordingBook).value;
-    const bookEntryNo = this.formHandler.getControl(this.controls.bookEntryNo).value;
+    const bookEntryNo = this.form.value.bookEntryNo;
+    const recordingBookName = this.form.value.recordingBook.name;
     const title = 'Se está omitiendo la fecha de presentación';
     const message = `¿Está seguro que no hay forma de saber cuál fue la fecha de presentación de la ` +
-      `<strong>Inscripción ${bookEntryNo} - Volumen ${recordingBook.name}</strong>?`;
+      `<strong>Inscripción ${bookEntryNo} - Volumen ${recordingBookName}</strong>?`;
     return this.messageBox.confirm(message, title).toPromise();
   }
 
@@ -440,10 +435,9 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   private getRegistrationCommand(): RegistrationCommand {
-    Assertion.assert(this.formHandler.form.valid,
-      'Programming error: form must be validated before command execution.');
+    Assertion.assert(this.form.valid, 'Programming error: form must be validated before command execution.');
 
-    const formModel = this.formHandler.form.getRawValue();
+    const formModel = this.form.getRawValue();
 
     const registrationCommandPayload: RegistrationCommandPayload = this.getRegistrationCommandPayload();
 
@@ -457,10 +451,9 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
 
   private getRegistrationCommandPayload(): RegistrationCommandPayload {
-    Assertion.assert(this.formHandler.form.valid,
-      'Programming error: form must be validated before command execution.');
+    Assertion.assert(this.form.valid, 'Programming error: form must be validated before command execution.');
 
-    const formModel = this.formHandler.form.getRawValue();
+    const formModel = this.form.getRawValue();
 
     let data: RegistrationCommandPayload = {
       recordingActTypeUID: formModel.recordingActType ?? '',
@@ -488,7 +481,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   private validateSelectBookEntryRule(data: RegistrationCommandPayload) {
     if (this.registrationCommandRules.selectBookEntry) {
-      const formModel = this.formHandler.form.getRawValue();
+      const formModel = this.form.getRawValue();
 
       data.recordingBookUID = formModel.recordingBook.uid ?? '';
 

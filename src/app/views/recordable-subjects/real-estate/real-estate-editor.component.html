@@ -1,6 +1,6 @@
 <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
-<form [formGroup]="formHandler.form" [empNgSpinnerHost]="spinner" empNgFormKeyDownEnter
+<form [formGroup]="form" [empNgSpinnerHost]="spinner" empNgFormKeyDownEnter
   autocomplete="off" class="form-section">
 
   <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
@@ -12,7 +12,7 @@
 
         <div fxLayout="row">
           <input type="text" class="text-box" [fxFlex]="showElectronicHistoryButton ? '159px': '247px'"
-            [formControlName]="controls.electronicID">
+            formControlName="electronicID">
           <button type="button" class="btn" fxFlex="80px" *ngIf="showElectronicHistoryButton"
             [style.marginTop.px]="2" (click)="onElectronicHistoryClicked()">Historia</button>
         </div>
@@ -22,13 +22,13 @@
 
         <div fxFlex>
           <label>Clave catastral:</label>
-          <input type="text" class="text-box" [formControlName]="controls.cadastralID"
-            [class.invalid-control]="formHandler.showInvalidControl(controls.cadastralID)">
+          <input type="text" class="text-box" formControlName="cadastralID"
+            [class.invalid-control]="formHelper.isControlInvalid(form.controls.cadastralID)">
         </div>
 
         <div fxFlex="100px" fxFlex.lt-md="none">
           <label>Vinculado el:</label>
-          <input type="text" class="text-box" [formControlName]="controls.cadastreLinkingDate">
+          <input type="text" class="text-box" formControlName="cadastreLinkingDate">
         </div>
 
         <div fxFlex="none" fxFlex.lt-md="none" *ngIf="!readonly">
@@ -50,19 +50,19 @@
 
       <div fxFlex="255px" fxFlex.lt-md="none">
         <label>Distrito:</label>
-        <emp-ng-select #districtControl [formControlName]="controls.recorderOfficeUID"
+        <emp-ng-select #districtControl formControlName="recorderOfficeUID"
           [items]="recorderOfficeList"
-          [showError]="formHandler.showInvalidControl(controls.recorderOfficeUID)"
-          (changes)="onRecorderOfficeChange($event)">
+          [showError]="formHelper.isControlInvalid(form.controls.recorderOfficeUID)"
+          (changes)="onRecorderOfficeChanges($event)">
         </emp-ng-select>
       </div>
 
       <div fxFlex="calc(100% - 255px)">
         <label>Municipio:</label>
-        <emp-ng-select [formControlName]="controls.municipalityUID"
+        <emp-ng-select formControlName="municipalityUID"
           [items]="municipalityList"
           [placeholder]="municipalityList.length === 0 ? 'Seleccione el distrito' : 'Seleccione'"
-          [showError]="formHandler.showInvalidControl(controls.municipalityUID)">
+          [showError]="formHelper.isControlInvalid(form.controls.municipalityUID)">
         </emp-ng-select>
       </div>
 
@@ -72,10 +72,10 @@
 
       <div fxFlex="255px" fxFlex.lt-md="none">
         <label>Tipo de predio:</label>
-        <emp-ng-select [formControlName]="controls.kind"
+        <emp-ng-select formControlName="kind"
           [bindValue]="'name'"
           [items]="realEstateKindList"
-          [showError]="formHandler.showInvalidControl(controls.kind)">
+          [showError]="formHelper.isControlInvalid(form.controls.kind)">
         </emp-ng-select>
       </div>
 
@@ -87,14 +87,14 @@
           <div fxLayout="row">
 
             <div fxFlex="50" fxFlex.lt-md="50">
-              <input type="number" class="text-box" [formControlName]="controls.lotSize"
-                [class.invalid-control]="formHandler.showInvalidControl(controls.lotSize)">
+              <input type="number" class="text-box" formControlName="lotSize"
+                [class.invalid-control]="formHelper.isControlInvalid(form.controls.lotSize)">
             </div>
 
             <div fxFlex="50" fxFlex.lt-md="50">
-              <emp-ng-select [formControlName]="controls.lotSizeUnitUID"
+              <emp-ng-select formControlName="lotSizeUnitUID"
                 [items]="lotSizeUnitList"
-                [showError]="formHandler.showInvalidControl(controls.lotSizeUnitUID)"
+                [showError]="formHelper.isControlInvalid(form.controls.lotSizeUnitUID)"
                 [style.width.%]="100">
               </emp-ng-select>
             </div>
@@ -105,14 +105,14 @@
 
         <div [fxFlex]="25">
           <label class="ellipsis">Superficie construida (m2):</label>
-          <input type="number" class="text-box" [formControlName]="controls.buildingArea"
-            [class.invalid-control]="formHandler.showInvalidControl(controls.buildingArea)">
+          <input type="number" class="text-box" formControlName="buildingArea"
+            [class.invalid-control]="formHelper.isControlInvalid(form.controls.buildingArea)">
         </div>
 
         <div [fxFlex]="25">
           <label class="ellipsis">Indiviso (%):</label>
-          <input type="number" class="text-box" [formControlName]="controls.undividedPct"
-            [class.invalid-control]="formHandler.showInvalidControl(controls.undividedPct)">
+          <input type="number" class="text-box" formControlName="undividedPct"
+            [class.invalid-control]="formHelper.isControlInvalid(form.controls.undividedPct)">
         </div>
 
       </div>
@@ -123,19 +123,19 @@
 
       <div fxFlex="255px" fxFlex.lt-md="none">
         <label class="ellipsis">Lote:</label>
-        <input type="text" class="text-box" [formControlName]="controls.lot">
+        <input type="text" class="text-box" formControlName="lot">
       </div>
 
       <div fxFlex="calc(100% - 255px)">
 
         <div [fxFlex]="25">
           <label class="ellipsis">Manzana:</label>
-          <input type="text" class="text-box" [formControlName]="controls.block">
+          <input type="text" class="text-box" formControlName="block">
         </div>
 
         <div [fxFlex]="25">
           <label class="ellipsis">Sección:</label>
-          <input type="text" class="text-box" [formControlName]="controls.section">
+          <input type="text" class="text-box" formControlName="section">
         </div>
 
       </div>
@@ -147,8 +147,8 @@
       <div fxFlex="100">
         <label>Descripción del predio (denominación y ubicación):</label>
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
-          [formControlName]="controls.description"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
+          formControlName="description"
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.description)">
 
         </textarea>
       </div>
@@ -160,8 +160,8 @@
       <div fxFlex="100">
         <label>Medidas y colindancias:</label>
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
-          [formControlName]="controls.metesAndBounds"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.metesAndBounds)">
+          formControlName="metesAndBounds"
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.metesAndBounds)">
 
         </textarea>
       </div>
@@ -185,13 +185,13 @@
           <span class="pr-1">{{editionMode ? 'Marcar el predio como:' : 'Marcado como:'}}</span>
 
           <emp-ng-select
-            [formControlName]="controls.status"
+            formControlName="status"
             bindLabel="statusName"
             bindValue="status"
             [items]="statusList"
-            [showError]="formHandler.showInvalidControl(controls.status)"
+            [showError]="formHelper.isControlInvalid(form.controls.status)"
             [style.width.px]="125"
-            (changes)="onStatusChange($event)">
+            (changes)="onStatusChanges($event)">
           </emp-ng-select>
 
         </ng-container>
@@ -207,9 +207,9 @@
         </button>
 
         <button *ngIf="editionMode"
-          [class.btn]="!formHandler.isValid"
-          [class.btn-action]="formHandler.isValid"
-          (click)="onSubmitForm()">
+          [class.btn]="!formHelper.isFormReady(form)"
+          [class.btn-action]="formHelper.isFormReady(form)"
+          (click)="onSubmitClicked()">
           Guardar
         </button>
 

@@ -1,4 +1,4 @@
-<form [formGroup]="formHandler.form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
+<form [formGroup]="form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
 
   <div fxLayout="column" fxLayoutGap="0.75rem">
 
@@ -6,19 +6,19 @@
 
       <div [fxFlex]="widthFirstColumn">
         <label>Tipo de acto:</label>
-        <emp-ng-select [formControlName]="controls.recordingActTypeGroup"
+        <emp-ng-select formControlName="recordingActTypeGroup"
           [items]="recordingActTypeGroupList"
-          [showError]="formHandler.showInvalidControl(controls.recordingActTypeGroup)"
+          [showError]="formHelper.isControlInvalid(form.controls.recordingActTypeGroup)"
           (changes)="onRecordingActTypeGroupChange($event)">
         </emp-ng-select>
       </div>
 
       <div fxFlex="calc(100% - {{widthFirstColumn}})">
         <label class="ellipsis">Acto jurídico a registrar:</label>
-        <emp-ng-select [formControlName]="controls.recordingActType"
+        <emp-ng-select formControlName="recordingActType"
           [items]="recordingActTypeList"
           [placeholder]="recordingActTypeList.length === 0 ? 'Seleccione el tipo de acto' : 'Seleccione'"
-          [showError]="formHandler.showInvalidControl(controls.recordingActType)" [style.width.%]="100"
+          [showError]="formHelper.isControlInvalid(form.controls.recordingActType)" [style.width.%]="100"
           (changes)="onRecordingActTypeChange($event)">
         </emp-ng-select>
       </div>
@@ -28,10 +28,10 @@
     <div fxLayout="row">
       <div [fxFlex]="widthFirstColumn">
         <label>Sobre:</label>
-        <emp-ng-select [formControlName]="controls.registrationCommand"
+        <emp-ng-select formControlName="registrationCommand"
           [items]="registrationCommands"
           [placeholder]="registrationCommands.length === 0 ? 'Seleccione el acto jurídico a registrar' : 'Seleccione'"
-          [showError]="formHandler.showInvalidControl(controls.registrationCommand)"
+          [showError]="formHelper.isControlInvalid(form.controls.registrationCommand)"
           (changes)="onRegistrationCommandChange($event)">
         </emp-ng-select>
       </div>
@@ -48,9 +48,9 @@
           </label>
 
           <emp-land-recordable-subject-searcher
-            [formControlName]="controls.recordableSubject"
+            formControlName="recordableSubject"
             [type]="registrationCommandRules.subjectType"
-            [showError]="formHandler.showInvalidControl(controls.recordableSubject)"
+            [showError]="formHelper.isControlInvalid(form.controls.recordableSubject)"
             (changes)="onRecordableSubjectChange($event)">
 
           </emp-land-recordable-subject-searcher>
@@ -111,12 +111,12 @@
         <div fxLayout="row">
 
           <emp-ng-select fxFlex="calc(100% - 70px)"
-            [formControlName]="controls.amendmentRecordingActUID"
+            formControlName="amendmentRecordingActUID"
             [items]="tractIndexSelected.entries"
             [config]="{clearable: true}"
             [placeholder]="amendmentRecordingActPlaceholder"
             [loading]="isLoadingAmendmentRecordingActs"
-            [showError]="formHandler.showInvalidControl(controls.amendmentRecordingActUID)"
+            [showError]="formHelper.isControlInvalid(form.controls.amendmentRecordingActUID)"
             bindValue="uid"
             (changes)="onAmendmentRecordingActChange($event)">
 
@@ -192,9 +192,9 @@
       <div fxFlex fxLayoutAlign="end">
 
         <button type="submit"
-          [class.btn]="!formHandler.isValid"
-          [class.btn-action]="formHandler.isValid"
-          (click)="submitRecordingAct()">
+          [class.btn]="!formHelper.isFormReady(form)"
+          [class.btn-action]="formHelper.isFormReady(form)"
+          (click)="onSubmitClicked()">
           Registrar el acto
         </button>
 
@@ -212,11 +212,11 @@
 
         <label class="ellipsis">Tipo de la nueva fracción:</label>
 
-        <emp-ng-select [formControlName]="controls.partitionType"
+        <emp-ng-select formControlName="partitionType"
           [config]="{bindByValue: false}"
           [bindLabel]="null"
           [items]="partitionKindList"
-          [showError]="formHandler.showInvalidControl(controls.partitionType)">
+          [showError]="formHelper.isControlInvalid(form.controls.partitionType)">
         </emp-ng-select>
 
       </div>
@@ -225,8 +225,8 @@
 
         <label class="ellipsis">Número o identificador de la nueva fracción:</label>
 
-        <input type="text" class="text-box" [formControlName]="controls.partitionNo"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.partitionNo)">
+        <input type="text" class="text-box" formControlName="partitionNo"
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.partitionNo)">
 
       </div>
 

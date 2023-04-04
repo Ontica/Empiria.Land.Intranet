@@ -5,8 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Assertion, DateString, Empty, EmptyMediaBase, Identifiable, MediaBase,
-         PartitionedType } from '@app/core';
+import { Assertion, DateString, Empty, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
 
 
 export enum SizeUnit {
@@ -206,6 +205,14 @@ export const EmptyRecordableSubject: RecordableSubject = {
   recordingContext: EmptyRecordingContext,
   status: 'Incomplete',
 };
+
+
+export interface NoProperty extends RecordableSubject {
+
+}
+
+
+export const EmptyNoProperty: NoProperty = EmptyRecordableSubject;
 
 
 export interface RealEstate extends RecordableSubject {

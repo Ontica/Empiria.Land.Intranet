@@ -1,4 +1,4 @@
-<form [formGroup]="formHandler.form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
+<form [formGroup]="form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
 
   <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
 
@@ -8,9 +8,9 @@
 
         <label>Tipo de acto jurídico:</label>
 
-        <emp-ng-select [formControlName]="controls.typeUID"
+        <emp-ng-select formControlName="typeUID"
           [items]="recordingAct.actions.editionValues.recordingActTypes"
-          [showError]="formHandler.showInvalidControl(controls.typeUID)">
+          [showError]="formHelper.isControlInvalid(form.controls.typeUID)">
         </emp-ng-select>
 
       </div>
@@ -19,13 +19,13 @@
 
         <label>Clasificación del acto jurídico:</label>
 
-        <emp-ng-select [formControlName]="controls.kind"
+        <emp-ng-select formControlName="kind"
           [config]="{ bindByValue: false }"
           [bindLabel]="null"
           [items]="recordingAct.actions.editionValues.kinds"
           [placeholder]="recordingAct.actions.editableFields.includes('Kinds') ?
             'Seleccionar': 'No aplica'"
-          [showError]="formHandler.showInvalidControl(controls.kind)"
+          [showError]="formHelper.isControlInvalid(form.controls.kind)"
           [style.width.%]="100">
         </emp-ng-select>
 
@@ -43,22 +43,22 @@
 
           <div fxFlex="50" fxFlex.lt-md="100">
 
-            <input [formControlName]="controls.operationAmount" empNgCurrency
+            <input formControlName="operationAmount" empNgCurrency
               [empNgCurrencyCode]="getCurrencyCode()"
               [empNgCurrencyDisplaySymbol]="getCurrencyCode() !== '' ? 'symbol-narrow' : ''"
               type="text" class="text-box"
-              [class.invalid-control]="formHandler.showInvalidControl(controls.operationAmount)">
+              [class.invalid-control]="formHelper.isControlInvalid(form.controls.operationAmount)">
 
           </div>
 
           <div fxFlex="50" fxFlex.lt-md="100" fxLayoutAlign="start end">
 
-            <emp-ng-select [formControlName]="controls.currencyUID"
+            <emp-ng-select formControlName="currencyUID"
               [items]="recordingAct.actions.editionValues.currencies"
               [placeholder]="recordingAct.actions.editableFields.includes('OperationAmount') ?
                 'Seleccionar': 'No aplica'"
               [style.width.%]="100"
-              [showError]="formHandler.showInvalidControl(controls.currencyUID)">
+              [showError]="formHelper.isControlInvalid(form.controls.currencyUID)">
             </emp-ng-select>
 
           </div>
@@ -76,8 +76,8 @@
         <label>Descripción o cláusulas del acto jurídico:</label>
 
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
-          [formControlName]="controls.description"
-          [class.invalid-control]="formHandler.showInvalidControl(controls.description)">
+          formControlName="description"
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.description)">
         </textarea>
 
       </div>
@@ -160,13 +160,13 @@
           <span class="pr-1">{{editionMode ? 'Marcar como:' : 'Marcado como:'}}</span>
 
           <emp-ng-select
-            [formControlName]="controls.status"
+            formControlName="status"
             bindLabel="statusName"
             bindValue="status"
             [items]="statusList"
-            [showError]="formHandler.showInvalidControl(controls.status)"
+            [showError]="formHelper.isControlInvalid(form.controls.status)"
             [style.width.px]="125"
-            (changes)="onStatusChange()">
+            (changes)="onStatusChanges()">
           </emp-ng-select>
 
         </div>
@@ -174,9 +174,9 @@
         <div fxFlex fxLayoutAlign="end">
 
           <button *ngIf="editionMode"
-            (click)="submit()"
-            [class.btn]="!formHandler.isValid"
-            [class.btn-action]="formHandler.isValid">
+            (click)="onSubmitClicked()"
+            [class.btn]="!formHelper.isFormReady(form)"
+            [class.btn-action]="formHelper.isFormReady(form)">
             Guardar
           </button>
 

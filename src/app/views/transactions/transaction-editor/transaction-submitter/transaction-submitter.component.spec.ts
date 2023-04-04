@@ -6,10 +6,15 @@
  */
 
 import { CurrencyPipe } from '@angular/common';
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { MatDialogModule } from '@angular/material/dialog';
+
 import { MessageBoxService } from '@app/shared/containers/message-box';
+
 import { TransactionSubmitterComponent } from './transaction-submitter.component';
 
 describe('TransactionSubmitterComponent', () => {
@@ -36,15 +41,15 @@ describe('TransactionSubmitterComponent', () => {
   });
 
   it('form invalid when empty', () => {
-    expect(component.formHandler.form.valid).toBeFalsy();
+    expect(component.form.valid).toBeFalsy();
   });
 
   it('form valid', () => {
-    expect(component.formHandler.form.valid).toBeFalsy();
+    expect(component.form.valid).toBeFalsy();
 
-    component.formHandler.getControl('paymentReceiptNo').setValue('9186');
-    component.formHandler.getControl('total').setValue(869.00);
+    component.form.controls.paymentReceiptNo.setValue('9186');
+    component.form.controls.total.setValue('869.00');
 
-    expect(component.formHandler.form.valid).toBeTruthy();
+    expect(component.form.valid).toBeTruthy();
   });
 });
