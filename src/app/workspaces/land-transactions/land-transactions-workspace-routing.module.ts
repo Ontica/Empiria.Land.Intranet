@@ -9,39 +9,39 @@ import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
 
-import { ROUTES_LIBRARY } from '@app/main-layout';
+import { ROUTES } from '@app/main-layout';
 
 import { LandTransactionsWorkspaceComponent } from './land-transactions-workspace.component';
 
 const routes: Routes = [
   {
-    data: { permission: ROUTES_LIBRARY.transactions_my_inbox.permission },
-    path: ROUTES_LIBRARY.transactions_my_inbox.path,
+    data: { permission: ROUTES.transactions_my_inbox.permission },
+    path: ROUTES.transactions_my_inbox.path,
     component: LandTransactionsWorkspaceComponent
   },
   {
-    data: { permission: ROUTES_LIBRARY.transactions_control_desk.permission },
-    path: ROUTES_LIBRARY.transactions_control_desk.path,
+    data: { permission: ROUTES.transactions_control_desk.permission },
+    path: ROUTES.transactions_control_desk.path,
     component: LandTransactionsWorkspaceComponent
   },
   {
-    data: { permission: ROUTES_LIBRARY.transactions_finished.permission },
-    path: ROUTES_LIBRARY.transactions_finished.path,
+    data: { permission: ROUTES.transactions_finished.permission },
+    path: ROUTES.transactions_finished.path,
     component: LandTransactionsWorkspaceComponent
   },
   {
-    data: { permission: ROUTES_LIBRARY.transactions_pending.permission },
-    path: ROUTES_LIBRARY.transactions_pending.path,
+    data: { permission: ROUTES.transactions_pending.permission },
+    path: ROUTES.transactions_pending.path,
     component: LandTransactionsWorkspaceComponent
   },
   {
-    data: { permission: ROUTES_LIBRARY.transactions_all.permission },
-    path: ROUTES_LIBRARY.transactions_all.path,
+    data: { permission: ROUTES.transactions_all.permission },
+    path: ROUTES.transactions_all.path,
     component: LandTransactionsWorkspaceComponent
   },
   {
     path: '',
-    redirectTo: ROUTES_LIBRARY.transactions_my_inbox.path,
+    redirectTo: ROUTES.transactions_my_inbox.path,
     pathMatch: 'full'
   }
 ];

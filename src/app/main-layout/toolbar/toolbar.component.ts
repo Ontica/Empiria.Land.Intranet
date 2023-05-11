@@ -17,7 +17,7 @@ import { PresentationState } from '@app/core/presentation';
 
 import { MainUIStateAction, MainUIStateSelector } from '@app/presentation/exported.presentation.types';
 
-import { PermissionsLibrary, TOOL } from '../config-data';
+import { PERMISSIONS, TOOL } from '../config-data';
 
 
 @Component({
@@ -27,7 +27,7 @@ import { PermissionsLibrary, TOOL } from '../config-data';
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
 
-  permissions = PermissionsLibrary;
+  permissions = PERMISSIONS;
 
   displayAsideRight = false;
 

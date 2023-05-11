@@ -14,7 +14,7 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { RecordingDataService } from '@app/data-services';
 
-import { ROUTES_LIBRARY } from '@app/main-layout';
+import { ROUTES } from '@app/main-layout';
 
 import { EmptyTractIndex, EmptyTractIndexEntry, TractIndex, TractIndexEntry } from '@app/models';
 
@@ -68,7 +68,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
 
   helper: SubscriptionHelper;
 
-  bookEntryUrl = ROUTES_LIBRARY.historic_registration_book_entry.fullpath;
+  bookEntryUrl = ROUTES.historic_registration_book_entry.fullpath;
 
   hasNestedEntries = false;
 

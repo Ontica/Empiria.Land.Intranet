@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { ROUTES_LIBRARY } from '../config-data';
+import { ROUTES } from '../config-data';
 
 import { View, Layout } from '../common-models/common';
 
@@ -25,22 +25,22 @@ export const APP_LAYOUTS: Layout[] = [
     views: TransactionViews,
     hint: 'Registro de trámites',
     defaultTitle: 'Trámites',
-    url: ROUTES_LIBRARY.transactions.fullpath,
-    permission: ROUTES_LIBRARY.transactions.permission,
+    url: ROUTES.transactions.fullpath,
+    permission: ROUTES.transactions.permission,
   },
   {
     name: 'HistoricRegistration',
     views: HistoricRegistrationViews,
     hint: 'Registro histórico de información',
     defaultTitle: 'Captura Histórica',
-    url: ROUTES_LIBRARY.historic_registration.fullpath,
-    permission: ROUTES_LIBRARY.historic_registration.permission,
+    url: ROUTES.historic_registration.fullpath,
+    permission: ROUTES.historic_registration.permission,
   },
   {
     name: 'Unauthorized',
     views: UnauthorizedViews,
     hint: '',
     defaultTitle: '401: Unauthorized',
-    url: ROUTES_LIBRARY.unauthorized.fullpath,
+    url: ROUTES.unauthorized.fullpath,
   },
 ];

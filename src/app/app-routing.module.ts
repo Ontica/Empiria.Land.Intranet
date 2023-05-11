@@ -11,13 +11,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SecurityGuard } from '@app/core';
 
-import { DEFAULT_URL, MainLayoutComponent, NoContentComponent, ROUTES_LIBRARY } from '@app/main-layout';
+import { DEFAULT_URL, MainLayoutComponent, NoContentComponent, ROUTES } from '@app/main-layout';
 
 
 const routes: Routes = [
   {
-    data: { permission: ROUTES_LIBRARY.transactions.permission },
-    path: ROUTES_LIBRARY.transactions.path,
+    data: { permission: ROUTES.transactions.permission },
+    path: ROUTES.transactions.path,
     component: MainLayoutComponent,
     canActivate: [SecurityGuard],
     canActivateChild: [SecurityGuard],
@@ -25,8 +25,8 @@ const routes: Routes = [
                               .then((m) => m.LandTransactionsWorkpaceModule)
   },
   {
-    data: { permission: ROUTES_LIBRARY.historic_registration.permission },
-    path: ROUTES_LIBRARY.historic_registration.path,
+    data: { permission: ROUTES.historic_registration.permission },
+    path: ROUTES.historic_registration.path,
     component: MainLayoutComponent,
     canActivate: [SecurityGuard],
     canActivateChild: [SecurityGuard],
@@ -34,14 +34,14 @@ const routes: Routes = [
                               .then(m => m.HistoricRegistrationWorkspaceModule)
   },
   {
-    path: ROUTES_LIBRARY.unauthorized.path,
+    path: ROUTES.unauthorized.path,
     canActivate: [SecurityGuard],
     component: MainLayoutComponent,
     loadChildren: () => import('./views/_unauthorized/unauthorized.module')
                               .then(m => m.UnauthorizedModule)
   },
   {
-    path: ROUTES_LIBRARY.security.path,
+    path: ROUTES.security.path,
     loadChildren: () => import('./views/_security/security-ui.module')
                               .then(m => m.SecurityUIModule)
   },
