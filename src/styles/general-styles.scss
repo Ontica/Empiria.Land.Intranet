@@ -541,24 +541,24 @@ i.disabled {
 // tags
 
 .tag {
-  background-color: $tag-background-color;
+  background-color: $tag-default-background-color;
   border-radius: 10px;
-  color: $primary-color-light;
+  color: $tag-default-color;
   padding: 4px 8px;
   width: fit-content;
 
   &.tag-info {
-    background-color: $primary-color-light;
+    background-color: $tag-info-background-color;
     color: $white;
   }
 
   &.tag-error {
-    background-color: $warning-color-light;
+    background-color:$tag-error-background-color;
     color: $white;
   }
 
   &.tag-warning {
-    background-color: $title-color;
+    background-color: $tag-warning-background-color;
     color: $white;
   }
 
@@ -572,22 +572,22 @@ a.tag {
   text-decoration: underline;
 
   &:hover {
-    background-color: darken($tag-background-color, 4%);
-    color: $primary-color-light;
+    background-color: darken($tag-default-background-color, 4%);
+    color: $tag-default-color;
     cursor: pointer;
 
     &.tag-info {
-      background-color: darken($primary-color-light, 4%);
+      background-color: darken($tag-info-background-color, 4%);
       color: $white;
     }
 
     &.tag-error {
-      background-color: darken($warning-color-light, 4%);
+      background-color: darken($tag-error-background-color, 4%);
       color: $white;
     }
 
     &.tag-warning {
-      background-color: darken($title-color, 4%);
+      background-color: darken($tag-warning-background-color, 4%);
       color: $white;
     }
   }
