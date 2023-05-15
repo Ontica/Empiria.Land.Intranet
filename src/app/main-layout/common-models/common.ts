@@ -58,7 +58,6 @@ export interface AppData {
 
 
 export interface AppLayout {
-  enablePermissions: boolean;
   displayNavbarHeader: boolean;
   displayMenuUser: boolean;
   displayChangeLanguage: boolean;
@@ -70,7 +69,14 @@ export interface AppLayout {
 }
 
 
+export interface AppSecurity {
+  enablePermissions: boolean;
+  encriptLocalStorageData: boolean;
+}
+
+
 export interface AppConfig {
   data: AppData;
+  security: AppSecurity;
   layout: AppLayout;
 }

@@ -15,8 +15,11 @@ export const APP_CONFIG: AppConfig = {
     organization: 'Gobierno del Estado de Zacatecas',
     description: '',
   },
-  layout: {
+  security: {
     enablePermissions: true,
+    encriptLocalStorageData: true,
+  },
+  layout: {
     displayNavbarHeader: true,
     displayMenuUser: false,
     displayChangeLanguage: false,
