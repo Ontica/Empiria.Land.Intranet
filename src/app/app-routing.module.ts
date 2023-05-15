@@ -34,6 +34,15 @@ const routes: Routes = [
                               .then(m => m.HistoricRegistrationWorkspaceModule)
   },
   {
+    data: { permission: ROUTES.administration.permission },
+    path: ROUTES.administration.path,
+    component: MainLayoutComponent,
+    canActivate: [SecurityGuard],
+    canActivateChild: [SecurityGuard],
+    loadChildren: () => import('./workspaces/system-management/system-management-workspace.module')
+      .then((m) => m.SystemManagementWorkspaceModule)
+  },
+  {
     path: ROUTES.unauthorized.path,
     canActivate: [SecurityGuard],
     component: MainLayoutComponent,

@@ -90,6 +90,22 @@ export const HistoricRegistrationViews: View[] = [
 ];
 
 
+export const SystemManagementViews: View[] = [
+  {
+    name: 'SystemManagementViews.ControlPanel',
+    title: 'Panel de control',
+    url: ROUTES.administration_control_panel.fullpath,
+    permission: ROUTES.administration_control_panel.permission,
+  },
+  {
+    name: 'SystemManagementViews.AccessControl',
+    title: 'Control de accesos',
+    url: ROUTES.administration_access_control.fullpath,
+    permission: ROUTES.administration_access_control.permission,
+  },
+];
+
+
 export const UnauthorizedViews: View[] = [
   {
     name: 'Unauthorized',

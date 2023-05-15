@@ -24,6 +24,12 @@ export const ROUTES = {
     path: 'historic-registration',
     fullpath: '/historic-registration',
   },
+  administration: {
+    permission: PERMISSIONS.MODULE_SYSTEM_ADMINISTRATION,
+    parent: '',
+    path: 'administration',
+    fullpath: '/administration',
+  },
   security: {
     parent: '',
     path: 'security',
@@ -86,6 +92,23 @@ export const ROUTES = {
     parent: 'historic-registration',
     path: 'book-entry',
     fullpath: '/historic-registration/book-entry',
+  },
+
+  // #endregion
+
+  // #region system-management-routing module
+
+  administration_control_panel: {
+    permission: PERMISSIONS.ROUTE_CONTROL_PANEL,
+    parent: 'administration',
+    path: 'control-panel',
+    fullpath: '/administration/control-panel',
+  },
+  administration_access_control : {
+    permission: PERMISSIONS.ROUTE_ACCESS_CONTROL,
+    parent: 'administration',
+    path: 'access-control',
+    fullpath: '/administration/access-control',
   },
 
   // #endregion

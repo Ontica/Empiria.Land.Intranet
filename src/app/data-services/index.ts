@@ -18,6 +18,8 @@
 // needed for external services interaction.
 //
 
+export * from './_access-control.data.service';
+
 export * from './file-services/file-download.service';
 
 export * from './certification.data.service';

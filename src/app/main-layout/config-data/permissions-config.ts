@@ -7,16 +7,52 @@
 
 
 export enum PERMISSIONS {
+
+  //
+  // DEFAULT
+  //
+
   NOT_REQUIRED = 'permission-not-required',
 
-  MODULE_TRANSACTIONS = 'menu-transactions',
-  MODULE_HISTORIC_REGISTRATION = 'menu-historic-registration',
+  //
+  // HERRAMIENTA DE BUSQUEDA UNIVERSAL
+  //
+
   MODULE_SEARCH_RECORDABLE_SUBJECTS = 'menu-search-recordable-subjects',
 
+  //
+  // TRAMITES
+  //
+
+  MODULE_TRANSACTIONS = 'menu-transactions',
+
   ROUTE_TRANSACTIONS = 'route-transactions',
-  ROUTE_HISTORIC_REGISTRATION = 'route-historic-registration',
 
   FEATURE_TRANSACTIONS_ADD = 'feature-transactions-add',
+
+  //
+  // CAPTURA HISTORICA
+  //
+  MODULE_HISTORIC_REGISTRATION = 'menu-historic-registration',
+
+  ROUTE_HISTORIC_REGISTRATION = 'route-historic-registration',
+
+  //
+  // ADMINISTRACION
+  //
+
+  MODULE_SYSTEM_ADMINISTRATION = 'menu-system-administration',
+
+  // PANEL DE CONTROL
+  ROUTE_CONTROL_PANEL = 'route-control-panel',
+
+  FEATURE_CHANGE_PASSWORD = 'feature-change-password',
+
+  // CONTROL DE ACCESOS
+  ROUTE_ACCESS_CONTROL = 'route-access-control',
+
+  FEATURE_ACCESS_CONTROL_EDITION = 'feature-access-control-edition',
+
 }
 
 

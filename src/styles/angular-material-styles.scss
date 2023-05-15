@@ -689,6 +689,10 @@ table.mat-table {
   padding-left: 0;
 }
 
+.mat-radio-outer-circle {
+  background-color: $white;
+}
+
 .mat-radio-button.mat-radio-checked .mat-radio-outer-circle {
   border-color: $checkbox-background-color !important;
 }

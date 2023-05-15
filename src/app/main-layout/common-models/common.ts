@@ -5,7 +5,8 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-export type LayoutType = 'Transactions' | 'Search' | 'HistoricRegistration' | 'Unauthorized';
+export type LayoutType = 'Transactions' | 'Search' | 'HistoricRegistration' | 'SystemManagement' |
+  'Unauthorized';
 
 
 export interface Layout {

@@ -12,11 +12,13 @@ import { View, Layout } from '../common-models/common';
 import {
   TransactionViews,
   HistoricRegistrationViews,
-  UnauthorizedViews
+  UnauthorizedViews,
+  SystemManagementViews
 } from './views-config';
 
 
 export const APP_VIEWS: View[] = TransactionViews.concat(HistoricRegistrationViews,
+                                                         SystemManagementViews,
                                                          UnauthorizedViews);
 
 export const APP_LAYOUTS: Layout[] = [
@@ -35,6 +37,14 @@ export const APP_LAYOUTS: Layout[] = [
     defaultTitle: 'Captura Histórica',
     url: ROUTES.historic_registration.fullpath,
     permission: ROUTES.historic_registration.permission,
+  },
+  {
+    name: 'SystemManagement',
+    views: SystemManagementViews,
+    hint: 'Herramientas de administración del sistema',
+    defaultTitle: 'Administración',
+    url: ROUTES.administration.fullpath,
+    permission: ROUTES.administration.permission,
   },
   {
     name: 'Unauthorized',

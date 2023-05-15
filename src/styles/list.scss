@@ -22,7 +22,7 @@ $box-shadow: 0 3px 1px -2px rgba(44, 57, 66, 0.1),
 }
 
 .list-selection-header {
-  background: $border-color-light;
+  background: $list-selection-header-background-color;
   box-shadow: $box-shadow;
   padding: 5px;
   margin: 3px 1px;
@@ -127,4 +127,31 @@ $box-shadow: 0 3px 1px -2px rgba(44, 57, 66, 0.1),
 
 .list-item-name a:hover {
   text-decoration: underline;
+}
+
+.simple-list-container {
+  max-height: 392px;
+  overflow: auto;
+}
+
+.simple-list-item {
+  padding: 4px 1px 4px 8px;
+  border-radius: 2px;
+  border-left: 4px solid $primary-color;
+  background: $simple-list-background-color;
+}
+
+.simple-list-item:not(:last-child).margin {
+  margin-bottom: 0.5rem;
+}
+
+.simple-list-item .detail {
+  font-family: $font-family-secondary;
+}
+
+.simple-list-item button {
+  height: 24px;
+  width: 24px;
+  line-height: 24px;
+  margin-right: 1px;
 }
