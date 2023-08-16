@@ -21,15 +21,12 @@ import { WorkflowTask } from '@app/models';
 @Component({
   selector: 'emp-land-workflow-history',
   templateUrl: './workflow-history.component.html',
-
 })
 export class WorkflowHistoryComponent implements OnInit, OnDestroy {
 
   @Input() transactionUID = 'Empty';
 
   helper: SubscriptionHelper;
-
-  listWorkflowTask: WorkflowTask[] = [];
 
   dataSource: MatTableDataSource<WorkflowTask>;
 
@@ -45,13 +42,9 @@ export class WorkflowHistoryComponent implements OnInit, OnDestroy {
   }
 
 
-  ngOnInit(): void {
-    this.helper.select<WorkflowTask[]>(TransactionStateSelector.SELECTED_WORKFLOW_HISTORY,
-      this.transactionUID)
-      .subscribe(x => {
-        this.listWorkflowTask = x;
-        this.setData();
-      });
+  ngOnInit() {
+    this.helper.select<WorkflowTask[]>(TransactionStateSelector.SELECTED_WORKFLOW_HISTORY, this.transactionUID)
+      .subscribe(x => this.setData(x ?? []));
   }
 
 
@@ -60,14 +53,14 @@ export class WorkflowHistoryComponent implements OnInit, OnDestroy {
   }
 
 
-  private setData() {
-    this.dataSource = new MatTableDataSource(this.listWorkflowTask);
-    this.setElapsedTimeTotal();
+  private setData(data: WorkflowTask[]) {
+    this.dataSource = new MatTableDataSource(data);
+    this.setElapsedTimeTotal(data);
   }
 
 
-  private setElapsedTimeTotal() {
-    this.elapsedTimeTotal = this.listWorkflowTask
+  private setElapsedTimeTotal(data: WorkflowTask[]) {
+    this.elapsedTimeTotal = data
       .filter(x => x.checkInTime !== x.endProcessTime)
       .map(x => x.elapsedTime)
       .reduce((a, c) => DateStringLibrary.addTimes(a, c), '00:00:00:00');

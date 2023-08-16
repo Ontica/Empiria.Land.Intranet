@@ -15,19 +15,19 @@
     <ng-container matColumnDef="checkInTime">
       <th mat-header-cell *matHeaderCellDef> Recibido </th>
       <td mat-cell *matCellDef="let row" class="nowrap">
-        {{ row.checkInTime | dateTimeFormat: 'DM HH:mm' }}
+        {{ row.checkInTime | dateTimeFormat: 'DMY HH:mm' }}
       </td>
     </ng-container>
     <ng-container matColumnDef="checkOutTime">
       <th mat-header-cell *matHeaderCellDef> Terminado </th>
       <td mat-cell *matCellDef="let row" class="nowrap">
-        {{ row.checkInTime === row.endProcessTime ? '' : row.endProcessTime | dateTimeFormat: 'DM HH:mm' }}
+        {{ row.checkInTime === row.endProcessTime ? '' : row.endProcessTime | dateTimeFormat: 'DMY HH:mm' }}
       </td>
     </ng-container>
     <ng-container matColumnDef="endProcessTime">
       <th mat-header-cell *matHeaderCellDef> Entregado </th>
       <td mat-cell *matCellDef="let row" class="nowrap">
-        {{ row.checkOutTime | dateTimeFormat: 'DM HH:mm' }}
+        {{ row.checkOutTime | dateTimeFormat: 'DMY HH:mm' }}
       </td>
     </ng-container>
     <ng-container matColumnDef="elapsedTime">

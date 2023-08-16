@@ -136,5 +136,5 @@ export const UNAUTHORIZED_ROUTE = ROUTES.unauthorized.path;
 
 
 export const ROUTES_LIST = Object.keys(ROUTES)
-  .map(key => ROUTES[key])
-  .filter(x => x.parent && x.permission);
+                                 .map(key => ROUTES[key])
+                                 .filter(x => x.parent && x.permission);
