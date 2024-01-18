@@ -39,6 +39,8 @@ interface TransactionFormModel extends FormGroup<{
   instrumentNo: FormControl<string>;
   agency: FormControl<string>;
   filingOffice: FormControl<string>;
+  billTo: FormControl<string>;
+  rfc: FormControl<string>;
 }> {}
 
 @Component({
@@ -104,6 +106,11 @@ export class TransactionHeaderComponent implements OnChanges {
       this.transaction.subtype.uid : null;
 
     this.form.controls.subtype.reset(subtypeUID);
+  }
+
+
+  onBillingFieldsChange() {
+    this.setBillingValidators();
   }
 
 
@@ -190,6 +197,8 @@ export class TransactionHeaderComponent implements OnChanges {
       instrumentNo: [''],
       agency: ['', Validators.required],
       filingOffice: ['', Validators.required],
+      billTo: [''],
+      rfc: [''],
     });
   }
 
@@ -203,7 +212,11 @@ export class TransactionHeaderComponent implements OnChanges {
       instrumentNo: this.transaction.instrumentDescriptor,
       agency: isEmpty(this.transaction.agency) ? null : this.transaction.agency.uid,
       filingOffice: isEmpty(this.transaction.filingOffice) ? null : this.transaction.filingOffice.uid,
+      billTo: !this.transaction.billing?.billTo ? null : this.transaction.billing.billTo,
+      rfc: !this.transaction.billing?.rfc ? null : this.transaction.billing.rfc,
     });
+
+    this.setBillingValidators();
   }
 
 
@@ -220,6 +233,18 @@ export class TransactionHeaderComponent implements OnChanges {
   }
 
 
+  private setBillingValidators() {
+    if (!!this.form.value.billTo || !!this.form.value.rfc) {
+      this.formHelper.setControlValidators(this.form.controls.billTo, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.rfc,
+        [Validators.required, Validators.minLength(12), Validators.maxLength(13)]);
+    } else {
+      this.formHelper.clearControlValidators(this.form.controls.billTo);
+      this.formHelper.clearControlValidators(this.form.controls.rfc);
+    }
+  }
+
+
   private getFormData(): TransactionFields {
     Assertion.assert(this.form.valid, 'Programming error: form must be validated before command execution.');
 
@@ -232,7 +257,9 @@ export class TransactionHeaderComponent implements OnChanges {
       agencyUID: formModel.agency,
       requestedBy: (formModel.name).toUpperCase(),
       requestedByEmail: formModel.email ? (formModel.email).toLowerCase() : '',
-      instrumentDescriptor: formModel.instrumentNo ? (formModel.instrumentNo).toUpperCase() : ''
+      instrumentDescriptor: formModel.instrumentNo ? (formModel.instrumentNo).toUpperCase() : '',
+      billTo: formModel.billTo ? formModel.billTo.toUpperCase() : '',
+      rfc: formModel.rfc ? formModel.rfc.toUpperCase() : '',
     };
 
     return data;

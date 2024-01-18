@@ -109,6 +109,18 @@ export interface PaymentOrder extends Entity {
 }
 
 
+export interface Billing {
+  billTo: string;
+  rfc: string;
+}
+
+
+export const EmptyBilling: Billing = {
+  billTo: '',
+  rfc: '',
+}
+
+
 export interface TransactionActions {
   can: {
     edit?: boolean;
@@ -205,6 +217,7 @@ export interface Transaction extends Entity {
   assignedTo: Identifiable;
   nextStatusName: string;
   nextAssignedTo: Identifiable;
+  billing: Billing;
   actions: TransactionActions;
 }
 
@@ -227,6 +240,7 @@ export const EmptyTransaction: Transaction = {
   assignedTo: Empty,
   nextStatusName: '',
   nextAssignedTo: Empty,
+  billing: EmptyBilling,
   actions: EmptyAction
 };
 
@@ -241,6 +255,7 @@ export interface ProvidedService extends Identifiable {
   feeConcepts: FeeConcept[];
 }
 
+
 export const EmptyProvidedService: ProvidedService = {
   uid: 'empty',
   name: '',
@@ -254,6 +269,7 @@ export interface FeeConcept extends Entity {
   financialCode: string;
   requiresTaxableBase: boolean;
 }
+
 
 export const EmptyFeeConcept: FeeConcept = {
   uid: 'empty',
@@ -270,6 +286,8 @@ export interface TransactionFields {
   agencyUID?: string;
   requestedBy?: string;
   requestedByEmail?: string;
+  billTo: string;
+  rfc: string;
   instrumentDescriptor?: string;
 }
 
@@ -283,8 +301,9 @@ export interface RequestedServiceFields {
   notes: string;
 }
 
-
+//
 // Functions
+//
 
 export function mapTransactionStageFromViewName(viewName: string): TransactionStage {
   switch (viewName) {

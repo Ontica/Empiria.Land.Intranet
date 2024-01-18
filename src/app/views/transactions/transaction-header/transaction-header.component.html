@@ -79,6 +79,30 @@
 
     </div>
 
+    <div class="section-title">Datos de facturación</div>
+
+     <div fxLayout="row" fxLayout.lt-md="column">
+
+      <div [fxFlex]="200/3">
+        <label>Nombre o razón social:</label>
+        <input formControlName="billTo"
+          type="text"
+          class="text-box uppercase"
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.billTo)"
+          (change)="onBillingFieldsChange()">
+      </div>
+
+      <div [fxFlex]="100/3">
+        <label>RFC:</label>
+        <input formControlName="rfc"
+          type="text"
+          class="text-box uppercase"
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.rfc)"
+          (change)="onBillingFieldsChange()">
+      </div>
+
+    </div>
+
     <mat-divider class="divider-padding"></mat-divider>
 
     <div fxLayout="row" *ngIf="isSaved && !editionMode">
