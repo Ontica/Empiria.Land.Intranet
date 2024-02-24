@@ -4,7 +4,7 @@
     {{principal.identity ? principal.identity.name : ''}}
   </div>
 
-  <a class="logout" (click)="logout()">Cerrar sesión</a>
+  <a class="logout" (click)="onLogoutClicked()">Cerrar sesión</a>
 
 </div>
 
@@ -47,7 +47,7 @@
 
     </mat-divider>
 
-    <button mat-menu-item (click)="logout()"> Cerrar sesión </button>
+    <button mat-menu-item (click)="onLogoutClicked()"> Cerrar sesión </button>
 
   </mat-menu>
 

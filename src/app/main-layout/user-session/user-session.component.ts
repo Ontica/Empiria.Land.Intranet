@@ -9,6 +9,10 @@ import { Component, OnInit } from '@angular/core';
 
 import { Router } from '@angular/router';
 
+import { PresentationState } from '@app/core/presentation';
+
+import { MainUIStateAction } from '@app/presentation/exported.presentation.types';
+
 import { AuthenticationService, SessionService } from '@app/core';
 
 import { Principal } from '@app/core/security/principal';
@@ -28,18 +32,29 @@ export class UserSessionComponent implements OnInit {
   appLayoutConfig = APP_CONFIG.layout;
 
 
-  constructor(private session: SessionService,
+  constructor(private store: PresentationState,
+              private session: SessionService,
               private authenticationService: AuthenticationService,
-              private router: Router) {}
+              private router: Router) { }
 
   ngOnInit(): void {
     this.principal = this.session.getPrincipal();
   }
 
 
-  logout() {
+  onLogoutClicked() {
+    this.logout()
+  }
+
+
+  private logout() {
+    this.store.dispatch(MainUIStateAction.SET_IS_PROCESSING_FLAG, true);
+
     this.authenticationService.logout()
-      .finally(() => this.router.navigateByUrl('security/login'));
+      .finally(() => {
+        this.store.dispatch(MainUIStateAction.SET_IS_PROCESSING_FLAG, false);
+        this.router.navigateByUrl('security/login');
+      });
   }
 
 }
