@@ -35,6 +35,10 @@ $min-width-sides: 345px;
     max-height: 46px;
   }
 
+  .logo-small {
+    display: none;
+  }
+
   .header-container {
     padding-left: 8px;
   }
@@ -57,10 +61,19 @@ $min-width-sides: 345px;
     margin: 0 $margin-size-border 0 $margin-size;
   }
 
-  @media only screen and (max-width: 1140px) {
+  @media only screen and (max-width: 1366px) {
     .left-section {
       min-width: auto;
       margin: 0 $margin-size-small;
+    }
+
+    .logo {
+      display: none;
+    }
+
+    .logo-small {
+      display: flex;
+      max-height: 46px;
     }
 
     .header-container {

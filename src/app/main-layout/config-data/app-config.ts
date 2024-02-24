@@ -21,7 +21,7 @@ export const APP_CONFIG: AppConfig = {
     encriptLocalStorageData: true,
   },
   layout: {
-    displayNavbarHeader: true,
+    displayNavbarHeader: false,
     displayMenuUser: false,
     displayChangeLanguage: false,
     displayChangePassword: false,

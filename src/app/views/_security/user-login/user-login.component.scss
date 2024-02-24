@@ -8,7 +8,8 @@
 @import "../../../../styles/variables";
 
 $medium-max-width: 1024px;
-$logo-width: 350px;
+$logo-width: 410px;
+$container-width: 450px;
 $logo-padding: 20px;
 
 .outer {
@@ -26,6 +27,7 @@ $logo-padding: 20px;
   display: flex;
   align-items: center;
   height: 100%;
+  width: $container-width;
   background: -prefix-linear-gradient(top, $layout-gradient-initial-color, $layout-gradient-final-color);
   background: linear-gradient(to top, $layout-gradient-initial-color, $layout-gradient-final-color);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
@@ -38,6 +40,7 @@ $logo-padding: 20px;
 .authentication-section-logo {
   display: flex;
   align-items: center;
+  width: calc($container-width + 10px);
   text-align: center;
   padding: $logo-padding;
   margin: 0 -5px;
@@ -108,7 +111,7 @@ label {
 }
 
 .inline-error {
-  width: $logo-width;
+  width: $logo-width - 10px;
   min-height: 30px;
   color: $layout-secondary-color-dark;
   font-size: 10pt;

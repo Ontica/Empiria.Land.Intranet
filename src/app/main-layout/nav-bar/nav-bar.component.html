@@ -3,7 +3,10 @@
   <div class="left-section">
 
     <img class="logo" [alt]="appConfig.data.organization"
-      [src]="appConfig.layout.displayNavbarHeader ? 'assets/img/customer/logo.png' : 'assets/img/customer/logo-horizontal.png'"/>
+      [src]="appConfig.layout.displayNavbarHeader ? 'assets/img/customer/logo.png' : 'assets/img/customer/logo-main-page.png'"/>
+
+    <img class="logo-small" [alt]="appConfig.data.organization"
+      [src]="appConfig.layout.displayNavbarHeader ? 'assets/img/customer/logo.png' : 'assets/img/customer/logo-main-page-small.png'"/>
 
     <div *ngIf="appConfig.layout.displayNavbarHeader" class="header-container">
       <span class="header">{{appConfig.data.name}}</span>
