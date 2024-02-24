@@ -5,8 +5,43 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
+
+export interface AppData {
+  name: string;
+  organization: string;
+  hint: string;
+  description: string;
+}
+
+
+export interface AppLayout {
+  displayNavbarHeader: boolean;
+  displayMenuUser: boolean;
+  displayChangeLanguage: boolean;
+  displayChangePassword: boolean;
+  displayAsideLeft: boolean;
+  displaySubMenu: boolean;
+  displayHeader: boolean;
+  displayFooter: boolean;
+}
+
+
+export interface AppSecurity {
+  fakeLogin: boolean;
+  enablePermissions: boolean;
+  encriptLocalStorageData: boolean;
+}
+
+
+export interface AppConfig {
+  data: AppData;
+  security: AppSecurity;
+  layout: AppLayout;
+}
+
+
 export type LayoutType = 'Transactions' | 'Search' | 'HistoricRegistration' | 'SystemManagement' |
-  'Unauthorized';
+                         'Unauthorized';
 
 
 export interface Layout {
@@ -48,36 +83,3 @@ export const DefaultView: View = {
   title: 'Default view',
   url: '/',
 };
-
-
-export interface AppData {
-  name: string;
-  organization: string;
-  hint: string;
-  description: string;
-}
-
-
-export interface AppLayout {
-  displayNavbarHeader: boolean;
-  displayMenuUser: boolean;
-  displayChangeLanguage: boolean;
-  displayChangePassword: boolean;
-  displayAsideLeft: boolean;
-  displaySubMenu: boolean;
-  displayHeader: boolean;
-  displayFooter: boolean;
-}
-
-
-export interface AppSecurity {
-  enablePermissions: boolean;
-  encriptLocalStorageData: boolean;
-}
-
-
-export interface AppConfig {
-  data: AppData;
-  security: AppSecurity;
-  layout: AppLayout;
-}

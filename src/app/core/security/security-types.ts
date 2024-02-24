@@ -26,3 +26,26 @@ export interface PrincipalData {
   readonly identity: Identity;
   permissions: string[];
 }
+
+
+export const FakeSessionToken: SessionToken = {
+  accessToken: 'FakeAccessToken',
+  expiresIn: 9999999,
+  refreshToken: 'FakeRefreshToken',
+  tokenType: 'FakeTokenType',
+};
+
+
+export function getFakePrincipalData(user: string): PrincipalData {
+  const FakePrincipalData: PrincipalData = {
+    identity: {
+      username: user,
+      email: user,
+      fullname: user,
+      name: user,
+    },
+    permissions: [],
+  };
+
+  return FakePrincipalData;
+}
