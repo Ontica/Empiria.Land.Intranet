@@ -6,22 +6,22 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { LandTransactionsWorkspaceComponent } from './land-transactions-workspace.component';
+import { TransactionsMainPageComponent } from './transactions-main-page.component';
 
 
-describe('LandTransactionsWorkspaceComponent', () => {
-  let component: LandTransactionsWorkspaceComponent;
-  let fixture: ComponentFixture<LandTransactionsWorkspaceComponent>;
+describe('TransactionsMainPageComponent', () => {
+  let component: TransactionsMainPageComponent;
+  let fixture: ComponentFixture<TransactionsMainPageComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LandTransactionsWorkspaceComponent ]
+      declarations: [ TransactionsMainPageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LandTransactionsWorkspaceComponent);
+    fixture = TestBed.createComponent(TransactionsMainPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

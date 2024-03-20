@@ -198,6 +198,16 @@ export const EmptyTransactionShortModel: TransactionShortModel = {
 };
 
 
+export enum TransactionsOperationType {
+  UpdateWorkflowMultiple = 'update-workflow-multiple',
+}
+
+
+export const TransactionsOperationTypeList: Identifiable[] = [
+  { uid: TransactionsOperationType.UpdateWorkflowMultiple, name: 'Cambiar estado' },
+];
+
+
 export interface Transaction extends Entity {
   type: TransactionType;
   subtype: TransactionSubtype;

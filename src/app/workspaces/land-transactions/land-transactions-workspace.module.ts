@@ -21,11 +21,11 @@ import { LandControlsModule } from '@app/views/land-controls/land.controls.modul
 import { RegistrationModule } from '@app/views/registration/registration.module';
 import { TransactionsModule } from '@app/views/transactions/transactions.module';
 
-import { LandTransactionsWorkspaceComponent } from './land-transactions-workspace.component';
-import { LandPreRegistationComponent } from './parts/land-pre-registration.component';
-import { LandRegistrationComponent } from './parts/land-registration.component';
-import { LandTransactionTabbedViewComponent } from './parts/land-transaction-tabbed-view.component';
-import { LandCertificationComponent } from './parts/land-certification.component';
+import { TransactionsMainPageComponent } from './transactions-main-page/transactions-main-page.component';
+import { LandTransactionTabbedViewComponent } from './transactions-main-page/parts/land-transaction-tabbed-view.component';
+import { LandPreRegistationComponent } from './transactions-main-page/parts/land-pre-registration.component';
+import { LandRegistrationComponent } from './transactions-main-page/parts/land-registration.component';
+import { LandCertificationComponent } from './transactions-main-page/parts/land-certification.component';
 
 
 @NgModule({
@@ -48,15 +48,15 @@ import { LandCertificationComponent } from './parts/land-certification.component
   ],
 
   declarations: [
+    TransactionsMainPageComponent,
+    LandTransactionTabbedViewComponent,
     LandCertificationComponent,
     LandPreRegistationComponent,
     LandRegistrationComponent,
-    LandTransactionsWorkspaceComponent,
-    LandTransactionTabbedViewComponent,
   ],
 
   exports: [
-    LandTransactionsWorkspaceComponent
+    TransactionsMainPageComponent
   ]
 
 })

@@ -14,19 +14,22 @@ import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module'
 
 import { SharedModule } from '@app/shared/shared.module';
 
-import { RequestedServiceEditorComponent } from './transaction-editor/requested-services/requested-service-editor.component';
-import { RequestedServiceListComponent } from './transaction-editor/requested-services/requested-service-list.component';
+import { TransactionExplorerComponent } from './transactions-explorer/transaction-explorer.component';
+import { TransactionActionsComponent } from './transactions-explorer/transaction-actions.component';
+import { TransactionControlsComponent } from './transactions-explorer/transaction-controls.component';
+import { TransactionListComponent } from './transactions-explorer/transaction-list.component';
+import { TransactionListItemComponent } from './transactions-explorer/transaction-list-item.component';
+import { TransactionListEditorComponent } from './transactions-explorer/transaction-list-editor.component';
+import { TransactionHeaderComponent } from './transaction-header/transaction-header.component';
 import { TransactionCreatorComponent } from './transaction-creator/transaction-creator.component';
 import { TransactionEditorComponent } from './transaction-editor/transaction-editor.component';
-import { TransactionFilesComponent } from './transaction-files/transaction-files.component';
-import { TransactionHeaderComponent } from './transaction-header/transaction-header.component';
-import { TransactionListComponent } from './transaction-list/transaction-list.component';
-import { TransactionListEditorComponent } from './transaction-list/transaction-list-editor.component';
-import { TransactionListItemComponent } from './transaction-list/transaction-list-item.component';
 import { TransactionSubmitterComponent } from './transaction-editor/transaction-submitter/transaction-submitter.component';
+import { TransactionFilesComponent } from './transaction-files/transaction-files.component';
 import { WorkflowCommandConfigComponent } from './workflow-commander/workflow-command-config.component';
 import { WorkflowCommanderComponent } from './workflow-commander/workflow-commander.component';
 import { WorkflowHistoryComponent } from './workflow-history/workflow-history.component';
+import { RequestedServiceEditorComponent } from './transaction-editor/requested-services/requested-service-editor.component';
+import { RequestedServiceListComponent } from './transaction-editor/requested-services/requested-service-list.component';
 
 
 @NgModule({
@@ -42,27 +45,29 @@ import { WorkflowHistoryComponent } from './workflow-history/workflow-history.co
   ],
 
   declarations: [
-    RequestedServiceEditorComponent,
-    RequestedServiceListComponent,
+    TransactionExplorerComponent,
+    TransactionActionsComponent,
+    TransactionControlsComponent,
+    TransactionListComponent,
+    TransactionListItemComponent,
+    TransactionListEditorComponent,
+    TransactionHeaderComponent,
     TransactionCreatorComponent,
     TransactionEditorComponent,
-    TransactionFilesComponent,
-    TransactionHeaderComponent,
-    TransactionListComponent,
-    TransactionListEditorComponent,
-    TransactionListItemComponent,
     TransactionSubmitterComponent,
+    TransactionFilesComponent,
     WorkflowCommandConfigComponent,
     WorkflowCommanderComponent,
     WorkflowHistoryComponent,
+    RequestedServiceEditorComponent,
+    RequestedServiceListComponent,
   ],
 
   exports: [
+    TransactionExplorerComponent,
     TransactionCreatorComponent,
     TransactionEditorComponent,
-    TransactionEditorComponent,
     TransactionFilesComponent,
-    TransactionListComponent,
     WorkflowCommanderComponent,
     WorkflowHistoryComponent,
   ]

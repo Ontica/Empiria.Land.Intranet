@@ -19,7 +19,7 @@ import { MessageBoxService } from '@app/shared/containers/message-box';
 
 import { ArrayLibrary } from '@app/shared/utils';
 
-import { TransactionListEditorEventType } from '../transaction-list/transaction-list-editor.component';
+import { TransactionListEditorEventType } from '../transactions-explorer/transaction-list-editor.component';
 
 import { FormDataEmitted } from './workflow-command-config.component';
 

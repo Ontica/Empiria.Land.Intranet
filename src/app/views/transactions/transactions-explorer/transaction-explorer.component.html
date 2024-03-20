@@ -1,0 +1,68 @@
+<div class="card card-border">
+
+  <div class="card-header card-header-flat">
+
+    <div *ngIf="transactionList.length > 0"
+         style="margin: auto; padding: 0 20px 0 4px;">
+
+      <emp-ng-check-box-all
+        [(selection)]="selection"
+        [values]="transactionList">
+      </emp-ng-check-box-all>
+
+    </div>
+
+    <div class="card-title">
+
+      {{title}}
+
+      <div class="card-hint" empNgProgressText
+           loadingText="Cargando trámites"
+           [finalText]="selection.hasValue() ?
+              selection.selected.length + ' de ' + transactionList.length + ' trámites seleccionados':
+              transactionList.length + ' trámites encontrados'"
+           [isLoading]="isLoading">
+      </div>
+
+    </div>
+
+    <div class="card-header-options">
+
+      <emp-land-transaction-actions
+        [filter]="filter"
+        (transactionActionsEvent)="onTransactionActionsEvent($event)">
+
+      </emp-land-transaction-actions>
+
+    </div>
+
+  </div>
+
+  <div class="card-body" [empNgSpinnerHost]="spinner">
+
+    <div fxLayout="column" fxFlexFill>
+
+      <emp-ng-spinner #spinner [visible]="isLoading">
+
+      </emp-ng-spinner>
+
+      <emp-land-transaction-controls
+        [transactionsSelected]="selection.selected ?? []"
+        (transactionControlsEvent)="onTransactionControlsEvent($event)">
+
+      </emp-land-transaction-controls>
+
+      <emp-land-transaction-list
+        [transactionList]="transactionList"
+        [selectedTransaction]="selectedTransaction"
+        [selection]="selection"
+        [isLoading]="isLoading"
+        (transactionListEvent)="onTransactionListEvent($event)">
+
+      </emp-land-transaction-list>
+
+    </div>
+
+  </div>
+
+</div>

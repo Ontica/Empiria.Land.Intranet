@@ -1,0 +1,30 @@
+<div [fxFlex]="100" [@expandCollapse] *ngIf="transactionsSelected.length > 0" fxFlex="none">
+
+  <div class="list-selection-header" fxLayoutAlign="start center">
+
+    <span fxFlex="none">¿Qué debo hacer con
+      <span *ngIf="transactionsSelected.length === 1">el trámite?</span>
+      <span *ngIf="transactionsSelected.length > 1">los {{transactionsSelected.length}} trámites?</span>
+    </span>
+
+    <div fxFlex="180px">
+
+      <emp-ng-select name="operation"
+        [config]="{bindByValue: false, selectFirst: true}"
+        [(ngModel)]="operationSelected"
+        [items]="operationsList">
+      </emp-ng-select>
+
+    </div>
+
+    <div fxFlex="none">
+
+      <button class="btn" (click)="onExecuteOperationClicked()">
+        Ejecutar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

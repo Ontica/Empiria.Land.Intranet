@@ -6,14 +6,14 @@
        [fxHide]="displayFileViewer"
        [fxHide.lt-lg]="displayTransactionTabbedView || displayFileViewer || displayRegistryEntryEditor">
 
-    <emp-land-transaction-list
+    <emp-land-transaction-explorer
         [transactionList]="transactionList"
         [selectedTransaction]="selectedTransaction"
         [filter]="filter"
         [title]="currentView?.title"
         [isLoading]="isLoading"
-        (transactionListEvent)="onTransactionListEvent($event)">
-    </emp-land-transaction-list>
+        (transactionExplorerEvent)="onTransactionExplorerEvent($event)">
+    </emp-land-transaction-explorer>
 
   </div>
 

@@ -11,33 +11,34 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ROUTES } from '@app/main-layout';
 
-import { LandTransactionsWorkspaceComponent } from './land-transactions-workspace.component';
+import { TransactionsMainPageComponent } from './transactions-main-page/transactions-main-page.component';
 
 const routes: Routes = [
   {
     data: { permission: ROUTES.transactions_my_inbox.permission },
     path: ROUTES.transactions_my_inbox.path,
+    component: TransactionsMainPageComponent
     component: LandTransactionsWorkspaceComponent
   },
   {
     data: { permission: ROUTES.transactions_control_desk.permission },
     path: ROUTES.transactions_control_desk.path,
-    component: LandTransactionsWorkspaceComponent
+    component: TransactionsMainPageComponent
   },
   {
     data: { permission: ROUTES.transactions_finished.permission },
     path: ROUTES.transactions_finished.path,
-    component: LandTransactionsWorkspaceComponent
+    component: TransactionsMainPageComponent
   },
   {
     data: { permission: ROUTES.transactions_pending.permission },
     path: ROUTES.transactions_pending.path,
-    component: LandTransactionsWorkspaceComponent
+    component: TransactionsMainPageComponent
   },
   {
     data: { permission: ROUTES.transactions_all.permission },
     path: ROUTES.transactions_all.path,
-    component: LandTransactionsWorkspaceComponent
+    component: TransactionsMainPageComponent
   },
   {
     path: '',

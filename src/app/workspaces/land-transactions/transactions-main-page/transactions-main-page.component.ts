@@ -29,7 +29,9 @@ import {
   RegistryEntryEditorEventType
 } from '@app/views/registration/registry-entry/registry-entry-editor.component';
 
-import { TransactionListEventType} from '@app/views/transactions/transaction-list/transaction-list.component';
+import {
+  TransactionExplorerEventType
+} from '@app/views/transactions/transactions-explorer/transaction-explorer.component';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
@@ -37,10 +39,10 @@ type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'E
 
 
 @Component({
-  selector: 'emp-land-transactions-workspace',
-  templateUrl: './land-transactions-workspace.component.html'
+  selector: 'emp-land-transactions-main-page',
+  templateUrl: './transactions-main-page.component.html'
 })
-export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
+export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   currentView: View;
 
@@ -68,8 +70,10 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.subscribeToDataInit();
-    this.suscribeToSelectedData();
+    this.subscribeToTransactionListData();
+    this.subscribeToCurrentView();
+    this.subscribeToSelectedTransaction();
+    this.suscribeToSelectedViewersData();
   }
 
 
@@ -78,35 +82,35 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
-  onTransactionListEvent(event: EventInfo): void {
-    switch (event.type as TransactionListEventType) {
+  onTransactionExplorerEvent(event: EventInfo): void {
+    switch (event.type as TransactionExplorerEventType) {
 
-      case TransactionListEventType.CREATE_TRANSACTION_CLICKED:
+      case TransactionExplorerEventType.CREATE_TRANSACTION_CLICKED:
         this.displayOptionModalSelected = 'CreateTransactionEditor';
         return;
 
-      case TransactionListEventType.FILTER_CHANGED:
+      case TransactionExplorerEventType.RECEIVE_TRANSACTIONS_CLICKED:
+        this.displayOptionModalSelected = 'ReceiveTransactions';
+        return;
+
+      case TransactionExplorerEventType.FILTER_CHANGED:
         this.applyTransactionsFilter(event.payload);
         return;
 
-      case TransactionListEventType.TRANSACTION_OPTIONS_CLICKED:
-        this.displayOptionModalSelected = 'ExecuteCommand';
-        this.selectedTransactions = [event.payload.transaction];
-        return;
-
-      case TransactionListEventType.TRANSACTION_SELECTED:
+      case TransactionExplorerEventType.TRANSACTION_SELECTED:
         this.isLoadingTransaction = true;
         this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION,
                               { transactionUID: event.payload.transaction.uid });
         return;
 
-      case TransactionListEventType.TRANSACTIONS_SELECTED_OPTIONS_CLICKED:
-        this.displayOptionModalSelected = 'ExecuteCommandMultiple';
-        this.selectedTransactions = event.payload.transactions;
+      case TransactionExplorerEventType.TRANSACTION_EXECUTE_OPERATION:
+        this.displayOptionModalSelected = 'ExecuteCommand';
+        this.selectedTransactions = [event.payload.transaction];
         return;
 
-      case TransactionListEventType.RECEIVE_TRANSACTIONS_CLICKED:
-        this.displayOptionModalSelected = 'ReceiveTransactions';
+      case TransactionExplorerEventType.TRANSACTIONS_EXECUTE_OPERATION:
+        this.displayOptionModalSelected = 'ExecuteCommandMultiple';
+        this.selectedTransactions = event.payload.transactions;
         return;
 
       default:
@@ -145,7 +149,13 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
-  private subscribeToDataInit() {
+  private subscribeToCurrentView() {
+    this.subscriptionHelper.select<View>(MainUIStateSelector.CURRENT_VIEW)
+      .subscribe(x => this.onCurrentViewChanged(x));
+  }
+
+
+  private subscribeToTransactionListData() {
     this.subscriptionHelper.select<TransactionShortModel[]>(TransactionStateSelector.TRANSACTION_LIST)
       .subscribe(x => {
         this.transactionList = x;
@@ -153,9 +163,12 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
         this.unselectCurrentSelections();
       }, error => this.isLoading = false);
 
-    this.subscriptionHelper.select<View>(MainUIStateSelector.CURRENT_VIEW)
-      .subscribe(x => this.onCurrentViewChanged(x));
+    this.subscriptionHelper.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
+      .subscribe(x => this.filter = x);
+  }
 
+
+  private subscribeToSelectedTransaction() {
     this.subscriptionHelper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
       .subscribe(x => {
         this.selectedTransaction = x;
@@ -163,13 +176,10 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
         this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
         this.unselectCurrentSelections();
       }, error => this.isLoadingTransaction = false);
-
-    this.subscriptionHelper.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
-      .subscribe(x => this.filter = x);
   }
 
 
-  private suscribeToSelectedData() {
+  private suscribeToSelectedViewersData() {
     this.subscriptionHelper.select<RegistryEntryData>(RegistrationStateSelector.SELECTED_REGISTRY_ENTRY)
       .subscribe(x => this.setRegistryEntryData(x));
 
@@ -222,14 +232,14 @@ export class LandTransactionsWorkspaceComponent implements OnInit, OnDestroy {
   }
 
 
-  private unselectCurrentSelections(){
-    this.unselectCurrentFile();
-    this.unselectRegistryEntryEditor();
+  private unselectRegistryEntryEditor() {
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_REGISTRY_ENTRY);
   }
 
 
-  private unselectRegistryEntryEditor() {
-    this.uiLayer.dispatch(RegistrationAction.UNSELECT_REGISTRY_ENTRY);
+  private unselectCurrentSelections(){
+    this.unselectCurrentFile();
+    this.unselectRegistryEntryEditor();
   }
 
 }

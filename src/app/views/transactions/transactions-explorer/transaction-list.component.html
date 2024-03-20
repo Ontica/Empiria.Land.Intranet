@@ -1,0 +1,38 @@
+<div fxFlex style="overflow-y: auto;">
+
+  <div *ngFor="let transaction of transactionList"
+        class="list-item" [class.list-item-selected]="selectedTransaction.uid === transaction.uid"
+        matRipple [matRippleTrigger]="trigger" matRippleColor="rgb(44, 57, 66, 0.05)">
+
+    <div class="list-item-checkbox">
+      <mat-checkbox
+        [checked]="selection.isSelected(transaction)"
+        (click)="$event.stopPropagation()"
+        (change)="selection.isSelected(transaction) ?
+                  selection.deselect(transaction) :
+                  selection.select(transaction)">
+      </mat-checkbox>
+    </div>
+
+    <div class="list-item-container">
+
+      <div class="list-item-name">
+        <strong>
+          <a #trigger (click)="onTransactionClicked(transaction)">{{transaction.requestedBy}}</a>
+        </strong>
+      </div>
+
+      <emp-land-transaction-list-item
+        [transaction]="transaction"
+        (optionsClick)="onTransactionOperationClicked(transaction)">
+      </emp-land-transaction-list-item>
+
+    </div>
+
+  </div>
+
+  <div *ngIf="transactionList.length === 0" class="text-not-found" [style.padding.rem]="3">
+    <p>{{ isLoading ? 'Cargando trámites...' : 'No se encontraron trámites.'}}</p>
+  </div>
+
+</div>
