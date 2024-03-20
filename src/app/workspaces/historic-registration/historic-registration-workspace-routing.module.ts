@@ -11,21 +11,23 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ROUTES } from '@app/main-layout';
 
-import { BookEntryWorkspaceComponent } from './book-entry-workspace.component';
+import { BookEntryMainPageComponent } from './book-entry-main-page/book-entry-main-page.component';
 
-import { HistoricRegistrationWorkspaceComponent } from './historic-registration-workspace.component';
+import {
+  HistoricRegistrationMainPageComponent
+} from './historic-registration-main-page/historic-registration-main-page.component';
 
 
 const routes: Routes = [
   {
     data: { permission: ROUTES.historic_registration_by_book.permission },
     path: ROUTES.historic_registration_by_book.path,
-    component: HistoricRegistrationWorkspaceComponent
+    component: HistoricRegistrationMainPageComponent
   },
   {
     data: { permission: ROUTES.historic_registration_book_entry.permission },
     path: ROUTES.historic_registration_book_entry.path,
-    component: BookEntryWorkspaceComponent
+    component: BookEntryMainPageComponent
   },
   {
     path: '',

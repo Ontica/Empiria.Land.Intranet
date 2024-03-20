@@ -16,8 +16,8 @@ import { LandControlsModule } from '@app/views/land-controls/land.controls.modul
 import { RegistrationModule } from '@app/views/registration/registration.module';
 
 import { HistoricRegistrationWorkspaceRoutingModule } from './historic-registration-workspace-routing.module';
-import { BookEntryWorkspaceComponent } from './book-entry-workspace.component';
-import { HistoricRegistrationWorkspaceComponent } from './historic-registration-workspace.component';
+import { BookEntryMainPageComponent } from './book-entry-main-page/book-entry-main-page.component';
+import { HistoricRegistrationMainPageComponent } from './historic-registration-main-page/historic-registration-main-page.component';
 
 
 @NgModule({
@@ -36,13 +36,13 @@ import { HistoricRegistrationWorkspaceComponent } from './historic-registration-
   ],
 
   declarations: [
-    BookEntryWorkspaceComponent,
-    HistoricRegistrationWorkspaceComponent,
+    BookEntryMainPageComponent,
+    HistoricRegistrationMainPageComponent,
   ],
 
   exports: [
-    BookEntryWorkspaceComponent,
-    HistoricRegistrationWorkspaceComponent,
+    BookEntryMainPageComponent,
+    HistoricRegistrationMainPageComponent,
   ]
 
 })

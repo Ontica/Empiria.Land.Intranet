@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { HistoricRegistrationWorkspaceComponent } from './historic-registration-workspace.component';
+import { HistoricRegistrationMainPageComponent } from './historic-registration-main-page.component';
 
 
-describe('HistoricRegistrationWorkspaceComponent', () => {
-  let component: HistoricRegistrationWorkspaceComponent;
-  let fixture: ComponentFixture<HistoricRegistrationWorkspaceComponent>;
+describe('HistoricRegistrationMainPageComponent', () => {
+  let component: HistoricRegistrationMainPageComponent;
+  let fixture: ComponentFixture<HistoricRegistrationMainPageComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ HistoricRegistrationWorkspaceComponent ]
+      declarations: [ HistoricRegistrationMainPageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HistoricRegistrationWorkspaceComponent);
+    fixture = TestBed.createComponent(HistoricRegistrationMainPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

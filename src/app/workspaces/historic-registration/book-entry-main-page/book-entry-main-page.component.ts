@@ -7,13 +7,14 @@
 
 import { Component, ViewChild } from '@angular/core';
 
-import { Assertion, EventInfo, isEmpty } from '@app/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { BookEntry, EmptyBookEntry, EmptyRegistryEntryData, isRegistryEntryDataValid,
-         RegistryEntryData } from '@app/models';
+import { Assertion, EventInfo, SessionService } from '@app/core';
 
-import { EmptyFileViewerData,
-         FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
+import { BookEntryContext, EmptyBookEntryContext, EmptyRegistryEntryData,
+         isRegistryEntryDataValid, RegistryEntryData } from '@app/models';
+
+import { MessageBoxService } from '@app/shared/containers/message-box';
 
 import {
   BookEntryEditionComponent,
@@ -21,63 +22,34 @@ import {
 } from '@app/views/registration/recording-book/book-entry-edition.component';
 
 import {
-  RecordingBookEditionEventType
-} from '@app/views/registration/recording-book/recording-book-edition.component';
-
-import {
   RegistryEntryEditorEventType
 } from '@app/views/registration/registry-entry/registry-entry-editor.component';
 
-
 @Component({
-  selector: 'emp-land-historic-registration',
-  templateUrl: './historic-registration-workspace.component.html'
+  selector: 'emp-land-book-entry-main-page',
+  templateUrl: './book-entry-main-page.component.html'
 })
-export class HistoricRegistrationWorkspaceComponent {
+export class BookEntryMainPageComponent {
 
   @ViewChild('bookEntryEdition') bookEntryEdition: BookEntryEditionComponent;
 
-  selectedBookEntry: BookEntry = EmptyBookEntry;
-  selectedFileViewerData: FileViewerData = EmptyFileViewerData;
+  bookEntryContext: BookEntryContext = EmptyBookEntryContext;
+
   selectedRegistryEntryData: RegistryEntryData = EmptyRegistryEntryData;
 
-  displayBookEntryEdition = false;
-  displayFileViewer = false;
   displayRegistryEntryEditor = false;
 
 
-  onCloseFileViewer() {
-    this.setFileViewerData(EmptyFileViewerData);
-  }
-
-
-  onRecordingBookEditionEvent(event: EventInfo) {
-    switch (event.type as RecordingBookEditionEventType) {
-
-      case RecordingBookEditionEventType.BOOK_ENTRY_SELECTED:
-        Assertion.assertValue(event.payload.bookEntry, 'event.payload.bookEntry');
-        this.setSelectedBookEntry(event.payload.bookEntry as BookEntry);
-        this.setRegistryEntryData(EmptyRegistryEntryData);
-        return;
-
-      case RecordingBookEditionEventType.FILES_SELECTED:
-        Assertion.assertValue(event.payload.fileViewerData, 'event.payload.fileViewerData');
-        this.setFileViewerData(event.payload.fileViewerData as FileViewerData);
-        return;
-
-      default:
-        console.log(`Unhandled user interface event ${event.type}`);
-        return;
-    }
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private session: SessionService,
+              private messageBox: MessageBoxService){
+    this.validateAndSetBookEntryContextFromRoute();
   }
 
 
   onBookEntryEditionEvent(event: EventInfo) {
     switch (event.type as BookEntryEditionEventType) {
-
-      case BookEntryEditionEventType.CLOSE_BUTTON_CLICKED:
-        this.setSelectedBookEntry(EmptyBookEntry);
-        return;
 
       case BookEntryEditionEventType.RECORDING_ACT_SELECTED:
       case BookEntryEditionEventType.RECORDABLE_SUBJECT_SELECTED:
@@ -112,15 +84,21 @@ export class HistoricRegistrationWorkspaceComponent {
   }
 
 
-  private setSelectedBookEntry(bookEntry: BookEntry) {
-    this.selectedBookEntry = bookEntry;
-    this.displayBookEntryEdition = !isEmpty(this.selectedBookEntry);
-  }
+  private validateAndSetBookEntryContextFromRoute() {
+    this.route.queryParams.subscribe( params => {
+      const bookEntryUID = params['uid'] ?? '';
+      const recordingBookUID = params['recordingBookUID'] ?? '';
+      const instrumentRecordingUID = params['instrumentRecordingUID'] ?? '';
 
-
-  private setFileViewerData(data: FileViewerData) {
-    this.selectedFileViewerData = data;
-    this.displayFileViewer = this.selectedFileViewerData.fileList?.length > 0;
+      if (!!bookEntryUID && !!recordingBookUID && !!instrumentRecordingUID) {
+        this.bookEntryContext.uid = bookEntryUID;
+        this.bookEntryContext.recordingBookUID = recordingBookUID;
+        this.bookEntryContext.instrumentRecordingUID = instrumentRecordingUID;
+      } else {
+        this.messageBox.showError(`La ruta es invalida.`);
+        this.router.navigate([this.session.getPrincipal().defaultRoute]);
+      }
+    });
   }
 
 
