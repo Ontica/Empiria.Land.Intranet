@@ -19,9 +19,11 @@ import { LandTransactionsWorkspaceRoutingModule } from './land-transactions-work
 import { LandControlsModule } from '@app/views/land-controls/land.controls.module';
 import { LandListModule } from '@app/views/land-list/land-list.module';
 import { TransactionsModule } from '@app/views/transactions/transactions.module';
+import { ESignModule } from '@app/views/e-sign/e-sign.module';
 import { CertificateEmissionModule } from '@app/views/certificate-emission/certificate-emission.module';
 import { RegistrationModule } from '@app/views/registration/registration.module';
 
+import { ESignMainPageComponent } from './e-sign-main-page/e-sign-main-page.component';
 import { TransactionsMainPageComponent } from './transactions-main-page/transactions-main-page.component';
 import { LandTransactionTabbedViewComponent } from './transactions-main-page/parts/land-transaction-tabbed-view.component';
 import { LandPreRegistationComponent } from './transactions-main-page/parts/land-pre-registration.component';
@@ -45,6 +47,7 @@ import { LandCertificationComponent } from './transactions-main-page/parts/land-
     CertificateEmissionModule,
     RegistrationModule,
     TransactionsModule,
+    ESignModule,
 
     LandTransactionsWorkspaceRoutingModule,
   ],
@@ -55,6 +58,7 @@ import { LandCertificationComponent } from './transactions-main-page/parts/land-
     LandCertificationComponent,
     LandPreRegistationComponent,
     LandRegistrationComponent,
+    ESignMainPageComponent,
   ],
 
   exports: [

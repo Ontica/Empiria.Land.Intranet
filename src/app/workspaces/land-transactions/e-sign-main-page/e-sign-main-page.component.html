@@ -1,0 +1,20 @@
+<div class="explorer">
+
+  <div class="primary">
+
+    <emp-land-explorer
+      [title]="titleWithStatus"
+      [explorerType]="landExplorerTypes.ESign"
+      [query]="query"
+      [itemsList]="transactionList"
+      [selectedItemUID]="selectedTransaction.uid ?? null"
+      [isLoading]="isLoading"
+      [statusList]="eSignStatusList"
+      [operationsList]="eSignOperationList"
+      (landExplorerEvent)="onESignExplorerEvent($event)">
+
+    </emp-land-explorer>
+
+  </div>
+
+</div>

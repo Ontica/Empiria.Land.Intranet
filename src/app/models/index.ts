@@ -22,6 +22,8 @@ export * from './_access-control';
 
 export * from './certificate';
 
+export * from './e-sign';
+
 export * from './files';
 
 export * from './instrument';

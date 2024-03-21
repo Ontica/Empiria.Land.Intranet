@@ -13,6 +13,8 @@ import { ROUTES } from '@app/main-layout';
 
 import { TransactionsMainPageComponent } from './transactions-main-page/transactions-main-page.component';
 
+import { ESignMainPageComponent } from './e-sign-main-page/e-sign-main-page.component';
+
 const routes: Routes = [
   {
     data: { permission: ROUTES.transactions_my_inbox.permission },
@@ -22,7 +24,7 @@ const routes: Routes = [
   {
     data: { permission: ROUTES.transactions_e_sign.permission },
     path: ROUTES.transactions_e_sign.path,
-    component: TransactionsMainPageComponent
+    component: ESignMainPageComponent
   },
   {
     data: { permission: ROUTES.transactions_control_desk.permission },
