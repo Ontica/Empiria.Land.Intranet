@@ -5,8 +5,6 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { PERMISSIONS } from './permissions-config';
-
 import { ROUTES } from './routes-config';
 
 import { View } from '../common-models/common';
@@ -19,10 +17,13 @@ export const TransactionViews: View[] = [
     menuTitle: 'Mis trámites pendientes',
     url: ROUTES.transactions_my_inbox.fullpath,
     permission: ROUTES.transactions_my_inbox.permission,
-    actions: [
-      { action: 'ActionChangeStatus', name: 'Paquetes', permission: PERMISSIONS.FEATURE_TRANSACTIONS_ADD },
-      { action: 'ActionCreate', name: 'Nuevo', permission: PERMISSIONS.FEATURE_TRANSACTIONS_ADD }
-    ]
+  },
+  {
+    name: 'Transactions.ESign',
+    title: 'Firma electrónica',
+    menuTitle: 'Firma electrónica',
+    url: ROUTES.transactions_e_sign.fullpath,
+    permission: ROUTES.transactions_e_sign.permission,
   },
   {
     name: 'Transactions.ControlDesk',
@@ -30,10 +31,6 @@ export const TransactionViews: View[] = [
     menuTitle: 'Mesa de control',
     url: ROUTES.transactions_control_desk.fullpath,
     permission: ROUTES.transactions_control_desk.permission,
-    actions: [
-      { action: 'ActionChangeStatus', name: 'Paquetes', permission: PERMISSIONS.FEATURE_TRANSACTIONS_ADD },
-      { action: 'ActionCreate', name: 'Nuevo', permission: PERMISSIONS.FEATURE_TRANSACTIONS_ADD }
-    ]
   },
   {
     name: 'Transactions.Finished',
@@ -41,10 +38,6 @@ export const TransactionViews: View[] = [
     menuTitle: 'Terminados',
     url: ROUTES.transactions_finished.fullpath,
     permission: ROUTES.transactions_finished.permission,
-    actions: [
-      { action: 'ActionChangeStatus', name: 'Paquetes', permission: PERMISSIONS.FEATURE_TRANSACTIONS_ADD },
-      { action: 'ActionCreate', name: 'Nuevo', permission: PERMISSIONS.FEATURE_TRANSACTIONS_ADD }
-    ]
   },
   {
     name: 'Transactions.Pending',
@@ -52,10 +45,6 @@ export const TransactionViews: View[] = [
     menuTitle: 'Por ingresar',
     url: ROUTES.transactions_pending.fullpath,
     permission: ROUTES.transactions_pending.permission,
-    actions: [
-      { action: 'ActionChangeStatus', name: 'Paquetes', permission: PERMISSIONS.FEATURE_TRANSACTIONS_ADD },
-      { action: 'ActionCreate', name: 'Nuevo', permission: PERMISSIONS.FEATURE_TRANSACTIONS_ADD }
-    ]
   },
   {
     name: 'Transactions.All',
@@ -63,10 +52,6 @@ export const TransactionViews: View[] = [
     menuTitle: 'Todos',
     url: ROUTES.transactions_all.fullpath,
     permission: ROUTES.transactions_all.permission,
-    actions: [
-      { action: 'ActionChangeStatus', name: 'Paquetes', permission: PERMISSIONS.FEATURE_TRANSACTIONS_ADD },
-      { action: 'ActionCreate', name: 'Nuevo', permission: PERMISSIONS.FEATURE_TRANSACTIONS_ADD }
-    ]
   }
 ];
 

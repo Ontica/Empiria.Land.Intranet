@@ -28,6 +28,8 @@ export enum PERMISSIONS {
 
   ROUTE_TRANSACTIONS = 'route-transactions',
 
+  ROUTE_E_SIGN = 'route-e-sign',
+
   FEATURE_TRANSACTIONS_ADD = 'feature-transactions-add',
 
   //

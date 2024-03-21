@@ -51,6 +51,12 @@ export const ROUTES = {
     path: 'my-inbox',
     fullpath: '/transactions/my-inbox',
   },
+  transactions_e_sign: {
+    permission: PERMISSIONS.ROUTE_E_SIGN,
+    parent: 'transactions',
+    path: 'e-sign',
+    fullpath: '/transactions/e-sign',
+  },
   transactions_control_desk: {
     permission: PERMISSIONS.ROUTE_TRANSACTIONS,
     parent: 'transactions',

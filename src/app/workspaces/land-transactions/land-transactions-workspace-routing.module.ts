@@ -18,7 +18,11 @@ const routes: Routes = [
     data: { permission: ROUTES.transactions_my_inbox.permission },
     path: ROUTES.transactions_my_inbox.path,
     component: TransactionsMainPageComponent
-    component: LandTransactionsWorkspaceComponent
+  },
+  {
+    data: { permission: ROUTES.transactions_e_sign.permission },
+    path: ROUTES.transactions_e_sign.path,
+    component: TransactionsMainPageComponent
   },
   {
     data: { permission: ROUTES.transactions_control_desk.permission },
