@@ -16,10 +16,11 @@ import { SharedModule } from '@app/shared/shared.module';
 
 import { LandTransactionsWorkspaceRoutingModule } from './land-transactions-workspace-routing.module';
 
-import { CertificateEmissionModule } from '@app/views/certificate-emission/certificate-emission.module';
 import { LandControlsModule } from '@app/views/land-controls/land.controls.module';
-import { RegistrationModule } from '@app/views/registration/registration.module';
+import { LandListModule } from '@app/views/land-list/land-list.module';
 import { TransactionsModule } from '@app/views/transactions/transactions.module';
+import { CertificateEmissionModule } from '@app/views/certificate-emission/certificate-emission.module';
+import { RegistrationModule } from '@app/views/registration/registration.module';
 
 import { TransactionsMainPageComponent } from './transactions-main-page/transactions-main-page.component';
 import { LandTransactionTabbedViewComponent } from './transactions-main-page/parts/land-transaction-tabbed-view.component';
@@ -39,8 +40,9 @@ import { LandCertificationComponent } from './transactions-main-page/parts/land-
     AngularFlexLayoutModule,
     SharedModule,
 
-    CertificateEmissionModule,
     LandControlsModule,
+    LandListModule,
+    CertificateEmissionModule,
     RegistrationModule,
     TransactionsModule,
 
@@ -56,7 +58,7 @@ import { LandCertificationComponent } from './transactions-main-page/parts/land-
   ],
 
   exports: [
-    TransactionsMainPageComponent
+
   ]
 
 })

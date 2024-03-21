@@ -19,8 +19,8 @@ import { TransactionDataService } from '@app/data-services';
 
 import { ArrayLibrary } from '@app/shared/utils';
 
-import { TransactionFilter, TransactionShortModel, EmptyTransaction, EmptyTransactionFilter,
-         mapTransactionShortModelFromTransaction } from '@app/models';
+import { TransactionQuery, TransactionDescriptor, EmptyTransaction, EmptyTransactionQuery,
+         mapTransactionDescriptorFromTransaction } from '@app/models';
 
 import { EmptyFileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
@@ -89,7 +89,7 @@ export enum SelectorType {
 
 
 const initialState: StateValues = [
-  { key: SelectorType.LIST_FILTER, value: EmptyTransactionFilter },
+  { key: SelectorType.LIST_FILTER, value: EmptyTransactionQuery },
   { key: SelectorType.SELECTED_TRANSACTION, value: EmptyTransaction },
   { key: SelectorType.TRANSACTION_LIST, value: [] },
   { key: SelectorType.TRANSACTION_TYPE_LIST, value: [] },
@@ -185,9 +185,9 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case EffectType.SET_PAYMENT:
       case EffectType.CANCEL_PAYMENT:
 
-        transactionList = this.getValue<TransactionShortModel[]>(SelectorType.TRANSACTION_LIST);
+        transactionList = this.getValue<TransactionDescriptor[]>(SelectorType.TRANSACTION_LIST);
 
-        const transactionToInsert = mapTransactionShortModelFromTransaction(params.result);
+        const transactionToInsert = mapTransactionDescriptorFromTransaction(params.result);
 
         const transactionListNew = ArrayLibrary.insertItemTop(transactionList, transactionToInsert, 'uid');
 
@@ -201,7 +201,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
       case EffectType.DELETE_TRANSACTION:
 
-        transactionList = this.getValue<TransactionShortModel[]>(SelectorType.TRANSACTION_LIST);
+        transactionList = this.getValue<TransactionDescriptor[]>(SelectorType.TRANSACTION_LIST);
 
         this.setValue(SelectorType.TRANSACTION_LIST,
           transactionList.filter(x => x.uid !== params.payload.transactionUID));
@@ -214,7 +214,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case EffectType.SET_LIST_FILTER:
       case EffectType.EXECUTE_WORKFLOW_COMMAND:
 
-        let filter = this.getValue<TransactionFilter>(SelectorType.LIST_FILTER);
+        let filter = this.getValue<TransactionQuery>(SelectorType.LIST_FILTER);
 
         if (effectType === EffectType.EXECUTE_WORKFLOW_COMMAND) {
           filter = { ...filter, ...{ keywords: '' } };

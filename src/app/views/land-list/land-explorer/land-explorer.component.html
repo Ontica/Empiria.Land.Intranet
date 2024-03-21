@@ -1,0 +1,74 @@
+<div class="card card-border">
+
+  <div class="card-header card-header-flat">
+
+    <div *ngIf="itemsList.length > 0"
+         style="margin: auto; padding: 0 20px 0 4px;">
+
+      <emp-ng-check-box-all
+        [(selection)]="selection"
+        [values]="itemsList">
+      </emp-ng-check-box-all>
+
+    </div>
+
+    <div class="card-title">
+
+      {{title}}
+
+      <div class="card-hint" empNgProgressText
+           loadingText="Cargando trámites"
+           [finalText]="selection.hasValue() ?
+              selection.selected.length + ' de ' + itemsList.length + ' trámites seleccionados':
+              itemsList.length + ' trámites encontrados'"
+           [isLoading]="isLoading">
+      </div>
+
+    </div>
+
+    <div class="card-header-options">
+
+      <emp-land-list-actions
+        [queryStatus]="query.status"
+        [queryKeywords]="query.keywords"
+        [statusList]="statusList"
+        [displayStatusSelect]="explorerType === landExplorerTypes.ESign"
+        [displayReceiveButton]="explorerType === landExplorerTypes.Transaction"
+        [displayCreateButton]="explorerType === landExplorerTypes.Transaction"
+        (listActionsEvent)="onListActionsEvent($event)">
+
+      </emp-land-list-actions>
+
+    </div>
+
+  </div>
+
+  <div class="card-body" [empNgSpinnerHost]="spinner">
+
+    <div fxLayout="column" fxFlexFill>
+
+      <emp-ng-spinner #spinner [visible]="isLoading">
+
+      </emp-ng-spinner>
+
+      <emp-land-list-controls
+        [itemsSelected]="selection.selected ?? []"
+        [operationsList]="operationsList"
+        (listControlsEvent)="onListControlsEvent($event)">
+
+      </emp-land-list-controls>
+
+      <emp-land-list
+        [itemsList]="itemsList"
+        [selectedItemUID]="selectedItemUID ?? null"
+        [selection]="selection"
+        [isLoading]="isLoading"
+        (listEvent)="onListEvent($event)">
+
+      </emp-land-list>
+
+    </div>
+
+  </div>
+
+</div>

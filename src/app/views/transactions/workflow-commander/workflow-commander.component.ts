@@ -7,19 +7,19 @@
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
-import { Command, EventInfo } from '@app/core';
+import { Assertion, Command, EventInfo } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
-import { TransactionShortModel, ApplicableCommand, WorkflowCommand } from '@app/models';
-
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
 import { ArrayLibrary } from '@app/shared/utils';
 
-import { TransactionListEditorEventType } from '../transactions-explorer/transaction-list-editor.component';
+import { TransactionDescriptor, ApplicableCommand, WorkflowCommand } from '@app/models';
+
+import { ListSelectorEventType } from '@app/views/land-list/land-list-selector/land-list-selector.component';
 
 import { FormDataEmitted } from './workflow-command-config.component';
 
@@ -30,7 +30,7 @@ import { FormDataEmitted } from './workflow-command-config.component';
 })
 export class WorkflowCommanderComponent implements OnInit, OnDestroy {
 
-  @Input() transactionList: TransactionShortModel[] = [];
+  @Input() transactionList: TransactionDescriptor[] = [];
 
   @Input() canEditList = true;
 
@@ -122,11 +122,16 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
   }
 
 
-  onTransactionListEditorEventEvent(event: EventInfo): void {
-    switch (event.type as TransactionListEditorEventType) {
+  onTransactionListSelectorEvent(event: EventInfo) {
+    switch (event.type as ListSelectorEventType) {
 
-      case TransactionListEditorEventType.FILTER_CHANGED:
+      case ListSelectorEventType.FILTER_CHANGED:
         this.searchTransaction(event.payload);
+        return;
+
+      case ListSelectorEventType.ITEMS_LIST_CHANGED:
+        Assertion.assertValue(event.payload.itemsList, 'event.payload.itemsList');
+        this.transactionList = event.payload.itemsList;
         return;
 
       default:
@@ -153,7 +158,7 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
       workflowCommand.payload.nextStatus = this.formWorkflow.formData.nextStatus;
     }
 
-    this.helper.select<TransactionShortModel>(TransactionStateSelector.TRANSACTION_FROM_COMMAND_EXECUTION,
+    this.helper.select<TransactionDescriptor>(TransactionStateSelector.TRANSACTION_FROM_COMMAND_EXECUTION,
       workflowCommand)
       .toPromise()
       .then(x => {

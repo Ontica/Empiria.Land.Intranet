@@ -7,6 +7,8 @@
 
 import { Assertion, DateString, Empty, EmptyMediaBase, Entity, Identifiable, MediaBase } from '@app/core';
 
+import { LandEntity, LandQuery } from './land-list';
+
 
 export enum TransactionStage  {
   MyInbox = 'MyInbox',
@@ -25,14 +27,14 @@ export enum TransactionStatus {
 }
 
 
-export interface TransactionFilter {
+export interface TransactionQuery extends LandQuery {
   stage?: TransactionStage;
   status?: TransactionStatus;
   keywords: string;
 }
 
 
-export const EmptyTransactionFilter: TransactionFilter = {
+export const EmptyTransactionQuery: TransactionQuery = {
   stage: TransactionStage.All,
   status: TransactionStatus.All,
   keywords: '',
@@ -169,7 +171,7 @@ export const EmptyAction: TransactionActions = {
 };
 
 
-export interface TransactionShortModel extends Entity {
+export interface TransactionDescriptor extends LandEntity {
   type: string;
   subtype: string;
   transactionID: string;
@@ -183,7 +185,7 @@ export interface TransactionShortModel extends Entity {
 }
 
 
-export const EmptyTransactionShortModel: TransactionShortModel = {
+export const EmptyTransactionDescriptor: TransactionDescriptor = {
   uid: '',
   type: '',
   subtype: '',
@@ -203,7 +205,7 @@ export enum TransactionsOperationType {
 }
 
 
-export const TransactionsOperationTypeList: Identifiable[] = [
+export const TransactionsOperationList: Identifiable[] = [
   { uid: TransactionsOperationType.UpdateWorkflowMultiple, name: 'Cambiar estado' },
 ];
 
@@ -345,7 +347,7 @@ export function mapTransactionStatusFromViewName(viewName: string): TransactionS
 }
 
 
-export function mapTransactionShortModelFromTransaction(transaction: Transaction): TransactionShortModel {
+export function mapTransactionDescriptorFromTransaction(transaction: Transaction): TransactionDescriptor {
   return {
     uid: transaction.uid,
     type: transaction.type.name,

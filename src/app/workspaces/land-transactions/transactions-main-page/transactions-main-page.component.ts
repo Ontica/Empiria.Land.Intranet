@@ -12,26 +12,22 @@ import { EventInfo, isEmpty } from '@app/core';
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { MainUIStateSelector, RegistrationAction, RegistrationStateSelector, TransactionAction,
-         TransactionStateSelector} from '@app/core/presentation/presentation-types';
+         TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
 import { View } from '@app/main-layout';
 
-import { TransactionShortModel, Transaction, EmptyTransaction, TransactionFilter, EmptyTransactionFilter,
+import { TransactionDescriptor, Transaction, EmptyTransaction, TransactionQuery, EmptyTransactionQuery,
          mapTransactionStageFromViewName, mapTransactionStatusFromViewName, RegistryEntryData,
-         EmptyRegistryEntryData, isRegistryEntryDataValid } from '@app/models';
+         EmptyRegistryEntryData, isRegistryEntryDataValid, TransactionsOperationList,
+         LandExplorerTypes } from '@app/models';
 
-import {
-  EmptyFileViewerData,
-  FileViewerData
-} from '@app/shared/form-controls/file-control/file-control-data';
+import { EmptyFileViewerData, FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
+
+import { LandExplorerEventType } from '@app/views/land-list/land-explorer/land-explorer.component';
 
 import {
   RegistryEntryEditorEventType
 } from '@app/views/registration/registry-entry/registry-entry-editor.component';
-
-import {
-  TransactionExplorerEventType
-} from '@app/views/transactions/transactions-explorer/transaction-explorer.component';
 
 
 type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'ExecuteCommandMultiple' |
@@ -46,11 +42,13 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   currentView: View;
 
-  filter: TransactionFilter = EmptyTransactionFilter;
-  transactionList: TransactionShortModel[] = [];
+  transactionsOperationList = TransactionsOperationList;
+
+  query: TransactionQuery = EmptyTransactionQuery;
+  transactionList: TransactionDescriptor[] = [];
 
   selectedTransaction: Transaction = EmptyTransaction;
-  selectedTransactions: TransactionShortModel[] = [];
+  selectedTransactions: TransactionDescriptor[] = [];
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedRegistryEntryData: RegistryEntryData = EmptyRegistryEntryData;
 
@@ -61,6 +59,8 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   isLoading = false;
   isLoadingTransaction = false;
+
+  landExplorerTypes = LandExplorerTypes;
 
   subscriptionHelper: SubscriptionHelper;
 
@@ -83,34 +83,34 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
 
   onTransactionExplorerEvent(event: EventInfo): void {
-    switch (event.type as TransactionExplorerEventType) {
+    switch (event.type as LandExplorerEventType) {
 
-      case TransactionExplorerEventType.CREATE_TRANSACTION_CLICKED:
+      case LandExplorerEventType.CREATE_ITEM_CLICKED:
         this.displayOptionModalSelected = 'CreateTransactionEditor';
         return;
 
-      case TransactionExplorerEventType.RECEIVE_TRANSACTIONS_CLICKED:
+      case LandExplorerEventType.RECEIVE_ITEMS_CLICKED:
         this.displayOptionModalSelected = 'ReceiveTransactions';
         return;
 
-      case TransactionExplorerEventType.FILTER_CHANGED:
+      case LandExplorerEventType.FILTER_CHANGED:
         this.applyTransactionsFilter(event.payload);
         return;
 
-      case TransactionExplorerEventType.TRANSACTION_SELECTED:
+      case LandExplorerEventType.ITEM_SELECTED:
         this.isLoadingTransaction = true;
         this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION,
-                              { transactionUID: event.payload.transaction.uid });
+                              { transactionUID: event.payload.item.uid });
         return;
 
-      case TransactionExplorerEventType.TRANSACTION_EXECUTE_OPERATION:
+      case LandExplorerEventType.ITEM_EXECUTE_OPERATION:
         this.displayOptionModalSelected = 'ExecuteCommand';
-        this.selectedTransactions = [event.payload.transaction];
+        this.selectedTransactions = [event.payload.item];
         return;
 
-      case TransactionExplorerEventType.TRANSACTIONS_EXECUTE_OPERATION:
+      case LandExplorerEventType.ITEMS_EXECUTE_OPERATION:
         this.displayOptionModalSelected = 'ExecuteCommandMultiple';
-        this.selectedTransactions = event.payload.transactions;
+        this.selectedTransactions = event.payload.items;
         return;
 
       default:
@@ -156,15 +156,15 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
 
   private subscribeToTransactionListData() {
-    this.subscriptionHelper.select<TransactionShortModel[]>(TransactionStateSelector.TRANSACTION_LIST)
+    this.subscriptionHelper.select<TransactionDescriptor[]>(TransactionStateSelector.TRANSACTION_LIST)
       .subscribe(x => {
         this.transactionList = x;
         this.isLoading = false;
         this.unselectCurrentSelections();
       }, error => this.isLoading = false);
 
-    this.subscriptionHelper.select<TransactionFilter>(TransactionStateSelector.LIST_FILTER)
-      .subscribe(x => this.filter = x);
+    this.subscriptionHelper.select<TransactionQuery>(TransactionStateSelector.LIST_FILTER)
+      .subscribe(x => this.query = x);
   }
 
 
@@ -190,9 +190,9 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   private applyTransactionsFilter(data?: { keywords: string }) {
     const currentKeywords =
-      this.uiLayer.selectValue<TransactionFilter>(TransactionStateSelector.LIST_FILTER).keywords;
+      this.uiLayer.selectValue<TransactionQuery>(TransactionStateSelector.LIST_FILTER).keywords;
 
-    const filter: TransactionFilter = {
+    const filter: TransactionQuery = {
       stage: mapTransactionStageFromViewName(this.currentView.name),
       status: mapTransactionStatusFromViewName(this.currentView.name),
       keywords: data ? data.keywords : currentKeywords,

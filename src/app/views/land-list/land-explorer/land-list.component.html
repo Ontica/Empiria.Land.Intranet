@@ -1,0 +1,38 @@
+<div fxFlex style="overflow-y: auto;">
+
+  <div *ngFor="let item of itemsList"
+        class="list-item" [class.list-item-selected]="selectedItemUID === item.uid"
+        matRipple [matRippleTrigger]="trigger" matRippleColor="rgb(44, 57, 66, 0.05)">
+
+    <div class="list-item-checkbox">
+      <mat-checkbox
+        [checked]="selection.isSelected(item)"
+        (click)="$event.stopPropagation()"
+        (change)="selection.isSelected(item) ?
+                  selection.deselect(item) :
+                  selection.select(item)">
+      </mat-checkbox>
+    </div>
+
+    <div class="list-item-container">
+
+      <div class="list-item-name">
+        <strong>
+          <a #trigger (click)="onItemClicked(item)">{{item.requestedBy}}</a>
+        </strong>
+      </div>
+
+      <emp-land-transaction-list-item
+        [transaction]="getTransaction(item)"
+        (optionsClick)="onItemOperationClicked(item)">
+      </emp-land-transaction-list-item>
+
+    </div>
+
+  </div>
+
+  <div *ngIf="itemsList.length === 0" class="text-not-found" [style.padding.rem]="3">
+    <p>{{ isLoading ? 'Cargando ' + itemsType + 's...' : 'No se encontraron ' + itemsType + 's.'}}</p>
+  </div>
+
+</div>

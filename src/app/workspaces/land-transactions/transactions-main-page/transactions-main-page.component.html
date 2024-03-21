@@ -6,14 +6,17 @@
        [fxHide]="displayFileViewer"
        [fxHide.lt-lg]="displayTransactionTabbedView || displayFileViewer || displayRegistryEntryEditor">
 
-    <emp-land-transaction-explorer
-        [transactionList]="transactionList"
-        [selectedTransaction]="selectedTransaction"
-        [filter]="filter"
-        [title]="currentView?.title"
-        [isLoading]="isLoading"
-        (transactionExplorerEvent)="onTransactionExplorerEvent($event)">
-    </emp-land-transaction-explorer>
+    <emp-land-explorer
+      [title]="currentView?.title"
+      [explorerType]="landExplorerTypes.Transaction"
+      [query]="query"
+      [itemsList]="transactionList"
+      [selectedItemUID]="selectedTransaction.uid ?? null"
+      [isLoading]="isLoading"
+      [operationsList]="transactionsOperationList"
+      (landExplorerEvent)="onTransactionExplorerEvent($event)">
+
+    </emp-land-explorer>
 
   </div>
 
@@ -42,6 +45,7 @@
     <emp-land-transaction-tabbed-view
         [transaction]="selectedTransaction"
         (closeEvent)="onCloseTransactionEditor()">
+
     </emp-land-transaction-tabbed-view>
 
   </div>

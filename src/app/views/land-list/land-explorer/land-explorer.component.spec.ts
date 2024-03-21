@@ -7,19 +7,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TransactionExplorerComponent } from './transaction-explorer.component';
+import { LandExplorerComponent } from './land-explorer.component';
 
-describe('TransactionExplorerComponent', () => {
-  let component: TransactionExplorerComponent;
-  let fixture: ComponentFixture<TransactionExplorerComponent>;
+describe('LandExplorerComponent', () => {
+  let component: LandExplorerComponent;
+  let fixture: ComponentFixture<LandExplorerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TransactionExplorerComponent ]
+      declarations: [ LandExplorerComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TransactionExplorerComponent);
+    fixture = TestBed.createComponent(LandExplorerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

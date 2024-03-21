@@ -12,8 +12,8 @@ import { Observable } from 'rxjs';
 import { Assertion, HttpService, Identifiable } from '@app/core';
 
 import { Agency, InstrumentMediaContent, PaymentFields, PreprocessingData, ProvidedServiceType,
-         RecordingSection, RequestedServiceFields, Transaction, TransactionFields, TransactionFilter,
-         TransactionShortModel, TransactionType, WorkflowCommand, WorkflowTask,
+         RecordingSection, RequestedServiceFields, Transaction, TransactionFields, TransactionQuery,
+         TransactionDescriptor, TransactionType, WorkflowCommand, WorkflowTask,
          ApplicableCommand } from '@app/models';
 
 
@@ -91,22 +91,22 @@ export class TransactionDataService {
   }
 
 
-  getTransactionList(filter: TransactionFilter): Observable<TransactionShortModel[]> {
+  getTransactionList(query: TransactionQuery): Observable<TransactionDescriptor[]> {
     let path = `v5/land/transactions`;
 
-    if (filter.stage) {
-      path += `/?stage=${filter.stage}`;
+    if (query.stage) {
+      path += `/?stage=${query.stage}`;
     }
 
-    if (filter.status) {
-      path += `&status=${filter.status}`;
+    if (query.status) {
+      path += `&status=${query.status}`;
     }
 
-    if (filter.keywords) {
-      path += `&keywords=${filter.keywords}`;
+    if (query.keywords) {
+      path += `&keywords=${query.keywords}`;
     }
 
-    return this.http.get<TransactionShortModel[]>(path);
+    return this.http.get<TransactionDescriptor[]>(path);
   }
 
 
@@ -208,12 +208,12 @@ export class TransactionDataService {
   }
 
 
-  searchAndAssertCommandExecution(command: WorkflowCommand): Observable<TransactionShortModel> {
+  searchAndAssertCommandExecution(command: WorkflowCommand): Observable<TransactionDescriptor> {
     Assertion.assertValue(command, 'command');
 
     const path = `v5/land/workflow/search-and-assert-command-execution`;
 
-    return this.http.post<TransactionShortModel>(path, command);
+    return this.http.post<TransactionDescriptor>(path, command);
   }
 
 

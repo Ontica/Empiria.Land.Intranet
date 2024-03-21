@@ -411,6 +411,11 @@ table.mat-table {
     margin: 12px 8px 0 0;
     height: $control-height;
   }
+
+  &.vertical-slim {
+    margin: 0 8px 0 0;
+    height: $control-height;
+  }
 }
 
 //

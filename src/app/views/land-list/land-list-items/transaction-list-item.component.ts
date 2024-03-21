@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { TransactionShortModel } from '@app/models';
+import { TransactionDescriptor } from '@app/models';
 
 
 @Component({
@@ -16,7 +16,7 @@ import { TransactionShortModel } from '@app/models';
 })
 export class TransactionListItemComponent {
 
-  @Input() transaction: TransactionShortModel;
+  @Input() transaction: TransactionDescriptor;
 
   @Input() listOptions: any[] = [{name: 'Cambiar estado', value: 'SetNextStatus'}];
 

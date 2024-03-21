@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TransactionListEditorComponent } from './transaction-list-editor.component';
+import { ListSelectorComponent } from './land-list-selector.component';
 
 
-describe('TransactionListEditorComponent', () => {
-  let component: TransactionListEditorComponent;
-  let fixture: ComponentFixture<TransactionListEditorComponent>;
+describe('ListSelectorComponent', () => {
+  let component: ListSelectorComponent;
+  let fixture: ComponentFixture<ListSelectorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TransactionListEditorComponent ]
+      declarations: [ ListSelectorComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TransactionListEditorComponent);
+    fixture = TestBed.createComponent(ListSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

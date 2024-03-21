@@ -1,0 +1,45 @@
+<br>
+
+<div class="section-title">Lista de {{itemsType}}s</div>
+
+<div fxLayout="row" fxLayoutAlign="space-between end" style="min-height: 32px;">
+
+  <div fxFlex style="margin: auto 0;">
+    {{ itemsList.length + ' ' + itemsType +
+     ( itemsList.length === 1 ? ' seleccionado' : 's seleccionados') }}
+  </div>
+
+  <input type="search" class="text-box" [fxFlex]="100/3" fxHide.lt-sm="true"
+    *ngIf="canEdit" placeholder="Buscar {{itemsType}}s por clave y agregarlos a la lista"
+    [(ngModel)]="searchUID" (search)="onChangeFilter()">
+
+</div>
+
+<div class="list-container">
+
+  <div *ngFor="let item of itemsList" class="list-item">
+
+    <div class="list-item-container">
+
+      <div class="list-item-name">
+        <strong>
+          <a>{{item.requestedBy}}</a>
+        </strong>
+      </div>
+
+      <emp-land-transaction-list-item
+        [transaction]="getTransaction(item)"
+        [listOptions]="listOptions"
+        (optionsClick)="removeFromList(item)">
+
+      </emp-land-transaction-list-item>
+
+    </div>
+
+  </div>
+
+  <div *ngIf="itemsList.length === 0" class="text-not-found">
+    <p>La lista de {{itemsType}}s está vacía.</p>
+  </div>
+
+</div>

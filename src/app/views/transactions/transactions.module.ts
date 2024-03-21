@@ -14,12 +14,8 @@ import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module'
 
 import { SharedModule } from '@app/shared/shared.module';
 
-import { TransactionExplorerComponent } from './transactions-explorer/transaction-explorer.component';
-import { TransactionActionsComponent } from './transactions-explorer/transaction-actions.component';
-import { TransactionControlsComponent } from './transactions-explorer/transaction-controls.component';
-import { TransactionListComponent } from './transactions-explorer/transaction-list.component';
-import { TransactionListItemComponent } from './transactions-explorer/transaction-list-item.component';
-import { TransactionListEditorComponent } from './transactions-explorer/transaction-list-editor.component';
+import { LandListModule } from '../land-list/land-list.module';
+
 import { TransactionHeaderComponent } from './transaction-header/transaction-header.component';
 import { TransactionCreatorComponent } from './transaction-creator/transaction-creator.component';
 import { TransactionEditorComponent } from './transaction-editor/transaction-editor.component';
@@ -41,16 +37,12 @@ import { RequestedServiceListComponent } from './transaction-editor/requested-se
 
     AngularMaterialModule,
     AngularFlexLayoutModule,
-    SharedModule
+    SharedModule,
+
+    LandListModule,
   ],
 
   declarations: [
-    TransactionExplorerComponent,
-    TransactionActionsComponent,
-    TransactionControlsComponent,
-    TransactionListComponent,
-    TransactionListItemComponent,
-    TransactionListEditorComponent,
     TransactionHeaderComponent,
     TransactionCreatorComponent,
     TransactionEditorComponent,
@@ -64,7 +56,6 @@ import { RequestedServiceListComponent } from './transaction-editor/requested-se
   ],
 
   exports: [
-    TransactionExplorerComponent,
     TransactionCreatorComponent,
     TransactionEditorComponent,
     TransactionFilesComponent,

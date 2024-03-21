@@ -1,0 +1,40 @@
+<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0.75rem">
+
+  <ng-container *empNgHasPermission="createPermission">
+
+    <button *ngIf="displayReceiveButton"
+      class="btn"
+      (click)="onReceiveOptionsClicked()">Paquetes</button>
+
+    <mat-divider *ngIf="displayReceiveButton && displayCreateButton"
+      vertical="true"
+      class="vertical-slim">
+
+    </mat-divider>
+
+
+    <button *ngIf="displayCreateButton"
+      class="btn-action"
+      (click)="onCreateClicked()">Nuevo</button>
+
+  </ng-container>
+
+
+  <emp-ng-select *ngIf="displayStatusSelect"
+    fxFlex="170px"
+    [(ngModel)]="status" name="status"
+    [config]="{ selectFirst: true }"
+    [items]="statusList"
+    [required]="true"
+    [showError]="!status"
+    (changes)="onFilterChanged()">
+  </emp-ng-select>
+
+
+  <input type="search" class="text-box"
+    fxFlex="220px" fxHide.lt-sm="true"
+    placeholder="Buscar trámites"
+    [(ngModel)]="keywords"
+    (search)="onFilterChanged()">
+
+</div>

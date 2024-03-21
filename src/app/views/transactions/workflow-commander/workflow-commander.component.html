@@ -13,11 +13,11 @@
 
     </emp-land-workflow-command-config>
 
-    <emp-land-transaction-list-editor *ngIf="formWorkflow.isValid" [canEdit]="canEditList"
-      [(transactionList)]="transactionList"
-      (transactionListEditorEvent)="onTransactionListEditorEventEvent($event)">
+    <emp-land-list-selector *ngIf="formWorkflow.isValid" [canEdit]="canEditList"
+      [itemsList]="transactionList"
+      (listSelectorEvent)="onTransactionListSelectorEvent($event)">
 
-    </emp-land-transaction-list-editor>
+    </emp-land-list-selector>
 
     <mat-divider class="divider-padding"></mat-divider>
 

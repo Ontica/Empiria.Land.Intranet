@@ -1,10 +1,10 @@
-<div [fxFlex]="100" [@expandCollapse] *ngIf="transactionsSelected.length > 0" fxFlex="none">
+<div [fxFlex]="100" [@expandCollapse] *ngIf="itemsSelected.length > 0" fxFlex="none">
 
   <div class="list-selection-header" fxLayoutAlign="start center">
 
     <span fxFlex="none">¿Qué debo hacer con
-      <span *ngIf="transactionsSelected.length === 1">el trámite?</span>
-      <span *ngIf="transactionsSelected.length > 1">los {{transactionsSelected.length}} trámites?</span>
+      <span *ngIf="itemsSelected.length === 1">el {{itemsType}}?</span>
+      <span *ngIf="itemsSelected.length > 1">los {{itemsSelected.length}} {{itemsType}}s?</span>
     </span>
 
     <div fxFlex="180px">
