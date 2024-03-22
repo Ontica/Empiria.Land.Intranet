@@ -40,10 +40,10 @@ export const EmptyESignRequestsQuery: ESignRequestsQuery = {
 
 export enum ESignOperationType {
   UpdateStatus = 'update-status',
-  Sign         = 'sign',
-  Revoke       = 'revoke',
-  Refuse       = 'refuse',
-  Unrefuse     = 'unrefuse',
+  Sign         = 'Sign',
+  Revoke       = 'Revoke',
+  Refuse       = 'Refuse',
+  Unrefuse     = 'Unrefuse',
 }
 
 
@@ -54,3 +54,16 @@ export const ESignOperationsList: Identifiable[] = [
   { uid: ESignOperationType.Unrefuse,     name: 'Desrechazar firmado' },
   { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
 ];
+
+
+export interface ESignCredentials {
+  userID: string;
+  password: string;
+}
+
+
+export interface ESignCommand {
+  commandType: ESignOperationType;
+  credentials: ESignCredentials,
+  transactionUIDs: string[];
+}

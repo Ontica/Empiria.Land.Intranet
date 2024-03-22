@@ -4,7 +4,7 @@
   <emp-ng-card
     [title]="operation.name + ' (' + transactionList.length + ' trámites seleccionados)'"
     [hint]="'Ingrese sus credenciales de firma electrónica.'"
-    (cardClose)="onClose()">
+    (cardClose)="onCloseClicked()">
 
     <div class="card-body-padding">
 
@@ -17,7 +17,7 @@
 
             <div fxFlex>
               <label for="userID">Usuario de firma electrónica:</label>
-              <input type="text" id="userID" name="userID" autocomplete="username" class="text-box" autofocus
+              <input type="text" id="userID" name="userID" autocomplete="username" class="text-box"
                 formControlName="userID"
                 [class.invalid-control]="form.controls.userID.invalid && form.controls.userID.touched">
             </div>
@@ -64,7 +64,7 @@
               <button type="sumbit" class="btn-action"
                 [class.spinner]="submitted"
                 [style.marginRight.px]="8"
-                (click)="executeOperation()">
+                (click)="onExecuteOperationClicked()">
                 {{operation.name}}
               </button>
 

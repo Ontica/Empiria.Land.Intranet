@@ -28,6 +28,7 @@ import { LandExplorerEventType } from '@app/views/land-list/land-explorer/land-e
 import {
   RegistryEntryEditorEventType
 } from '@app/views/registration/registry-entry/registry-entry-editor.component';
+import { ESignModalEventType } from '@app/views/e-sign/e-sign-modal/e-sign-modal.component';
 
 
 enum WorkflowCommanderOptions {
@@ -136,29 +137,6 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private validateOperationToExecute(operation: Identifiable, transactions: TransactionDescriptor[]) {
-    this.selectedTransactions = transactions;
-
-    switch (operation.uid as ESignOperationType) {
-      case ESignOperationType.UpdateStatus:
-        this.displayWorkflowCommanderOption = WorkflowCommanderOptions.ExecuteCommandMultiple;
-        return;
-
-      case ESignOperationType.Sign:
-      case ESignOperationType.Revoke:
-      case ESignOperationType.Refuse:
-      case ESignOperationType.Unrefuse:
-        this.displayESignOption = operation;
-        return;
-
-      default:
-        console.log(`Unhandled user interface operation ${operation}`);
-        return;
-    }
-
-  }
-
-
   onRegistryEntryEditorEvent(event: EventInfo) {
     switch (event.type as RegistryEntryEditorEventType) {
 
@@ -178,8 +156,22 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  onESignModalClosed() {
-    this.displayESignOption = null;
+  onESignModalEvent(event: EventInfo) {
+    switch (event.type as ESignModalEventType) {
+
+      case ESignModalEventType.CLOSE_BUTTON_CLICKED:
+        this.closeESignModal();
+        return;
+
+      case ESignModalEventType.OPERATION_EXECUTED:
+        this.closeESignModal();
+        this.searchESignRequestedTransactions();
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
   }
 
 
@@ -264,6 +256,35 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   private unselectRegistryEntryEditor() {
     this.uiLayer.dispatch(RegistrationAction.UNSELECT_REGISTRY_ENTRY);
+  }
+
+
+  private validateOperationToExecute(operation: Identifiable, transactions: TransactionDescriptor[]) {
+    this.selectedTransactions = transactions;
+
+    switch (operation.uid as ESignOperationType) {
+      case ESignOperationType.UpdateStatus:
+        this.displayWorkflowCommanderOption = WorkflowCommanderOptions.ExecuteCommandMultiple;
+        return;
+
+      case ESignOperationType.Sign:
+      case ESignOperationType.Revoke:
+      case ESignOperationType.Refuse:
+      case ESignOperationType.Unrefuse:
+        this.displayESignOption = operation;
+        return;
+
+      default:
+        console.log(`Unhandled user interface operation ${operation}`);
+        return;
+    }
+
+  }
+
+
+  private closeESignModal() {
+    this.displayESignOption = null;
+    this.selectedTransactions = [];
   }
 
 }

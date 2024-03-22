@@ -9,9 +9,20 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Empty, Identifiable } from '@app/core';
+import { Empty, EventInfo, Identifiable } from '@app/core';
 
-import { TransactionDescriptor } from '@app/models';
+import { MessageBoxService } from '@app/shared/containers/message-box';
+
+import { sendEvent } from '@app/shared/utils';
+
+import { ESignDataService } from '@app/data-services';
+
+import { ESignCommand, ESignOperationType, TransactionDescriptor } from '@app/models';
+
+export enum ESignModalEventType {
+  OPERATION_EXECUTED   = 'ESignModalComponent.Event.OperationExecuted',
+  CLOSE_BUTTON_CLICKED = 'ESignModalComponent.Event.CloseButtonClicked',
+}
 
 @Component({
   selector: 'emp-land-e-sign-modal',
@@ -23,7 +34,7 @@ export class ESignModalComponent {
 
   @Input() transactionList: TransactionDescriptor[] = [];
 
-  @Output() closeEvent = new EventEmitter<void>();
+  @Output() eSignModalEvent = new EventEmitter<EventInfo>();
 
   showPassword = false;
 
@@ -37,8 +48,14 @@ export class ESignModalComponent {
   exceptionMsg: string;
 
 
-  onClose() {
-    this.closeEvent.emit();
+  constructor(private eSignData: ESignDataService,
+              private messageBox: MessageBoxService) {
+
+  }
+
+
+  onCloseClicked() {
+    sendEvent(this.eSignModalEvent, ESignModalEventType.CLOSE_BUTTON_CLICKED);
   }
 
 
@@ -47,13 +64,59 @@ export class ESignModalComponent {
   }
 
 
-  executeOperation() {
+  onExecuteOperationClicked() {
+    if (this.form.invalid || this.submitted) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    switch (this.operation.uid as ESignOperationType) {
+      case ESignOperationType.Sign:
+        this.executeOperation(this.buildCommandToExecute());
+        return;
+
+      case ESignOperationType.Revoke:
+      case ESignOperationType.Refuse:
+      case ESignOperationType.Unrefuse:
+        this.messageBox.showInDevelopment(this.operation.name);
+        return;
+
+      default:
+        console.log(`Unhandled user interface operation ${this.operation.uid}`);
+        return;
+    }
+
+  }
+
+
+  private buildCommandToExecute(): ESignCommand {
+    const command: ESignCommand = {
+      commandType: this.operation.uid as ESignOperationType,
+      credentials: {
+        userID: this.form.value.userID,
+        password: this.form.value.password,
+      },
+      transactionUIDs: this.transactionList.map(x => x.uid),
+    };
+
+    return command;
+  }
+
+
+  private executeOperation(command: ESignCommand) {
     this.submitted = true;
 
-    setTimeout(() => {
-      this.exceptionMsg = 'Funcionalidad en proceso de desarrollo.';
-      this.submitted = false;
-    }, 200);
+    this.eSignData.signMyTransactionDocuments(command)
+      .then(
+        x => this.emitOperationExecuted(),
+        error => this.exceptionMsg = error.message
+      )
+      .finally(() => this.submitted = false);
+  }
+
+
+  private emitOperationExecuted() {
+    sendEvent(this.eSignModalEvent, ESignModalEventType.OPERATION_EXECUTED);
   }
 
 }

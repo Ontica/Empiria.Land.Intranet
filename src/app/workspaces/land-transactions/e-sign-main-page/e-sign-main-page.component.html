@@ -82,6 +82,6 @@
 <emp-land-e-sign-modal *ngIf="displayESignOption"
   [operation]="displayESignOption"
   [transactionList]="selectedTransactions"
-  (closeEvent)="onESignModalClosed()">
+  (eSignModalEvent)="onESignModalEvent($event)">
 
 </emp-land-e-sign-modal>
