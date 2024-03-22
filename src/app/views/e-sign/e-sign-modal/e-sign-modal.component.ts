@@ -5,13 +5,11 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Empty, EventInfo, Identifiable } from '@app/core';
-
-import { MessageBoxService } from '@app/shared/containers/message-box';
+import { Assertion, Empty, EventInfo, Identifiable } from '@app/core';
 
 import { sendEvent } from '@app/shared/utils';
 
@@ -28,13 +26,15 @@ export enum ESignModalEventType {
   selector: 'emp-land-e-sign-modal',
   templateUrl: './e-sign-modal.component.html',
 })
-export class ESignModalComponent {
+export class ESignModalComponent implements OnInit {
 
   @Input() operation: Identifiable = Empty;
 
   @Input() transactionList: TransactionDescriptor[] = [];
 
   @Output() eSignModalEvent = new EventEmitter<EventInfo>();
+
+  title = '';
 
   showPassword = false;
 
@@ -48,9 +48,17 @@ export class ESignModalComponent {
   exceptionMsg: string;
 
 
-  constructor(private eSignData: ESignDataService,
-              private messageBox: MessageBoxService) {
+  constructor(private eSignData: ESignDataService) {
 
+  }
+
+
+  ngOnInit() {
+    if (this.transactionList.length === 1) {
+      this.title = this.operation.name + ' (' + this.transactionList.length + ' trámite seleccionado)'
+    } else {
+      this.title = this.operation.name + ' (' + this.transactionList.length + ' trámites seleccionados)'
+    }
   }
 
 
@@ -59,7 +67,7 @@ export class ESignModalComponent {
   }
 
 
-  toggleShowPassword() {
+  onToggleShowPasswordClicked() {
     this.showPassword = !this.showPassword;
   }
 
@@ -70,26 +78,41 @@ export class ESignModalComponent {
       return;
     }
 
+    const promise = this.validaOperationToExecute();
+
+    if (!!promise) {
+      this.executeOperation(promise);
+    }
+  }
+
+
+  private validaOperationToExecute(): Promise<void> {
     switch (this.operation.uid as ESignOperationType) {
       case ESignOperationType.Sign:
-        this.executeOperation(this.buildCommandToExecute());
-        return;
+        return this.eSignData.signMyTransactionDocuments(this.buildCommandToExecute());
 
       case ESignOperationType.Revoke:
+        return this.eSignData.revokeMyTransactionDocuments(this.buildCommandToExecute());
+
       case ESignOperationType.Refuse:
+        return this.eSignData.refuseMyTransactionDocuments(this.buildCommandToExecute());
+
       case ESignOperationType.Unrefuse:
-        this.messageBox.showInDevelopment(this.operation.name);
-        return;
+        return this.eSignData.unrefuseMyTransactionDocuments(this.buildCommandToExecute());
 
       default:
         console.log(`Unhandled user interface operation ${this.operation.uid}`);
-        return;
+        return null;
     }
-
   }
 
 
   private buildCommandToExecute(): ESignCommand {
+    Assertion.assertValue(this.operation.uid, 'operation');
+    Assertion.assertValue(this.form.value.userID, 'userID');
+    Assertion.assertValue(this.form.value.password, 'password');
+    Assertion.assertValue(this.transactionList.length > 0, 'transactions');
+
     const command: ESignCommand = {
       commandType: this.operation.uid as ESignOperationType,
       credentials: {
@@ -103,20 +126,13 @@ export class ESignModalComponent {
   }
 
 
-  private executeOperation(command: ESignCommand) {
+  private executeOperation(promise: Promise<void>) {
     this.submitted = true;
 
-    this.eSignData.signMyTransactionDocuments(command)
-      .then(
-        x => this.emitOperationExecuted(),
-        error => this.exceptionMsg = error.message
-      )
+    promise
+      .then(x => sendEvent(this.eSignModalEvent, ESignModalEventType.OPERATION_EXECUTED))
+      .catch(error => this.exceptionMsg = error.message)
       .finally(() => this.submitted = false);
-  }
-
-
-  private emitOperationExecuted() {
-    sendEvent(this.eSignModalEvent, ESignModalEventType.OPERATION_EXECUTED);
   }
 
 }

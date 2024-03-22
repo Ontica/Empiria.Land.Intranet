@@ -2,7 +2,7 @@
 <emp-ng-modal-window [config]="{width:'450px'}">
 
   <emp-ng-card
-    [title]="operation.name + ' (' + transactionList.length + ' trámites seleccionados)'"
+    [title]="title"
     [hint]="'Ingrese sus credenciales de firma electrónica.'"
     (cardClose)="onCloseClicked()">
 
@@ -38,7 +38,7 @@
             <mat-checkbox
               [checked]="showPassword"
               (click)="$event.stopPropagation"
-              (change)="toggleShowPassword()"
+              (change)="onToggleShowPasswordClicked()"
               color="warn">
               Mostrar contraseña
             </mat-checkbox>
