@@ -7,15 +7,15 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-
 import { Assertion, Empty, EventInfo, Identifiable } from '@app/core';
 
 import { sendEvent } from '@app/shared/utils';
 
 import { ESignDataService } from '@app/data-services';
 
-import { ESignCommand, ESignOperationType, TransactionDescriptor } from '@app/models';
+import { ESignCommand, ESignCredentials, ESignOperationType, TransactionDescriptor } from '@app/models';
+
+import { ESignFormEventType } from './e-sign-form.component';
 
 export enum ESignModalEventType {
   OPERATION_EXECUTED   = 'ESignModalComponent.Event.OperationExecuted',
@@ -36,14 +36,7 @@ export class ESignModalComponent implements OnInit {
 
   title = '';
 
-  showPassword = false;
-
   submitted = false;
-
-  form = new FormGroup({
-    userID: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required)
-  });
 
   exceptionMsg: string;
 
@@ -67,38 +60,47 @@ export class ESignModalComponent implements OnInit {
   }
 
 
-  onToggleShowPasswordClicked() {
-    this.showPassword = !this.showPassword;
-  }
-
-
-  onExecuteOperationClicked() {
-    if (this.form.invalid || this.submitted) {
-      this.form.markAllAsTouched();
+  onESignFormEvent(event: EventInfo) {
+    if (this.submitted) {
       return;
     }
 
-    const promise = this.validaOperationToExecute();
+    switch (event.type as ESignFormEventType) {
+      case ESignFormEventType.EXECUTE_OPERATION_BUTTON_CLICKED:
+        Assertion.assertValue(event.payload.credentials, 'event.payload.credentials');
+        Assertion.assertValue(event.payload.credentials.userID, 'event.payload.credentials.userID');
+        Assertion.assertValue(event.payload.credentials.password, 'event.payload.credentials.password');
 
-    if (!!promise) {
-      this.executeOperation(promise);
+        const promise = this.validaOperationToExecute(event.payload.credentials as ESignCredentials);
+
+        if (!!promise) {
+          this.executeOperation(promise);
+        }
+
+        break;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
     }
   }
 
 
-  private validaOperationToExecute(): Promise<void> {
+  private validaOperationToExecute(credentials: ESignCredentials): Promise<void> {
+    const command = this.buildCommandToExecute(credentials);
+
     switch (this.operation.uid as ESignOperationType) {
       case ESignOperationType.Sign:
-        return this.eSignData.signMyTransactionDocuments(this.buildCommandToExecute());
+        return this.eSignData.signMyTransactionDocuments(command);
 
       case ESignOperationType.Revoke:
-        return this.eSignData.revokeMyTransactionDocuments(this.buildCommandToExecute());
+        return this.eSignData.revokeMyTransactionDocuments(command);
 
       case ESignOperationType.Refuse:
-        return this.eSignData.refuseMyTransactionDocuments(this.buildCommandToExecute());
+        return this.eSignData.refuseMyTransactionDocuments(command);
 
       case ESignOperationType.Unrefuse:
-        return this.eSignData.unrefuseMyTransactionDocuments(this.buildCommandToExecute());
+        return this.eSignData.unrefuseMyTransactionDocuments(command);
 
       default:
         console.log(`Unhandled user interface operation ${this.operation.uid}`);
@@ -107,19 +109,15 @@ export class ESignModalComponent implements OnInit {
   }
 
 
-  private buildCommandToExecute(): ESignCommand {
+  private buildCommandToExecute(credentials: ESignCredentials): ESignCommand {
     Assertion.assertValue(this.operation.uid, 'operation');
-    Assertion.assertValue(this.form.value.userID, 'userID');
-    Assertion.assertValue(this.form.value.password, 'password');
     Assertion.assertValue(this.transactionList.length > 0, 'transactions');
+    Assertion.assertValue(credentials, 'credentials');
 
     const command: ESignCommand = {
       commandType: this.operation.uid as ESignOperationType,
-      credentials: {
-        userID: this.form.value.userID,
-        password: this.form.value.password,
-      },
       transactionUIDs: this.transactionList.map(x => x.uid),
+      credentials,
     };
 
     return command;
@@ -130,8 +128,8 @@ export class ESignModalComponent implements OnInit {
     this.submitted = true;
 
     promise
-      .then(x => sendEvent(this.eSignModalEvent, ESignModalEventType.OPERATION_EXECUTED))
-      .catch(error => this.exceptionMsg = error.message)
+      .then(() => sendEvent(this.eSignModalEvent, ESignModalEventType.OPERATION_EXECUTED))
+      .catch(error => this.exceptionMsg = error.error.message)
       .finally(() => this.submitted = false);
   }
 

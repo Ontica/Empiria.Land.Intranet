@@ -15,6 +15,7 @@ import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module'
 import { SharedModule } from '@app/shared/shared.module';
 
 import { ESignModalComponent } from './e-sign-modal/e-sign-modal.component';
+import { ESignFormComponent } from './e-sign-modal/e-sign-form.component';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { ESignModalComponent } from './e-sign-modal/e-sign-modal.component';
   ],
   declarations: [
     ESignModalComponent,
+    ESignFormComponent,
   ],
   exports: [
     ESignModalComponent,
