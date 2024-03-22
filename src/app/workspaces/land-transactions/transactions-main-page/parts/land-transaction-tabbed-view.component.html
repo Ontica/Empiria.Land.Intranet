@@ -4,7 +4,8 @@
 
 <mat-tab-group [(selectedIndex)]="selectedTabIndex">
   <mat-tab label="Información del trámite">
-    <emp-land-transaction-editor>
+    <emp-land-transaction-editor
+      [transaction]="transaction">
 
     </emp-land-transaction-editor>
   </mat-tab>

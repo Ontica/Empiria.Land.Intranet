@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 import { combineLatest } from 'rxjs';
 
@@ -22,8 +22,11 @@ import { ArrayLibrary } from '@app/shared/utils';
 import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
 
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
+
 import { TransactionSubmitterEventType } from './transaction-submitter/transaction-submitter.component';
+
 import { RequestedServiceEditorEventType } from './requested-services/requested-service-editor.component';
+
 import { RequestedServiceListEventType } from './requested-services/requested-service-list.component';
 
 
@@ -31,11 +34,11 @@ import { RequestedServiceListEventType } from './requested-services/requested-se
   selector: 'emp-land-transaction-editor',
   templateUrl: './transaction-editor.component.html',
 })
-export class TransactionEditorComponent implements OnInit, OnDestroy {
+export class TransactionEditorComponent implements OnChanges, OnInit, OnDestroy {
 
   @ViewChild('filePrintPreview', { static: true }) filePrintPreview: FilePrintPreviewComponent;
 
-  transaction: Transaction = EmptyTransaction;
+  @Input() transaction: Transaction = EmptyTransaction;
 
   transactionTypeList: TransactionType[] = [];
 
@@ -56,8 +59,14 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
   }
 
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.transaction) {
+      this.resetInitTransactionData();
+    }
+  }
+
+
   ngOnInit() {
-    this.loadTransactionData();
     this.loadDataLists();
   }
 
@@ -233,13 +242,9 @@ export class TransactionEditorComponent implements OnInit, OnDestroy {
   }
 
 
-  private loadTransactionData() {
-    this.helper.select<Transaction>(TransactionStateSelector.SELECTED_TRANSACTION)
-      .subscribe(x => {
-        this.transaction = x;
-        this.resetPanelState();
-        this.insertTransactionDataIfNotExist();
-      });
+  private resetInitTransactionData() {
+    this.resetPanelState();
+    this.insertTransactionDataIfNotExist();
   }
 
 
