@@ -216,6 +216,7 @@ export interface Transaction extends Entity {
   transactionID: string;
   requestedBy: Requester;
   presentationTime: DateString;
+  registrationTime: DateString;
   internalControlNo: string;
   agency: Agency;
   filingOffice: Identifiable;
@@ -241,6 +242,7 @@ export const EmptyTransaction: Transaction = {
   transactionID: '',
   requestedBy: EmptyRequester,
   presentationTime: '',
+  registrationTime: '',
   internalControlNo: '',
   agency: Empty,
   filingOffice: Empty,

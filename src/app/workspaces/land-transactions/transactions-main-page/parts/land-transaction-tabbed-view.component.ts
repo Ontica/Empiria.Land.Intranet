@@ -7,7 +7,7 @@
 
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 
-import { DateStringLibrary } from '@app/core';
+import { DateStringLibrary, isEmpty } from '@app/core';
 
 import { Transaction, EmptyTransaction } from '@app/models';
 
@@ -36,15 +36,27 @@ export class LandTransactionTabbedViewComponent implements OnChanges {
 
 
   private setCardHint() {
-    this.cardHint = `<strong>${this.transaction.transactionID}</strong>`;
+    let cardText = `<strong>${this.transaction.transactionID}</strong>`;
 
-    if (this.transaction.internalControlNo) {
-      const presentationTime = DateStringLibrary.format(this.transaction.presentationTime);
-
-      this.cardHint += ` &nbsp; &nbsp; | &nbsp; &nbsp; <strong> ${this.transaction.internalControlNo} </strong> &nbsp; &nbsp;` +
-        ` | ${this.transaction.subtype.name}` +
-        ` | Presentado el: ${presentationTime}`;
+    if (!!this.transaction.internalControlNo) {
+      cardText += ` &nbsp; &nbsp; | &nbsp; &nbsp; <strong>${this.transaction.internalControlNo}</strong> &nbsp; &nbsp;`;
     }
+
+    if (!isEmpty(this.transaction.subtype)) {
+      cardText += ` &nbsp; &nbsp; | &nbsp; &nbsp; ${this.transaction.subtype.name}`;
+    }
+
+    if (!!this.transaction.presentationTime) {
+      const presentationTime = DateStringLibrary.format(this.transaction.presentationTime);
+      cardText += ` &nbsp; &nbsp; | &nbsp; &nbsp; Presentado el: ${presentationTime}`;
+    }
+
+    if (!!this.transaction.registrationTime) {
+      const registrationTime = DateStringLibrary.format(this.transaction.registrationTime, 'DMY HH:mm');
+      cardText += ` &nbsp; &nbsp; | &nbsp; &nbsp; Registrado el: ${registrationTime}`;
+    }
+
+    this.cardHint = cardText;
   }
 
 }
