@@ -22,7 +22,7 @@ export const ESignStatusList: Identifiable[] = [
   { uid: ESignStatus.Unsigned, name: 'Pendientes de firmar' },
   { uid: ESignStatus.Signed,   name: 'Firmados' },
   { uid: ESignStatus.Refused,  name: 'Rechazados' },
-  { uid: ESignStatus.Revoked,  name: 'Revocados' },
+  // { uid: ESignStatus.Revoked,  name: 'Revocados' },
 ];
 
 
@@ -54,6 +54,37 @@ export const ESignOperationsList: Identifiable[] = [
   { uid: ESignOperationType.Unrefuse,     name: 'Desrechazar firmado' },
   { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
 ];
+
+
+export function buildESignOperationsListByESignStatus(status: ESignStatus): Identifiable[] {
+  switch (status) {
+    case ESignStatus.Unsigned:
+
+      return [
+        { uid: ESignOperationType.Sign,         name: 'Firmar' },
+        { uid: ESignOperationType.Refuse,       name: 'Rechazar firmado' },
+        { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
+      ];
+
+    case ESignStatus.Signed:
+
+      return [
+        { uid: ESignOperationType.Revoke,       name: 'Revocar firma' },
+        { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
+      ];
+
+    case ESignStatus.Refused:
+
+      return [
+        { uid: ESignOperationType.Unrefuse,     name: 'Desrechazar firmado' },
+        { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
+      ];
+
+    case ESignStatus.Revoked:
+    default:
+      return [];
+  }
+}
 
 
 export interface ESignCredentials {

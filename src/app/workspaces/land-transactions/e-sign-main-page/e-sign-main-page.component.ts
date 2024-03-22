@@ -16,9 +16,10 @@ import { RegistrationAction, RegistrationStateSelector, TransactionAction,
 
 import { ESignDataService, TransactionDataService } from '@app/data-services';
 
-import { ESignRequestsQuery, ESignOperationsList, EmptyESignRequestsQuery, ESignStatus, EmptyTransaction,
-         Transaction, TransactionDescriptor, LandExplorerTypes, ESignStatusList, RegistryEntryData,
-         EmptyRegistryEntryData, isRegistryEntryDataValid, ESignOperationType } from '@app/models';
+import { ESignRequestsQuery, EmptyESignRequestsQuery, ESignStatus, EmptyTransaction, Transaction,
+         TransactionDescriptor, LandExplorerTypes, ESignStatusList, RegistryEntryData, EmptyRegistryEntryData,
+         isRegistryEntryDataValid, ESignOperationType,
+         buildESignOperationsListByESignStatus } from '@app/models';
 
 import { EmptyFileViewerData,
          FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
@@ -28,6 +29,7 @@ import { LandExplorerEventType } from '@app/views/land-list/land-explorer/land-e
 import {
   RegistryEntryEditorEventType
 } from '@app/views/registration/registry-entry/registry-entry-editor.component';
+
 import { ESignModalEventType } from '@app/views/e-sign/e-sign-modal/e-sign-modal.component';
 
 
@@ -45,7 +47,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   eSignStatusList = ESignStatusList;
 
-  eSignOperationList = ESignOperationsList;
+  eSignOperationList = [];
 
   query: ESignRequestsQuery = EmptyESignRequestsQuery;
 
@@ -80,6 +82,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    this.buildESignOperationsListByESignStatus();
     this.searchESignRequestedTransactions();
     this.suscribeToSelectedViewersData();
   }
@@ -109,6 +112,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
       case LandExplorerEventType.FILTER_CHANGED:
         this.setESignQuery(event.payload.status ?? ESignStatus.Unsigned, event.payload.keywords ?? '');
+        this.buildESignOperationsListByESignStatus();
         this.searchESignRequestedTransactions();
         return;
 
@@ -182,6 +186,11 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   onCloseFileViewer() {
     this.unselectCurrentFile();
+  }
+
+
+  private buildESignOperationsListByESignStatus() {
+    this.eSignOperationList = buildESignOperationsListByESignStatus(this.query.status);
   }
 
 
