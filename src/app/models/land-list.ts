@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Entity } from "@app/core";
+import { DateString, Entity } from "@app/core";
 
 import { TransactionStage, TransactionStatus } from "./transaction";
 
@@ -19,6 +19,7 @@ export enum LandExplorerTypes {
 export interface LandEntity extends Entity {
   uid: string;
   requestedBy: string;
+  registrationTime: DateString;
 }
 
 

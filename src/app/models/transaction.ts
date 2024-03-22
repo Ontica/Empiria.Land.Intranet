@@ -177,6 +177,7 @@ export interface TransactionDescriptor extends LandEntity {
   transactionID: string;
   requestedBy: string;
   presentationTime: DateString;
+  registrationTime: DateString;
   internalControlNo: string;
   statusName: string;
   assignedToName: string;
@@ -192,6 +193,7 @@ export const EmptyTransactionDescriptor: TransactionDescriptor = {
   transactionID: '',
   requestedBy: '',
   presentationTime: '',
+  registrationTime: '',
   internalControlNo: '',
   statusName: '',
   assignedToName: '',
@@ -357,6 +359,7 @@ export function mapTransactionDescriptorFromTransaction(transaction: Transaction
     transactionID: transaction.transactionID,
     requestedBy: transaction.requestedBy.name,
     presentationTime: transaction.presentationTime,
+    registrationTime: transaction.registrationTime,
     internalControlNo: transaction.internalControlNo,
     statusName: transaction.statusName,
     assignedToName: transaction.assignedTo.name,
