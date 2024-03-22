@@ -5,23 +5,50 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { EventInfo, isEmpty } from '@app/core';
+import { Assertion, EventInfo, isEmpty } from '@app/core';
 
-import { ESignDataService } from '@app/data-services/e-sign.data.service';
+import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { ESignRequestsQuery, ESignOperationsList, EmptyESignRequestsQuery, ESignStatus,
-         EmptyTransaction, Transaction, TransactionDescriptor, LandExplorerTypes,
-         ESignStatusList } from '@app/models';
+import { RegistrationAction, RegistrationStateSelector, TransactionAction,
+         TransactionStateSelector } from '@app/presentation/exported.presentation.types';
+
+import { ESignDataService, TransactionDataService } from '@app/data-services';
+
+import { ESignRequestsQuery, ESignOperationsList, EmptyESignRequestsQuery, ESignStatus, EmptyTransaction,
+         Transaction, TransactionDescriptor, LandExplorerTypes, ESignStatusList, RegistryEntryData,
+         EmptyRegistryEntryData, isRegistryEntryDataValid, ESignOperationType } from '@app/models';
+
+import { EmptyFileViewerData,
+         FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 import { LandExplorerEventType } from '@app/views/land-list/land-explorer/land-explorer.component';
+
+import {
+  RegistryEntryEditorEventType
+} from '@app/views/registration/registry-entry/registry-entry-editor.component';
+
+
+enum WorkflowCommanderOptions {
+  ExecuteCommand         = 'ExecuteCommand',
+  ExecuteCommandMultiple = 'ExecuteCommandMultiple',
+  ReceiveTransactions    = 'ReceiveTransactions',
+};
+
+
+enum ESignOptions {
+  Sign     = 'Sign',
+  Revoke   = 'Revoke',
+  Refuse   = 'Refuse',
+  Unrefuse = 'Unrefuse',
+};
 
 @Component({
   selector: 'emp-land-e-sign-main-page',
   templateUrl: './e-sign-main-page.component.html',
 })
-export class ESignMainPageComponent implements OnInit {
+export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   eSignStatusList = ESignStatusList;
 
@@ -32,19 +59,41 @@ export class ESignMainPageComponent implements OnInit {
   transactionList: TransactionDescriptor[] = [];
 
   selectedTransaction: Transaction = EmptyTransaction;
+  selectedTransactions: TransactionDescriptor[] = [];
+  selectedFileViewerData: FileViewerData = EmptyFileViewerData;
+  selectedRegistryEntryData: RegistryEntryData = EmptyRegistryEntryData;
+
+  displayTransactionTabbedView = false;
+  displayWorkflowCommanderOption: WorkflowCommanderOptions = null;
+  displayESignOption: ESignOptions = null;
+  displayFileViewer = false;
+  displayRegistryEntryEditor = false;
 
   isLoading = false;
+  isLoadingESignRequest = false;
 
   landExplorerTypes = LandExplorerTypes;
 
+  subscriptionHelper: SubscriptionHelper;
 
-  constructor(private eSignData: ESignDataService) {
+  WorkflowCommanderOptions = WorkflowCommanderOptions;
 
+
+  constructor(private uiLayer: PresentationLayer,
+              private eSignData: ESignDataService,
+              private transactionData: TransactionDataService) {
+    this.subscriptionHelper = uiLayer.createSubscriptionHelper();
   }
 
 
   ngOnInit() {
     this.searchESignRequestedTransactions();
+    this.suscribeToSelectedViewersData();
+  }
+
+
+  ngOnDestroy() {
+    this.subscriptionHelper.destroy();
   }
 
 
@@ -61,39 +110,107 @@ export class ESignMainPageComponent implements OnInit {
   onESignExplorerEvent(event: EventInfo): void {
     switch (event.type as LandExplorerEventType) {
 
-      // case LandExplorerEventType.CREATE_ITEM_CLICKED:
-      //   this.displayOptionModalSelected = 'CreateTransactionEditor';
-      //   return;
-
-      // case LandExplorerEventType.RECEIVE_ITEMS_CLICKED:
-      //   this.displayOptionModalSelected = 'ReceiveTransactions';
-      //   return;
+      case LandExplorerEventType.RECEIVE_ITEMS_CLICKED:
+        this.displayWorkflowCommanderOption = WorkflowCommanderOptions.ReceiveTransactions;
+        return;
 
       case LandExplorerEventType.FILTER_CHANGED:
         this.setESignQuery(event.payload.status ?? ESignStatus.Unsigned, event.payload.keywords ?? '');
         this.searchESignRequestedTransactions();
         return;
 
-      // case LandExplorerEventType.ITEM_SELECTED:
-      //   this.isLoadingTransaction = true;
-      //   this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION,
-      //     { transactionUID: event.payload.item.uid });
-      //   return;
+      case LandExplorerEventType.ITEM_SELECTED:
+        Assertion.assertValue(event.payload.item.uid, 'event.payload.item.uid');
+        this.getTransaction(event.payload.item.uid);
+        return;
 
-      // case LandExplorerEventType.ITEM_EXECUTE_OPERATION:
-      //   this.displayOptionModalSelected = 'ExecuteCommand';
-      //   this.selectedTransactions = [event.payload.item];
-      //   return;
+      case LandExplorerEventType.ITEM_EXECUTE_OPERATION:
+        this.displayWorkflowCommanderOption = WorkflowCommanderOptions.ExecuteCommand;
+        this.selectedTransactions = [event.payload.item];
+        return;
 
-      // case LandExplorerEventType.ITEMS_EXECUTE_OPERATION:
-      //   this.displayOptionModalSelected = 'ExecuteCommandMultiple';
-      //   this.selectedTransactions = event.payload.items;
-      //   return;
+      case LandExplorerEventType.ITEMS_EXECUTE_OPERATION:
+        Assertion.assertValue(event.payload.operation.uid, 'event.payload.operation.uid');
+        Assertion.assertValue(event.payload.items, 'event.payload.items');
+
+        this.validateOperationToExecute(event.payload.operation.uid, event.payload.items);
+
+        return;
 
       default:
         console.log(`Unhandled user interface event ${event.type}`);
         return;
     }
+  }
+
+
+  private validateOperationToExecute(operation: ESignOperationType, transactions: TransactionDescriptor[]) {
+    this.selectedTransactions = transactions;
+
+    switch (operation) {
+      case ESignOperationType.UpdateStatus:
+        this.displayWorkflowCommanderOption = WorkflowCommanderOptions.ExecuteCommandMultiple;
+        return;
+
+      case ESignOperationType.Sign:
+        this.displayESignOption = ESignOptions.Sign;
+        return;
+
+      case ESignOperationType.Revoke:
+        this.displayESignOption = ESignOptions.Revoke;
+        return;
+
+      case ESignOperationType.Refuse:
+        this.displayESignOption = ESignOptions.Refuse;
+        return;
+
+      case ESignOperationType.Unrefuse:
+        this.displayESignOption = ESignOptions.Unrefuse;
+        return;
+
+      default:
+        console.log(`Unhandled user interface operation ${operation}`);
+        return;
+    }
+
+  }
+
+
+  onRegistryEntryEditorEvent(event: EventInfo) {
+    switch (event.type as RegistryEntryEditorEventType) {
+
+      case RegistryEntryEditorEventType.CLOSE_BUTTON_CLICKED:
+        this.unselectRegistryEntryEditor();
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
+  }
+
+
+  onOptionModalClosed() {
+    this.displayWorkflowCommanderOption = null;
+  }
+
+
+  onCloseTransactionEditor() {
+    this.unselectCurrentTransaction();
+  }
+
+
+  onCloseFileViewer() {
+    this.unselectCurrentFile();
+  }
+
+
+  private suscribeToSelectedViewersData() {
+    this.subscriptionHelper.select<RegistryEntryData>(RegistrationStateSelector.SELECTED_REGISTRY_ENTRY)
+      .subscribe(x => this.setRegistryEntryData(x));
+
+    this.subscriptionHelper.select<FileViewerData>(TransactionStateSelector.SELECTED_FILE_LIST)
+      .subscribe(x => this.setFileViewerData(x));
   }
 
 
@@ -107,8 +224,58 @@ export class ESignMainPageComponent implements OnInit {
   }
 
 
+  private getTransaction(transactionUID: string) {
+    this.isLoadingESignRequest = true;
+
+    this.transactionData.getTransaction(transactionUID)
+      .toPromise()
+      .then(x => this.setTransaction(x))
+      .finally(() => this.isLoadingESignRequest = false)
+  }
+
+
   private setESignQuery(status: ESignStatus, keywords: string) {
     this.query = { ...this.query, ...{ status, keywords }};
+  }
+
+
+  private setTransaction(transaction: Transaction) {
+    this.selectedTransaction = transaction;
+    this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
+    this.unselectCurrentSelections();
+  }
+
+
+  private setRegistryEntryData(data: RegistryEntryData) {
+    this.selectedRegistryEntryData = data;
+    this.displayRegistryEntryEditor = isRegistryEntryDataValid(this.selectedRegistryEntryData);
+  }
+
+
+  private setFileViewerData(data: FileViewerData) {
+    this.selectedFileViewerData = data;
+    this.displayFileViewer = this.selectedFileViewerData.fileList.length > 0;
+  }
+
+
+  private unselectCurrentSelections() {
+    this.unselectCurrentFile();
+    this.unselectRegistryEntryEditor();
+  }
+
+
+  private unselectCurrentTransaction() {
+    this.setTransaction(EmptyTransaction);
+  }
+
+
+  private unselectCurrentFile() {
+    this.uiLayer.dispatch(TransactionAction.UNSELECT_FILE_LIST);
+  }
+
+
+  private unselectRegistryEntryEditor() {
+    this.uiLayer.dispatch(RegistrationAction.UNSELECT_REGISTRY_ENTRY);
   }
 
 }

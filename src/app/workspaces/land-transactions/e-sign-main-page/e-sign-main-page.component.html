@@ -1,6 +1,10 @@
+<emp-ng-spinner #spinner [visible]="isLoadingESignRequest"></emp-ng-spinner>
+
 <div class="explorer">
 
-  <div class="primary">
+  <div class="primary"
+    [fxHide]="displayFileViewer"
+    [fxHide.lt-lg]="displayTransactionTabbedView || displayFileViewer || displayRegistryEntryEditor">
 
     <emp-land-explorer
       [title]="titleWithStatus"
@@ -17,4 +21,59 @@
 
   </div>
 
+  <div *ngIf="displayFileViewer"
+    class="primary-resizable primary-floating"
+    [fxHide.lt-lg]="displayRegistryEntryEditor"
+    [ngClass.lt-lg]="'primary-resizable-disable'"
+    empNgResizable>
+
+    <emp-land-file-viewer
+      [fileViewerData]="selectedFileViewerData"
+      [cardFloatingEffect]="true"
+      (closeEvent)="onCloseFileViewer()">
+
+    </emp-land-file-viewer>
+
+  </div>
+
+
+  <div *ngIf="displayTransactionTabbedView"
+    class="secondary"
+    [fxHide]="displayRegistryEntryEditor"
+    [fxHide.lt-lg]="displayRegistryEntryEditor || displayFileViewer">
+
+    <emp-land-transaction-tabbed-view
+        [transaction]="selectedTransaction"
+        (closeEvent)="onCloseTransactionEditor()">
+
+    </emp-land-transaction-tabbed-view>
+
+  </div>
+
+
+  <div *ngIf="displayRegistryEntryEditor"
+    class="secondary">
+
+    <emp-land-registry-entry-editor
+      [data]="selectedRegistryEntryData"
+      [cardFloatingEffect]="true"
+      (registryEntryEditorEvent)="onRegistryEntryEditorEvent($event)">
+
+    </emp-land-registry-entry-editor>
+
+  </div>
+
 </div>
+
+
+<emp-ng-modal-window *ngIf="displayWorkflowCommanderOption"
+                     [config]="{width:'920px'}">
+
+    <emp-land-workflow-commander
+      [transactionList]="displayWorkflowCommanderOption === WorkflowCommanderOptions.ReceiveTransactions ? [] : selectedTransactions"
+      [canEditList]="displayWorkflowCommanderOption !== WorkflowCommanderOptions.ExecuteCommand"
+      (closeEvent)="onOptionModalClosed()">
+
+    </emp-land-workflow-commander>
+
+</emp-ng-modal-window>

@@ -5,11 +5,9 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Identifiable } from "@app/core";
+import { Identifiable } from '@app/core';
 
-import { TransactionsOperationType } from "./transaction";
-
-import { LandQuery } from "./land-list";
+import { LandQuery } from './land-list';
 
 
 export enum ESignStatus {
@@ -41,15 +39,18 @@ export const EmptyESignRequestsQuery: ESignRequestsQuery = {
 
 
 export enum ESignOperationType {
-  ESignMultiple = 'e-sign-multiple',
-  RevokeESignMultiple = 'revoke-e-sign-multiple',
-  RejectESignMultiple = 'reject-e-sign-multiple',
+  UpdateStatus = 'update-status',
+  Sign         = 'sign',
+  Revoke       = 'revoke',
+  Refuse       = 'refuse',
+  Unrefuse     = 'unrefuse',
 }
 
 
 export const ESignOperationsList: Identifiable[] = [
-  { uid: TransactionsOperationType.UpdateWorkflowMultiple, name: 'Cambiar estado' },
-  { uid: ESignOperationType.ESignMultiple,          name: 'Firmar' },
-  { uid: ESignOperationType.RevokeESignMultiple,    name: 'Revocar' },
-  { uid: ESignOperationType.RejectESignMultiple,    name: 'Rechazar' },
+  { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
+  { uid: ESignOperationType.Sign,         name: 'Firmar' },
+  { uid: ESignOperationType.Revoke,       name: 'Revocar firma' },
+  { uid: ESignOperationType.Refuse,       name: 'Rechazar firmado' },
+  { uid: ESignOperationType.Unrefuse,     name: 'Desrechazar firmado' },
 ];
