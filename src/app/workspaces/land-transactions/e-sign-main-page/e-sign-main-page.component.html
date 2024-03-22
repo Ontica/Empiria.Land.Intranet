@@ -72,8 +72,16 @@
     <emp-land-workflow-commander
       [transactionList]="displayWorkflowCommanderOption === WorkflowCommanderOptions.ReceiveTransactions ? [] : selectedTransactions"
       [canEditList]="displayWorkflowCommanderOption !== WorkflowCommanderOptions.ExecuteCommand"
-      (closeEvent)="onOptionModalClosed()">
+      (closeEvent)="onWorkflowCommanderClosed()">
 
     </emp-land-workflow-commander>
 
 </emp-ng-modal-window>
+
+
+<emp-land-e-sign-modal *ngIf="displayESignOption"
+  [operation]="displayESignOption"
+  [transactionList]="selectedTransactions"
+  (closeEvent)="onESignModalClosed()">
+
+</emp-land-e-sign-modal>

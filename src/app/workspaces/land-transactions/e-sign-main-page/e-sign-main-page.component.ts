@@ -7,7 +7,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { Assertion, EventInfo, isEmpty } from '@app/core';
+import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
@@ -36,14 +36,6 @@ enum WorkflowCommanderOptions {
   ReceiveTransactions    = 'ReceiveTransactions',
 };
 
-
-enum ESignOptions {
-  Sign     = 'Sign',
-  Revoke   = 'Revoke',
-  Refuse   = 'Refuse',
-  Unrefuse = 'Unrefuse',
-};
-
 @Component({
   selector: 'emp-land-e-sign-main-page',
   templateUrl: './e-sign-main-page.component.html',
@@ -65,7 +57,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   displayTransactionTabbedView = false;
   displayWorkflowCommanderOption: WorkflowCommanderOptions = null;
-  displayESignOption: ESignOptions = null;
+  displayESignOption: Identifiable = null;
   displayFileViewer = false;
   displayRegistryEntryEditor = false;
 
@@ -133,7 +125,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
         Assertion.assertValue(event.payload.operation.uid, 'event.payload.operation.uid');
         Assertion.assertValue(event.payload.items, 'event.payload.items');
 
-        this.validateOperationToExecute(event.payload.operation.uid, event.payload.items);
+        this.validateOperationToExecute(event.payload.operation, event.payload.items);
 
         return;
 
@@ -144,28 +136,19 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private validateOperationToExecute(operation: ESignOperationType, transactions: TransactionDescriptor[]) {
+  private validateOperationToExecute(operation: Identifiable, transactions: TransactionDescriptor[]) {
     this.selectedTransactions = transactions;
 
-    switch (operation) {
+    switch (operation.uid as ESignOperationType) {
       case ESignOperationType.UpdateStatus:
         this.displayWorkflowCommanderOption = WorkflowCommanderOptions.ExecuteCommandMultiple;
         return;
 
       case ESignOperationType.Sign:
-        this.displayESignOption = ESignOptions.Sign;
-        return;
-
       case ESignOperationType.Revoke:
-        this.displayESignOption = ESignOptions.Revoke;
-        return;
-
       case ESignOperationType.Refuse:
-        this.displayESignOption = ESignOptions.Refuse;
-        return;
-
       case ESignOperationType.Unrefuse:
-        this.displayESignOption = ESignOptions.Unrefuse;
+        this.displayESignOption = operation;
         return;
 
       default:
@@ -190,8 +173,13 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  onOptionModalClosed() {
+  onWorkflowCommanderClosed() {
     this.displayWorkflowCommanderOption = null;
+  }
+
+
+  onESignModalClosed() {
+    this.displayESignOption = null;
   }
 
 

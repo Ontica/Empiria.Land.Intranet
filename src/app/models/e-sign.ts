@@ -48,9 +48,9 @@ export enum ESignOperationType {
 
 
 export const ESignOperationsList: Identifiable[] = [
-  { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
   { uid: ESignOperationType.Sign,         name: 'Firmar' },
   { uid: ESignOperationType.Revoke,       name: 'Revocar firma' },
   { uid: ESignOperationType.Refuse,       name: 'Rechazar firmado' },
   { uid: ESignOperationType.Unrefuse,     name: 'Desrechazar firmado' },
+  { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
 ];

@@ -1,0 +1,83 @@
+
+<emp-ng-modal-window [config]="{width:'450px'}">
+
+  <emp-ng-card
+    [title]="operation.name + ' (' + transactionList.length + ' trámites seleccionados)'"
+    [hint]="'Ingrese sus credenciales de firma electrónica.'"
+    (cardClose)="onClose()">
+
+    <div class="card-body-padding">
+
+      <form [formGroup]="form" empNgFormKeyDownEnter autocomplete="off"
+        class="form-section">
+
+        <div fxLayout="column" [style.margin-right.px]="-8">
+
+          <div fxLayout="column" fxLayoutGap="0.75rem">
+
+            <div fxFlex>
+              <label for="userID">Usuario de firma electrónica:</label>
+              <input type="text" id="userID" name="userID" autocomplete="username" class="text-box" autofocus
+                formControlName="userID"
+                [class.invalid-control]="form.controls.userID.invalid && form.controls.userID.touched">
+            </div>
+
+            <div fxFlex>
+              <label for="password">Contraseña de firma electrónica:</label>
+              <input [type]="showPassword ? 'text' : 'password'"
+                id="password" name="password" autocomplete="current-password" class="text-box"
+                formControlName="password"
+                [class.invalid-control]="form.controls.password.invalid && form.controls.password.touched">
+            </div>
+
+          </div>
+
+
+          <div fxFlex="none" [style.margin-top.px]="8">
+
+            <mat-checkbox
+              [checked]="showPassword"
+              (click)="$event.stopPropagation"
+              (change)="toggleShowPassword()"
+              color="warn">
+              Mostrar contraseña
+            </mat-checkbox>
+
+          </div>
+
+          <div *ngIf="exceptionMsg" class="inline-error"
+            [style.marginTop.px]="8"
+            [style.marginBottom.px]="0">
+            {{exceptionMsg}}
+          </div>
+
+
+          <mat-divider class="horizontal">
+
+          </mat-divider>
+
+
+          <div fxLayout="row" fxLayoutAlign="end center">
+
+            <div fxFlex="none">
+
+              <button type="sumbit" class="btn-action"
+                [class.spinner]="submitted"
+                [style.marginRight.px]="8"
+                (click)="executeOperation()">
+                {{operation.name}}
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </emp-ng-card>
+
+</emp-ng-modal-window>
