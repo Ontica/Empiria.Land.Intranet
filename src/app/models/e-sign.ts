@@ -21,8 +21,8 @@ export enum ESignStatus {
 export const ESignStatusList: Identifiable[] = [
   { uid: ESignStatus.Unsigned, name: 'Pendientes de firmar' },
   { uid: ESignStatus.Signed,   name: 'Firmados' },
-  { uid: ESignStatus.Refused,  name: 'Rechazados' },
-  // { uid: ESignStatus.Revoked,  name: 'Revocados' },
+//  { uid: ESignStatus.Refused,  name: 'Rechazados' },
+  { uid: ESignStatus.Revoked,  name: 'Revocados' },
 ];
 
 
@@ -62,7 +62,7 @@ export function buildESignOperationsListByESignStatus(status: ESignStatus): Iden
 
       return [
         { uid: ESignOperationType.Sign,         name: 'Firmar' },
-        { uid: ESignOperationType.Refuse,       name: 'Rechazar firmado' },
+   //     { uid: ESignOperationType.Refuse,       name: 'Rechazar firmado' },
         { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
       ];
 
@@ -76,13 +76,16 @@ export function buildESignOperationsListByESignStatus(status: ESignStatus): Iden
     case ESignStatus.Refused:
 
       return [
-        { uid: ESignOperationType.Unrefuse,     name: 'Desrechazar firmado' },
-        { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
+        // { uid: ESignOperationType.Unrefuse,     name: 'Desrechazar firmado' },
+        // { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
       ];
 
     case ESignStatus.Revoked:
     default:
-      return [];
+      return [
+        { uid: ESignOperationType.Sign,         name: 'Firmar' },
+        { uid: ESignOperationType.UpdateStatus, name: 'Cambiar estado' },
+      ];
   }
 }
 
