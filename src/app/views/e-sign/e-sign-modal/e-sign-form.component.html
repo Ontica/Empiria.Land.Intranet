@@ -7,7 +7,7 @@
 
       <div fxFlex>
         <label for="userID">Usuario de firma electrónica:</label>
-        <input type="text" id="userID" name="userID" autocomplete="username" class="text-box"
+        <input type="text" id="userID" name="userID" autocomplete="off" class="text-box"
           formControlName="userID"
           [class.invalid-control]="form.controls.userID.invalid && form.controls.userID.touched">
       </div>
@@ -15,7 +15,7 @@
       <div fxFlex>
         <label for="password">Contraseña de firma electrónica:</label>
         <input [type]="showPassword ? 'text' : 'password'"
-          id="password" name="password" autocomplete="current-password" class="text-box"
+          id="password" name="password" autocomplete="new-password" class="text-box"
           formControlName="password"
           [class.invalid-control]="form.controls.password.invalid && form.controls.password.touched">
       </div>

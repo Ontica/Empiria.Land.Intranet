@@ -23,7 +23,7 @@ export enum ESignFormEventType {
   selector: 'emp-land-e-sign-form',
   templateUrl: './e-sign-form.component.html',
 })
-export class ESignFormComponent  {
+export class ESignFormComponent {
 
   @Input() buttonText: string = 'Ejecutar';
 
