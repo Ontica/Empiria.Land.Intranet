@@ -15,7 +15,7 @@
       <div fxFlex>
         <label for="password">Contraseña de firma electrónica:</label>
         <input [type]="showPassword ? 'text' : 'password'"
-          id="password" name="password" autocomplete="new-password" class="text-box"
+          id="password" name="password" autocomplete="one-time-code" class="text-box"
           formControlName="password"
           [class.invalid-control]="form.controls.password.invalid && form.controls.password.touched">
       </div>
