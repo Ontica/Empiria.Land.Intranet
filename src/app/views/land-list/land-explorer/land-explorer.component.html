@@ -32,9 +32,9 @@
         [queryStatus]="query.status"
         [queryKeywords]="query.keywords"
         [statusList]="statusList"
-        [displayStatusSelect]="explorerType === landExplorerTypes.ESign"
-        [displayReceiveButton]="explorerType === landExplorerTypes.Transaction"
-        [displayCreateButton]="explorerType === landExplorerTypes.Transaction"
+        [displayStatusSelect]="canSelectStatus"
+        [displayReceiveButton]="canReceive"
+        [displayCreateButton]="canCreate"
         (listActionsEvent)="onListActionsEvent($event)">
 
       </emp-land-list-actions>

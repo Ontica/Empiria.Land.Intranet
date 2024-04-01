@@ -51,6 +51,12 @@ export class LandExplorerComponent implements OnChanges {
 
   @Input() statusList: Identifiable[] = [];
 
+  @Input() canSelectStatus: boolean = false;
+
+  @Input() canReceive: boolean = false;
+
+  @Input() canCreate: boolean = false;
+
   @Input() isLoading = false;
 
   @Output() landExplorerEvent = new EventEmitter<EventInfo>();

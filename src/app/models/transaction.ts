@@ -46,7 +46,6 @@ export interface TransactionType extends Identifiable {
 }
 
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface TransactionSubtype extends Identifiable {
 
 }
@@ -82,7 +81,6 @@ export const EmptyRequester: Requester = {
 };
 
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Agency extends Identifiable {
 
 }
@@ -316,6 +314,19 @@ export interface RequestedServiceFields {
   quantity: number;
   notes: string;
 }
+
+
+export const TransactionViewCanReceive: string[] = [
+  'Transactions.MyInbox',
+  'Transactions.ControlDesk',
+  'Transactions.All',
+];
+
+
+export const TransactionViewCanCreate: string[] = [
+  'Transactions.Pending',
+  'Transactions.All',
+];
 
 //
 // Functions

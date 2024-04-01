@@ -12,6 +12,8 @@
       [query]="query"
       [itemsList]="transactionList"
       [selectedItemUID]="selectedTransaction.uid ?? null"
+      [canReceive]="canReceiveTransactions"
+      [canCreate]="canCreateTransaction"
       [isLoading]="isLoading"
       [operationsList]="transactionsOperationList"
       (landExplorerEvent)="onTransactionExplorerEvent($event)">

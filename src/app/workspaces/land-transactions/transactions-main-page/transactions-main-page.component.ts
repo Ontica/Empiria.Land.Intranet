@@ -18,8 +18,8 @@ import { View } from '@app/main-layout';
 
 import { TransactionDescriptor, Transaction, EmptyTransaction, TransactionQuery, EmptyTransactionQuery,
          mapTransactionStageFromViewName, mapTransactionStatusFromViewName, RegistryEntryData,
-         EmptyRegistryEntryData, isRegistryEntryDataValid, TransactionsOperationList,
-         LandExplorerTypes } from '@app/models';
+         EmptyRegistryEntryData, isRegistryEntryDataValid, TransactionsOperationList, LandExplorerTypes,
+         TransactionViewCanReceive, TransactionViewCanCreate } from '@app/models';
 
 import { EmptyFileViewerData, FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
@@ -51,6 +51,9 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   selectedTransactions: TransactionDescriptor[] = [];
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedRegistryEntryData: RegistryEntryData = EmptyRegistryEntryData;
+
+  canReceiveTransactions = false;
+  canCreateTransaction = false;
 
   displayTransactionTabbedView = false;
   displayOptionModalSelected: TransactionModalOptions = null;
@@ -207,6 +210,13 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   private onCurrentViewChanged(newView: View) {
     this.currentView = newView;
     this.applyTransactionsFilter();
+    this.setDisplayActionButtons();
+  }
+
+
+  private setDisplayActionButtons() {
+    this.canReceiveTransactions = TransactionViewCanReceive.includes(this.currentView.name);
+    this.canCreateTransaction = TransactionViewCanCreate.includes(this.currentView.name);
   }
 
 
