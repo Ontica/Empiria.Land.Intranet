@@ -19,7 +19,7 @@ export enum ESignStatus {
 
 
 export const ESignStatusList: Identifiable[] = [
-  { uid: ESignStatus.Unsigned, name: 'Pendientes de firmar' },
+  { uid: ESignStatus.Unsigned, name: 'Por firmar' },
   { uid: ESignStatus.Signed,   name: 'Firmados' },
 //  { uid: ESignStatus.Refused,  name: 'Rechazados' },
   { uid: ESignStatus.Revoked,  name: 'Revocados' },

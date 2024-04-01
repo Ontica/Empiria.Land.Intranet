@@ -14,14 +14,14 @@
 
     <div class="card-title">
 
-      {{title}}
+      <div [innerHTML]="title"></div>
 
       <div class="card-hint" empNgProgressText
-           loadingText="Cargando trámites"
-           [finalText]="selection.hasValue() ?
-              selection.selected.length + ' de ' + itemsList.length + ' trámites seleccionados':
-              itemsList.length + ' trámites encontrados'"
-           [isLoading]="isLoading">
+        loadingText="Cargando trámites"
+        [finalText]="selection.hasValue() ?
+          selection.selected.length + ' de ' + itemsList.length + ' trámites seleccionados':
+          itemsList.length + ' trámites encontrados'"
+        [isLoading]="isLoading">
       </div>
 
     </div>

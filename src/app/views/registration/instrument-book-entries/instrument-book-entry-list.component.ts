@@ -109,7 +109,7 @@ export class InstrumentBookEntryListComponent implements OnChanges, OnDestroy {
   private getConfirmMessage(bookEntry: BookEntry): string {
     return `
       <table style="margin: 0;">
-        <tr><td>Distrito: </td><td><strong> ${bookEntry.recorderOfficeName} </strong></td></tr>
+        <tr><td>Oficialía: </td><td><strong> ${bookEntry.recorderOfficeName} </strong></td></tr>
 
         <tr><td>Sección: </td><td><strong> ${bookEntry.recordingSectionName} </strong></td></tr>
 

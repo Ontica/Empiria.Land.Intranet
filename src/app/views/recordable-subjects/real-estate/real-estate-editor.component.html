@@ -49,7 +49,7 @@
     <div fxLayout="row" fxLayout.lt-md="column">
 
       <div fxFlex="255px" fxFlex.lt-md="none">
-        <label>Distrito:</label>
+        <label>Oficialía:</label>
         <emp-ng-select #districtControl formControlName="recorderOfficeUID"
           [items]="recorderOfficeList"
           [showError]="formHelper.isControlInvalid(form.controls.recorderOfficeUID)"
@@ -61,7 +61,7 @@
         <label>Municipio:</label>
         <emp-ng-select formControlName="municipalityUID"
           [items]="municipalityList"
-          [placeholder]="municipalityList.length === 0 ? 'Seleccione el distrito' : 'Seleccione'"
+          [placeholder]="municipalityList.length === 0 ? 'Seleccione la oficialía' : 'Seleccione'"
           [showError]="formHelper.isControlInvalid(form.controls.municipalityUID)">
         </emp-ng-select>
       </div>

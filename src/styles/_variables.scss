@@ -144,11 +144,14 @@ $checkbox-background-color: $primary-color-light;
 $checkbox-warning-background-color: $layout-secondary-color;
 $date-picker-width: 90px;
 
+$tag-background-color: hsl(167, 36%, 95%);
 $tag-default-background-color: hsl(167, 36%, 88%);
-$tag-default-color: hsl(205, 20%, 50%);
 $tag-info-background-color: hsl(205, 20%, 60%);
-$tag-warning-background-color: hsl(54, 37%, 74%);
 $tag-error-background-color: hsl(357, 47%, 65%);
+$tag-warning-color: hsl(54, 37%, 74%);
+
+$tag-default-color: hsl(205, 20%, 50%);
+
 $list-selection-header-background-color: hsl(210, 20%, 90%) !default;
 $simple-list-background-color: hsl(210, 20%, 96%) !default;
 

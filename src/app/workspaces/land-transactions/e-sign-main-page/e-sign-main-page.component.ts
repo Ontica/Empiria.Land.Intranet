@@ -98,7 +98,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
     if (isEmpty(status)) {
       return 'Firma electrónica';
     } else {
-      return `Firma electrónica - ${status.name}`;
+      return `Firma electrónica <span class="tag tag-info tag-medium">${status.name}</span>`;
     }
   }
 

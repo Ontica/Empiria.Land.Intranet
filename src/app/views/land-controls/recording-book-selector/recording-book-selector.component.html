@@ -8,7 +8,7 @@
 
       <div fxFlex="20">
 
-        <label>Distrito:</label>
+        <label>Oficialía:</label>
 
         <emp-ng-select
           [(ngModel)]="recorderOfficeSelected" name="recorderOffice"
@@ -34,7 +34,7 @@
           [items]="recordingSectionList"
           [required]="fieldsRequired"
           [disabled]="!recorderOfficeSelected"
-          [placeholder]="!recorderOfficeSelected ? 'Seleccione el distrito' : 'Seleccione'"
+          [placeholder]="!recorderOfficeSelected ? 'Seleccione la oficialía' : 'Seleccione'"
           [showError]="fieldsRequired && ( !recordingSectionSelected || !recordingSectionSelected.uid )"
           (changes)="onRecordingSectionChange($event)">
         </emp-ng-select>
