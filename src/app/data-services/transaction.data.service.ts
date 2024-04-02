@@ -52,20 +52,6 @@ export class TransactionDataService {
   }
 
 
-  getFilingOffices(): Observable<Identifiable[]> {
-    const path = `v5/land/filing-offices`;
-
-    return this.http.get<Identifiable[]>(path);
-  }
-
-
-  getRecordingSections(): Observable<RecordingSection[]> {
-    const path = `v5/land/recording-sections`;
-
-    return this.http.get<RecordingSection[]>(path);
-  }
-
-
   getTransactionTypes(): Observable<TransactionType[]> {
     const path = `v5/land/transaction-types`;
 

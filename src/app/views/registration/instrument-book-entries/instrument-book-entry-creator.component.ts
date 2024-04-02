@@ -9,15 +9,14 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { combineLatest } from 'rxjs';
-
 import { Assertion, Command, Identifiable } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { RegistrationCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
+import { RecordableSubjectsStateSelector,
+         RegistrationCommandType } from '@app/core/presentation/presentation-types';
 
-import { InstrumentBookEntryFields, RecordingSection } from '@app/models';
+import { InstrumentBookEntryFields, RecorderOffice, RecordingSection } from '@app/models';
 
 import { FormHelper } from '@app/shared/utils';
 
@@ -55,12 +54,18 @@ export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.loadDataList();
+    this.loadRecorderOfficeList();
   }
 
 
   ngOnDestroy() {
     this.helper.destroy();
+  }
+
+
+  onRecorderOfficeChange(recorderOffice: RecorderOffice) {
+    this.recordingSectionList = recorderOffice?.recordingSections ?? [];
+    this.form.controls.recordingSection.reset('');
   }
 
 
@@ -88,15 +93,12 @@ export class InstrumentBookEntryCreatorComponent implements OnInit, OnDestroy {
   }
 
 
-  private loadDataList() {
-    combineLatest([
-      this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST),
-      this.helper.select<RecordingSection[]>(TransactionStateSelector.RECORDING_SECTION_LIST),
-    ])
-    .subscribe(([a, b]) => {
-      this.recorderOfficeList = a;
-      this.recordingSectionList = b;
-    });
+  private loadRecorderOfficeList() {
+    this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
+      .subscribe(x => {
+        this.recorderOfficeList = x;
+        this.recordingSectionList = [];
+      });
   }
 
 

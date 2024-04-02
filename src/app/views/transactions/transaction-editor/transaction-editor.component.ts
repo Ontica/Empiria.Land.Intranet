@@ -13,7 +13,8 @@ import { Command, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { TransactionCommandType, TransactionStateSelector } from '@app/core/presentation/presentation-types';
+import { RecordableSubjectsStateSelector, TransactionCommandType,
+         TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
 import { Agency, Transaction, EmptyTransaction, TransactionType, ProvidedServiceType } from '@app/models';
 
@@ -251,7 +252,7 @@ export class TransactionEditorComponent implements OnChanges, OnInit, OnDestroy 
   private loadDataLists() {
     combineLatest([
       this.helper.select<TransactionType[]>(TransactionStateSelector.TRANSACTION_TYPE_LIST),
-      this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST),
+      this.helper.select<Identifiable[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST),
       this.helper.select<Agency[]>(TransactionStateSelector.AGENCY_LIST),
       this.helper.select<ProvidedServiceType[]>(TransactionStateSelector.PROVIDED_SERVICE_LIST)
     ])

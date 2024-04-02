@@ -53,7 +53,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
   isLoading = false;
 
-  recorderOfficeList: Identifiable[] = [];
+  recorderOfficeList: RecorderOffice[] = [];
   recordingSectionList: Identifiable[] = [];
 
   recordingBookList$: Observable<Identifiable[]>;
@@ -80,7 +80,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
   ngOnInit(): void {
     this.initForm();
-    this.loadDataLists();
+    this.loadRecorderOfficeList();
     this.resetRecordingBookField();
     this.setRecorderOfficeDefault();
     this.recordingSectionSelected = null;
@@ -117,6 +117,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
 
   onRecorderOfficeChange(recorderOffice: RecorderOffice){
+    this.recordingSectionList = recorderOffice?.recordingSections ?? [];
     this.recordingSectionSelected = null;
     this.resetRecordingBookField();
     this.emitRecordingBook(Empty);
@@ -197,18 +198,20 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
   }
 
 
-  private loadDataLists() {
+  private loadRecorderOfficeList() {
     this.isLoading = true;
-
-    combineLatest([
-      this.helper.select<Identifiable[]>(TransactionStateSelector.FILING_OFFICE_LIST),
-      this.helper.select<Identifiable[]>(TransactionStateSelector.RECORDING_SECTION_LIST),
-    ])
-    .subscribe(([a, b]) => {
-        this.recorderOfficeList = a;
-        this.recordingSectionList = b;
+    this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
+      .subscribe(x => {
+        this.recorderOfficeList = x;
         this.isLoading = false;
-    });
+        this.clearRecordingSectionList();
+      });
+  }
+
+
+  private clearRecordingSectionList() {
+    this.recordingSectionList = [];
+    this.recordingSectionSelected = null;
   }
 
 
