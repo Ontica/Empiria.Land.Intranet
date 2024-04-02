@@ -191,11 +191,19 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private applyTransactionsFilter(data?: { keywords: string }) {
+  private applyTransactionsFilter(data?: { recorderOfficeUID: string, keywords: string }) {
+    const currentRecorderOfficeUID =
+      this.uiLayer.selectValue<TransactionQuery>(TransactionStateSelector.LIST_FILTER).recorderOfficeUID;
+
     const currentKeywords =
       this.uiLayer.selectValue<TransactionQuery>(TransactionStateSelector.LIST_FILTER).keywords;
 
+    if (!currentRecorderOfficeUID && !data?.recorderOfficeUID) {
+      return;
+    }
+
     const filter: TransactionQuery = {
+      recorderOfficeUID: data ? data.recorderOfficeUID : currentRecorderOfficeUID,
       stage: mapTransactionStageFromViewName(this.currentView.name),
       status: mapTransactionStatusFromViewName(this.currentView.name),
       keywords: data ? data.keywords : currentKeywords,

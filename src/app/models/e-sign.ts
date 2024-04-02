@@ -21,18 +21,20 @@ export enum ESignStatus {
 export const ESignStatusList: Identifiable[] = [
   { uid: ESignStatus.Unsigned, name: 'Por firmar' },
   { uid: ESignStatus.Signed,   name: 'Firmados' },
-//  { uid: ESignStatus.Refused,  name: 'Rechazados' },
+  // { uid: ESignStatus.Refused,  name: 'Rechazados' },
   { uid: ESignStatus.Revoked,  name: 'Revocados' },
 ];
 
 
 export interface ESignRequestsQuery extends LandQuery {
+  recorderOfficeUID: string;
   status: ESignStatus;
   keywords: string;
 }
 
 
 export const EmptyESignRequestsQuery: ESignRequestsQuery = {
+  recorderOfficeUID: '',
   status: ESignStatus.Unsigned,
   keywords: '',
 };

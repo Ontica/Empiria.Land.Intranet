@@ -83,7 +83,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildESignOperationsListByESignStatus();
-    this.searchESignRequestedTransactions();
+    // this.searchESignRequestedTransactions();
     this.suscribeToSelectedViewersData();
   }
 
@@ -111,7 +111,9 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
         return;
 
       case LandExplorerEventType.FILTER_CHANGED:
-        this.setESignQuery(event.payload.status ?? ESignStatus.Unsigned, event.payload.keywords ?? '');
+        this.setESignQuery(event.payload.recorderOfficeUID ?? '',
+                           event.payload.status ?? ESignStatus.Unsigned,
+                           event.payload.keywords ?? '');
         this.buildESignOperationsListByESignStatus();
         this.searchESignRequestedTransactions();
         return;
@@ -204,6 +206,11 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
 
   private searchESignRequestedTransactions() {
+    if (!this.query.recorderOfficeUID) {
+      this.transactionList = [];
+      return;
+    }
+
     this.isLoading = true;
 
     this.eSignData.searchESignRequestedTransactions(this.query)
@@ -223,8 +230,10 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private setESignQuery(status: ESignStatus, keywords: string) {
-    this.query = { ...this.query, ...{ status, keywords }};
+  private setESignQuery(recorderOfficeUID: string,
+                        status: ESignStatus,
+                        keywords: string) {
+    this.query = { ...this.query, ...{ recorderOfficeUID, status, keywords }};
   }
 
 

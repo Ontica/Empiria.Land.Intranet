@@ -28,6 +28,7 @@ export enum TransactionStatus {
 
 
 export interface TransactionQuery extends LandQuery {
+  recorderOfficeUID: string;
   stage?: TransactionStage;
   status?: TransactionStatus;
   keywords: string;
@@ -35,6 +36,7 @@ export interface TransactionQuery extends LandQuery {
 
 
 export const EmptyTransactionQuery: TransactionQuery = {
+  recorderOfficeUID: '',
   stage: TransactionStage.All,
   status: TransactionStatus.All,
   keywords: '',

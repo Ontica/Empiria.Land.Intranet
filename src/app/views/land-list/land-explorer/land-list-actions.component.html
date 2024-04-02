@@ -20,6 +20,18 @@
   </ng-container>
 
 
+  <emp-ng-select
+    fxFlex="170px"
+    [(ngModel)]="recorderOffice" name="recorderOffice"
+    [config]="{ selectFirst: true }"
+    [items]="recorderOfficeList"
+    [required]="true"
+    [showError]="!recorderOffice"
+    placeholder="Seleccione oficialía"
+    (changes)="onFilterChanged()">
+  </emp-ng-select>
+
+
   <emp-ng-select *ngIf="displayStatusSelect"
     fxFlex="125px"
     [(ngModel)]="status" name="status"
@@ -32,7 +44,7 @@
 
 
   <input type="search" class="text-box"
-    fxFlex="220px" fxHide.lt-sm="true"
+    fxFlex="200px" fxHide.lt-sm="true"
     placeholder="Buscar trámites"
     [(ngModel)]="keywords"
     (search)="onFilterChanged()">

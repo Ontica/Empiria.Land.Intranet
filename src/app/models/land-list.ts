@@ -24,6 +24,7 @@ export interface LandEntity extends Entity {
 
 
 export interface LandQuery {
+  recorderOfficeUID: string;
   stage?: string;
   status?: string;
   keywords: string;
@@ -31,6 +32,7 @@ export interface LandQuery {
 
 
 export const EmptyLandQuery: LandQuery = {
+  recorderOfficeUID: '',
   stage: TransactionStage.All,
   status: TransactionStatus.All,
   keywords: '',
