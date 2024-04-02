@@ -208,7 +208,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
           this.setValue(SelectorType.LIST_FILTER, filter);
         }
 
-        transactionList = this.data.getTransactionList(filter);
+        transactionList = this.data.searchTransactionsList(filter);
 
         this.setValue(SelectorType.TRANSACTION_LIST, transactionList);
 

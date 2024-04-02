@@ -77,22 +77,13 @@ export class TransactionDataService {
   }
 
 
-  getTransactionList(query: TransactionQuery): Observable<TransactionDescriptor[]> {
-    let path = `v5/land/transactions`;
+  searchTransactionsList(query: TransactionQuery): Observable<TransactionDescriptor[]> {
+    Assertion.assertValue(query, 'query');
+    Assertion.assertValue(query.recorderOfficeUID, 'query.recorderOfficeUID');
 
-    if (query.stage) {
-      path += `/?stage=${query.stage}`;
-    }
+    const path = `v5/land/transactions/search`;
 
-    if (query.status) {
-      path += `&status=${query.status}`;
-    }
-
-    if (query.keywords) {
-      path += `&keywords=${query.keywords}`;
-    }
-
-    return this.http.get<TransactionDescriptor[]>(path);
+    return this.http.post<TransactionDescriptor[]>(path, query);
   }
 
 
