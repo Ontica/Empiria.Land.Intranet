@@ -18,7 +18,7 @@
           [required]="fieldsRequired"
           [disabled]="hasRecorderOfficeDefault"
           [showError]="fieldsRequired && ( !recorderOfficeSelected || !recorderOfficeSelected.uid )"
-          (changes)="onRecorderOfficeChange($event)">
+          (changes)="onRecorderOfficeChange()">
         </emp-ng-select>
 
       </div>
@@ -31,12 +31,12 @@
         <emp-ng-select [(ngModel)]="recordingSectionSelected" name="recordingSection"
           [config]="{ bindByValue: false,
                       dropdownPosition: selectorPosition }"
-          [items]="recordingSectionList"
+          [items]="recorderOfficeSelected?.recordingSections ?? []"
           [required]="fieldsRequired"
           [disabled]="!recorderOfficeSelected"
           [placeholder]="!recorderOfficeSelected ? 'Seleccione la oficialía' : 'Seleccione'"
           [showError]="fieldsRequired && ( !recordingSectionSelected || !recordingSectionSelected.uid )"
-          (changes)="onRecordingSectionChange($event)">
+          (changes)="onRecordingSectionChange()">
         </emp-ng-select>
 
       </div>

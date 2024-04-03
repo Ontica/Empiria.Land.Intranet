@@ -8,7 +8,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output,
          SimpleChanges } from '@angular/core';
 
-import { combineLatest, concat, Observable, of, Subject } from 'rxjs';
+import { concat, Observable, of, Subject } from 'rxjs';
 
 import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
@@ -18,15 +18,14 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { BookEntryShortModel, EmptyBookEntryShortModel, RecorderOffice } from '@app/models';
 
-import { RecordableSubjectsStateSelector,
-         TransactionStateSelector } from '@app/presentation/exported.presentation.types';
+import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
 import { sendEvent } from '@app/shared/utils';
 
 
 export enum RecordingBookSelectorEventType {
-  RECORDING_BOOK_CHANGED = 'RecordingBookSelectorComponent.Event.RecordingBookChanged',
-  BOOK_ENTRY_CHANGED = 'RecordingBookSelectorComponent.Event.BookEntryChanged',
+  RECORDING_BOOK_CHANGED   = 'RecordingBookSelectorComponent.Event.RecordingBookChanged',
+  BOOK_ENTRY_CHANGED       = 'RecordingBookSelectorComponent.Event.BookEntryChanged',
   BOOK_ENTRY_CHECK_CHANGED = 'RecordingBookSelectorComponent.Event.BookEntryCheckChanged',
 }
 
@@ -54,7 +53,6 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
   isLoading = false;
 
   recorderOfficeList: RecorderOffice[] = [];
-  recordingSectionList: Identifiable[] = [];
 
   recordingBookList$: Observable<Identifiable[]>;
   recordingBookInput$ = new Subject<string>();
@@ -63,7 +61,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
   recordingBookEntryList: BookEntryShortModel[] = [];
 
-  recorderOfficeSelected: Identifiable;
+  recorderOfficeSelected: RecorderOffice;
   recordingSectionSelected: Identifiable;
   recordingBookSelected: Identifiable;
   recordingBookEntrySelected: BookEntryShortModel;
@@ -78,7 +76,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
   }
 
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.initForm();
     this.loadRecorderOfficeList();
     this.resetRecordingBookField();
@@ -116,15 +114,13 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
   }
 
 
-  onRecorderOfficeChange(recorderOffice: RecorderOffice){
-    this.recordingSectionList = recorderOffice?.recordingSections ?? [];
+  onRecorderOfficeChange(){
     this.recordingSectionSelected = null;
-    this.resetRecordingBookField();
-    this.emitRecordingBook(Empty);
+    this.onRecordingSectionChange();
   }
 
 
-  onRecordingSectionChange(recordingSection: Identifiable) {
+  onRecordingSectionChange() {
     this.resetRecordingBookField();
     this.emitRecordingBook(Empty);
   }
@@ -139,7 +135,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
 
   onBookEntryChange(bookEntry: BookEntryShortModel) {
-    this.emitBookEntry(isEmpty(bookEntry) ? EmptyBookEntryShortModel : this.recordingBookEntrySelected );
+    this.emitBookEntry(isEmpty(bookEntry) ? EmptyBookEntryShortModel : this.recordingBookEntrySelected);
   }
 
 
@@ -203,20 +199,17 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
     this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
       .subscribe(x => {
         this.recorderOfficeList = x;
+        this.setRecorderOfficeDefault();
         this.isLoading = false;
-        this.clearRecordingSectionList();
       });
   }
 
 
-  private clearRecordingSectionList() {
-    this.recordingSectionList = [];
-    this.recordingSectionSelected = null;
-  }
-
-
   private setRecorderOfficeDefault() {
-    this.recorderOfficeSelected = this.hasRecorderOfficeDefault ? this.recorderOffice : null;
+    const recorderOfficeDefault =
+      this.recorderOfficeList.find(x => x.uid === this.recorderOffice.uid) ?? null;
+
+    this.recorderOfficeSelected = this.hasRecorderOfficeDefault ? recorderOfficeDefault : null;
   }
 
 
