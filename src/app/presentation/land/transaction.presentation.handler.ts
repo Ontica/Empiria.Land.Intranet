@@ -198,21 +198,26 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
 
       case EffectType.SET_LIST_FILTER:
-      case EffectType.EXECUTE_WORKFLOW_COMMAND:
+        let listFilter = this.getValue<TransactionQuery>(SelectorType.LIST_FILTER);
 
-        let filter = this.getValue<TransactionQuery>(SelectorType.LIST_FILTER);
-
-        if (effectType === EffectType.EXECUTE_WORKFLOW_COMMAND) {
-          filter = { ...filter, ...{ keywords: '' } };
-
-          this.setValue(SelectorType.LIST_FILTER, filter);
-        }
-
-        transactionList = this.data.searchTransactionsList(filter);
-
+        transactionList = this.data.searchTransactionsList(listFilter);
         this.setValue(SelectorType.TRANSACTION_LIST, transactionList);
 
         this.dispatch(ActionType.UNSELECT_TRANSACTION);
+
+        return;
+
+      case EffectType.EXECUTE_WORKFLOW_COMMAND:
+        if (params.applyEffects) {
+          let filter = this.getValue<TransactionQuery>(SelectorType.LIST_FILTER);
+          filter = { ...filter, ...{ keywords: '' } };
+          this.setValue(SelectorType.LIST_FILTER, filter);
+
+          transactionList = this.data.searchTransactionsList(filter);
+          this.setValue(SelectorType.TRANSACTION_LIST, transactionList);
+
+          this.dispatch(ActionType.UNSELECT_TRANSACTION);
+        }
 
         return;
 

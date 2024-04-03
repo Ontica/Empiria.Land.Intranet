@@ -82,7 +82,7 @@
     <emp-land-workflow-commander *ngSwitchDefault
       [transactionList]="displayOptionModalSelected === 'ReceiveTransactions' ? [] : selectedTransactions"
       [canEditList]="displayOptionModalSelected !== 'ExecuteCommand'"
-      (closeEvent)="onOptionModalClosed()">
+      (workflowCommanderEvent)="onOptionModalClosed()">
 
     </emp-land-workflow-commander>
 

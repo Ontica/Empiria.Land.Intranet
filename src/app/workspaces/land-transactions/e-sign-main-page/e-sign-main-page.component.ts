@@ -32,6 +32,10 @@ import {
 
 import { ESignModalEventType } from '@app/views/e-sign/e-sign-modal/e-sign-modal.component';
 
+import {
+  WorkflowCommanderEventType
+} from '@app/views/transactions/workflow-commander/workflow-commander.component';
+
 
 enum WorkflowCommanderOptions {
   ExecuteCommand         = 'ExecuteCommand',
@@ -157,8 +161,25 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  onWorkflowCommanderClosed() {
-    this.displayWorkflowCommanderOption = null;
+  onWorkflowCommanderEvent(event: EventInfo) {
+    switch (event.type as WorkflowCommanderEventType) {
+      case WorkflowCommanderEventType.CLOSE_BUTTON_CLICKED:
+        this.displayWorkflowCommanderOption = null;
+        return;
+
+      case WorkflowCommanderEventType.WORKFLOW_COMMAND_EXECUTED:
+        this.displayWorkflowCommanderOption = null;
+
+        this.unselectCurrentTransaction();
+        this.unselectRegistryEntryEditor();
+
+        this.searchESignRequestedTransactions();
+        return;
+
+      default:
+        console.log(`Unhandled user interface event ${event.type}`);
+        return;
+    }
   }
 
 

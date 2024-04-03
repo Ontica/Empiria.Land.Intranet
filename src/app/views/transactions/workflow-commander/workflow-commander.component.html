@@ -3,13 +3,13 @@
   [hint]="transactionList.length > 1 ?
          '¿Qué debo hacer con los ' + transactionList.length + ' trámites del paquete?' :
          '¿Qué debo hacer con el trámite seleccionado?'"
-  (cardClose)="onClose()">
+  (cardClose)="onCloseClicked()">
 
   <div class="card-body-padding">
 
     <emp-land-workflow-command-config
       [applicableCommandsList]="applicableCommandsList"
-      (formData)="setFormData($event)">
+      (formData)="onWorkflowCommandConfigEvent($event)">
 
     </emp-land-workflow-command-config>
 
@@ -28,7 +28,7 @@
         <button type="submit"
           [class.btn]="!formWorkflow.isValid || transactionList.length === 0"
           [class.btn-action]="formWorkflow.isValid && transactionList.length > 0"
-          (click)="submitCommand()">
+          (click)="onSubmitButtonClicked()">
           Ejecutar la operación
         </button>
 

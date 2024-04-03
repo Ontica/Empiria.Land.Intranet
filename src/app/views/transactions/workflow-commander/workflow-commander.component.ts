@@ -15,14 +15,19 @@ import { TransactionCommandType, TransactionStateSelector } from '@app/core/pres
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
-import { ArrayLibrary } from '@app/shared/utils';
+import { ArrayLibrary, sendEvent } from '@app/shared/utils';
 
-import { TransactionDescriptor, ApplicableCommand, WorkflowCommand } from '@app/models';
+import { TransactionDescriptor, ApplicableCommand, WorkflowCommand, WorkflowTask } from '@app/models';
 
 import { ListSelectorEventType } from '@app/views/land-list/land-list-selector/land-list-selector.component';
 
 import { FormDataEmitted } from './workflow-command-config.component';
 
+
+export enum WorkflowCommanderEventType {
+  CLOSE_BUTTON_CLICKED      = 'WorkflowCommanderComponent.Event.CloseButtonClicked',
+  WORKFLOW_COMMAND_EXECUTED = 'WorkflowCommanderComponent.Event.WorkflowCommandExecuted',
+}
 
 @Component({
   selector: 'emp-land-workflow-commander',
@@ -36,7 +41,9 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
 
   @Input() titleText = '';
 
-  @Output() closeEvent = new EventEmitter<void>();
+  @Input() applyEffects = true;
+
+  @Output() workflowCommanderEvent = new EventEmitter<EventInfo>();
 
   helper: SubscriptionHelper;
 
@@ -60,7 +67,7 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.validateAllCommandsMode();
+    this.initWorkflowCommanderMode();
     this.loadCommandList();
   }
 
@@ -70,55 +77,13 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
   }
 
 
-  loadCommandList() {
-    const selector = this.allCommandsMode ?
-      TransactionStateSelector.ALL_AVAILABLE_COMMANDS :
-      TransactionStateSelector.APPLICABLE_COMMANDS;
-
-    const params = this.allCommandsMode ? null : this.transactionList.map(x => x.uid);
-
-    this.helper.select<ApplicableCommand[]>(selector, params)
-      .subscribe(x => {
-        this.applicableCommandsList = x;
-      });
+  onCloseClicked() {
+    sendEvent(this.workflowCommanderEvent, WorkflowCommanderEventType.CLOSE_BUTTON_CLICKED);
   }
 
 
-  onClose() {
-    this.closeEvent.emit();
-  }
-
-
-  setFormData(event: FormDataEmitted) {
+  onWorkflowCommandConfigEvent(event: FormDataEmitted) {
     this.formWorkflow = event;
-  }
-
-
-  submitCommand() {
-    if (this.submitted || !this.formWorkflow.isValid || this.transactionList.length === 0) {
-      return;
-    }
-
-    const message = this.getConfirmMessage();
-
-    this.messageBox.confirm(message, 'Cambiar estado', 'AcceptCancel')
-      .toPromise()
-      .then(x => {
-        if (x) {
-
-          this.formWorkflow.formData.transactionUID = this.transactionList.map(t => t.uid);
-
-          const payload = {
-            type: this.formWorkflow.commandType,
-            payload: this.formWorkflow.formData
-          };
-
-          this.executeCommand(TransactionCommandType.EXECUTE_WORKFLOW_COMMAND, payload)
-            .finally(() => {
-              this.onClose();
-            });
-        }
-      });
   }
 
 
@@ -141,10 +106,43 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
   }
 
 
-  validateAllCommandsMode() {
-    this.allCommandsMode = this.transactionList.length === 0;
+  onSubmitButtonClicked() {
+    if (this.submitted || !this.formWorkflow.isValid || this.transactionList.length === 0) {
+      return;
+    }
 
+    this.messageBox.confirm(this.getConfirmMessage(), 'Cambiar estado', 'AcceptCancel')
+      .toPromise()
+      .then(x => {
+        if (x) {
+          this.formWorkflow.formData.transactionUID = this.transactionList.map(t => t.uid);
+
+          const command: WorkflowCommand = {
+            type: this.formWorkflow.commandType,
+            payload: this.formWorkflow.formData
+          };
+
+          this.executeWorkflowCommand(command);
+        }
+      });
+  }
+
+
+  private initWorkflowCommanderMode() {
+    this.allCommandsMode = this.transactionList.length === 0;
     this.titleText = this.allCommandsMode ? 'Paquete de trámites' : 'Cambio de estado';
+  }
+
+
+  private loadCommandList() {
+    const selector = this.allCommandsMode ?
+      TransactionStateSelector.ALL_AVAILABLE_COMMANDS :
+      TransactionStateSelector.APPLICABLE_COMMANDS;
+
+    const params = this.allCommandsMode ? null : this.transactionList.map(x => x.uid);
+
+    this.helper.select<ApplicableCommand[]>(selector, params)
+      .subscribe(x => this.applicableCommandsList = x);
   }
 
 
@@ -168,42 +166,42 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
   }
 
 
+  private executeWorkflowCommand(workflowCommand: WorkflowCommand) {
+    this.submitted = true;
+
+    const command: Command = {
+      type: TransactionCommandType.EXECUTE_WORKFLOW_COMMAND,
+      payload: workflowCommand,
+      applyEffects: this.applyEffects,
+    };
+
+    this.uiLayer.execute<WorkflowTask[]>(command)
+      .then(x => this.resolveWorkflowCommandExecuted(x))
+      .finally(() => this.submitted = false);
+  }
+
+
   private getConfirmMessage(): string {
     const numTransactions = this.transactionList.length;
 
-    const commandType = this.applicableCommandsList.filter(x => x.type === this.formWorkflow.commandType)[0];
+    const commandType = this.applicableCommandsList.find(x => x.type === this.formWorkflow.commandType);
 
     const nextStatus = !this.formWorkflow.formData.nextStatus ? null :
-      commandType.nextStatus.filter(x => x.type === this.formWorkflow.formData.nextStatus)[0];
+      commandType.nextStatus.find(x => x.type === this.formWorkflow.formData.nextStatus);
 
-    const nextUser = !this.formWorkflow.formData.assignToUID ? null : nextStatus.users
-      .filter(x => x.uid === this.formWorkflow.formData.assignToUID)[0];
+    const nextUser = !this.formWorkflow.formData.assignToUID ? null :
+      nextStatus.users.find(x => x.uid === this.formWorkflow.formData.assignToUID);
 
     const labelNextUser = commandType.type === 'Receive' ? 'De:' : 'Asignar a:';
 
     return `
-      <table style="margin: 0;">
+      <table class='confirm-data'>
         <tr><td>Operación: </td> <td> <strong>${commandType.name} </strong> </td></tr>
-        ${!nextStatus ? '' :
-        '<tr><td class="nowrap">Nuevo estado: </td><td><strong>' + nextStatus.name + '</strong></td></tr>'}
-        ${!nextUser ? '' :
-        '<tr><td>' + labelNextUser + '</td><td><strong>' + nextUser.name + '</strong></td></tr>'}
+        ${!nextStatus ? '' : '<tr><td>Nuevo estado: </td><td><strong>' + nextStatus.name + '</strong></td></tr>'}
+        ${!nextUser ? '' : '<tr><td>' + labelNextUser + '</td><td><strong>' + nextUser.name + '</strong></td></tr>'}
       </table>
       <br>¿Cambio el estado
       ${numTransactions > 1 ? ' de los ' + numTransactions + ' trámites seleccionados' : ' del trámite'}?`;
-  }
-
-
-  private executeCommand<T>(commandType: any, payload?: any): Promise<T> {
-    this.submitted = true;
-
-    const command: Command = {
-      type: commandType,
-      payload
-    };
-
-    return this.uiLayer.execute<T>(command)
-      .finally(() => this.submitted = false);
   }
 
 
@@ -211,6 +209,12 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
     if (this.transactionList.filter(t => t.uid === transactionUID).length > 0) {
       this.messageBox.show(`El trámite '${keyword}' ya se encuentra en la lista.`, 'Trámite duplicado');
     }
+  }
+
+
+  private resolveWorkflowCommandExecuted(workflowTasks: WorkflowTask[]) {
+    sendEvent(this.workflowCommanderEvent,
+      WorkflowCommanderEventType.WORKFLOW_COMMAND_EXECUTED, { workflowTasks });
   }
 
 }

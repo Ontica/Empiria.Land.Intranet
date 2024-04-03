@@ -74,7 +74,8 @@
     <emp-land-workflow-commander
       [transactionList]="displayWorkflowCommanderOption === WorkflowCommanderOptions.ReceiveTransactions ? [] : selectedTransactions"
       [canEditList]="displayWorkflowCommanderOption !== WorkflowCommanderOptions.ExecuteCommand"
-      (closeEvent)="onWorkflowCommanderClosed()">
+      [applyEffects]=" false"
+      (workflowCommanderEvent)="onWorkflowCommanderEvent($event)">
 
     </emp-land-workflow-commander>
 
