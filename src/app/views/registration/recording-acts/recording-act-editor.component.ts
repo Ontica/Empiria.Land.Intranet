@@ -49,6 +49,8 @@ export class RecordingActEditorComponent implements OnChanges {
 
   statusList: RecordableObjectStatusItem[] = RecordableObjectStatusList;
 
+  operationAmountDigitsMax = 4;
+
 
   constructor() {
     this.initForm();
@@ -121,13 +123,18 @@ export class RecordingActEditorComponent implements OnChanges {
 
 
   private setFormModel() {
+    const operationAmountFormatted = this.recordingAct.operationAmount > 0 ?
+      FormatLibrary.numberWithCommas(this.recordingAct.operationAmount, `1.2-${this.operationAmountDigitsMax}`) :
+      null;
+
+    const currencyUIDValidated = this.recordingAct.currencyUID && this.recordingAct.currencyUID !== 'Empty' ?
+      this.recordingAct.currencyUID : null;
+
     this.form.reset({
       typeUID: this.recordingAct.type ?? null,
       kind: this.recordingAct.kind ?? null,
-      operationAmount: this.recordingAct.operationAmount > 0 ?
-        this.recordingAct.operationAmount.toString() : null,
-      currencyUID: this.recordingAct.currencyUID && this.recordingAct.currencyUID !== 'Empty' ?
-        this.recordingAct.currencyUID : null,
+      operationAmount: operationAmountFormatted,
+      currencyUID: currencyUIDValidated,
       description: this.recordingAct.description,
       status: this.recordingAct.status,
     });
