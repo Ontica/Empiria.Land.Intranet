@@ -50,6 +50,7 @@
           <emp-land-recordable-subject-searcher
             formControlName="recordableSubject"
             [type]="registrationCommandRules.subjectType"
+            [recorderOffice]="recorderOffice"
             [showError]="formHelper.isControlInvalid(form.controls.recordableSubject)"
             (changes)="onRecordableSubjectChange($event)">
 

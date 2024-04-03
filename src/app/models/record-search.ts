@@ -47,17 +47,21 @@ export interface RecordSearchData {
 
 
 export interface RecordSearchQuery {
+  recorderOfficeUID: string;
   type: string;
-  municipality?: string;
-  filterBy?: string;
+  keywords: string;
+}
+
+
+export interface PartyRecordSearchQuery {
+  recorderOfficeUID: string;
   keywords: string;
 }
 
 
 export const EmptyRecordSearchQuery: RecordSearchQuery = {
+  recorderOfficeUID: '',
   type: RecordSearchType.RealEstate,
-  municipality: '',
-  filterBy: '',
   keywords: '',
 };
 

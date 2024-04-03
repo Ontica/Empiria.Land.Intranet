@@ -34,6 +34,7 @@
           <label class="ellipsis"> Buscar y seleccionar el folio real: </label>
           <emp-land-recordable-subject-searcher
             formControlName="recordableSubject"
+            [recorderOffice]="recorderOffice"
             [type]="certificateRulesSelected.subjectType"
             [showError]="formHelper.isControlInvalid(form.controls.recordableSubject)">
 

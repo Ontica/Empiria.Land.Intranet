@@ -4,22 +4,22 @@
 
       <div fxLayout="row" fxLayout.lt-sm="column">
 
-        <div fxFlex="20">
+        <div fxFlex="25">
 
           <label>Oficialía:</label>
 
-          <emp-ng-select name="municipality"
-            [(ngModel)]="formData.municipality"
-            [items]="municipalityList"
-            [config]="{clearable: true}"
-            placeholder="Todas"
-            disabled
+          <emp-ng-select name="recorderOfficeUID" required
+            [(ngModel)]="formData.recorderOfficeUID"
+            [items]="recorderOfficeList"
+            [config]="{selectFirst: true}"
+            [loading]="isLoading"
+            [showError]="!formData.recorderOfficeUID"
             (changes)="onFilterChanges()">
           </emp-ng-select>
 
         </div>
 
-        <div fxFlex="20">
+        <div fxFlex="25">
 
           <label>Buscar:</label>
 
@@ -33,23 +33,7 @@
 
         </div>
 
-
-        <div fxFlex="20">
-
-          <label>Filtrar por:</label>
-
-          <emp-ng-select name="filterBy"
-            [(ngModel)]="formData.filterBy"
-            [items]="filterByList"
-            [config]="{clearable: true}"
-            placeholder="Todos"
-            disabled
-            (changes)="onFilterChanges()">
-          </emp-ng-select>
-
-        </div>
-
-        <div fxFlex="40" fxLayoutAlign="start end">
+        <div fxFlex="50" fxLayoutAlign="start end">
 
           <div class="input-search-container">
 

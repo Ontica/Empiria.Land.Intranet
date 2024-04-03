@@ -11,8 +11,8 @@ import { Assertion, EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { EmptyRecordSearchData, EmptyTractIndex, RecordSearchData, RecordSearchQuery, RecordSearchResult,
-         RecordSearchType, TractIndex } from '@app/models';
+import { EmptyRecordSearchData, EmptyTractIndex, PartyRecordSearchQuery, RecordSearchData, RecordSearchQuery,
+         RecordSearchResult, RecordSearchType, TractIndex } from '@app/models';
 
 import { RecordSearchFilterEventType } from './record-search-filter.component';
 
@@ -100,7 +100,7 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
 
 
   private validateSearchType(query: RecordSearchQuery) {
-    if (!query.type || !query.keywords) {
+    if (!this.isValidRecordSearchQuery(query)) {
       return;
     }
 
@@ -122,6 +122,11 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
   }
 
 
+  private isValidRecordSearchQuery(query: RecordSearchQuery): boolean {
+    return !!query.recorderOfficeUID && !!query.type && !!query.keywords;
+  }
+
+
   private searchRecordableSubjects(query: RecordSearchQuery) {
     this.isLoading = true;
 
@@ -135,7 +140,12 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
   private searchParties(query: RecordSearchQuery) {
     this.isLoading = true;
 
-    this.searchServicesData.searchParties({keywords: query.keywords})
+    const partyQuery: PartyRecordSearchQuery = {
+      recorderOfficeUID: query.recorderOfficeUID,
+      keywords: query.keywords
+    };
+
+    this.searchServicesData.searchParties(partyQuery)
       .toPromise()
       .then(x => this.saveDataInState(query, x, true))
       .finally(() => this.isLoading = false);

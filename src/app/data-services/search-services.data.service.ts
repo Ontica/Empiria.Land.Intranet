@@ -11,7 +11,8 @@ import { Observable } from 'rxjs';
 
 import { Assertion, HttpService } from '@app/core';
 
-import { RecordableSubjectQueryResult, RecordingActPartyQueryResult, RecordSearchQuery } from '@app/models';
+import { PartyRecordSearchQuery, RecordableSubjectQueryResult, RecordingActPartyQueryResult,
+         RecordSearchQuery } from '@app/models';
 
 
 @Injectable()
@@ -29,7 +30,7 @@ export class SearchServicesDataService {
   }
 
 
-  searchParties(query: {keywords: string}): Observable<RecordingActPartyQueryResult[]> {
+  searchParties(query: PartyRecordSearchQuery): Observable<RecordingActPartyQueryResult[]> {
     Assertion.assertValue(query, 'query');
 
     const path = `v5/land/internal-search-services/recording-acts-parties`;

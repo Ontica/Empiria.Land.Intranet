@@ -13,7 +13,7 @@ import { concat, Observable, of, Subject } from 'rxjs';
 
 import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 
-import { isEmpty } from '@app/core';
+import { Empty, Identifiable, isEmpty } from '@app/core';
 
 import { SearchServicesDataService } from '@app/data-services';
 
@@ -43,6 +43,8 @@ export class RecordableSubjectSearcherComponent implements OnInit, ControlValueA
   @Input() allWidth = true;
 
   @Input() type: RecordableSubjectType = null;
+
+  @Input() recorderOffice: Identifiable = Empty;
 
   @Input() showError = false;
 
@@ -124,6 +126,7 @@ export class RecordableSubjectSearcherComponent implements OnInit, ControlValueA
 
   private buildRecordableSubjectFilter(keywords: string): RecordSearchQuery {
     const query: RecordSearchQuery = {
+      recorderOfficeUID: this.recorderOffice.uid,
       type: this.type,
       keywords
     };
