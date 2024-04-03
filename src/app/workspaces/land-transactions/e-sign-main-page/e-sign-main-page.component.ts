@@ -11,15 +11,15 @@ import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { RegistrationAction, RegistrationStateSelector, TransactionAction,
+import { RecordableSubjectsStateSelector, RegistrationAction, RegistrationStateSelector, TransactionAction,
          TransactionStateSelector } from '@app/presentation/exported.presentation.types';
 
 import { ESignDataService, TransactionDataService } from '@app/data-services';
 
 import { ESignRequestsQuery, EmptyESignRequestsQuery, ESignStatus, EmptyTransaction, Transaction,
          TransactionDescriptor, LandExplorerTypes, ESignStatusList, RegistryEntryData, EmptyRegistryEntryData,
-         isRegistryEntryDataValid, ESignOperationType,
-         buildESignOperationsListByESignStatus } from '@app/models';
+         isRegistryEntryDataValid, ESignOperationType, buildESignOperationsListByESignStatus,
+         RecorderOffice } from '@app/models';
 
 import { EmptyFileViewerData,
          FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
@@ -49,6 +49,8 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   eSignOperationList = [];
 
+  recorderOfficeList: RecorderOffice[] = [];
+
   query: ESignRequestsQuery = EmptyESignRequestsQuery;
 
   transactionList: TransactionDescriptor[] = [];
@@ -69,9 +71,9 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   landExplorerTypes = LandExplorerTypes;
 
-  subscriptionHelper: SubscriptionHelper;
-
   WorkflowCommanderOptions = WorkflowCommanderOptions;
+
+  subscriptionHelper: SubscriptionHelper;
 
 
   constructor(private uiLayer: PresentationLayer,
@@ -83,7 +85,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildESignOperationsListByESignStatus();
-    // this.searchESignRequestedTransactions();
+    this.subscribeToFilterData();
     this.suscribeToSelectedViewersData();
   }
 
@@ -103,7 +105,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  onESignExplorerEvent(event: EventInfo): void {
+  onESignExplorerEvent(event: EventInfo) {
     switch (event.type as LandExplorerEventType) {
 
       case LandExplorerEventType.RECEIVE_ITEMS_CLICKED:
@@ -131,9 +133,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
       case LandExplorerEventType.ITEMS_EXECUTE_OPERATION:
         Assertion.assertValue(event.payload.operation.uid, 'event.payload.operation.uid');
         Assertion.assertValue(event.payload.items, 'event.payload.items');
-
         this.validateOperationToExecute(event.payload.operation, event.payload.items);
-
         return;
 
       default:
@@ -193,6 +193,26 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   private buildESignOperationsListByESignStatus() {
     this.eSignOperationList = buildESignOperationsListByESignStatus(this.query.status);
+  }
+
+
+  private subscribeToFilterData() {
+    this.subscriptionHelper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
+      .subscribe(x => {
+        this.recorderOfficeList = x;
+        this.setRecorderOfficeDefault();
+      });
+  }
+
+
+  private setRecorderOfficeDefault() {
+    if (this.recorderOfficeList.length > 0) {
+      const defaultRecorderOfficeUID = this.recorderOfficeList[0].uid;
+      this.setESignQuery(defaultRecorderOfficeUID,
+                        this.query.status,
+                        this.query.keywords);
+      this.searchESignRequestedTransactions();
+    }
   }
 
 
@@ -296,7 +316,6 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
         console.log(`Unhandled user interface operation ${operation}`);
         return;
     }
-
   }
 
 

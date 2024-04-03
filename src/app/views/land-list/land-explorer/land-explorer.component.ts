@@ -13,7 +13,7 @@ import { Assertion, EventInfo, Identifiable } from '@app/core';
 
 import { sendEvent } from '@app/shared/utils';
 
-import { LandEntity, LandQuery, EmptyLandQuery, LandExplorerTypes } from '@app/models';
+import { LandEntity, LandQuery, EmptyLandQuery, LandExplorerTypes, RecorderOffice } from '@app/models';
 
 import { ListControlsEventType } from '@app/views/land-list/land-explorer/land-list-controls.component';
 
@@ -48,6 +48,8 @@ export class LandExplorerComponent implements OnChanges {
   @Input() query: LandQuery = EmptyLandQuery;
 
   @Input() operationsList: Identifiable[] = [];
+
+  @Input() recorderOfficeList: RecorderOffice[] = [];
 
   @Input() statusList: Identifiable[] = [];
 

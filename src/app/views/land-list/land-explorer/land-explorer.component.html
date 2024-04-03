@@ -29,9 +29,8 @@
     <div class="card-header-options">
 
       <emp-land-list-actions
-        [queryRecorderOffice]="query.recorderOfficeUID"
-        [queryStatus]="query.status"
-        [queryKeywords]="query.keywords"
+        [query]="query"
+        [recorderOfficeList]="recorderOfficeList"
         [statusList]="statusList"
         [displayStatusSelect]="canSelectStatus"
         [displayReceiveButton]="canReceive"

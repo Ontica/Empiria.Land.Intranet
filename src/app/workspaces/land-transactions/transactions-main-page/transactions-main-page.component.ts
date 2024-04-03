@@ -11,15 +11,15 @@ import { EventInfo, isEmpty } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { MainUIStateSelector, RegistrationAction, RegistrationStateSelector, TransactionAction,
-         TransactionStateSelector } from '@app/core/presentation/presentation-types';
+import { MainUIStateSelector, RecordableSubjectsStateSelector, RegistrationAction, RegistrationStateSelector,
+         TransactionAction, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
 import { View } from '@app/main-layout';
 
 import { TransactionDescriptor, Transaction, EmptyTransaction, TransactionQuery, EmptyTransactionQuery,
          mapTransactionStageFromViewName, mapTransactionStatusFromViewName, RegistryEntryData,
          EmptyRegistryEntryData, isRegistryEntryDataValid, TransactionsOperationList, LandExplorerTypes,
-         TransactionViewCanReceive, TransactionViewCanCreate } from '@app/models';
+         TransactionViewCanReceive, TransactionViewCanCreate, RecorderOffice } from '@app/models';
 
 import { EmptyFileViewerData, FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
@@ -43,6 +43,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   currentView: View;
 
   transactionsOperationList = TransactionsOperationList;
+  recorderOfficeList: RecorderOffice[] = [];
 
   query: TransactionQuery = EmptyTransactionQuery;
   transactionList: TransactionDescriptor[] = [];
@@ -73,7 +74,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.subscribeToTransactionListData();
+    this.subscribeToTransactionExplorerData();
     this.subscribeToCurrentView();
     this.subscribeToSelectedTransaction();
     this.suscribeToSelectedViewersData();
@@ -85,7 +86,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  onTransactionExplorerEvent(event: EventInfo): void {
+  onTransactionExplorerEvent(event: EventInfo) {
     switch (event.type as LandExplorerEventType) {
 
       case LandExplorerEventType.CREATE_ITEM_CLICKED:
@@ -97,7 +98,9 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
         return;
 
       case LandExplorerEventType.FILTER_CHANGED:
-        this.applyTransactionsFilter(event.payload);
+        this.setTransactionsQuery(event.payload.recorderOfficeUID ?? '',
+                                  event.payload.keywords ?? '');
+        this.applyTransactionsQuery();
         return;
 
       case LandExplorerEventType.ITEM_SELECTED:
@@ -158,7 +161,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private subscribeToTransactionListData() {
+  private subscribeToTransactionExplorerData() {
     this.subscriptionHelper.select<TransactionDescriptor[]>(TransactionStateSelector.TRANSACTION_LIST)
       .subscribe(x => {
         this.transactionList = x;
@@ -168,6 +171,12 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
     this.subscriptionHelper.select<TransactionQuery>(TransactionStateSelector.LIST_FILTER)
       .subscribe(x => this.query = x);
+
+    this.subscriptionHelper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
+      .subscribe(x => {
+        this.recorderOfficeList = x;
+        this.setRecorderOfficeDefault();
+      });
   }
 
 
@@ -191,40 +200,57 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private applyTransactionsFilter(data?: { recorderOfficeUID: string, keywords: string }) {
+  private setTransactionsQuery(recorderOfficeUID?: string, keywords?: string) {
     const currentRecorderOfficeUID =
       this.uiLayer.selectValue<TransactionQuery>(TransactionStateSelector.LIST_FILTER).recorderOfficeUID;
 
     const currentKeywords =
       this.uiLayer.selectValue<TransactionQuery>(TransactionStateSelector.LIST_FILTER).keywords;
 
-    if (!currentRecorderOfficeUID && !data?.recorderOfficeUID) {
-      return;
-    }
-
-    const filter: TransactionQuery = {
-      recorderOfficeUID: data ? data.recorderOfficeUID : currentRecorderOfficeUID,
-      stage: mapTransactionStageFromViewName(this.currentView.name),
-      status: mapTransactionStatusFromViewName(this.currentView.name),
-      keywords: data ? data.keywords : currentKeywords,
+    const query: TransactionQuery = {
+      recorderOfficeUID: recorderOfficeUID ?? currentRecorderOfficeUID,
+      stage: mapTransactionStageFromViewName(this.currentView?.name),
+      status: mapTransactionStatusFromViewName(this.currentView?.name),
+      keywords: keywords ?? currentKeywords,
     };
 
-    this.isLoading = true;
+    this.query = query;
+  }
 
-    this.uiLayer.dispatch(TransactionAction.SET_LIST_FILTER, { filter });
+
+  private applyTransactionsQuery() {
+    if (this.isValidTransactionQuery()) {
+      this.isLoading = true;
+      this.uiLayer.dispatch(TransactionAction.SET_LIST_FILTER, { filter: this.query });
+    }
+  }
+
+
+  private isValidTransactionQuery(): boolean {
+    return !!this.query.recorderOfficeUID && !!this.currentView?.name;
   }
 
 
   private onCurrentViewChanged(newView: View) {
     this.currentView = newView;
-    this.applyTransactionsFilter();
+    this.setTransactionsQuery(this.query.recorderOfficeUID, this.query.keywords);
+    this.applyTransactionsQuery();
     this.setDisplayActionButtons();
   }
 
 
+  private setRecorderOfficeDefault() {
+    if (!this.query.recorderOfficeUID) {
+      const recorderOfficeUID = this.recorderOfficeList.length > 0 ? this.recorderOfficeList[0].uid : null;
+      this.query = { ...this.query, recorderOfficeUID };
+      this.applyTransactionsQuery();
+    }
+  }
+
+
   private setDisplayActionButtons() {
-    this.canReceiveTransactions = TransactionViewCanReceive.includes(this.currentView.name);
-    this.canCreateTransaction = TransactionViewCanCreate.includes(this.currentView.name);
+    this.canReceiveTransactions = TransactionViewCanReceive.includes(this.currentView?.name);
+    this.canCreateTransaction = TransactionViewCanCreate.includes(this.currentView?.name);
   }
 
 

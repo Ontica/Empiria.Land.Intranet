@@ -23,11 +23,10 @@
   <emp-ng-select
     fxFlex="170px"
     [(ngModel)]="recorderOffice" name="recorderOffice"
-    [config]="{ selectFirst: true }"
     [items]="recorderOfficeList"
     [required]="true"
     [showError]="!recorderOffice"
-    placeholder="Seleccione oficialía"
+    placeholder="Seleccione la oficialía"
     (changes)="onFilterChanged()">
   </emp-ng-select>
 

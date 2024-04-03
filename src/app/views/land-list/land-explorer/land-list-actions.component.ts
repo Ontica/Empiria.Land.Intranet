@@ -5,19 +5,15 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 import { EventInfo, Identifiable } from '@app/core';
 
 import { PERMISSIONS } from '@app/main-layout';
 
-import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
-
-import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
-
 import { sendEvent } from '@app/shared/utils';
 
-import { RecorderOffice } from '@app/models';
+import { EmptyLandQuery, LandQuery, RecorderOffice } from '@app/models';
 
 
 export enum ListActionsEventType {
@@ -30,15 +26,13 @@ export enum ListActionsEventType {
   selector: 'emp-land-list-actions',
   templateUrl: './land-list-actions.component.html',
 })
-export class ListActionsComponent implements OnChanges, OnInit, OnDestroy {
+export class ListActionsComponent implements OnChanges {
+
+  @Input() query: LandQuery = EmptyLandQuery;
 
   @Input() statusList: Identifiable[] = [];
 
-  @Input() queryRecorderOffice: string = '';
-
-  @Input() queryStatus: string = '';
-
-  @Input() queryKeywords: string = '';
+  @Input() recorderOfficeList: RecorderOffice[] = [];
 
   @Input() displayStatusSelect: boolean = false;
 
@@ -58,39 +52,13 @@ export class ListActionsComponent implements OnChanges, OnInit, OnDestroy {
 
   isLoading = false;
 
-  recorderOfficeList: RecorderOffice[] = [];
-
-  helper: SubscriptionHelper;
-
-
-  constructor(private uiLayer: PresentationLayer) {
-    this.helper = uiLayer.createSubscriptionHelper();
-  }
-
 
   ngOnChanges(changes: SimpleChanges) {
-    // TODO: fix double request due toby "selectFirst=true"
-    if (changes.queryRecorderOffice) {
-      this.recorderOffice = this.queryRecorderOffice;
+    if (changes.query) {
+      this.recorderOffice = this.query.recorderOfficeUID ?? null;
+      this.status = this.query.status ?? null;
+      this.keywords = this.query.keywords ?? null;
     }
-
-    if (changes.queryStatus) {
-      this.status = this.queryStatus ?? null;
-    }
-
-    if (changes.queryKeywords) {
-      this.keywords = this.queryKeywords;
-    }
-  }
-
-
-  ngOnInit() {
-    this.loadRecorderOfficeList();
-  }
-
-
-  ngOnDestroy() {
-    this.helper.destroy();
   }
 
 
@@ -108,21 +76,5 @@ export class ListActionsComponent implements OnChanges, OnInit, OnDestroy {
   onReceiveOptionsClicked() {
     sendEvent(this.listActionsEvent, ListActionsEventType.RECEIVE_CLICKED);
   }
-
-
-  private loadRecorderOfficeList() {
-    this.isLoading = true;
-    this.helper.select<RecorderOffice[]>(RecordableSubjectsStateSelector.RECORDER_OFFICE_LIST)
-      .subscribe(x => {
-        this.recorderOfficeList = x;
-        this.isLoading = false;
-        // this.setRecorderOffice();
-      });
-  }
-
-
-  // private setRecorderOffice() {
-  //   this.recorderOffice = this.recorderOfficeList.length > 0 ? this.recorderOfficeList[0].uid : null;
-  // }
 
 }
