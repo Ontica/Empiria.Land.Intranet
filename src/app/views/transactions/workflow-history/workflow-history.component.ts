@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
 import { DateStringLibrary } from '@app/core';
 
@@ -13,7 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { TransactionStateSelector } from '@app/core/presentation/presentation-types';
+import { TransactionAction, TransactionStateSelector } from '@app/core/presentation/presentation-types';
 
 import { WorkflowTask } from '@app/models';
 
@@ -22,7 +22,7 @@ import { WorkflowTask } from '@app/models';
   selector: 'emp-land-workflow-history',
   templateUrl: './workflow-history.component.html',
 })
-export class WorkflowHistoryComponent implements OnInit, OnDestroy {
+export class WorkflowHistoryComponent implements OnChanges, OnInit, OnDestroy {
 
   @Input() transactionUID = 'Empty';
 
@@ -42,14 +42,29 @@ export class WorkflowHistoryComponent implements OnInit, OnDestroy {
   }
 
 
+  ngOnChanges() {
+    this.getWorkflowHistory();
+  }
+
+
   ngOnInit() {
-    this.helper.select<WorkflowTask[]>(TransactionStateSelector.SELECTED_WORKFLOW_HISTORY, this.transactionUID)
-      .subscribe(x => this.setData(x ?? []));
+    this.subscribeWorkflowHistory();
   }
 
 
   ngOnDestroy() {
     this.helper.destroy();
+  }
+
+
+  private getWorkflowHistory() {
+    this.uiLayer.dispatch(TransactionAction.SELECT_WORKFLOW_HISTORY, { transactionUID: this.transactionUID });
+  }
+
+
+  private subscribeWorkflowHistory() {
+    this.helper.select<WorkflowTask[]>(TransactionStateSelector.SELECTED_WORKFLOW_HISTORY)
+      .subscribe(x => this.setData(x ?? []));
   }
 
 

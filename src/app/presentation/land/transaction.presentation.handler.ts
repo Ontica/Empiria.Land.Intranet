@@ -26,62 +26,64 @@ import { EmptyFileViewerData } from '@app/shared/form-controls/file-control/file
 
 
 export enum ActionType {
-  SET_LIST_FILTER = 'Land.Transactions.Action.SetListFilter',
-  SELECT_TRANSACTION = 'Land.Transactions.Action.SelectTransaction',
-  UNSELECT_TRANSACTION = 'Land.Transactions.Action.UnselectTransaction',
-  SELECT_FILE_LIST = 'Land.Transactions.Action.SelectFileList',
-  UNSELECT_FILE_LIST = 'Land.Transactions.Action.UnselectFileList',
+  SET_LIST_FILTER           = 'Land.Transactions.Action.SetListFilter',
+  SELECT_TRANSACTION        = 'Land.Transactions.Action.SelectTransaction',
+  UNSELECT_TRANSACTION      = 'Land.Transactions.Action.UnselectTransaction',
+  SELECT_WORKFLOW_HISTORY   = 'Land.Transactions.Action.SelectWorkflowHisgtory',
+  UNSELECT_WORKFLOW_HISTORY = 'Land.Transactions.Action.UnselectWorkflowHisgtory',
+  SELECT_FILE_LIST          = 'Land.Transactions.Action.SelectFileList',
+  UNSELECT_FILE_LIST        = 'Land.Transactions.Action.UnselectFileList',
 }
 
 
 export enum CommandType {
-  CREATE_TRANSACTION = 'Land.Transactions.Command.CreateTransaction',
-  UPDATE_TRANSACTION = 'Land.Transactions.Command.UpdateTransaction',
-  CLONE_TRANSACTION = 'Land.Transactions.Command.CloneTransaction',
-  DELETE_TRANSACTION = 'Land.Transactions.Command.DeleteTransaction',
-  SUBMIT_TRANSACTION = 'Land.Transactions.Command.SubmitTransaction',
-  ADD_TRANSACTION_SERVICE = 'Land.Transactions.Command.AddTransactionService',
+  CREATE_TRANSACTION         = 'Land.Transactions.Command.CreateTransaction',
+  UPDATE_TRANSACTION         = 'Land.Transactions.Command.UpdateTransaction',
+  CLONE_TRANSACTION          = 'Land.Transactions.Command.CloneTransaction',
+  DELETE_TRANSACTION         = 'Land.Transactions.Command.DeleteTransaction',
+  SUBMIT_TRANSACTION         = 'Land.Transactions.Command.SubmitTransaction',
+  ADD_TRANSACTION_SERVICE    = 'Land.Transactions.Command.AddTransactionService',
   DELETE_TRANSACTION_SERVICE = 'Land.Transactions.Command.DeleteTransactionService',
-  GENERATE_PAYMENT_ORDER = 'Land.Transactions.Command.GeneratePaymentOrder',
-  CANCEL_PAYMENT_ORDER = 'Land.Transactions.Command.CancelPaymentOrder',
-  SET_PAYMENT = 'Land.Transactions.Command.SetPayment',
-  CANCEL_PAYMENT = 'Land.Transactions.Command.CancelPayment',
-  UPLOAD_TRANSACTION_FILE = 'Land.Transactions.Command.UploadTransactionFile',
-  REMOVE_TRANSACTION_FILE = 'Land.Transactions.Command.RemoveTransactionFile',
-  EXECUTE_WORKFLOW_COMMAND = 'Land.Transactions.Command.ExecuteWorkflowCommand',
+  GENERATE_PAYMENT_ORDER     = 'Land.Transactions.Command.GeneratePaymentOrder',
+  CANCEL_PAYMENT_ORDER       = 'Land.Transactions.Command.CancelPaymentOrder',
+  SET_PAYMENT                = 'Land.Transactions.Command.SetPayment',
+  CANCEL_PAYMENT             = 'Land.Transactions.Command.CancelPayment',
+  UPLOAD_TRANSACTION_FILE    = 'Land.Transactions.Command.UploadTransactionFile',
+  REMOVE_TRANSACTION_FILE    = 'Land.Transactions.Command.RemoveTransactionFile',
+  EXECUTE_WORKFLOW_COMMAND   = 'Land.Transactions.Command.ExecuteWorkflowCommand',
 }
 
 
 export enum EffectType {
-  SET_LIST_FILTER = ActionType.SET_LIST_FILTER,
-  CREATE_TRANSACTION = CommandType.CREATE_TRANSACTION,
-  UPDATE_TRANSACTION = CommandType.UPDATE_TRANSACTION,
-  CLONE_TRANSACTION = CommandType.CLONE_TRANSACTION,
-  DELETE_TRANSACTION = CommandType.DELETE_TRANSACTION,
-  SUBMIT_TRANSACTION = CommandType.SUBMIT_TRANSACTION,
-  ADD_TRANSACTION_SERVICE = CommandType.ADD_TRANSACTION_SERVICE,
+  SET_LIST_FILTER            = ActionType.SET_LIST_FILTER,
+  CREATE_TRANSACTION         = CommandType.CREATE_TRANSACTION,
+  UPDATE_TRANSACTION         = CommandType.UPDATE_TRANSACTION,
+  CLONE_TRANSACTION          = CommandType.CLONE_TRANSACTION,
+  DELETE_TRANSACTION         = CommandType.DELETE_TRANSACTION,
+  SUBMIT_TRANSACTION         = CommandType.SUBMIT_TRANSACTION,
+  ADD_TRANSACTION_SERVICE    = CommandType.ADD_TRANSACTION_SERVICE,
   DELETE_TRANSACTION_SERVICE = CommandType.DELETE_TRANSACTION_SERVICE,
-  GENERATE_PAYMENT_ORDER = CommandType.GENERATE_PAYMENT_ORDER,
-  CANCEL_PAYMENT_ORDER = CommandType.CANCEL_PAYMENT_ORDER,
-  SET_PAYMENT = CommandType.SET_PAYMENT,
-  CANCEL_PAYMENT = CommandType.CANCEL_PAYMENT,
-  UPLOAD_TRANSACTION_FILE = CommandType.UPLOAD_TRANSACTION_FILE,
-  REMOVE_TRANSACTION_FILE = CommandType.REMOVE_TRANSACTION_FILE,
-  EXECUTE_WORKFLOW_COMMAND = CommandType.EXECUTE_WORKFLOW_COMMAND,
+  GENERATE_PAYMENT_ORDER     = CommandType.GENERATE_PAYMENT_ORDER,
+  CANCEL_PAYMENT_ORDER       = CommandType.CANCEL_PAYMENT_ORDER,
+  SET_PAYMENT                = CommandType.SET_PAYMENT,
+  CANCEL_PAYMENT             = CommandType.CANCEL_PAYMENT,
+  UPLOAD_TRANSACTION_FILE    = CommandType.UPLOAD_TRANSACTION_FILE,
+  REMOVE_TRANSACTION_FILE    = CommandType.REMOVE_TRANSACTION_FILE,
+  EXECUTE_WORKFLOW_COMMAND   = CommandType.EXECUTE_WORKFLOW_COMMAND,
 }
 
 
 export enum SelectorType {
-  LIST_FILTER = 'Land.Transactions.Selectors.TransactionListFilter',
-  SELECTED_TRANSACTION = 'Land.Transactions.Selectors.SelectedTransaction',
-  TRANSACTION_LIST = 'Land.Transactions.Selectors.TransactionList',
-  TRANSACTION_TYPE_LIST = 'Land.Transactions.Selectors.TransactionTypeList',
-  AGENCY_LIST = 'Land.Transactions.Selectors.AgencyList',
-  PROVIDED_SERVICE_LIST = 'Land.Transactions.Selectors.ProvidedServiceList',
-  SELECTED_FILE_LIST = 'Land.Transactions.Selectors.SelectedFileList',
-  SELECTED_WORKFLOW_HISTORY = 'Land.Transactions.Selectors.WorkflowHistory',
-  APPLICABLE_COMMANDS = 'Land.Transactions.Selectors.ApplicableCommands',
-  ALL_AVAILABLE_COMMANDS = 'Land.Transactions.Selectors.AllAvailableCommands',
+  LIST_FILTER                        = 'Land.Transactions.Selectors.TransactionListFilter',
+  SELECTED_TRANSACTION               = 'Land.Transactions.Selectors.SelectedTransaction',
+  TRANSACTION_LIST                   = 'Land.Transactions.Selectors.TransactionList',
+  TRANSACTION_TYPE_LIST              = 'Land.Transactions.Selectors.TransactionTypeList',
+  AGENCY_LIST                        ='Land.Transactions.Selectors.AgencyList',
+  PROVIDED_SERVICE_LIST              = 'Land.Transactions.Selectors.ProvidedServiceList',
+  SELECTED_FILE_LIST                 = 'Land.Transactions.Selectors.SelectedFileList',
+  SELECTED_WORKFLOW_HISTORY          = 'Land.Transactions.Selectors.WorkflowHistory',
+  APPLICABLE_COMMANDS                = 'Land.Transactions.Selectors.ApplicableCommands',
+  ALL_AVAILABLE_COMMANDS             = 'Land.Transactions.Selectors.AllAvailableCommands',
   TRANSACTION_FROM_COMMAND_EXECUTION = 'Land.Transactions.Selectors.TransactionFromCommandExecution',
 }
 
@@ -328,8 +330,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
       case ActionType.SELECT_TRANSACTION:
         Assertion.assertValue(params.transactionUID, 'params.transactionUID');
 
-        const transaction = this.data.getTransaction(params.transactionUID)
-          .pipe(tap(t => this.getWorkflowHistoryForTransaction(t.uid)));
+        const transaction = this.data.getTransaction(params.transactionUID);
 
         this.setValue(SelectorType.SELECTED_TRANSACTION, transaction);
 
@@ -340,6 +341,18 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
 
         this.setValue(SelectorType.SELECTED_FILE_LIST, EmptyFileViewerData);
 
+        this.setValue(SelectorType.SELECTED_WORKFLOW_HISTORY, []);
+
+        return;
+
+      case ActionType.SELECT_WORKFLOW_HISTORY:
+        Assertion.assertValue(params.transactionUID, 'params.transactionUID');
+
+        this.getWorkflowHistoryForTransaction(params.transactionUID);
+
+        return;
+
+      case ActionType.UNSELECT_WORKFLOW_HISTORY:
         this.setValue(SelectorType.SELECTED_WORKFLOW_HISTORY, []);
 
         return;

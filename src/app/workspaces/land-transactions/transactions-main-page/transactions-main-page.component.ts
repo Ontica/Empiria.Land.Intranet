@@ -105,8 +105,7 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
       case LandExplorerEventType.ITEM_SELECTED:
         this.isLoadingTransaction = true;
-        this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION,
-                              { transactionUID: event.payload.item.uid });
+        this.uiLayer.dispatch(TransactionAction.SELECT_TRANSACTION, {transactionUID: event.payload.item.uid});
         return;
 
       case LandExplorerEventType.ITEM_EXECUTE_OPERATION:
