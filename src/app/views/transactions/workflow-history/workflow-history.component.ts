@@ -9,7 +9,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
 import { DateStringLibrary } from '@app/core';
 
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
