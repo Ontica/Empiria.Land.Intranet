@@ -5,68 +5,60 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
+
+import { Router, ActivatedRouteSnapshot, CanActivateFn, CanActivateChildFn } from '@angular/router';
 
 import { LOGIN_PATH, UNAUTHORIZED_PATH } from '@app/main-layout';
 
-import { Router, CanActivate, CanActivateChild, ActivatedRouteSnapshot,
-         NavigationEnd } from '@angular/router';
-
-import { filter, take } from 'rxjs/operators';
+import { ApplicationStatusService } from '../general/application-status.service';
 
 import { SessionService } from '../general/session.service';
 
+import { RoutingStateService } from './routing-state.service';
 
-@Injectable()
-export class SecurityGuard implements CanActivate, CanActivateChild {
 
-  isRoutingInitialized = false;
+export const ParentRouteGuard: CanActivateFn = () => isAuthenticated();
 
-  constructor(private router: Router,
-              private session: SessionService) {
-    this.initRouting();
+
+export const ChildRouteGuard: CanActivateChildFn = (route: ActivatedRouteSnapshot) => {
+  if (!isAuthenticated()) {
+    return false;
   }
 
+  const isRoutingInicialized = inject(RoutingStateService).isInitialized;
 
-  canActivate() {
-    return this.isAuthenticated();
-  }
-
-
-  canActivateChild(childRoute: ActivatedRouteSnapshot) {
-    if (!this.isAuthenticated()) {
-      return false;
-    }
-
-    if (!!childRoute.data.permission && !this.session.hasPermission(childRoute.data.permission)) {
-      const firstValidRouteInModule = this.isRoutingInitialized ?
-        this.session.getFirstValidRouteInModule(childRoute.data.permission) : null;
-
-      this.router.navigateByUrl(firstValidRouteInModule ?? UNAUTHORIZED_PATH);
-
-      return false;
-    }
-
+  if (!isRouteProtected(route)) {
     return true;
   }
 
+  const session = inject(SessionService);
 
-  private isAuthenticated() {
-    const principal = this.session.getPrincipal();
+  if (!session.hasPermission(route.data.permission)) {
+    const firstValidRouteInModule = isRoutingInicialized ?
+      session.getFirstValidRouteInModule(route.data.permission) : null;
 
-    if (!principal.isAuthenticated) {
-      this.router.navigateByUrl(LOGIN_PATH);
-      return false;
-    }
+    inject(Router).navigateByUrl(firstValidRouteInModule ?? UNAUTHORIZED_PATH);
 
-    return true;
+    return false;
   }
 
+  const userCanContinue = inject(ApplicationStatusService).canUserContinue();
 
-  private initRouting() {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd), take(1))
-      .subscribe((events: NavigationEnd) => this.isRoutingInitialized = !!events.urlAfterRedirects);
+  return userCanContinue;
+};
+
+
+const isAuthenticated = (): boolean => {
+  if (!inject(SessionService).getPrincipal().isAuthenticated) {
+    inject(Router).navigateByUrl(LOGIN_PATH);
+    return false;
   }
 
-}
+  return true;
+};
+
+
+const isRouteProtected = (route: ActivatedRouteSnapshot): boolean => {
+  return !!route.data.permission;
+};

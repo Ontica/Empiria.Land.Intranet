@@ -9,7 +9,7 @@ import { NgModule } from '@angular/core';
 
 import { Routes, RouterModule } from '@angular/router';
 
-import { SecurityGuard } from '@app/core';
+import { ChildRouteGuard, ParentRouteGuard } from './core';
 
 import { DEFAULT_PATH, MainLayoutComponent, NoContentComponent, ROUTES } from '@app/main-layout';
 
@@ -19,8 +19,8 @@ const routes: Routes = [
     data: { permission: ROUTES.transactions.permission },
     path: ROUTES.transactions.path,
     component: MainLayoutComponent,
-    canActivate: [SecurityGuard],
-    canActivateChild: [SecurityGuard],
+    canActivate: [ParentRouteGuard],
+    canActivateChild: [ChildRouteGuard],
     loadChildren: () => import('./workspaces/land-transactions/land-transactions-workspace.module')
                               .then((m) => m.LandTransactionsWorkpaceModule)
   },
@@ -28,8 +28,8 @@ const routes: Routes = [
     data: { permission: ROUTES.historic_registration.permission },
     path: ROUTES.historic_registration.path,
     component: MainLayoutComponent,
-    canActivate: [SecurityGuard],
-    canActivateChild: [SecurityGuard],
+    canActivate: [ParentRouteGuard],
+    canActivateChild: [ChildRouteGuard],
     loadChildren: () => import('./workspaces/historic-registration/historic-registration-workspace.module')
                               .then(m => m.HistoricRegistrationWorkspaceModule)
   },
@@ -37,14 +37,14 @@ const routes: Routes = [
     data: { permission: ROUTES.administration.permission },
     path: ROUTES.administration.path,
     component: MainLayoutComponent,
-    canActivate: [SecurityGuard],
-    canActivateChild: [SecurityGuard],
+    canActivate: [ParentRouteGuard],
+    canActivateChild: [ChildRouteGuard],
     loadChildren: () => import('./workspaces/system-management/system-management-workspace.module')
       .then((m) => m.SystemManagementWorkspaceModule)
   },
   {
     path: ROUTES.unauthorized.path,
-    canActivate: [SecurityGuard],
+    canActivate: [ParentRouteGuard],
     component: MainLayoutComponent,
     loadChildren: () => import('./views/_unauthorized/unauthorized.module')
                               .then(m => m.UnauthorizedModule)
