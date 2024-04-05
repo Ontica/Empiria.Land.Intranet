@@ -6,16 +6,17 @@
  */
 
 import { NgModule } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
 
 import { SharedContainersModule } from './containers/shared-containers.module';
+import { SharedComponentsModule } from './components/shared-components.module';
 import { SharedDirectivesModule } from './directives/shared-directives.module';
 import { SharedFormControlsModule } from './form-controls/shared-form-controls.module';
 import { SharedIndicatorsModule } from './indicators/shared-indicators.module';
 import { SharedPipesModule } from './pipes/shared-pipes.module';
 
 import { PrinterService } from './utils/printer.service';
-import { UrlViewerService } from './utils/url-viewer.service';
+import { UrlViewerService } from './services';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { UrlViewerService } from './utils/url-viewer.service';
     CommonModule,
 
     SharedContainersModule,
+    SharedComponentsModule,
     SharedDirectivesModule,
     SharedFormControlsModule,
     SharedIndicatorsModule,
@@ -34,6 +36,7 @@ import { UrlViewerService } from './utils/url-viewer.service';
 
   exports: [
     SharedContainersModule,
+    SharedComponentsModule,
     SharedDirectivesModule,
     SharedFormControlsModule,
     SharedIndicatorsModule,
@@ -42,6 +45,7 @@ import { UrlViewerService } from './utils/url-viewer.service';
 
   providers: [
     CurrencyPipe,
+    DecimalPipe,
     PrinterService,
     UrlViewerService,
   ]

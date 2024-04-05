@@ -7,9 +7,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-
-import { Assertion, Cache, toObservable } from '@app/core';
+import { Assertion, Cache, EmpObservable } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
@@ -65,7 +63,7 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
   }
 
 
-  select<U>(selectorType: SelectorType, params?: any): Observable<U> {
+  select<U>(selectorType: SelectorType, params?: any): EmpObservable<U> {
     let provider: () => any;
 
     switch (selectorType) {
@@ -73,7 +71,7 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
       case SelectorType.AMENDABLE_RECORDING_ACTS:
         Assertion.assertValue(params.query, 'params.query');
 
-        return toObservable<U>(this.data.getAmendableRecordingActs(params.query));
+        return this.data.getAmendableRecordingActs(params.query) as EmpObservable<U>;
 
 
       case SelectorType.ASSOCIATION_KIND_LIST:
@@ -95,7 +93,7 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
       case SelectorType.INSTRUMENT_TYPE_ISSUERS_LIST:
         Assertion.assertValue(params.instrumentType, 'params.instrumentType');
 
-        return toObservable<U>(this.data.findInstrumentTypeIssuers(params as IssuersFilter));
+        return this.data.findInstrumentTypeIssuers(params as IssuersFilter) as EmpObservable<U>;
 
 
       case SelectorType.NO_PROPERTY_KIND_LIST:
@@ -132,19 +130,19 @@ export class RecordableSubjectsPresentationHandler extends AbstractPresentationH
         Assertion.assertValue(params.recordingSectionUID, 'params.recordingSectionUID');
         Assertion.assertValue(params.keywords, 'params.keywords');
 
-        return toObservable<U>(this.data.getRecordingBooks(params.recorderOfficeUID,
-                                                           params.recordingSectionUID,
-                                                           params.keywords));
+        return this.data.getRecordingBooks(params.recorderOfficeUID,
+                                           params.recordingSectionUID,
+                                           params.keywords) as EmpObservable<U>;
 
       case SelectorType.RECORDING_BOOK_ENTRIES_LIST:
         Assertion.assertValue(params.recordingBookUID, 'params.recordingBookUID');
 
-        return toObservable<U>(this.data.getRecordingBookEntries(params.recordingBookUID));
+        return this.data.getRecordingBookEntries(params.recordingBookUID) as EmpObservable<U>;
 
       case SelectorType.TRACT_INDEX:
         Assertion.assertValue(params.recordableSubjectUID, 'params.recordableSubjectUID');
 
-        return toObservable<U>(this.data.getFullTractIndex(params.recordableSubjectUID));
+        return this.data.getFullTractIndex(params.recordableSubjectUID) as EmpObservable<U>;
 
       default:
         return super.select<U>(selectorType, params);

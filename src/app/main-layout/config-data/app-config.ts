@@ -11,21 +11,25 @@ import { AppConfig } from '../common-models/common';
 export const APP_CONFIG: AppConfig = {
   data: {
     name: 'Registro Público de la Propiedad',
+    nameShort: 'RPP',
     hint: 'Secretaría de Finanzas',
     organization: 'Gobierno del Estado de Zacatecas',
+    organizationShort: 'Zacatecas',
     description: '',
   },
   security: {
     fakeLogin: false,
     enablePermissions: true,
     encriptLocalStorageData: true,
+    protectUserWork: false,
   },
   layout: {
+    displayLogo: true,
     displayNavbarHeader: false,
+    displayNavbarHint: false,
     displayMenuUser: false,
     displayChangeLanguage: false,
     displayChangePassword: false,
-    displayAsideLeft: false,
     displaySubMenu: true,
     displayHeader: false,
     displayFooter: false,

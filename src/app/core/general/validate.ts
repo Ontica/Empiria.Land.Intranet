@@ -9,20 +9,25 @@ import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angu
 
 import { FormatLibrary } from '@app/shared/utils';
 
+import { Assertion } from './assertion';
+
 
 export class Validate {
 
   static hasValue(object: any): boolean {
-    if (object === null) {
+    if (Assertion.isNullValue(object)) {
       return false;
     }
-    if (typeof object === 'undefined') {
+    if (Assertion.isUndefinedValue(object)) {
       return false;
     }
-    if (object === {}) {
+    if (Assertion.isNaNValue(object)) {
       return false;
     }
-    if (typeof object === 'string' && object === '') {
+    if (Assertion.isEmptyString(object)) {
+      return false;
+    }
+    if (Assertion.isEmptyObject(object)) {
       return false;
     }
     return true;
@@ -45,7 +50,7 @@ export class Validate {
 
 
   static notNull(value: any): boolean {
-    if ((value === null) || (typeof value === 'undefined') || value === {}) {
+    if (Assertion.isNullValue(value) || Assertion.isUndefinedValue(value) || Assertion.isEmptyObject(value)) {
       return false;
     }
     return true;
@@ -53,10 +58,10 @@ export class Validate {
 
 
   static isPositive(control: AbstractControl): ValidationErrors | null {
-    if (typeof control.value === 'string' && FormatLibrary.stringToNumber(control.value) <= 0 ) {
+    if (typeof control.value === 'string' && FormatLibrary.stringToNumber(control.value) <= 0) {
       return { isPositive: true };
     }
-    if (typeof control.value === 'number' && control.value <= 0 ) {
+    if (typeof control.value === 'number' && control.value <= 0) {
       return { isPositive: true };
     }
     return null;
@@ -74,7 +79,7 @@ export class Validate {
 
   static maxCurrencyValue(max: number): ValidationErrors | null {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (control.value && ( FormatLibrary.stringToNumber(control.value) > max )) {
+      if (control.value && (FormatLibrary.stringToNumber(control.value) > max)) {
         return { maxCurrencyValue: true };
       }
       return null;
@@ -84,7 +89,7 @@ export class Validate {
 
   static minCurrencyValue(min: number): ValidationErrors | null {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (control.value && ( FormatLibrary.stringToNumber(control.value) < min )) {
+      if (control.value && (FormatLibrary.stringToNumber(control.value) < min)) {
         return { minCurrencyValue: true };
       }
       return null;
@@ -133,8 +138,8 @@ export class Validate {
       }
 
       if (Array.isArray(control.value) && Array.isArray(initialValue) &&
-        initialValue.length === control.value.length &&
-        initialValue.every(x => control.value.includes(x))) {
+          initialValue.length === control.value.length &&
+          initialValue.every(x => control.value.includes(x))) {
         return { changeRequired: true };
       }
 

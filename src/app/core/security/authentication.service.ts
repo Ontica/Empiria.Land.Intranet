@@ -7,8 +7,8 @@
 
 import { Injectable } from '@angular/core';
 
-import { APP_CONFIG, DEFAULT_ROUTE, DEFAULT_URL, getAllPermissions, ROUTES_LIST,
-         UNAUTHORIZED_ROUTE } from '@app/main-layout';
+import { APP_CONFIG, DEFAULT_ROUTE, DEFAULT_PATH, getAllPermissions, ROUTES_LIST,
+         UNAUTHORIZED_PATH } from '@app/main-layout';
 
 import { ACCESS_PROBLEM_MESSAGE, INVALID_CREDENTIALS_MESSAGE } from '../errors/error-messages';
 
@@ -109,27 +109,29 @@ export class AuthenticationService {
 
   private getDefaultRoute(permissions: string[]): string {
     if (permissions.includes(DEFAULT_ROUTE.permission)) {
-      return DEFAULT_URL;
+      return DEFAULT_PATH;
     }
 
-    const routesValid = this.getValitRoutes(permissions);
+    const firstRouteValid = this.getFirstRouteValid(permissions);
 
-    if (routesValid.length === 0) {
-      return UNAUTHORIZED_ROUTE;
-    }
-
-    for (const route of ROUTES_LIST) {
-      if (route.permission === routesValid[0]) {
-        return route.parent + '/' + route.path;
+    if (!!firstRouteValid) {
+      for (const route of ROUTES_LIST) {
+        if (route.permission === firstRouteValid) {
+          return route.fullpath;
+        }
       }
     }
 
-    return UNAUTHORIZED_ROUTE;
+    return UNAUTHORIZED_PATH;
   }
 
 
-  private getValitRoutes(permissions): string[] {
-    return permissions ? permissions.filter(x => x.startsWith('route-')) : [];
+  private getFirstRouteValid(permissions: string[]): string {
+    if (!permissions) {
+      return null;
+    }
+
+    return permissions.find(x => x.startsWith('route-')) ?? null;
   }
 
 

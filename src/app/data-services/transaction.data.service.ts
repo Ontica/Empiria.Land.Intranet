@@ -7,14 +7,11 @@
 
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-
-import { Assertion, HttpService, Identifiable } from '@app/core';
+import { Assertion, EmpObservable, HttpService } from '@app/core';
 
 import { Agency, InstrumentMediaContent, PaymentFields, PreprocessingData, ProvidedServiceType,
-         RecordingSection, RequestedServiceFields, Transaction, TransactionFields, TransactionQuery,
-         TransactionDescriptor, TransactionType, WorkflowCommand, WorkflowTask,
-         ApplicableCommand } from '@app/models';
+         RequestedServiceFields, Transaction, TransactionFields, TransactionQuery, TransactionDescriptor,
+         TransactionType, WorkflowCommand, WorkflowTask, ApplicableCommand } from '@app/models';
 
 
 @Injectable()
@@ -22,21 +19,21 @@ export class TransactionDataService {
 
   constructor(private http: HttpService) { }
 
-  getAgencies(): Observable<Agency[]> {
+  getAgencies(): EmpObservable<Agency[]> {
     const path = `v5/land/agencies`;
 
     return this.http.get<Agency[]>(path);
   }
 
 
-  getAllAvailableCommandTypes(): Observable<ApplicableCommand[]> {
+  getAllAvailableCommandTypes(): EmpObservable<ApplicableCommand[]> {
     const path = `v5/land/workflow/all-command-types`;
 
     return this.http.get<ApplicableCommand[]>(path);
   }
 
 
-  getApplicableCommands(transactionsUidList: string[]): Observable<ApplicableCommand[]> {
+  getApplicableCommands(transactionsUidList: string[]): EmpObservable<ApplicableCommand[]> {
     Assertion.assertValue(transactionsUidList, 'transactionsUidList');
 
     const path = `v5/land/workflow/applicable-command-types`;
@@ -45,21 +42,21 @@ export class TransactionDataService {
   }
 
 
-  getProvidedServices(): Observable<ProvidedServiceType[]> {
+  getProvidedServices(): EmpObservable<ProvidedServiceType[]> {
     const path = `v5/land/provided-services`;
 
     return this.http.get<ProvidedServiceType[]>(path);
   }
 
 
-  getTransactionTypes(): Observable<TransactionType[]> {
+  getTransactionTypes(): EmpObservable<TransactionType[]> {
     const path = `v5/land/transaction-types`;
 
     return this.http.get<TransactionType[]>(path);
   }
 
 
-  getTransactionPreprocessingData(transactionUID: string): Observable<PreprocessingData> {
+  getTransactionPreprocessingData(transactionUID: string): EmpObservable<PreprocessingData> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/transactions/${transactionUID}/preprocessing-data`;
@@ -68,7 +65,7 @@ export class TransactionDataService {
   }
 
 
-  getTransaction(transactionUID: string): Observable<Transaction> {
+  getTransaction(transactionUID: string): EmpObservable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/transactions/${transactionUID}`;
@@ -77,7 +74,7 @@ export class TransactionDataService {
   }
 
 
-  searchTransactionsList(query: TransactionQuery): Observable<TransactionDescriptor[]> {
+  searchTransactionsList(query: TransactionQuery): EmpObservable<TransactionDescriptor[]> {
     Assertion.assertValue(query, 'query');
     Assertion.assertValue(query.recorderOfficeUID, 'query.recorderOfficeUID');
 
@@ -87,7 +84,7 @@ export class TransactionDataService {
   }
 
 
-  getWorkflowHistoryForTransaction(transactionUID: string): Observable<WorkflowTask> {
+  getWorkflowHistoryForTransaction(transactionUID: string): EmpObservable<WorkflowTask> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/workflow/${transactionUID}/history`;
@@ -97,7 +94,7 @@ export class TransactionDataService {
 
 
   addTransactionService(transactionUID: string,
-                        requestedService: RequestedServiceFields): Observable<Transaction> {
+                        requestedService: RequestedServiceFields): EmpObservable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(requestedService, 'requestedService');
 
@@ -107,7 +104,7 @@ export class TransactionDataService {
   }
 
 
-  cancelPayment(transactionUID: string): Observable<Transaction> {
+  cancelPayment(transactionUID: string): EmpObservable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/transactions/${transactionUID}/cancel-payment`;
@@ -116,7 +113,7 @@ export class TransactionDataService {
   }
 
 
-  cancelPaymentOrder(transactionUID: string): Observable<Transaction> {
+  cancelPaymentOrder(transactionUID: string): EmpObservable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/transactions/${transactionUID}/cancel-payment-order`;
@@ -125,7 +122,7 @@ export class TransactionDataService {
   }
 
 
-  cloneTransaction(transactionUID: string): Observable<Transaction> {
+  cloneTransaction(transactionUID: string): EmpObservable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/transactions/${transactionUID}/clone`;
@@ -134,7 +131,7 @@ export class TransactionDataService {
   }
 
 
-  createTransaction(transaction: TransactionFields): Observable<Transaction> {
+  createTransaction(transaction: TransactionFields): EmpObservable<Transaction> {
     Assertion.assertValue(transaction, 'transaction');
 
     const path = `v5/land/transactions`;
@@ -143,7 +140,7 @@ export class TransactionDataService {
   }
 
 
-  deleteTransaction(transactionUID: string): Observable<Transaction> {
+  deleteTransaction(transactionUID: string): EmpObservable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/transactions/${transactionUID}`;
@@ -153,7 +150,7 @@ export class TransactionDataService {
 
 
   deleteTransactionService(transactionUID: string,
-                           requestedServiceUID: string): Observable<Transaction> {
+                           requestedServiceUID: string): EmpObservable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(requestedServiceUID, 'requestedServiceUID');
 
@@ -163,7 +160,7 @@ export class TransactionDataService {
   }
 
 
-  executeWorkflowCommand(command: WorkflowCommand): Observable<WorkflowTask[]> {
+  executeWorkflowCommand(command: WorkflowCommand): EmpObservable<WorkflowTask[]> {
     Assertion.assertValue(command, 'command');
 
     const path = `v5/land/workflow/execute-command`;
@@ -176,7 +173,7 @@ export class TransactionDataService {
   }
 
 
-  generatePaymentOrder(transactionUID: string): Observable<Transaction> {
+  generatePaymentOrder(transactionUID: string): EmpObservable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/transactions/${transactionUID}/generate-payment-order`;
@@ -185,7 +182,7 @@ export class TransactionDataService {
   }
 
 
-  searchAndAssertCommandExecution(command: WorkflowCommand): Observable<TransactionDescriptor> {
+  searchAndAssertCommandExecution(command: WorkflowCommand): EmpObservable<TransactionDescriptor> {
     Assertion.assertValue(command, 'command');
 
     const path = `v5/land/workflow/search-and-assert-command-execution`;
@@ -194,7 +191,7 @@ export class TransactionDataService {
   }
 
 
-  setPayment(transactionUID: string, payment: PaymentFields): Observable<Transaction> {
+  setPayment(transactionUID: string, payment: PaymentFields): EmpObservable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(payment, 'payment');
 
@@ -204,7 +201,7 @@ export class TransactionDataService {
   }
 
 
-  submitTransaction(transactionUID: string): Observable<Transaction> {
+  submitTransaction(transactionUID: string): EmpObservable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/transactions/${transactionUID}/submit`;
@@ -214,7 +211,7 @@ export class TransactionDataService {
 
 
   updateTransaction(transactionUID: string,
-                    transaction: TransactionFields): Observable<Transaction> {
+                    transaction: TransactionFields): EmpObservable<Transaction> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(transaction, 'transaction');
 
@@ -226,7 +223,7 @@ export class TransactionDataService {
 
   uploadTransactionMediaFile(transactionUID: string,
                              file: File,
-                             mediaContent: InstrumentMediaContent): Observable<PreprocessingData> {
+                             mediaContent: InstrumentMediaContent): EmpObservable<PreprocessingData> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(file, 'file');
     Assertion.assertValue(mediaContent, 'mediaContent');
@@ -241,7 +238,7 @@ export class TransactionDataService {
   }
 
 
-  removeTransactionMediaFile(transactionUID: string, mediaFileUID: string): Observable<PreprocessingData> {
+  removeTransactionMediaFile(transactionUID: string, mediaFileUID: string): EmpObservable<PreprocessingData> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(mediaFileUID, 'mediaFileUID');
 

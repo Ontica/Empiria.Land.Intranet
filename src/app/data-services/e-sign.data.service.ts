@@ -7,9 +7,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-
-import { Assertion, HttpService } from '@app/core';
+import { Assertion, EmpObservable, HttpService } from '@app/core';
 
 import { ESignCommand, ESignCredentials, ESignRequestsQuery, TransactionDescriptor } from '@app/models';
 
@@ -22,7 +20,7 @@ export class ESignDataService {
   constructor(private http: HttpService) { }
 
 
-  searchESignRequestedTransactions(query: ESignRequestsQuery): Observable<TransactionDescriptor[]> {
+  searchESignRequestedTransactions(query: ESignRequestsQuery): EmpObservable<TransactionDescriptor[]> {
     Assertion.assertValue(query, 'query');
 
     const path = `v5/land/electronic-sign/requests/transactions/mine`;
@@ -41,7 +39,7 @@ export class ESignDataService {
       this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
 
     return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/sign', command)
-      .toPromise();
+      .firstValue();
   }
 
 
@@ -55,7 +53,7 @@ export class ESignDataService {
       this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
 
     return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/revoke', command)
-      .toPromise();
+      .firstValue();
   }
 
 
@@ -69,7 +67,7 @@ export class ESignDataService {
       this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
 
     return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/refuse', command)
-      .toPromise();
+      .firstValue();
   }
 
 
@@ -83,7 +81,7 @@ export class ESignDataService {
       this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
 
     return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/unrefuse', command)
-      .toPromise();
+      .firstValue();
   }
 
 
@@ -98,7 +96,7 @@ export class ESignDataService {
 
     const token = await
       this.http.post<string>('v5/land/electronic-sign/generate-esign-command-security-token', credentials)
-        .toPromise();
+        .firstValue();
 
     credentials.password = Cryptography.encryptAES2(password, token);
 

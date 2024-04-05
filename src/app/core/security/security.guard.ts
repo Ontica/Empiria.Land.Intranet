@@ -7,6 +7,8 @@
 
 import { Injectable } from '@angular/core';
 
+import { LOGIN_PATH, UNAUTHORIZED_PATH } from '@app/main-layout';
+
 import { Router, CanActivate, CanActivateChild, ActivatedRouteSnapshot,
          NavigationEnd } from '@angular/router';
 
@@ -40,7 +42,7 @@ export class SecurityGuard implements CanActivate, CanActivateChild {
       const firstValidRouteInModule = this.isRoutingInitialized ?
         this.session.getFirstValidRouteInModule(childRoute.data.permission) : null;
 
-      this.router.navigateByUrl(firstValidRouteInModule ?? 'unauthorized');
+      this.router.navigateByUrl(firstValidRouteInModule ?? UNAUTHORIZED_PATH);
 
       return false;
     }
@@ -53,7 +55,7 @@ export class SecurityGuard implements CanActivate, CanActivateChild {
     const principal = this.session.getPrincipal();
 
     if (!principal.isAuthenticated) {
-      this.router.navigateByUrl('security/login');
+      this.router.navigateByUrl(LOGIN_PATH);
       return false;
     }
 

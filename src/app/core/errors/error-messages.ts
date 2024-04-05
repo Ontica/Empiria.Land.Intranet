@@ -6,10 +6,10 @@
  */
 
 export const INVALID_CREDENTIALS_MESSAGE =
-  'El nombre de usuario o contraseña no coinciden con los registrados. Favor de intentar nuevamente.';
+  'La cuenta o contraseña no coinciden con los registrados. Favor de intentar nuevamente.';
 
-export const SESSION_EXPIRED_MESSAGE =
-  'La sesión ha expirado. Se requiere iniciar una nueva sesión para continuar.';
+export const NOT_ACTIVE_CREDENTIALS_MESSAGE =
+  'La contraseña de la cuenta ya expiró. Se requiere cambiarla por una nueva, distinta a la contraseña actual.';
 
 export const ACCESS_PROBLEM_MESSAGE = 'Tuve un problema al intentar acceder al sistema';
 

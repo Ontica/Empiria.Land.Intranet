@@ -7,9 +7,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-
-import { Assertion, HttpService, Identifiable } from '@app/core';
+import { Assertion, EmpObservable, HttpService, Identifiable } from '@app/core';
 
 import { ManualBookEntryFields, InstrumentBookEntryFields, InstrumentFields, InstrumentRecording,
          RecordableSubjectFields, RecordingAct, RecordingActTypeGroup, RecordingBook, RegistrationCommand,
@@ -22,7 +20,7 @@ export class RecordingDataService {
   constructor(private http: HttpService) { }
 
 
-  getInstrumentRecording(instrumentRecordingUID: string): Observable<InstrumentRecording> {
+  getInstrumentRecording(instrumentRecordingUID: string): EmpObservable<InstrumentRecording> {
     const path = `v5/land/registration/${instrumentRecordingUID}`;
 
     return this.http.get<InstrumentRecording>(path);
@@ -30,7 +28,7 @@ export class RecordingDataService {
 
 
   getRecordingAct(instrumentRecordingUID: string,
-                  recordingActUID: string): Observable<RecordingAct> {
+                  recordingActUID: string): EmpObservable<RecordingAct> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(recordingActUID, 'recordingActUID');
 
@@ -40,7 +38,7 @@ export class RecordingDataService {
   }
 
 
-  getRecordingActTypesList(listUID: string): Observable<Identifiable[]> {
+  getRecordingActTypesList(listUID: string): EmpObservable<Identifiable[]> {
     Assertion.assertValue(listUID, 'listUID');
 
     const path = `v5/land/registration/recording-act-types/${listUID}`;
@@ -49,7 +47,7 @@ export class RecordingDataService {
   }
 
 
-  getRecordingActTypesForInstrument(instrumentUID: string): Observable<RecordingActTypeGroup[]> {
+  getRecordingActTypesForInstrument(instrumentUID: string): EmpObservable<RecordingActTypeGroup[]> {
     Assertion.assertValue(instrumentUID, 'instrumentUID');
 
     const path = `v5/land/registration/${instrumentUID}/recording-act-types`;
@@ -58,7 +56,7 @@ export class RecordingDataService {
   }
 
 
-  getRecordingActTypesForRecordableSubject(recordableSubjectUID: string): Observable<RecordingActTypeGroup[]> {
+  getRecordingActTypesForRecordableSubject(recordableSubjectUID: string): EmpObservable<RecordingActTypeGroup[]> {
     Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
 
     const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}` +
@@ -69,7 +67,7 @@ export class RecordingDataService {
 
 
   getRecordingActTypesForBookEntry(recordingBookUID: string,
-                                   bookEntryUID: string): Observable<RecordingActTypeGroup[]> {
+                                   bookEntryUID: string): EmpObservable<RecordingActTypeGroup[]> {
     Assertion.assertValue(recordingBookUID, 'recordingBookUID');
     Assertion.assertValue(bookEntryUID, 'bookEntryUID');
 
@@ -80,7 +78,7 @@ export class RecordingDataService {
   }
 
 
-  getTransactionInstrumentRecording(transactionUID: string): Observable<InstrumentRecording> {
+  getTransactionInstrumentRecording(transactionUID: string): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/transactions/${transactionUID}/instrument-recording`;
@@ -89,7 +87,7 @@ export class RecordingDataService {
   }
 
 
-  getRecordingBook(recordingBookUID: string): Observable<RecordingBook> {
+  getRecordingBook(recordingBookUID: string): EmpObservable<RecordingBook> {
     Assertion.assertValue(recordingBookUID, 'recordingBookUID');
 
     const path = `v5/land/registration/recording-books/${recordingBookUID}`;
@@ -99,7 +97,7 @@ export class RecordingDataService {
 
 
   createBookEntry(recordingBookUID: string,
-                  manualBookEntryFields: ManualBookEntryFields): Observable<RecordingBook> {
+                  manualBookEntryFields: ManualBookEntryFields): EmpObservable<RecordingBook> {
     Assertion.assertValue(recordingBookUID, 'recordingBookUID');
     Assertion.assertValue(manualBookEntryFields, 'manualBookEntryFields');
 
@@ -109,7 +107,7 @@ export class RecordingDataService {
   }
 
 
-  deleteBookEntry(recordingBookUID: string, bookEntryUID: string): Observable<RecordingBook> {
+  deleteBookEntry(recordingBookUID: string, bookEntryUID: string): EmpObservable<RecordingBook> {
     Assertion.assertValue(recordingBookUID, 'recordingBookUID');
     Assertion.assertValue(bookEntryUID, 'bookEntryUID');
 
@@ -120,7 +118,7 @@ export class RecordingDataService {
 
 
   createTransactionInstrumentRecording(transactionUID: string,
-                                       instrument: InstrumentFields): Observable<InstrumentRecording> {
+                                       instrument: InstrumentFields): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(instrument, 'instrument');
 
@@ -131,7 +129,7 @@ export class RecordingDataService {
 
 
   updateTransactionInstrumentRecording(transactionUID: string,
-                                       instrument: InstrumentFields): Observable<InstrumentRecording> {
+                                       instrument: InstrumentFields): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(instrument, 'instrument');
 
@@ -143,7 +141,7 @@ export class RecordingDataService {
 
   updateBookEntryInstrumentRecording(instrumentRecordingUID: string,
                                      bookEntryUID: string,
-                                     instrument: ManualBookEntryFields): Observable<InstrumentRecording> {
+                                     instrument: ManualBookEntryFields): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(bookEntryUID, 'bookEntryUID');
     Assertion.assertValue(instrument, 'instrument');
@@ -156,7 +154,7 @@ export class RecordingDataService {
 
 
   appendRecordingAct(instrumentRecordingUID: string,
-                     registrationCommand: RegistrationCommand): Observable<InstrumentRecording> {
+                     registrationCommand: RegistrationCommand): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(registrationCommand, 'registrationCommand');
 
@@ -168,7 +166,7 @@ export class RecordingDataService {
 
   updateRecordingAct(instrumentRecordingUID: string,
                      recordingActUID: string,
-                     recordingActFields: RecordingActFields): Observable<RecordingAct> {
+                     recordingActFields: RecordingActFields): EmpObservable<RecordingAct> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(recordingActUID, 'recordingActUID');
     Assertion.assertValue(recordingActFields, 'recordingActFields');
@@ -180,7 +178,7 @@ export class RecordingDataService {
 
 
   removeRecordingAct(instrumentRecordingUID: string,
-                     recordingActUID: string): Observable<InstrumentRecording> {
+                     recordingActUID: string): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(recordingActUID, 'recordingActUID');
 
@@ -192,7 +190,7 @@ export class RecordingDataService {
 
   appendRecordingActToBookEntry(recordingBookUID: string,
                                 bookEntryUID: string,
-                                registrationCommand: RegistrationCommand): Observable<InstrumentRecording> {
+                                registrationCommand: RegistrationCommand): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(recordingBookUID, 'recordingBookUID');
     Assertion.assertValue(bookEntryUID, 'bookEntryUID');
     Assertion.assertValue(registrationCommand, 'registrationCommand');
@@ -206,7 +204,7 @@ export class RecordingDataService {
 
   appendRecordingActParty(instrumentRecordingUID: string,
                           recordingActUID: string,
-                          recordingActPartyFields: RecordingActPartyFields): Observable<RecordingAct> {
+                          recordingActPartyFields: RecordingActPartyFields): EmpObservable<RecordingAct> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(recordingActUID, 'recordingActUID');
     Assertion.assertValue(recordingActPartyFields, 'recordingActPartyFields');
@@ -219,7 +217,7 @@ export class RecordingDataService {
 
   removeRecordingActParty(instrumentRecordingUID: string,
                           recordingActUID: string,
-                          recordingActPartyUID: string): Observable<RecordingAct> {
+                          recordingActPartyUID: string): EmpObservable<RecordingAct> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(recordingActUID, 'recordingActUID');
     Assertion.assertValue(recordingActPartyUID, 'recordingActPartyUID');
@@ -231,7 +229,7 @@ export class RecordingDataService {
   }
 
 
-  searchParties(filter: PartyFilter): Observable<Party[]> {
+  searchParties(filter: PartyFilter): EmpObservable<Party[]> {
     Assertion.assertValue(filter.instrumentRecordingUID, 'filter.instrumentRecordingUID');
     Assertion.assertValue(filter.recordingActUID, 'filter.recordingActUID');
 
@@ -248,7 +246,7 @@ export class RecordingDataService {
 
   removeRecordingActFromBookEntry(recordingBookUID: string,
                                   bookEntryUID: string,
-                                  recordingActUID: string): Observable<InstrumentRecording> {
+                                  recordingActUID: string): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(recordingBookUID, 'recordingBookUID');
     Assertion.assertValue(bookEntryUID, 'bookEntryUID');
     Assertion.assertValue(recordingActUID, 'recordingActUID');
@@ -261,7 +259,7 @@ export class RecordingDataService {
 
 
   createNextRecordingBookEntry(instrumentRecordingUID: string,
-                               bookEntryFields: InstrumentBookEntryFields): Observable<InstrumentRecording> {
+                               bookEntryFields: InstrumentBookEntryFields): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(bookEntryFields, 'bookEntryFields');
 
@@ -272,7 +270,7 @@ export class RecordingDataService {
 
 
   deleteRecordingBookEntry(instrumentRecordingUID: string,
-                           bookEntryUID: string): Observable<InstrumentRecording> {
+                           bookEntryUID: string): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(bookEntryUID, 'bookEntryUID');
 
@@ -284,7 +282,7 @@ export class RecordingDataService {
 
   updateRecordableSubject(instrumentRecordingUID: string,
                           recordingActUID: string,
-                          recordableSubjectFields: RecordableSubjectFields): Observable<InstrumentRecording> {
+                          recordableSubjectFields: RecordableSubjectFields): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
     Assertion.assertValue(recordingActUID, 'recordingActUID');
     Assertion.assertValue(recordableSubjectFields, 'recordableSubjectFields');
@@ -296,7 +294,7 @@ export class RecordingDataService {
   }
 
 
-  openRegistration(instrumentRecordingUID: string): Observable<InstrumentRecording> {
+  openRegistration(instrumentRecordingUID: string): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
 
     const path = `v5/land/registration/${instrumentRecordingUID}/open-registration`;
@@ -305,7 +303,7 @@ export class RecordingDataService {
   }
 
 
-  closeRegistration(instrumentRecordingUID: string): Observable<InstrumentRecording> {
+  closeRegistration(instrumentRecordingUID: string): EmpObservable<InstrumentRecording> {
     Assertion.assertValue(instrumentRecordingUID, 'instrumentRecordingUID');
 
     const path = `v5/land/registration/${instrumentRecordingUID}/close-registration`;
@@ -314,7 +312,7 @@ export class RecordingDataService {
   }
 
 
-  getTractIndex(instrumentRecordingUID: string, recordingActUID: string): Observable<TractIndex> {
+  getTractIndex(instrumentRecordingUID: string, recordingActUID: string): EmpObservable<TractIndex> {
     Assertion.assertValue(recordingActUID, 'recordingActUID');
 
     const path = `v5/land/registration/${instrumentRecordingUID}/` +
@@ -325,7 +323,7 @@ export class RecordingDataService {
 
 
   createRecordingActInTractIndex(recordableSubjectUID: string,
-                                 command: RegistrationCommand): Observable<TractIndex> {
+                                 command: RegistrationCommand): EmpObservable<TractIndex> {
     Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
     Assertion.assertValue(command, 'command');
 
@@ -336,7 +334,7 @@ export class RecordingDataService {
 
 
   removeRecordingActFromTractIndex(recordableSubjectUID: string,
-                                   recordingActUID: string): Observable<TractIndex> {
+                                   recordingActUID: string): EmpObservable<TractIndex> {
     Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
     Assertion.assertValue(recordingActUID, 'recordingActUID');
 
@@ -347,7 +345,7 @@ export class RecordingDataService {
   }
 
 
-  openTractIndex(recordableSubjectUID: string): Observable<TractIndex> {
+  openTractIndex(recordableSubjectUID: string): EmpObservable<TractIndex> {
     Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
 
     const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}/tract-index/open`;
@@ -356,7 +354,7 @@ export class RecordingDataService {
   }
 
 
-  closeTractIndex(recordableSubjectUID: string): Observable<TractIndex> {
+  closeTractIndex(recordableSubjectUID: string): EmpObservable<TractIndex> {
     Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
 
     const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}/tract-index/close`;

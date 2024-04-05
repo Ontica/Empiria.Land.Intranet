@@ -6,6 +6,7 @@
  */
 
 import { DateFormat, LocalizationLibrary, DEFAULT_LANGUAGE, Language } from '../localization';
+
 import { Assertion } from '../general/assertion';
 
 import * as moment from 'moment';
@@ -83,6 +84,12 @@ export class DateStringLibrary {
     const date = this.toDate(value);
     const firstDate = moment().date(1).month(date.getMonth()).year(date.getFullYear());
     return this.mapDateStringFromMoment(firstDate);
+  }
+
+
+  static todayAddDays(days: number): DateString {
+    const date = moment().add(days, 'days');
+    return this.mapDateStringFromMoment(date);
   }
 
 

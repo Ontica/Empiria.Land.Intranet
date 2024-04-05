@@ -18,6 +18,7 @@ import { SessionService } from './general/session.service';
 import { LocalStorageService } from './general/local-storage.service';
 import { LoggerService } from './general/logger.service';
 import { ApplicationSettingsService } from './general/application-settings.service';
+import { ApplicationStatusService } from './general/application-status.service';
 
 import { DirectoryService } from './http/directory.service';
 import { HttpHandler } from './http/http-handler';
@@ -27,6 +28,7 @@ import { HttpErrorInterceptor } from './http/http-error-interceptor';
 import { SecurityDataService } from './security/security-data.service';
 import { AuthenticationService } from './security/authentication.service';
 import { SecurityGuard } from './security/security.guard';
+import { RoutingStateService } from './security/routing-state.service';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 
@@ -53,6 +55,7 @@ import { ErrorMessageService } from './errors/error-message.service';
     ErrorMessageService,
     SessionService,
     ApplicationSettingsService,
+    ApplicationStatusService,
     LocalStorageService,
     LoggerService,
     SecurityDataService,
@@ -61,6 +64,7 @@ import { ErrorMessageService } from './errors/error-message.service';
     HttpHandler,
     HttpService,
     DirectoryService,
+    RoutingStateService,
 
     { provide: ErrorHandler, useClass: ExceptionHandler },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }

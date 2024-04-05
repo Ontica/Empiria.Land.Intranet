@@ -6,9 +6,13 @@
  */
 
 import { Injectable } from '@angular/core';
+
 import { HttpClient } from '@angular/common/http';
 
+import { firstValueFrom } from 'rxjs';
+
 import { ApplicationSettings } from './application-settings';
+
 import { KeyValue } from '../data-types/key-value';
 
 
@@ -32,13 +36,12 @@ export class ApplicationSettingsService {
       return;
     }
 
-    this.settings = this.http.get('./assets/empiria.config.json')
-                        .toPromise()
-                        .then((response: {settings: KeyValue[]}) => {
-                          const data = response.settings;
+    this.settings = firstValueFrom(this.http.get('./assets/empiria.config.json'))
+      .then((response: { settings: KeyValue[]; }) => {
+        const data = response.settings;
 
-                          return new ApplicationSettings(data);
-                        });
+        return new ApplicationSettings(data);
+      });
   }
 
 }

@@ -37,7 +37,7 @@ export const FakeSessionToken: SessionToken = {
 
 
 export function getFakePrincipalData(user: string): PrincipalData {
-  const FakePrincipalData: PrincipalData = {
+  const fakePrincipalData: PrincipalData = {
     identity: {
       username: user,
       email: user,
@@ -47,5 +47,5 @@ export function getFakePrincipalData(user: string): PrincipalData {
     permissions: [],
   };
 
-  return FakePrincipalData;
+  return fakePrincipalData;
 }

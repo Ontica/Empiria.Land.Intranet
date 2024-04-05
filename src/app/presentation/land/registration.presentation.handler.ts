@@ -7,9 +7,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-
-import { Assertion, Command, toObservable, toPromise } from '@app/core';
+import { Assertion, Command, EmpObservable  } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
@@ -96,18 +94,18 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
   }
 
 
-  select<U>(selectorType: SelectorType, params?: any): Observable<U> {
+  select<U>(selectorType: SelectorType, params?: any): EmpObservable<U> {
     switch (selectorType) {
 
       case SelectorType.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT:
         Assertion.assertValue(params.instrumentUID, 'params.instrumentUID');
 
-        return toObservable<U>(this.data.getRecordingActTypesForInstrument(params.instrumentUID));
+        return this.data.getRecordingActTypesForInstrument(params.instrumentUID) as EmpObservable<U>;
 
       case SelectorType.RECORDING_ACT_TYPES_LIST_FOR_RECORDABLE_SUBJECT:
         Assertion.assertValue(params.recordableSubjectUID, 'params.recordableSubjectUID');
 
-        return toObservable<U>(this.data.getRecordingActTypesForRecordableSubject(params.recordableSubjectUID));
+        return this.data.getRecordingActTypesForRecordableSubject(params.recordableSubjectUID) as EmpObservable<U>;
 
       default:
         return super.select<U>(selectorType, params);
@@ -152,58 +150,40 @@ export class RegistrationPresentationHandler extends AbstractPresentationHandler
     switch (command.type as CommandType) {
 
       case CommandType.CREATE_INSTRUMENT_RECORDING:
-        return toPromise<U>(
-          this.data.createTransactionInstrumentRecording(command.payload.transactionUID,
-                                                         command.payload.instrument)
-        );
+        return this.data.createTransactionInstrumentRecording(command.payload.transactionUID,
+                                                              command.payload.instrument).firstValue() as Promise<U>;
 
       case CommandType.UPDATE_RECORDED_INSTRUMENT:
-        return toPromise<U>(
-          this.data.updateTransactionInstrumentRecording(command.payload.transactionUID,
-                                                         command.payload.instrument)
-        );
+        return this.data.updateTransactionInstrumentRecording(command.payload.transactionUID,
+                                                              command.payload.instrument).firstValue() as Promise<U>;
 
       case CommandType.APPEND_RECORDING_ACT:
-        return toPromise<U>(
-          this.data.appendRecordingAct(command.payload.instrumentRecordingUID,
-                                       command.payload.registrationCommand)
-        );
+        return this.data.appendRecordingAct(command.payload.instrumentRecordingUID,
+                                            command.payload.registrationCommand).firstValue() as Promise<U>;
 
       case CommandType.REMOVE_RECORDING_ACT:
-        return toPromise<U>(
-          this.data.removeRecordingAct(command.payload.instrumentRecordingUID,
-                                       command.payload.recordingActUID)
-        );
+        return this.data.removeRecordingAct(command.payload.instrumentRecordingUID,
+                                            command.payload.recordingActUID).firstValue() as Promise<U>;
 
       case CommandType.CREATE_INSTRUMENT_RECORDING_BOOK_ENTRY:
-        return toPromise<U>(
-          this.data.createNextRecordingBookEntry(command.payload.instrumentRecordingUID,
-                                                 command.payload.bookEntryFields)
-        );
+        return this.data.createNextRecordingBookEntry(command.payload.instrumentRecordingUID,
+                                                      command.payload.bookEntryFields).firstValue() as Promise<U>;
 
       case CommandType.DELETE_INSTRUMENT_RECORDING_BOOK_ENTRY:
-        return toPromise<U>(
-          this.data.deleteRecordingBookEntry(command.payload.instrumentRecordingUID,
-                                             command.payload.bookEntryUID)
-        );
+        return this.data.deleteRecordingBookEntry(command.payload.instrumentRecordingUID,
+                                                  command.payload.bookEntryUID).firstValue() as Promise<U>;
 
       case CommandType.UPDATE_RECORDABLE_SUBJECT:
-        return toPromise<U>(
-          this.data.updateRecordableSubject(command.payload.instrumentRecordingUID,
-                                            command.payload.recordingActUID,
-                                            command.payload.recordableSubjectFields)
-        );
+        return this.data.updateRecordableSubject(command.payload.instrumentRecordingUID,
+                                                 command.payload.recordingActUID,
+                                                 command.payload.recordableSubjectFields).firstValue() as Promise<U>;
 
       case CommandType.CLOSE_REGISTRATION:
-        return toPromise<U>(
-          this.data.closeRegistration(command.payload.instrumentRecordingUID)
-        );
+        return this.data.closeRegistration(command.payload.instrumentRecordingUID).firstValue() as Promise<U>;
 
 
       case CommandType.OPEN_REGISTRATION:
-        return toPromise<U>(
-          this.data.openRegistration(command.payload.instrumentRecordingUID)
-        );
+        return this.data.openRegistration(command.payload.instrumentRecordingUID).firstValue() as Promise<U>;
 
       default:
         throw this.unhandledCommand(command);

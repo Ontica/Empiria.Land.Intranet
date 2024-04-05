@@ -35,13 +35,13 @@ export class SecurityDataService {
     Assertion.assertValue(event, 'event');
 
     return this.httpHandler.post<boolean>('v3/security/change-password', event)
-                           .toPromise();
+      .firstValue();
   }
 
 
   closeSession(): Promise<void> {
     return this.httpHandler.post<void>('v3/security/logout')
-               .toPromise();
+      .firstValue();
   }
 
 
@@ -58,14 +58,14 @@ export class SecurityDataService {
     body.password = Cryptography.createHash(body.password + token);
 
     return this.httpHandler.post<ExternalSessionToken>('v3/security/login', body)
-      .toPromise()
+      .firstValue()
       .then(x => this.mapToSessionToken(x));
   }
 
 
   getPrincipal(): Promise<PrincipalData> {
     return this.httpHandler.get<PrincipalData>('v3/security/principal')
-      .toPromise();
+      .firstValue();
   }
 
 

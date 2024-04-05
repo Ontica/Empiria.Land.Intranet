@@ -135,10 +135,13 @@ export const ROUTES = {
 export const DEFAULT_ROUTE = ROUTES.transactions_my_inbox;
 
 
-export const DEFAULT_URL = (DEFAULT_ROUTE.parent ? DEFAULT_ROUTE.parent + '/' : '') + DEFAULT_ROUTE.path;
+export const DEFAULT_PATH = DEFAULT_ROUTE.fullpath;
 
 
-export const UNAUTHORIZED_ROUTE = ROUTES.unauthorized.path;
+export const LOGIN_PATH = ROUTES.security_login.fullpath;
+
+
+export const UNAUTHORIZED_PATH = ROUTES.unauthorized.path;
 
 
 export const ROUTES_LIST = Object.keys(ROUTES)

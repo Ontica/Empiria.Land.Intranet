@@ -7,11 +7,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-
-import { tap } from 'rxjs/operators';
-
-import { Assertion, Command, toObservable, toPromise } from '@app/core';
+import { Assertion, Command, EmpObservable } from '@app/core';
 
 import { AbstractPresentationHandler, StateValues } from '@app/core/presentation/presentation.handler';
 
@@ -114,7 +110,7 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
   }
 
 
-  select<U>(selectorType: SelectorType, params?: any): Observable<U> {
+  select<U>(selectorType: SelectorType, params?: any): EmpObservable<U> {
     let provider: () => any;
 
     switch (selectorType) {
@@ -141,13 +137,13 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
         return super.selectFirst<U>(selectorType, provider);
 
       case SelectorType.APPLICABLE_COMMANDS:
-        return toObservable<U>(this.data.getApplicableCommands(params));
+        return this.data.getApplicableCommands(params) as EmpObservable<U>;
 
       case SelectorType.ALL_AVAILABLE_COMMANDS:
-        return toObservable<U>(this.data.getAllAvailableCommandTypes());
+        return this.data.getAllAvailableCommandTypes() as EmpObservable<U>;
 
       case SelectorType.TRANSACTION_FROM_COMMAND_EXECUTION:
-        return toObservable<U>(this.data.searchAndAssertCommandExecution(params));
+        return this.data.searchAndAssertCommandExecution(params) as EmpObservable<U>;
 
       default:
         return super.select<U>(selectorType, params);
@@ -242,81 +238,53 @@ export class TransactionPresentationHandler extends AbstractPresentationHandler 
     switch (command.type as CommandType) {
 
       case CommandType.CREATE_TRANSACTION:
-        return toPromise<T>(
-          this.data.createTransaction(command.payload.transaction)
-        );
+        return this.data.createTransaction(command.payload.transaction).firstValue() as Promise<T>;
 
       case CommandType.UPDATE_TRANSACTION:
-        return toPromise<T>(
-          this.data.updateTransaction(command.payload.transactionUID,
-            command.payload.transaction)
-        );
+        return this.data.updateTransaction(command.payload.transactionUID,
+                                           command.payload.transaction).firstValue() as Promise<T>;
 
       case CommandType.CLONE_TRANSACTION:
-        return toPromise<T>(
-          this.data.cloneTransaction(command.payload.transactionUID)
-        );
+        return this.data.cloneTransaction(command.payload.transactionUID).firstValue() as Promise<T>;
 
       case CommandType.DELETE_TRANSACTION:
-        return toPromise<T>(
-          this.data.deleteTransaction(command.payload.transactionUID)
-        );
+        return this.data.deleteTransaction(command.payload.transactionUID).firstValue() as Promise<T>;
 
       case CommandType.SUBMIT_TRANSACTION:
-        return toPromise<T>(
-          this.data.submitTransaction(command.payload.transactionUID)
-        );
+        return this.data.submitTransaction(command.payload.transactionUID).firstValue() as Promise<T>;
 
       case CommandType.ADD_TRANSACTION_SERVICE:
-        return toPromise<T>(
-          this.data.addTransactionService(command.payload.transactionUID,
-            command.payload.requestedService)
-        );
+        return this.data.addTransactionService(command.payload.transactionUID,
+                                               command.payload.requestedService).firstValue() as Promise<T>;
 
       case CommandType.DELETE_TRANSACTION_SERVICE:
-        return toPromise<T>(
-          this.data.deleteTransactionService(command.payload.transactionUID,
-            command.payload.requestedServiceUID)
-        );
+        return this.data.deleteTransactionService(command.payload.transactionUID,
+                                                  command.payload.requestedServiceUID).firstValue() as Promise<T>;
 
       case CommandType.GENERATE_PAYMENT_ORDER:
-        return toPromise<T>(
-          this.data.generatePaymentOrder(command.payload.transactionUID)
-        );
+        return this.data.generatePaymentOrder(command.payload.transactionUID).firstValue() as Promise<T>;
 
       case CommandType.CANCEL_PAYMENT_ORDER:
-        return toPromise<T>(
-          this.data.cancelPaymentOrder(command.payload.transactionUID)
-        );
+        return this.data.cancelPaymentOrder(command.payload.transactionUID).firstValue() as Promise<T>;
 
       case CommandType.SET_PAYMENT:
-        return toPromise<T>(
-          this.data.setPayment(command.payload.transactionUID,
-            command.payload.payment)
-        );
+        return this.data.setPayment(command.payload.transactionUID,
+                                    command.payload.payment).firstValue() as Promise<T>;
 
       case CommandType.CANCEL_PAYMENT:
-        return toPromise<T>(
-          this.data.cancelPayment(command.payload.transactionUID)
-        );
+        return this.data.cancelPayment(command.payload.transactionUID).firstValue() as Promise<T>;
 
       case CommandType.UPLOAD_TRANSACTION_FILE:
-        return toPromise<T>(
-          this.data.uploadTransactionMediaFile(command.payload.transactionUID,
-            command.payload.file,
-            command.payload.mediaContent)
-        );
+        return this.data.uploadTransactionMediaFile(command.payload.transactionUID,
+                                                    command.payload.file,
+                                                    command.payload.mediaContent).firstValue() as Promise<T>;
 
       case CommandType.REMOVE_TRANSACTION_FILE:
-        return toPromise<T>(
-          this.data.removeTransactionMediaFile(command.payload.transactionUID,
-            command.payload.mediaFileUID)
-        );
+        return this.data.removeTransactionMediaFile(command.payload.transactionUID,
+                                                    command.payload.mediaFileUID).firstValue() as Promise<T>;
 
       case CommandType.EXECUTE_WORKFLOW_COMMAND:
-        return toPromise<T>(
-          this.data.executeWorkflowCommand(command.payload)
-        );
+        return this.data.executeWorkflowCommand(command.payload).firstValue() as Promise<T>;
 
       default:
         throw this.unhandledCommand(command);

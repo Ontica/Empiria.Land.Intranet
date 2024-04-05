@@ -9,6 +9,9 @@
 import { MainLayoutActions, MainLayoutSelectors } from './main-layout/_main-layout.presentation.types';
 export * from './main-layout/_main-layout.presentation.types';
 
+import { AppStatusActions, AppStatusSelectors } from './app-data/_app-data.presentation.types';
+export * from './app-data/_app-data.presentation.types';
+
 import { SMSelectors } from './security-management/_security.management.presentation.types';
 export * from './security-management/_security.management.presentation.types';
 
@@ -18,10 +21,10 @@ export * from './land/_land.presentation.types';
 
 /* Exportation types */
 
-export type ActionType = MainLayoutActions | LandActions;
+export type ActionType = MainLayoutActions | AppStatusActions | LandActions;
 
 export type CommandType = LandCommands;
 
 export type StateEffect = LandEffects;
 
-export type StateSelector = LandSelectors | SMSelectors | MainLayoutSelectors;
+export type StateSelector = MainLayoutSelectors | AppStatusSelectors | LandSelectors | SMSelectors;

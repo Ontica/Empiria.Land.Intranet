@@ -11,8 +11,9 @@ import { Router } from '@angular/router';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
-import { CLIENT_SIDE_ERROR_MESSAGE, INVALID_CREDENTIALS_MESSAGE, OFFLINE_ERROR_MESSAGE,
-         SESSION_EXPIRED_MESSAGE } from './error-messages';
+import { LOGIN_PATH } from '@app/main-layout';
+
+import { CLIENT_SIDE_ERROR_MESSAGE, OFFLINE_ERROR_MESSAGE, } from './error-messages';
 
 
 @Injectable()
@@ -39,11 +40,12 @@ export class ErrorMessageService {
 
     switch (error.status) {
       case 401:
-        this.handle401Error(error.error.request.withCredentials ?? false);
+        this.handle401Error(error.error.message);
         return;
 
       default:
         this.showErrorMessage(error.error.message, error.status);
+        return;
     }
   }
 
@@ -57,25 +59,19 @@ export class ErrorMessageService {
   private showErrorMessage(message: string, status?: string) {
     if (!this.messageBox.isOpen()) {
       const statusMessage = status ? `<strong>(${status})</strong>  ` : '';
-      this.messageBox.showError(statusMessage + message);
+      this.messageBox.showError(statusMessage + message)
+        .firstValue();
     }
   }
 
 
-  private handle401Error(withCredentials) {
-    const errorMessage = withCredentials ? SESSION_EXPIRED_MESSAGE : INVALID_CREDENTIALS_MESSAGE;
-
+  private handle401Error(message: string) {
     if (!this.messageBox.isOpen()) {
-      this.messageBox.showError(errorMessage)
-        .toPromise()
-        .then(x => this.validateRedirectToLogin(withCredentials));
-    }
-  }
+      const statusMessage = `<strong>(401)</strong> ${message}`;
 
-
-  private validateRedirectToLogin(withCredentials: boolean) {
-    if (withCredentials) {
-      this.router.navigateByUrl('security/login');
+      this.messageBox.showError(statusMessage)
+        .firstValue()
+        .then(x => this.router.navigateByUrl(LOGIN_PATH))
     }
   }
 

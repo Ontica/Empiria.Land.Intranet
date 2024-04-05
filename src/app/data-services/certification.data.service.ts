@@ -7,9 +7,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-
-import { Assertion, HttpService } from '@app/core';
+import { Assertion, EmpObservable, HttpService } from '@app/core';
 
 import { Certificate, CertificateType, CreateCertificateCommand } from '@app/models';
 
@@ -20,7 +18,7 @@ export class CertificationDataService {
   constructor(private http: HttpService) { }
 
 
-  getTransactionCertificateTypes(transactionUID: string): Observable<CertificateType[]> {
+  getTransactionCertificateTypes(transactionUID: string): EmpObservable<CertificateType[]> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/transactions/${transactionUID}/certificates/certificate-types`;
@@ -29,7 +27,7 @@ export class CertificationDataService {
   }
 
 
-  getTransactionCertificates(transactionUID: string): Observable<Certificate[]> {
+  getTransactionCertificates(transactionUID: string): EmpObservable<Certificate[]> {
     Assertion.assertValue(transactionUID, 'transactionUID');
 
     const path = `v5/land/transactions/${transactionUID}/certificates`;
@@ -38,7 +36,7 @@ export class CertificationDataService {
   }
 
 
-  createCertificate(transactionUID: string, command: CreateCertificateCommand): Observable<Certificate> {
+  createCertificate(transactionUID: string, command: CreateCertificateCommand): EmpObservable<Certificate> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(command, 'command');
 
@@ -48,7 +46,7 @@ export class CertificationDataService {
   }
 
 
-  closeCertificate(transactionUID: string, certificateUID: string): Observable<Certificate> {
+  closeCertificate(transactionUID: string, certificateUID: string): EmpObservable<Certificate> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(certificateUID, 'certificateUID');
 
@@ -58,7 +56,7 @@ export class CertificationDataService {
   }
 
 
-  openCertificate(transactionUID: string, certificateUID: string): Observable<Certificate> {
+  openCertificate(transactionUID: string, certificateUID: string): EmpObservable<Certificate> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(certificateUID, 'certificateUID');
 
@@ -68,7 +66,7 @@ export class CertificationDataService {
   }
 
 
-  deleteCertificate(transactionUID: string, certificateUID: string): Observable<void> {
+  deleteCertificate(transactionUID: string, certificateUID: string): EmpObservable<void> {
     Assertion.assertValue(transactionUID, 'transactionUID');
     Assertion.assertValue(certificateUID, 'certificateUID');
 

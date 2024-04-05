@@ -7,9 +7,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-
-import { Assertion, DateStringLibrary, HttpService, Identifiable } from '@app/core';
+import { Assertion, DateStringLibrary, EmpObservable, HttpService, Identifiable } from '@app/core';
 
 import { BookEntryShortModel, InstrumentType, Issuer, IssuersFilter, RecorderOffice, RecordingActSearchQuery,
          TractIndex } from '@app/models';
@@ -20,7 +18,7 @@ export class RecordableSubjectsDataService {
 
   constructor(private http: HttpService) { }
 
-  findInstrumentTypeIssuers(filter: IssuersFilter): Observable<Issuer[]> {
+  findInstrumentTypeIssuers(filter: IssuersFilter): EmpObservable<Issuer[]> {
     let path = `v5/land/instrument-issuers/?instrumentType=${filter.instrumentType}`;
 
     if (filter.instrumentKind) {
@@ -39,7 +37,7 @@ export class RecordableSubjectsDataService {
   }
 
 
-  getAmendableRecordingActs(query: RecordingActSearchQuery): Observable<TractIndex> {
+  getAmendableRecordingActs(query: RecordingActSearchQuery): EmpObservable<TractIndex> {
     Assertion.assertValue(query.recordableSubjectUID, 'query.recordableSubjectUID');
     Assertion.assertValue(query.amendmentRecordingActTypeUID, 'query.amendmentRecordingActTypeUID');
 
@@ -58,21 +56,21 @@ export class RecordableSubjectsDataService {
   }
 
 
-  getAssociationKinds(): Observable<string[]> {
+  getAssociationKinds(): EmpObservable<string[]> {
     const path = `v5/land/registration/association-kinds`;
 
     return this.http.get<string[]>(path);
   }
 
 
-  getNoPropertyKinds(): Observable<string[]> {
+  getNoPropertyKinds(): EmpObservable<string[]> {
     const path = `v5/land/registration/no-property-kinds`;
 
     return this.http.get<string[]>(path);
   }
 
 
-  getInstrumentKinds(instrumentType: InstrumentType): Observable<string[]> {
+  getInstrumentKinds(instrumentType: InstrumentType): EmpObservable<string[]> {
     Assertion.assertValue(instrumentType, 'instrumentType');
 
     const path = `v5/land/instrument-types/${instrumentType}/instrument-kinds`;
@@ -81,28 +79,28 @@ export class RecordableSubjectsDataService {
   }
 
 
-  getRealEstateKinds(): Observable<string[]> {
+  getRealEstateKinds(): EmpObservable<string[]> {
     const path = `v5/land/registration/real-estate-kinds`;
 
     return this.http.get<string[]>(path);
   }
 
 
-  getRealEstatePartitionKinds(): Observable<string[]> {
+  getRealEstatePartitionKinds(): EmpObservable<string[]> {
     const path = `v5/land/registration/real-estate-partition-kinds`;
 
     return this.http.get<string[]>(path);
   }
 
 
-  getRealEstateLotSizeUnits(): Observable<Identifiable[]> {
+  getRealEstateLotSizeUnits(): EmpObservable<Identifiable[]> {
     const path = `v5/land/registration/real-estate-lot-size-units`;
 
     return this.http.get<Identifiable[]>(path);
   }
 
 
-  getRecorderOffices(): Observable<RecorderOffice[]> {
+  getRecorderOffices(): EmpObservable<RecorderOffice[]> {
     const path = `v5/land/registration/recorder-offices`;
 
     return this.http.get<RecorderOffice[]>(path);
@@ -111,7 +109,7 @@ export class RecordableSubjectsDataService {
 
   getRecordingBooks(recorderOfficeUID: string,
                     recordingSectionUID: string,
-                    keywords?: string): Observable<Identifiable[]> {
+                    keywords?: string): EmpObservable<Identifiable[]> {
     let path = `v5/land/registration/recorder-offices/${recorderOfficeUID}/` +
                `recording-sections/${recordingSectionUID}/recording-books`;
 
@@ -123,7 +121,7 @@ export class RecordableSubjectsDataService {
   }
 
 
-  getRecordingBookEntries(recordingBookUID: string): Observable<BookEntryShortModel[]> {
+  getRecordingBookEntries(recordingBookUID: string): EmpObservable<BookEntryShortModel[]> {
     Assertion.assertValue(recordingBookUID, 'recordingBookUID');
 
     const path = `v5/land/registration/recording-books/${recordingBookUID}/book-entries`;
@@ -132,7 +130,7 @@ export class RecordableSubjectsDataService {
   }
 
 
-  getFullTractIndex(recordableSubjectUID: string): Observable<TractIndex> {
+  getFullTractIndex(recordableSubjectUID: string): EmpObservable<TractIndex> {
     Assertion.assertValue(recordableSubjectUID, 'recordableSubjectUID');
 
     const path = `v5/land/registration/recordable-subjects/${recordableSubjectUID}/tract-index`;
