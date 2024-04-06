@@ -11,8 +11,6 @@ import { EventInfo } from '@app/core';
 
 import { RealEstate, RecordableSubject, RecordableSubjectType } from '@app/models';
 
-import { AlertService } from '@app/shared/containers/alert/alert.service';
-
 import { sendEvent } from '@app/shared/utils';
 
 export enum RecordableSubjectViewEventType {
@@ -32,11 +30,6 @@ export class RecordableSubjectViewComponent {
   @Input() showCopyPaste = true;
 
   @Output() recordableSubjectViewEvent = new EventEmitter<EventInfo>();
-
-
-  constructor(private alertService: AlertService) {
-
-  }
 
 
   get displayRealEstate(): boolean {
@@ -63,12 +56,6 @@ export class RecordableSubjectViewComponent {
   onCadastralClicked() {
     sendEvent(this.recordableSubjectViewEvent,
       RecordableSubjectViewEventType.CADASTRAL_CLICKED, {recordableSubject: this.recordableSubject});
-  }
-
-
-  showAlertTextCopied(copied: boolean) {
-    const message = copied ? 'Folio electrónico copiado' : 'Tuve un problema al copiar el electrónico';
-    this.alertService.openAlert(message, 'Ok');
   }
 
 }

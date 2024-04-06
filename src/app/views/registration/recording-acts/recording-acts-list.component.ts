@@ -8,15 +8,13 @@
 
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo, Identifiable, isEmpty } from '@app/core';
 
 import { EmptyInstrumentRecording, getRecordableObjectStatusName, getSizeUnitNameShort, InstrumentRecording,
          RecordableObjectStatus, RecordableSubject, RecordableSubjectType, RecordingActEntry,
          RegistryEntryData, SizeUnit, RegistryEntryView } from '@app/models';
-
-import { AlertService } from '@app/shared/containers/alert/alert.service';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
@@ -48,8 +46,8 @@ export class RecordingActsListComponent implements OnChanges {
   displayedColumns = [...this.displayedColumnsDefault];
 
 
-  constructor(private messageBox: MessageBoxService,
-              private alertService: AlertService) {
+  constructor(private messageBox: MessageBoxService) {
+
   }
 
 
@@ -95,12 +93,6 @@ export class RecordingActsListComponent implements OnChanges {
   onOpenRecordableSubjectTabbedView(entry: RecordingActEntry, isRelatedSubject: boolean) {
     sendEvent(this.recordingActsListEvent, RecordingActsListEventType.SELECT_RECORDABLE_SUBJECT,
       this.getRegistryEntryData(entry, 'RecordableSubject', isRelatedSubject));
-  }
-
-
-  showAlertTextCopied(copied: boolean) {
-    const message = copied ? 'Folio real copiado' : 'Tuve un problema al copiar el folio real ';
-    this.alertService.openAlert(message, 'Ok');
   }
 
 

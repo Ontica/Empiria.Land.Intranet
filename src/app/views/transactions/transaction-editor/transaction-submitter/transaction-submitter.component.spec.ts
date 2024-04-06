@@ -11,7 +11,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { MessageBoxService } from '@app/shared/containers/message-box';
 

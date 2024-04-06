@@ -10,50 +10,184 @@
 
 // variables
 
-$primary-font-family: "'Work Sans', sans-serif" !default;
+$emp-land-font-family-primary: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 
-$empiria-land-app-typography: mat.define-legacy-typography-config(
-  $font-family: $primary-font-family,
-  $headline: mat.define-typography-level(24pt, 34pt, 400),
-  $title: mat.define-typography-level(14pt, 20pt, 500),
-  $body-1: mat.define-typography-level(9.5pt, 16pt, 400),
-  $body-2: mat.define-typography-level(10pt, 14pt, 500),
-  $caption: mat.define-typography-level(9pt, 12pt, 400),
-  $button: mat.define-typography-level(10pt, 14pt, 400),
-  $input: mat.define-typography-level(10.5pt, 1.25, 400)
+$emp-land-text-color: rgb(52, 52, 52);
+
+// https: //material.angular.io/guide/typography
+$emp-land-app-typography: mat.define-typography-config(
+  $font-family: $emp-land-font-family-primary,
+  $button: mat.define-typography-level(9.5pt, 14pt, 400),
 );
+
+$emp-land-app-foreground: (
+  base: black,
+  divider: rgba(black, 0.12),
+  dividers: rgba(black, 0.12),
+  disabled: rgba(black, 0.38),
+  disabled-button: rgba(black, 0.26),
+  disabled-text: rgba(black, 0.38),
+  elevation: black,
+  hint-text: rgba(black, 0.38),
+  secondary-text: rgba(black, 0.54),
+  icon: rgba(black, 0.54),
+  icons: rgba(black, 0.54),
+  text: rgba(black, 0.87),
+  slider-min: rgba(black, 0.87),
+  slider-off: rgba(black, 0.26),
+  slider-off-active: rgba(black, 0.38),
+);
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+
+$emp-land-primary-palette: (
+  50: hsl(205, 20%, 68%),
+  100: hsl(205, 20%, 64%),
+  200: hsl(205, 20%, 50%),
+  300: hsl(205, 20%, 46%),
+  400: hsl(205, 20%, 42%),
+  500: hsl(205, 20%, 38%),
+  600: hsl(205, 20%, 34%),
+  700: hsl(205, 20%, 30%), // $primary-color
+  800: hsl(205, 20%, 25%),
+  900: hsl(205, 20%, 23%),
+  A100: hsl(205, 20%, 60%),
+  A200: hsl(205, 20%, 50%),
+  A400: hsl(205, 20%, 40%),
+  A700: hsl(205, 20%, 36%),
+
+  contrast: (
+    50: rgba($emp-land-text-color, 0.8),
+    100: rgba($emp-land-text-color, 0.8),
+    200: rgba($emp-land-text-color, 0.8),
+    300: rgba($emp-land-text-color, 0.8),
+    400: rgba($emp-land-text-color, 0.8),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba($emp-land-text-color, 0.8),
+    A200: rgba($emp-land-text-color, 0.8),
+    A400: rgba($emp-land-text-color, 0.8),
+    A700: rgba($emp-land-text-color, 0.8),
+  ));
+
+$emp-land-accent-palette: (
+  50: hsl(205, 20%, 46%),
+  100: hsl(205, 20%, 40%),
+  200: hsl(205, 20%, 34%),
+  300: hsl(205, 20%, 28%),
+  400: hsl(205, 20%, 22%), // $secondary-color
+  500: hsl(205, 20%, 20%),
+  600: hsl(205, 20%, 18%),
+  700: hsl(205, 20%, 16%),
+  800: hsl(205, 20%, 14%),
+  900: hsl(205, 20%, 12%),
+  A100: hsl(205, 20%, 60%),
+  A200: hsl(205, 20%, 55%),
+  A400: hsl(205, 20%, 50%),
+  A700: hsl(205, 20%, 45%),
+
+  contrast: (
+    50: rgba($emp-land-text-color, 0.8),
+    100: rgba($emp-land-text-color, 0.8),
+    200: rgba($emp-land-text-color, 0.8),
+    300: rgba($emp-land-text-color, 0.8),
+    400: rgba($emp-land-text-color, 0.8),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba($emp-land-text-color, 0.8),
+    A200: rgba($emp-land-text-color, 0.8),
+    A400: rgba($emp-land-text-color, 0.8),
+    A700: rgba($emp-land-text-color, 0.8),
+  ));
+
+$emp-land-warn-palette: (
+  50: hsl(357, 47%, 85%),
+  100: hsl(357, 47%, 75%),
+  200: hsl(357, 47%, 65%),
+  300: hsl(357, 47%, 55%),
+  400: hsl(357, 47%, 45%),
+  500: hsl(357, 47%, 35%), // $warning-color
+  600: hsl(357, 47%, 32%),
+  700: hsl(357, 47%, 29%),
+  800: hsl(357, 47%, 25%),
+  900: hsl(357, 47%, 20%),
+  A100: hsl(357, 47%, 75%),
+  A200: hsl(357, 47%, 55%),
+  A400: hsl(357, 47%, 51%),
+  A700: hsl(357, 47%, 45%),
+
+  contrast: (
+    50: rgba($emp-land-text-color, 0.8),
+    100: rgba($emp-land-text-color, 0.8),
+    200: rgba($emp-land-text-color, 0.8),
+    300: rgba($emp-land-text-color, 0.8),
+    400: rgba($emp-land-text-color, 0.8),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba($emp-land-text-color, 0.8),
+    A200: rgba($emp-land-text-color, 0.8),
+    A400: rgba($emp-land-text-color, 0.8),
+    A700: rgba($emp-land-text-color, 0.8),
+  ));
+
+$emp-land-app-primary: mat.define-palette($emp-land-primary-palette, 500);
+
+$emp-land-app-accent: mat.define-palette($emp-land-accent-palette, 300, 200, 500);
+
+$emp-land-app-warn: mat.define-palette($emp-land-warn-palette, 500);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$emp-land-app-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $emp-land-app-primary,
+      accent: $emp-land-app-accent,
+      warn: $emp-land-app-warn,
+      foreground: $emp-land-app-foreground, // for some reason this line does not work and it is necessary to overwrite below
+    ),
+    typography: $emp-land-app-typography,
+    density: 0,
+  )
+);
+
+// get color y foreground configuration from the theme
+$app-theme-color: map-get($emp-land-app-theme, color);
+
+$app-theme-foreground: map-merge(map-get($app-theme-color, foreground), $emp-land-app-foreground);
+
+// overriding color background/foreground
+$app-theme-color: map-merge($app-theme-color, (foreground: $app-theme-foreground));
+
+$emp-land-app-theme: map-merge($emp-land-app-theme, (color: $app-theme-color));
+
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
 // Also applies custom typography that allow use of angular material style classes in html items.
-// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
 //  The following line adds:
 //    1. Default typography styles for all components
 //    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
 //  If you specify typography styles for the components you use elsewhere, you should delete this line.
 //  If you don't need the default component typographies but still want the hierarchy styles,
-//  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy($empiria-land-app-typography);`
-@include mat.all-legacy-component-typographies($empiria-land-app-typography);
-@include mat.legacy-core();
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue.
-$empiria-land-app-primary: mat.define-palette(mat.$gray-palette, 500);
-$empiria-land-app-accent: mat.define-palette(mat.$teal-palette, 300, 200, 500);
+@include mat.all-component-typographies($emp-land-app-typography);
 
-// The warn palette is optional (defaults to red).
-$empiria-land-app-warn: mat.define-palette(mat.$red-palette, 500);
-
-// Create the theme object (a Sass map containing all of the palettes).
-$empiria-land-app-theme: mat.define-light-theme($empiria-land-app-primary, $empiria-land-app-accent, $empiria-land-app-warn);
+@include mat.core();
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-legacy-component-themes($empiria-land-app-theme);
 
-// Apply custom typography to all angular material components.
-@include mat.all-legacy-component-typographies($empiria-land-app-typography);
+@include mat.all-component-themes($emp-land-app-theme);

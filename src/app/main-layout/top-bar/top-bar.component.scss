@@ -23,7 +23,7 @@
 .toolbar-item {
   flex: 0 0 auto;
   margin: auto 10px auto 0;
-  background-color: #f3f3f3;
+  background-color: $toolbar-item-background;
   height: $toolbar-item-size;
   width: $toolbar-item-size;
   border-radius: 3px;
@@ -39,7 +39,7 @@
 
 .toolbar-item.activate,
 .toolbar-item:hover {
-  background-color: lighten($toolbar-icon-color, 60);
+  background-color: $toolbar-item-background-hover;
   transition: 0.3s ease-out;
 
   .mat-icon {

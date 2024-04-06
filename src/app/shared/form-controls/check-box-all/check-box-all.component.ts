@@ -9,16 +9,18 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { SelectionModel } from '@angular/cdk/collections';
 
-import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 
 @Component({
   selector: 'emp-ng-check-box-all',
   template: `
     <mat-checkbox
-      [class.mat-checkbox-warning]="showWarning"
+      [color]="showWarning ? 'warn' : 'primary'"
       [checked]="isChecked()"
       [indeterminate]="isIndeterminate()"
+      [disabled]="disabled"
+      [class.no-label]="!text"
       (change)="toggleSelection($event)"
       (click)="$event.stopPropagation()">
       {{text}}
@@ -30,6 +32,8 @@ export class CheckboxAllComponent {
   @Input() selection: SelectionModel<any>;
   @Input() values = [];
   @Input() text = '';
+  @Input() disabled = false;
+  @Input() indeterminated = false;
   @Input() showWarning = false;
   @Output() selectionChange = new EventEmitter<SelectionModel<any>>();
 
@@ -38,20 +42,15 @@ export class CheckboxAllComponent {
   }
 
   isIndeterminate(): boolean {
-    return this.selection.hasValue() && this.selection.selected.length !== this.values.length;
+    return (this.selection.hasValue() && this.selection.selected.length !== this.values.length) ||
+      (this.disabled && this.indeterminated);
   }
 
   toggleSelection(change: MatCheckboxChange): void {
     if (change.checked) {
-
-      this.values.forEach(value => {
-        this.selection.select(value);
-      });
-
+      this.values.forEach(value => this.selection.select(value));
     } else {
-
       this.selection.clear();
-
     }
 
     this.selectionChange.emit(this.selection);

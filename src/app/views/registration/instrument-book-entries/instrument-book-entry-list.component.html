@@ -4,11 +4,14 @@
     <ng-container matColumnDef="stampMedia">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let row" class="column-action">
-        <mat-icon *ngIf="row.stampMedia.url"
-          (click)="printBookEntryStampMedia(row)"
-          title="Sello partida">
-          approval
-        </mat-icon>
+        <button mat-icon-button
+          *ngIf="row.stampMedia.url"
+          title="Sello partida"
+          (click)="printBookEntryStampMedia(row)">
+          <mat-icon>
+            approval
+          </mat-icon>
+        </button>
       </td>
     </ng-container>
 
@@ -40,11 +43,13 @@
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let row" class="column-action">
-        <mat-icon
-          (click)="removeBookEntry(row)"
-          title="Eliminar registro">
-          delete
-        </mat-icon>
+        <button mat-icon-button
+          title="Eliminar registro"
+          (click)="removeBookEntry(row)">
+          <mat-icon>
+            delete
+          </mat-icon>
+        </button>
       </td>
     </ng-container>
 

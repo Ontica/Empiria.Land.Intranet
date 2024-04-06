@@ -5,6 +5,9 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
+//
+// Color Palette
+//
 $white: #fdfdfd !default;
 
 $primary-color: hsl(205, 20%, 30%) !default;
@@ -40,6 +43,10 @@ $disabled-color: #edeef0 !default;
 $secondary-text-color: $white !default;
 $action-color: $primary-color;
 $action-selected-color: $primary-color-dark;
+$selected-item-text-color: $text-color !default;
+$link-color: $text-color !default;
+
+$backdrop-color: rgba(0, 0, 0, 0.32) !default;
 
 //
 // Typography
@@ -58,32 +65,31 @@ $font-weight-command: 300;
 //
 $font-size-hint: $font-size-base * 0.75;
 $font-weight-hint: 300;
-$text-bold: lighten($text-color, 3%);
+$font-weight-bold: 600;
 $text-italic: italic;
 //
 $font-size-grid-header: $font-size-base * 0.75;
-$font-size-grid: 9.5pt;
+$font-size-grid: 9pt;
+
+//
+// Responsive
+//
+$screen-small: 959px;
+$screen-medium: 1366px;
+$screen-standard: 1440px;
 
 //
 // Layout
 //
-// $layout-gradient-initial-color: $primary-color-dark;
-// $layout-gradient-final-color: $primary-color;
-// $layout-secondary-color: $warning-color;
-// $layout-secondary-color-dark: $warning-color-dark;
 $layout-gradient-initial-color: $warning-color-dark;
 $layout-gradient-final-color: $warning-color;
 $layout-secondary-color: $secondary-color;
 $layout-secondary-color-dark: $secondary-color-dark;
+$toolbar-item-background: #f3f3f3;
+$toolbar-item-background-hover: lighten($primary-color, 70);
+$toolbar-icon-color: $primary-color;
 $toolbar-item-size: 34px;
 $toolbar-icon-size: 24px;
-$toolbar-icon-color: $primary-color;
-
-//
-// Elements colors
-//
-$selected-item-text-color: $text-color;
-$link-color: $text-color;
 
 //
 // icons
@@ -141,15 +147,16 @@ $button-border: 0 solid #cecece;
 $button-height: 28px;
 
 $checkbox-background-color: $primary-color-light;
+$checkbox-size: 28px;
 $checkbox-warning-background-color: $layout-secondary-color;
 $date-picker-width: 90px;
+$range-picker-width: 185px;
 
 $tag-background-color: hsl(167, 36%, 95%);
 $tag-default-background-color: hsl(167, 36%, 88%);
 $tag-info-background-color: hsl(205, 20%, 60%);
 $tag-error-background-color: hsl(357, 47%, 65%);
 $tag-warning-color: hsl(54, 37%, 74%);
-
 $tag-default-color: hsl(205, 20%, 50%);
 
 $list-selection-header-background-color: hsl(210, 20%, 90%) !default;
@@ -167,10 +174,15 @@ $grid-odd-background-color: #f4f4f4 !default;
 $grid-hover-background-color: #f5f8fa;
 $grid-selected-background-color: #f0f3f5;
 $grid-selected-hover-background-color: #edf0f3;
+$grid-header-height: 37px;
+$grid-row-height: 35px;
+$grid-entry-padding-vertical: 10px;
+$grid-entry-padding-horizontal: 10px;
+$grid-entry-padding-vertical-first: 10px;
+$grid-entry-padding-vertical-default: 8px;
 $grid-nested-background-color: #e0e6eb;
 $grid-nested-hover-background-color: #d0dae1;
 $grid-nested-border: 2px solid #859cad;
-$grid-row-height: 35px;
 
 //
 // Designer

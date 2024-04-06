@@ -9,7 +9,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 
 import { CurrencyPipe } from '@angular/common';
 
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo } from '@app/core';
 

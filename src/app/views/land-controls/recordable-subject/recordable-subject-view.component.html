@@ -6,15 +6,13 @@
         {{recordableSubject.electronicID}}
       </a>
 
-      <a [style.marginLeft.px]="8">
-        <mat-icon title="Copiar folio electrónico" class="mat-icon-sm" *ngIf="showCopyPaste"
-          matRipple [matRippleCentered]="true" [matRippleUnbounded]="true"
-          [cdkCopyToClipboard]="recordableSubject.electronicID"
-          (cdkCopyToClipboardCopied)="showAlertTextCopied($event);"
-          (click)="$event.stopPropagation();">
-          bookmark
-        </mat-icon>
-      </a>
+      <emp-ng-button-copy-to-clipboard  *ngIf="showCopyPaste"
+        title="Copiar folio electrónico"
+        itemToCopy="Folio electrónico"
+        [textToCopy]="recordableSubject.electronicID"
+        [style.marginLeft.px]="8">
+
+      </emp-ng-button-copy-to-clipboard>
 
     </div>
 

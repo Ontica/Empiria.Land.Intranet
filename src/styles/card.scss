@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-@import "general-styles";
+@import 'mixins', 'variables';
 
 @mixin raised-header {
   box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.28);
@@ -80,13 +80,13 @@
 }
 
 .card-header-raised {
-  border-bottom: 4px solid $title-border-color;
+  border-bottom: 3px solid $title-border-color;
 
   @include raised-header;
 }
 
 .card-header-flat {
-  border-bottom: 4px solid $title-border-color;
+  border-bottom: 3px solid $title-border-color;
 }
 
 .card-shadow {

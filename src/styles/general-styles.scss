@@ -5,8 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-@import "variables";
-@import "responsive";
+@import 'variables', 'responsive';
 
 table {
   border: 0;
@@ -153,6 +152,7 @@ button.btn-base {
 
   .mat-icon {
     color: $icon-color;
+    margin-left: 8px;
   }
 }
 
@@ -408,7 +408,6 @@ textarea:focus {
   text-decoration: underline;
 }
 
-
 .error-indicator-text {
   color: $warning-color;
   text-decoration: underline;
@@ -451,7 +450,7 @@ a.warning-indicator-text:hover {
 
 .small-italic-notification {
   font: $control-small-font;
-  font-weight: $text-bold;
+  font-weight: $font-weight-bold;
   font-style: $text-italic;
 }
 

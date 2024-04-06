@@ -8,7 +8,7 @@
 
 import { Component, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
 
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { Command } from '@app/core';
 

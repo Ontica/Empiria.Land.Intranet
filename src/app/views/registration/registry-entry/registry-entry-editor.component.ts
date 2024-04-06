@@ -7,7 +7,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 
-import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 import { Assertion, EventInfo } from '@app/core';
 
