@@ -9,40 +9,38 @@
 
 $medium-max-width: 1024px;
 $logo-width: 410px;
-$container-width: 450px;
+$width: 450px;
 $logo-padding: 20px;
 
 .outer {
-  height: 100vh;
-  padding-right: 15%;
-  display: flex;
   align-items: center;
-  justify-content: flex-end;
-  background: $white;
   // background: url("../../../../assets/img/customer/background.png") no-repeat center center fixed;
-  // background-size: cover;
+  background-size: cover;
+  display: flex;
+  height: 100vh;
+  justify-content: flex-end;
+  padding-right: 15%;
 }
 
 .authentication-container {
   display: flex;
   align-items: center;
   height: 100%;
-  width: $container-width;
+  max-width: $width;
   background: -prefix-linear-gradient(top, $layout-gradient-initial-color, $layout-gradient-final-color);
   background: linear-gradient(to top, $layout-gradient-initial-color, $layout-gradient-final-color);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
 }
 
 .authentication-center {
-  margin-top: -25%;
+
 }
 
 .authentication-section-logo {
   display: flex;
   align-items: center;
-  width: calc($container-width + 10px);
   text-align: center;
-  padding: $logo-padding;
+  padding: $logo-padding 0;
   margin: 0 -5px;
   background: white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
@@ -62,37 +60,25 @@ $logo-padding: 20px;
   line-height: 16pt;
 }
 
+.authentication-section-instruction {
+  padding: 30px $logo-padding;
+  font-size: 14pt;
+  color: $layout-secondary-color;
+  line-height: 16pt;
+}
+
 .authentication-section-form {
   padding: 0 12px 0 $logo-padding;
-  height: 164px;
-
-  .login-field-container {
-    position: relative;
-    padding-bottom: 10px;
-
-    .invalid-control {
-      border-left: 5px solid $secondary-color  !important;
-    }
-  }
-
-  .footer-submit-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 10px;
-  }
+  height: auto;
 }
 
-.authentication-section-footer {
-  margin-left: $logo-padding;
-  margin-top: $logo-padding;
-  font-size: 10pt;
+.authentication-error {
+  width: calc($width - 32px);
+  min-height: 74px;
 }
 
-label {
-  font-size: 10pt;
-  font-weight: 500;
-  color: $white;
+.authentication-space {
+  height: 5vh;
 }
 
 .hint {
@@ -108,23 +94,6 @@ label {
   color: $white;
   margin-top: 4px;
   font-weight: 800;
-}
-
-.inline-error {
-  width: $logo-width - 10px;
-  min-height: 30px;
-  color: $layout-secondary-color-dark;
-  font-size: 10pt;
-  font-weight: 400;
-  margin: 0 8px 12px 0;
-  padding: 4px;
-  border: 1px solid $layout-secondary-color-dark;
-  border-radius: 2px;
-}
-
-input:-webkit-autofill {
-  box-shadow: 0 0 0 32px $control-background-color inset;
-  -webkit-box-shadow: 0 0 0 32px $control-background-color inset;
 }
 
 @media only screen and (max-width: $medium-max-width) {

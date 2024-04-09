@@ -37,11 +37,11 @@ export class ApplicationSettingsService {
     }
 
     this.settings = firstValueFrom(this.http.get('./assets/empiria.config.json'))
-      .then((response: { settings: KeyValue[]; }) => {
-        const data = response.settings;
+                      .then((response: {settings: KeyValue[]}) => {
+                        const data = response.settings;
 
-        return new ApplicationSettings(data);
-      });
+                        return new ApplicationSettings(data);
+                      });
   }
 
 }

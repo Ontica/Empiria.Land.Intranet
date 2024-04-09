@@ -9,10 +9,6 @@ import { Injectable } from '@angular/core';
 
 import { Cryptography } from './cryptography';
 
-import { EventInfo } from '../data-types/command';
-
-import { Assertion } from '../general/assertion';
-
 import { HttpHandler } from '../http/http-handler';
 
 import { SessionToken, PrincipalData } from './security-types';
@@ -26,46 +22,74 @@ interface ExternalSessionToken {
 }
 
 
+export interface Credentials {
+  userID: string;
+  password: string;
+}
+
+
+interface NewCredentials {
+  userID: string;
+  currentPassword: string;
+  newPassword: string;
+}
+
+
 @Injectable()
 export class SecurityDataService {
 
+
   constructor(private httpHandler: HttpHandler) { }
 
-  changePassword(event: EventInfo): Promise<boolean> {
-    Assertion.assertValue(event, 'event');
 
-    return this.httpHandler.post<boolean>('v3/security/change-password', event)
-      .firstValue();
-  }
-
-
-  closeSession(): Promise<void> {
-    return this.httpHandler.post<void>('v3/security/logout')
-      .firstValue();
-  }
-
-
-  async createSession(userID: string, userPassword: string): Promise<SessionToken> {
-    const body = {
+  async createLoginSession(userID: string, userPassword: string): Promise<SessionToken> {
+    const credentials: Credentials = {
       userID,
       password: ''
     };
 
-    const token = await this.httpHandler.post<string>('v3/security/login-token', body)
-                                        .toPromise();
+    const token = await
+      this.httpHandler.post<string>('v3/security/login-token', credentials)
+                      .firstValue();
 
-    body.password = Cryptography.createHash(userPassword);
-    body.password = Cryptography.createHash(body.password + token);
+    credentials.password = this.encryptUserPassword(userPassword, token);
 
-    return this.httpHandler.post<ExternalSessionToken>('v3/security/login', body)
-      .firstValue()
-      .then(x => this.mapToSessionToken(x));
+    return this.httpHandler.post<ExternalSessionToken>('v3/security/login', credentials)
+                           .firstValue()
+                           .then(x => this.mapToSessionToken(x));
   }
 
 
-  getPrincipal(): Promise<PrincipalData> {
+  async getPrincipalData(): Promise<PrincipalData> {
     return this.httpHandler.get<PrincipalData>('v3/security/principal')
-      .firstValue();
+                           .firstValue();
+  }
+
+
+
+  async changePassword(userID: string, currentPassword: string, newPassword: string): Promise<void> {
+    const credentials: NewCredentials = {
+      userID,
+      currentPassword: '',
+      newPassword: '',
+    };
+
+    const token = await
+      this.httpHandler.post<string>('v4/onepoint/security/management/new-credentials-token', credentials)
+        .firstValue();
+
+    credentials.currentPassword = this.encryptUserPassword(currentPassword, token);
+
+    credentials.newPassword = Cryptography.encryptAES2(newPassword, token);
+
+    return this.httpHandler.post<void>('v4/onepoint/security/management/update-my-credentials', credentials)
+                           .firstValue();
+  }
+
+
+  async closeSession(): Promise<void> {
+    return this.httpHandler.post<void>('v3/security/logout')
+                           .firstValue();
   }
 
 
@@ -76,6 +100,13 @@ export class SecurityDataService {
       refreshToken: source.refresh_token,
       tokenType: source.token_type
     };
+  }
+
+
+  private encryptUserPassword(userPassword: string, token: string): string {
+    const encryptedPassword = Cryptography.createHash(userPassword);
+
+    return Cryptography.createHash(encryptedPassword + token);
   }
 
 }

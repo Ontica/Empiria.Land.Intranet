@@ -7,7 +7,6 @@
 
 
 import * as CryptoJS from 'crypto-js';
-
 import { Assertion } from '../general/assertion';
 
 
