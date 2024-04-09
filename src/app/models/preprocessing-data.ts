@@ -7,7 +7,7 @@
 
 import { EmptyInstrument, Instrument } from './instrument';
 
-import { MediaFile } from './files';
+import { MediaFile } from './reporting';
 
 
 export interface PreprocessingData {

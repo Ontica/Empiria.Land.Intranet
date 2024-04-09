@@ -61,7 +61,7 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"
     [title]="row.uid === tractIndexEntryUID ? 'Acto jurídico seleccionado' : ''"
-    [class.bold-text]="row.uid === tractIndexEntryUID"
+    [class.row-bold]="row.uid === tractIndexEntryUID"
     [class.nested]="checkNestedEntries"
     [class.parent]="checkNestedEntries && !row.isChild"
     [class.child]="checkNestedEntries && row.isChild"

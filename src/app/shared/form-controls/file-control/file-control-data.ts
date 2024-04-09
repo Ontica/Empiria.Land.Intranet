@@ -39,6 +39,7 @@ export interface FileControlConfig {
   tagRequired?: boolean;
   textAccion?: string;
   textSave?: string;
+  textTemplate?: string;
 }
 
 
@@ -55,6 +56,7 @@ export const DefaultFileControlConfig: FileControlConfig = {
   tagRequired: false,
   textAccion: 'Agregar archivo',
   textSave: 'Guardar archivo',
+  textTemplate: 'Descargar plantilla',
 };
 
 
@@ -111,3 +113,9 @@ export const EmptyFileViewerData: FileViewerData = {
   title: 'Visor de Archivos',
   hint: '',
 };
+
+
+export interface FileControlEventData {
+  option: string;
+  file: any;
+}

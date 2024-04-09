@@ -6,7 +6,7 @@
     [ngClass.gt-md]="{'card-floating-secondary': cardFloatingEffect}"
     (cardClose)="onClose()">
 
-    <mat-tab-group (selectedTabChange)="onSelectedTabChange($event)">
+    <mat-tab-group mat-stretch-tabs="false" (selectedTabChange)="onSelectedTabChange($event)">
 
       <mat-tab label="Acto Jurídico" *ngIf="displayRecordingAct">
 

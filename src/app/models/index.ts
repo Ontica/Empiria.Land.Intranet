@@ -20,11 +20,13 @@
 
 export * from './_access-control';
 
+export * from './_data-table';
+
+export * from './reporting';
+
 export * from './certificate';
 
 export * from './e-sign';
-
-export * from './files';
 
 export * from './instrument';
 
