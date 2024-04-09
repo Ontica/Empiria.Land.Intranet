@@ -7,8 +7,6 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { Router } from '@angular/router';
-
 import { Subject } from 'rxjs';
 
 import { takeUntil } from 'rxjs/operators';
@@ -17,7 +15,9 @@ import { PresentationState } from '@app/core/presentation';
 
 import { MainUIStateAction, MainUIStateSelector } from '@app/presentation/exported.presentation.types';
 
-import { PERMISSIONS, TOOL } from '../config-data';
+import { MessageBoxService } from '@app/shared/containers/message-box';
+
+import { PERMISSIONS, TOOL_TYPES, Tool } from '../config-data';
 
 
 @Component({
@@ -31,14 +31,14 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   displayAsideRight = false;
 
-  toolSelected: TOOL = 'None';
+  toolSelected: TOOL_TYPES = 'None';
 
   private unsubscribe: Subject<void> = new Subject();
 
-  constructor(private store: PresentationState, private router: Router) {}
+  constructor(private store: PresentationState) {}
 
-  ngOnInit(): void {
-    this.store.select<TOOL>(MainUIStateSelector.TOOL_SELECTED)
+  ngOnInit() {
+    this.store.select<Tool>(MainUIStateSelector.TOOL_SELECTED)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(x => this.setToolSelected(x));
   }
@@ -50,13 +50,27 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
 
-  onToolClicked(tool: TOOL) {
-    this.store.dispatch(MainUIStateAction.SET_TOOL_SELECTED, tool);
+  onToolClicked(toolType: TOOL_TYPES) {
+
+    switch (toolType) {
+      case 'SearchRecordableSubject':
+
+        const tool: Tool = {
+          toolType,
+        };
+
+        this.store.dispatch(MainUIStateAction.SET_TOOL_SELECTED, tool);
+        return;
+
+      default:
+        return;
+    }
+
   }
 
 
-  private setToolSelected(tool: TOOL) {
-    this.toolSelected = tool;
+  private setToolSelected(tool: Tool) {
+    this.toolSelected = tool.toolType;
     this.displayAsideRight = this.toolSelected !== 'None';
   }
 

@@ -13,7 +13,7 @@ import { PresentationState } from '@app/core/presentation';
 
 import { MainUIStateAction } from '@app/presentation/exported.presentation.types';
 
-import { AuthenticationService, SessionService } from '@app/core';
+import { ApplicationStatusService, AuthenticationService, SessionService } from '@app/core';
 
 import { Principal } from '@app/core/security/principal';
 
@@ -32,10 +32,11 @@ export class UserSessionComponent implements OnInit {
   appLayoutConfig = APP_CONFIG.layout;
 
 
-  constructor(private store: PresentationState,
+  constructor(private appStatus: ApplicationStatusService,
+              private store: PresentationState,
               private session: SessionService,
               private authenticationService: AuthenticationService,
-              private router: Router) { }
+              private router: Router) {}
 
   ngOnInit(): void {
     this.principal = this.session.getPrincipal();
@@ -43,7 +44,10 @@ export class UserSessionComponent implements OnInit {
 
 
   onLogoutClicked() {
-    this.logout()
+    this.appStatus.canUserContinue()
+      .subscribe(x =>
+        x ? this.logout() : null
+      );
   }
 
 

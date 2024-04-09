@@ -11,25 +11,29 @@
   <mat-sidenav-container>
 
 
-    <mat-sidenav #sidenavLeft class="sidenav-left" mode="side" disableClose="true"
-      [opened]="false">
+    <mat-sidenav #sidenavLeft class="sidenav-left" mode="over" class="md-show">
+
+      <emp-ng-main-menu-left>
+
+      </emp-ng-main-menu-left>
 
     </mat-sidenav>
 
 
     <mat-sidenav-content #sidenavContent class="content">
 
-      <div fxLayout="column" fxFlexFill>
+      <div class="fx-column-container-fill">
 
-        <emp-ng-nav-bar fxFlex="none">
+        <emp-ng-navigation class="md-hide">
 
-        </emp-ng-nav-bar>
+        </emp-ng-navigation>
 
-        <emp-ng-header fxFlex="none" (action)="onAction($event)">
+        <emp-ng-navigation-responsive class="md-show"
+          (openMenuEvent)="sidenavLeft.toggle()">
 
-        </emp-ng-header>
+        </emp-ng-navigation-responsive>
 
-        <div class="workarea" fxFlex>
+        <div class="workarea">
 
           <router-outlet>
 
@@ -37,7 +41,7 @@
 
         </div>
 
-        <emp-ng-footer fxFlex="none" *ngIf="appLayoutConfig.displayFooter">
+        <emp-ng-footer *ngIf="appLayoutConfig.displayFooter">
 
         </emp-ng-footer>
 
@@ -52,12 +56,10 @@
       <button class="toolbar-item btn-collapse-sidenav-right"
         title="Cerrar herramienta"
         (click)="onCloseAsideRight()">
-
         <mat-icon>last_page</mat-icon>
-
       </button>
 
-      <container-element [ngSwitch]="toolSelected">
+      <container-element [ngSwitch]="toolSelected" #tools_section>
 
         <emp-land-recordable-subjects-search-tool *ngSwitchCase="'SearchRecordableSubject'">
 
