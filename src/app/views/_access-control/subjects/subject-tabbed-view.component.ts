@@ -63,7 +63,12 @@ export class SubjectTabbedViewComponent implements OnChanges {
 
 
   get isDeleted(): boolean {
-    return this.subject.status === 'Deleted';
+    return this.subject.status.uid === 'Deleted';
+  }
+
+
+  get isSuspended(): boolean {
+    return this.subject.status.uid === 'Suspended';
   }
 
 
@@ -105,7 +110,7 @@ export class SubjectTabbedViewComponent implements OnChanges {
     this.isLoading = true;
 
     this.accessControlData.getSubjectContexts(this.subject.uid)
-      .toPromise()
+      .firstValue()
       .then(x => this.setSubjectContextsList(x))
       .finally(() => this.isLoading = false);
   }

@@ -38,6 +38,8 @@ export class SubjectEditorComponent {
 
   @Input() isDeleted = false;
 
+  @Input() isSuspended = false;
+
   @Output() subjectEditorEvent = new EventEmitter<EventInfo>();
 
   submitted = false;
@@ -62,6 +64,12 @@ export class SubjectEditorComponent {
       case SubjectHeaderEventType.GENERATE_PASSWORD:
         this.generatePasswordToSubject();
         return;
+      case SubjectHeaderEventType.ACTIVATE_SUBJECT:
+        this.activateSubject();
+        return;
+      case SubjectHeaderEventType.SUSPEND_SUBJECT:
+        this.suspendSubject();
+        return;
       case SubjectHeaderEventType.DELETE_SUBJECT:
         this.deleteSubject();
         return;
@@ -76,8 +84,8 @@ export class SubjectEditorComponent {
     this.submitted = true;
 
     this.accessControlData.updateSubject(subjectUID, subjectFields)
-      .toPromise()
-      .then(x => sendEvent(this.subjectEditorEvent, SubjectEditorEventType.SUBJECT_UPDATED, {subject: x}))
+      .firstValue()
+      .then(x => this.emitSubjectUpdated(x))
       .finally(() => this.submitted = false);
   }
 
@@ -86,10 +94,28 @@ export class SubjectEditorComponent {
     this.submitted = true;
 
     this.accessControlData.resetCredentialsToSubject(this.subject.uid)
-      .toPromise()
-      .then(x =>
-        this.messageBox.show('La operación se realizó correctamente.', 'Generar contraseña')
-      )
+      .firstValue()
+      .then(x => this.messageBox.show('La operación se realizó correctamente.', 'Generar contraseña'))
+      .finally(() => this.submitted = false);
+  }
+
+
+  private activateSubject() {
+    this.submitted = true;
+
+    this.accessControlData.activateSubject(this.subject.uid)
+      .firstValue()
+      .then(x => this.emitSubjectUpdated(x))
+      .finally(() => this.submitted = false);
+  }
+
+
+  private suspendSubject() {
+    this.submitted = true;
+
+    this.accessControlData.suspendSubject(this.subject.uid)
+      .firstValue()
+      .then(x => this.emitSubjectUpdated(x))
       .finally(() => this.submitted = false);
   }
 
@@ -98,10 +124,19 @@ export class SubjectEditorComponent {
     this.submitted = true;
 
     this.accessControlData.deleteSubject(this.subject.uid)
-      .toPromise()
-      .then(x => sendEvent(this.subjectEditorEvent, SubjectEditorEventType.SUBJECT_DELETED,
-        {subjectUID: this.subject.uid}))
+      .firstValue()
+      .then(x => this.emitSubjectDeleted(this.subject.uid))
       .finally(() => this.submitted = false);
+  }
+
+
+  private emitSubjectUpdated(subject: Subject) {
+    sendEvent(this.subjectEditorEvent, SubjectEditorEventType.SUBJECT_UPDATED, { subject });
+  }
+
+
+  private emitSubjectDeleted(subjectUID: string) {
+    sendEvent(this.subjectEditorEvent, SubjectEditorEventType.SUBJECT_DELETED, { subjectUID });
   }
 
 }

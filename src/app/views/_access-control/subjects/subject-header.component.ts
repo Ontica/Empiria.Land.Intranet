@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -26,6 +26,8 @@ export enum SubjectHeaderEventType {
   UPDATE_SUBJECT    = 'SubjectHeaderComponent.Event.UpdateSubject',
   DELETE_SUBJECT    = 'SubjectHeaderComponent.Event.DeleteSubject',
   GENERATE_PASSWORD = 'SubjectHeaderComponent.Event.GeneratePassword',
+  ACTIVATE_SUBJECT  = 'SubjectHeaderComponent.Event.ActivateSubject',
+  SUSPEND_SUBJECT   = 'SubjectHeaderComponent.Event.SuspendSubject',
 }
 
 interface SubjectFormModel extends FormGroup<{
@@ -35,14 +37,13 @@ interface SubjectFormModel extends FormGroup<{
   employeeNo: FormControl<string>;
   jobPosition: FormControl<string>;
   workareaUID: FormControl<string>;
-}> {
-}
+}> { }
 
 @Component({
   selector: 'emp-ng-subject-header',
   templateUrl: './subject-header.component.html',
 })
-export class SubjectHeaderComponent implements OnChanges, OnInit, OnDestroy {
+export class SubjectHeaderComponent implements OnChanges, OnDestroy {
 
   @Input() subject: Subject = EmptySubject;
 
@@ -51,6 +52,8 @@ export class SubjectHeaderComponent implements OnChanges, OnInit, OnDestroy {
   @Input() canGeneratePassword = false;
 
   @Input() isDeleted = false;
+
+  @Input() isSuspended = false;
 
   @Output() subjectHeaderEvent = new EventEmitter<EventInfo>();
 
@@ -77,10 +80,6 @@ export class SubjectHeaderComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnChanges() {
     this.enableEditor(!this.isSaved);
-  }
-
-
-  ngOnInit() {
     this.loadWorkareas();
   }
 
@@ -123,6 +122,16 @@ export class SubjectHeaderComponent implements OnChanges, OnInit, OnDestroy {
   }
 
 
+  onActivateButtonClicked() {
+    this.showConfirmMessage(SubjectHeaderEventType.ACTIVATE_SUBJECT);
+  }
+
+
+  onSuspendButtonClicked() {
+    this.showConfirmMessage(SubjectHeaderEventType.SUSPEND_SUBJECT);
+  }
+
+
   onDeleteButtonClicked() {
     this.showConfirmMessage(SubjectHeaderEventType.DELETE_SUBJECT);
   }
@@ -141,33 +150,24 @@ export class SubjectHeaderComponent implements OnChanges, OnInit, OnDestroy {
 
 
   private validateSubjectWorkareaInList() {
-    if (!this.subject.workareaUID) {
-
-      return;
+    if (!isEmpty(this.subject.workarea)) {
+      this.workareasList =
+        ArrayLibrary.insertIfNotExist(this.workareasList ?? [], this.subject.workarea, 'uid');
     }
-
-    const subjectWorkarea: Identifiable = {
-      uid: this.subject.workareaUID,
-      name: this.subject.workarea,
-    };
-
-    this.workareasList = ArrayLibrary.insertIfNotExist(this.workareasList ?? [], subjectWorkarea, 'uid');
   }
 
 
   private initForm() {
     const fb = new FormBuilder();
 
-    this.form = fb.group(
-      {
-        fullName: ['', Validators.required],
-        userID: ['', Validators.required],
-        eMail: ['', Validators.required],
-        employeeNo: [''],
-        jobPosition: ['', Validators.required],
-        workareaUID: ['', Validators.required],
-      }
-    );
+    this.form = fb.group({
+      fullName: ['', Validators.required],
+      userID: ['', Validators.required],
+      eMail: ['', Validators.required],
+      employeeNo: [''],
+      jobPosition: ['', Validators.required],
+      workareaUID: ['', Validators.required],
+    });
   }
 
 
@@ -178,7 +178,7 @@ export class SubjectHeaderComponent implements OnChanges, OnInit, OnDestroy {
       eMail: this.subject.eMail,
       employeeNo: this.subject.employeeNo,
       jobPosition: this.subject.jobPosition,
-      workareaUID: this.subject.workareaUID,
+      workareaUID: this.subject.workarea.uid,
     });
   }
 
@@ -209,7 +209,7 @@ export class SubjectHeaderComponent implements OnChanges, OnInit, OnDestroy {
     const message = this.getConfirmMessage(eventType);
 
     this.messageBox.confirm(message, title, confirmType)
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           sendEvent(this.subjectHeaderEvent, eventType, {subject: this.subject});
@@ -221,7 +221,9 @@ export class SubjectHeaderComponent implements OnChanges, OnInit, OnDestroy {
   private getConfirmTitle(eventType: SubjectHeaderEventType): string {
     switch (eventType) {
       case SubjectHeaderEventType.GENERATE_PASSWORD: return 'Generar contraseña';
-      case SubjectHeaderEventType.DELETE_SUBJECT: return 'Dar de baja al usuario';
+      case SubjectHeaderEventType.ACTIVATE_SUBJECT: return 'Desbloquear cuenta';
+      case SubjectHeaderEventType.SUSPEND_SUBJECT: return 'Suspender cuenta';
+      case SubjectHeaderEventType.DELETE_SUBJECT: return 'Dar de baja la cuenta';
       default: return '';
     }
   }
@@ -230,14 +232,24 @@ export class SubjectHeaderComponent implements OnChanges, OnInit, OnDestroy {
   private getConfirmMessage(eventType: SubjectHeaderEventType): string {
     switch (eventType) {
       case SubjectHeaderEventType.GENERATE_PASSWORD:
-        return `Esta operación generará la contraseña y se enviará al correo del usuario:
-                <strong> ${this.subject.eMail}</strong>.
+        return `Esta operación generará la contraseña y se enviará al correo:
+                <strong> ${this.subject.eMail} </strong>.
                 <br><br>¿Genero la contraseña?`;
 
+      case SubjectHeaderEventType.ACTIVATE_SUBJECT:
+        return `Esta operación desbloqueará la cuenta:
+                <strong> (${this.subject.userID}) ${this.subject.fullName} - ${this.subject.employeeNo} </strong>.
+                <br><br>¿Desbloqueo la cuenta?`;
+
+      case SubjectHeaderEventType.SUSPEND_SUBJECT:
+        return `Esta operación suspenderá la cuenta:
+                <strong> (${this.subject.userID}) ${this.subject.fullName} - ${this.subject.employeeNo} </strong>.
+                <br><br>¿Suspendo la cuenta?`;
+
       case SubjectHeaderEventType.DELETE_SUBJECT:
-        return `Esta operación <strong>dará de baja / eliminará</strong> al usuario
-                <strong> (${this.subject.userID}) ${this.subject.fullName} - ${this.subject.employeeNo}</strong>.
-                <br><br>¿Doy de baja al usuario?`;
+        return `Esta operación <strong>dará de baja / eliminará</strong> la cuenta
+                <strong> (${this.subject.userID}) ${this.subject.fullName} - ${this.subject.employeeNo} </strong>.
+                <br><br>¿Doy de baja la cuenta?`;
 
       default: return '';
     }
