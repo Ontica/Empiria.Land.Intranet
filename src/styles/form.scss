@@ -104,6 +104,10 @@ form .inline-info {
   border-left: 5px solid $warning-color !important;
 }
 
+.invalid-control-secondary {
+  border-left: 5px solid $secondary-color !important;
+}
+
 .title-section {
   color: $form-title-color;
   border-bottom: $form-title-border;

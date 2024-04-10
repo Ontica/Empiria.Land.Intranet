@@ -7,39 +7,87 @@
 
 @import 'mixins';
 
-.row {
-  @include row;
+//
+// Responsive classes
+//
+
+.sm-show {
+  display: none;
+
+  @include small() {
+    display: block;
+  }
 }
 
-.column {
-  @include column;
+
+.md-show {
+  display: none;
+
+  @include medium() {
+    display: block;
+  }
 }
 
-.expand {
-  @include expand;
+
+.sm-hide {
+  @include small() {
+    display: none;
+  }
 }
 
-.stretch {
-  align-items: stretch;
+
+.md-hide {
+  @include medium() {
+    display: none;
+  }
 }
 
-.end {
-  align-content: flex-end;
+
+.std-hide {
+  @include standard() {
+    display: none;
+  }
 }
 
-.nowrap {
-  white-space: nowrap;
+
+.md-fx-column-container {
+  @include small() {
+    @include column;
+    flex: 0;
+  }
 }
 
-.expand-no-scroll {
-  height: 100%;
-  width: 100%;
-  overflow-y: hidden;
-  overflow-x: hidden;
-}
 
-.float-right {
-  @include row;
+.fx-row-container,
+.fx-row-container-fill,
+.fx-column-container,
+.fx-column-container-fill {
 
-  justify-content: flex-end;
+  .md-fx-item {
+    @include small() {
+      flex: 1 1 100%;
+      max-height: 100%;
+      max-width: 100%;
+    }
+  }
+
+  .md-fx-item-none {
+    @include small() {
+      flex: 0 0 auto;
+    }
+  }
+
+  .md-fx-item-size {
+    @include small() {
+      flex: 1 1 var(--md-size);
+      max-width: var(--md-size);
+    }
+  }
+
+  .md-fx-gap-half {
+    @include small() {
+      gap: 0.5rem;
+    }
+  }
+
 }

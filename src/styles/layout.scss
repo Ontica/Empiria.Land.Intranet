@@ -31,6 +31,11 @@
 .fx-row-container,
 .fx-row-container-fill {
 
+  .fx-item-size {
+    flex: 1 1 var(--size);
+    max-width: var(--size);
+  }
+
   .fx-item {
     @include expand;
   }
@@ -62,6 +67,11 @@
   .fx-item-quarter {
     flex: 1 1 100%;
     max-width: 25%;
+  }
+
+  .fx-item-fifth {
+    flex: 1 1 100%;
+    max-height: 20%;
   }
 
   .fx-item-sixth {
@@ -125,6 +135,11 @@
   .fx-item-quarter {
     flex: 1 1 100%;
     max-height: 25%;
+  }
+
+  .fx-item-fifth {
+    flex: 1 1 100%;
+    max-height: 20%;
   }
 
   .fx-item-sixth {

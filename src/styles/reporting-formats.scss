@@ -9,11 +9,28 @@
 // mat-table row formats (ItemType)
 //
 
+table.mat-mdc-table th.column-checkbox {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  width: calc($checkbox-size + $grid-entry-padding-horizontal);
+
+  &:first-of-type {
+    width: calc($checkbox-size + $grid-entry-padding-horizontal + $grid-entry-padding-vertical);
+  }
+
+}
+
+
 table.mat-mdc-table tr.mat-mdc-row {
   background-color: $white;
 
   .item-strikethrough {
     text-decoration: line-through;
+  }
+
+  td.mat-mdc-cell.column-checkbox {
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
 
   &.item-type-summary td.mat-mdc-cell,
@@ -53,7 +70,7 @@ table.mat-mdc-table tr.mat-mdc-row {
     background: $grid-nested-background-color;
 
     td {
-      border-bottom: $grid-nested-border;
+      border-bottom: $grid-nested-border !important;
     }
 
     &:hover {
@@ -128,7 +145,7 @@ table.mat-mdc-table.emp-designer tr.mat-mdc-row.fixed-cells-type {
 table.mat-mdc-table.emp-designer tr.mat-mdc-row.designer-row-selected {
   td {
     border-top: 1px solid $designer-bar-selected-border-color;
-    border-bottom: 1px solid $designer-bar-selected-border-color;
+    border-bottom: 1px solid $designer-bar-selected-border-color !important;
 
     &:first-of-type {
       border-left: 1px solid $designer-bar-selected-border-color;
@@ -263,8 +280,13 @@ table.mat-mdc-table.emp-designer tr.mat-mdc-row.fixed-cells-type td.mat-mdc-cell
 table.mat-mdc-table tr.mat-mdc-row.row-selected {
 
   td:first-of-type {
-    padding-left: 10px; //7px;
-    // border-left: 3px solid darken($grid-selected-background-color, 50%);
+    padding-left: calc($grid-entry-padding-vertical - 3px);
+    border-left: 3px solid darken($grid-selected-background-color, 50%);
+
+    &.column-checkbox {
+      width: calc($checkbox-size + $grid-entry-padding-horizontal + $grid-entry-padding-vertical);
+      padding-left: calc(1rem - 7px);
+    }
   }
 
   &.Primario {
@@ -303,4 +325,21 @@ table.mat-mdc-table tr.mat-mdc-row.row-selected {
       border-left-color: darken($designer-green-color, 65%);
     }
   }
+}
+
+
+table.mat-mdc-table tr.mat-mdc-row.row-bold td {
+  font-weight: 600;
+}
+
+
+.controls-container {
+  padding: 5px;
+  margin: 3px;
+}
+
+
+.controls-container-aligned {
+  padding-bottom: 5px;
+  margin-bottom: 3px;
 }

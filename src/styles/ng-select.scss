@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-@import "~@ng-select/ng-select/themes/default.theme.css";
+@import '~@ng-select/ng-select/themes/default.theme.css';
 
 $primary-font-family: $font-family-secondary;
 $font-size: 11pt;
@@ -45,7 +45,7 @@ $font-size-xsmall: 9pt;
   min-height: $control-height;
   margin: $control-margin;
   padding: $select-padding;
-  border-radius: 2px;
+  border-radius: $control-border-radius;
   font-family: $primary-font-family;
   border: $control-border;
   outline: none;
@@ -90,10 +90,6 @@ $font-size-xsmall: 9pt;
 
 .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon.left:hover {
   background-color: rgba($primary-color, 0.2);
-}
-
-.ng-dropdown-panel .ng-dropdown-panel-items {
-  max-height: 300px !important
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {

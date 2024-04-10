@@ -5,7 +5,7 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-@import 'variables', 'responsive';
+@import 'mixins', 'variables';
 
 table {
   border: 0;
@@ -21,16 +21,6 @@ table td {
 
 table td:last-child {
   width: 100%;
-}
-
-@mixin input-button-settings {
-  font: $button-font;
-  text-transform: uppercase;
-  border: $button-border;
-  height: $button-height;
-  min-width: 88px;
-  padding: 4pt 8pt;
-  white-space: nowrap;
 }
 
 .circled {
@@ -224,29 +214,6 @@ button.btn-margin-right {
   margin-right: 32px;
 }
 
-@mixin input-settings {
-  background-color: $control-background-color;
-  border-top: $control-border;
-  border-bottom: $control-border;
-  border-left: $control-border;
-  border-right: $control-border;
-  color: $control-color;
-  font: $control-font;
-  font-weight: normal;
-  margin: $control-margin;
-  padding: $control-padding;
-  vertical-align: middle;
-  height: $control-height;
-  width: $control-width;
-  border-radius: $control-border-radius;
-  transition: 0.3s ease-out;
-}
-
-@mixin disabled-element {
-  color: $control-disabled-color;
-  background: $control-disabled-background;
-}
-
 select.select-box {
   @include input-settings;
 }
@@ -318,6 +285,10 @@ input::placeholder {
   cursor: pointer;
 }
 
+input.text-box.no-margin {
+  margin: 0;
+}
+
 .text-area {
   background-color: $control-background-color;
   border: $control-border;
@@ -343,6 +314,11 @@ textarea:focus {
   box-shadow: inset 0 0 2px $selected-control-border;
 }
 
+.text-monospace {
+  font-family: $font-family-secondary;
+  font-size: 11pt;
+}
+
 .text-align-left {
   text-align: left;
 }
@@ -362,7 +338,7 @@ textarea:focus {
 }
 
 .text-small-text {
-  font-size: 0.75em;
+  font-size: 1em;
 }
 
 .left {
@@ -382,6 +358,10 @@ textarea:focus {
   white-space: normal !important;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 .info-text {
   color: $primary-color;
   font-weight: 600;
@@ -393,7 +373,7 @@ textarea:focus {
 }
 
 .instruction-text {
-  font-size: 0.75em;
+  font-size: 1em;
   text-align: center;
   padding: 1rem;
   background: $control-disabled-background;
@@ -444,11 +424,7 @@ a.warning-indicator-text:hover {
   color: $icon-color-dark;
 }
 
-@mixin raised-header {
-  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.28);
-}
-
-.small-italic-notification {
+.small-italic-bold {
   font: $control-small-font;
   font-weight: $font-weight-bold;
   font-style: $text-italic;
@@ -546,9 +522,9 @@ i.disabled {
 
 .tag {
   background-color: $tag-default-background-color;
-  border-radius: 10px;
+  border-radius: 0.75rem;
   color: $tag-default-color;
-  padding: 4px 8px;
+  padding: 0.25rem 0.5rem;
   width: fit-content;
   white-space: nowrap;
 
@@ -558,14 +534,42 @@ i.disabled {
     border: 1px solid $tag-default-color;
   }
 
+  &.tag-base-info {
+    background-color: $white;
+    color: $tag-info-background-color;
+    border: 1px solid $tag-info-background-color;
+  }
+
+  &.tag-base-success {
+    background-color: $white;
+    color: $tag-success-background-color;
+    border: 1px solid $tag-success-background-color;
+  }
+
   &.tag-base-warning {
     background-color: $white;
-    color: $tag-warning-color;
-    border: 1px solid $tag-warning-color;
+    color: $tag-warning-background-color;
+    border: 1px solid $tag-warning-background-color;
+  }
+
+  &.tag-base-error {
+    background-color: $white;
+    color: $tag-error-background-color;
+    border: 1px solid $tag-error-background-color;
   }
 
   &.tag-info {
     background-color: $tag-info-background-color;
+    color: $white;
+  }
+
+  &.tag-success {
+    background-color: $tag-success-background-color;
+    color: $white;
+  }
+
+  &.tag-warning {
+    background-color: $tag-warning-background-color;
     color: $white;
   }
 
@@ -574,24 +578,17 @@ i.disabled {
     color: $white;
   }
 
-  &.tag-warning {
-    background-color: $tag-warning-color;
-    color: $white;
-  }
-
   &.tag-small {
     font-size: 0.5rem;
-    line-height: 0.75rem;
-    margin: 0 8px;
-    padding: 4px 8px;
+    margin: 0 0.5rem;
+    padding: 0.125rem 0.5rem;
+    line-height: 1rem;
   }
 
   &.tag-medium {
     font-size: 0.75rem;
-    line-height: 1rem;
-    font-weight: 500;
-    margin: 0 8px;
-    padding: 4px 8px;
+    margin: 0 0.5rem;
+    padding: 0.25rem 0.5rem;
   }
 }
 
@@ -612,13 +609,18 @@ a.tag {
       color: $white;
     }
 
-    &.tag-error {
-      background-color: darken($tag-error-background-color, 4%);
+    &.tag-success {
+      background-color: darken($tag-success-background-color, 4%);
       color: $white;
     }
 
     &.tag-warning {
-      background-color: darken($tag-warning-color, 4%);
+      background-color: darken($tag-warning-background-color, 4%);
+      color: $white;
+    }
+
+    &.tag-error {
+      background-color: darken($tag-error-background-color, 4%);
       color: $white;
     }
   }
@@ -697,17 +699,14 @@ ul.default-list {
 
   li {
 
+    label {
+      color: $primary-color;
+      font-weight: 600;
+    }
+
     &.limit-list {
       font-weight: 600;
       font-size: 8.5pt;
-      margin-left: 1.25rem;
-    }
-
-    &:not(.limit-list)::before {
-      content: "-";
-      color: $primary-color;
-      font-weight: 600;
-      padding-right: 0.75rem;
     }
 
     &:not(:last-child) {
@@ -753,4 +752,40 @@ ul.default-list {
   color: $primary-color;
   font-style: $text-italic;
   padding: 1rem 0 0.5rem 0;
+}
+
+
+.workarea-color {
+  background: hsl(207, 91%, 98%);
+}
+
+
+.info-container {
+  @include message-container;
+
+  border-color: $primary-color;
+}
+
+
+.warning-container {
+  @include message-container;
+
+  border-color: darken($icon-color-warning, 35%);
+}
+
+
+.container-expand-half {
+  max-height: 35vh;
+  overflow-y: auto;
+}
+
+
+.container-expand-all {
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+
+.text-expandable-selection {
+  font-size: 0.75rem;
 }

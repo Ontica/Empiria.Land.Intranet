@@ -85,8 +85,8 @@ $layout-gradient-initial-color: $warning-color-dark;
 $layout-gradient-final-color: $warning-color;
 $layout-secondary-color: $secondary-color;
 $layout-secondary-color-dark: $secondary-color-dark;
-$toolbar-item-background: #f3f3f3;
-$toolbar-item-background-hover: lighten($primary-color, 70);
+$toolbar-item-background: lighten($primary-color, 65);
+$toolbar-item-background-hover: lighten($primary-color, 60);
 $toolbar-icon-color: $primary-color;
 $toolbar-item-size: 34px;
 $toolbar-icon-size: 24px;
@@ -146,18 +146,18 @@ $button-selected-color: #e6e6e6;
 $button-border: 0 solid #cecece;
 $button-height: 28px;
 
-$checkbox-background-color: $primary-color-light;
+$checkbox-background-color: $primary-color;
 $checkbox-size: 28px;
 $checkbox-warning-background-color: $layout-secondary-color;
 $date-picker-width: 90px;
 $range-picker-width: 185px;
 
-$tag-background-color: hsl(167, 36%, 95%);
-$tag-default-background-color: hsl(167, 36%, 88%);
-$tag-info-background-color: hsl(205, 20%, 60%);
-$tag-error-background-color: hsl(357, 47%, 65%);
-$tag-warning-color: hsl(54, 37%, 74%);
+$tag-default-background-color: hsl(205, 20%, 85%);
 $tag-default-color: hsl(205, 20%, 50%);
+$tag-info-background-color: hsl(205, 20%, 50%);
+$tag-success-background-color: hsl(166, 26%, 52%) !default;
+$tag-warning-background-color: hsl(39, 81%, 70%) !default;
+$tag-error-background-color: hsl(357, 47%, 70%) !default;
 
 $list-selection-header-background-color: hsl(210, 20%, 90%) !default;
 $simple-list-background-color: hsl(210, 20%, 96%) !default;
