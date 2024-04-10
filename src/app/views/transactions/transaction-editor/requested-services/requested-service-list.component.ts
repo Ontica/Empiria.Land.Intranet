@@ -63,7 +63,7 @@ export class RequestedServiceListComponent implements OnChanges {
       <br><br>¿Elimino el concepto?`;
 
     this.messageBox.confirm(message, 'Eliminar concepto', 'DeleteCancel')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           sendEvent(this.requestedServiceListEvent,

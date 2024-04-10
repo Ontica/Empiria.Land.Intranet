@@ -93,7 +93,7 @@ export class RecordingActCreatorModalComponent implements OnInit, OnDestroy {
     this.helper.select<RecordingActTypeGroup[]>(
       RegistrationStateSelector.RECORDING_ACT_TYPES_LIST_FOR_RECORDABLE_SUBJECT,
       { recordableSubjectUID: this.recordableSubject.uid })
-      .toPromise()
+      .firstValue()
       .then(x => this.recordingActTypeGroupList = x);
   }
 
@@ -102,7 +102,7 @@ export class RecordingActCreatorModalComponent implements OnInit, OnDestroy {
     this.submitted = true;
 
     this.recordingData.createRecordingActInTractIndex(recordableSubjectUID, command)
-      .toPromise()
+      .firstValue()
       .then(x =>
         sendEvent(this.recordingActCreatorModalEvent, RecordingActCreatorModalEventType.RECORDING_ACT_CREATED,
           {tractIndex: x})

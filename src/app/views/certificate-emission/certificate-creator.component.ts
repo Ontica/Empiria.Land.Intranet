@@ -189,7 +189,7 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
   private getCertificateTypes() {
     this.isLoading = true;
     this.certificationData.getTransactionCertificateTypes(this.transactionUID)
-      .toPromise()
+      .firstValue()
       .then(x => this.certificateTypesList = x)
       .finally(() => this.isLoading = false);
   }
@@ -298,7 +298,7 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
     const title = 'Se está omitiendo la fecha de presentación';
     const message = `¿Está seguro que no hay forma de saber cuál fue la fecha de presentación de la ` +
       `<strong>Inscripción ${bookEntryNo} - Volumen ${recordingBook.name}</strong>?`;
-    return this.messageBox.confirm(message, title).toPromise();
+    return this.messageBox.confirm(message, title).firstValue();
   }
 
 

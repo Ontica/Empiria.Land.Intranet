@@ -152,7 +152,7 @@ export class LandCertificationComponent implements OnChanges {
     this.isLoading = true;
 
     this.certificationData.getTransactionCertificates(this.transactionUID)
-      .toPromise()
+      .firstValue()
       .then(x => this.certificatesList = x)
       .finally(() => this.isLoading = false);
   }
@@ -162,7 +162,7 @@ export class LandCertificationComponent implements OnChanges {
     this.submitted = true;
 
     this.certificationData.createCertificate(transactionUID, command)
-      .toPromise()
+      .firstValue()
       .then(x => this.refreshData())
       .finally(() => this.submitted = false);
   }
@@ -172,7 +172,7 @@ export class LandCertificationComponent implements OnChanges {
     this.submitted = true;
 
     this.certificationData.deleteCertificate(transactionUID, certificateUID)
-      .toPromise()
+      .firstValue()
       .then(x =>{
         this.messageBox.show('El certificado fue eliminado correctamente.', 'Eliminar certificado');
         this.refreshData();

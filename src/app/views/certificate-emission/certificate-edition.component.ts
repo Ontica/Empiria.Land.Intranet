@@ -73,7 +73,7 @@ export class CertificateEditionComponent implements OnChanges {
     const message = `Esta operación cerrará el certificado.<br><br>¿Cierro el certificado?`;
 
     this.messageBox.confirm(message, 'Cerrar certificado')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) this.closeCertificate()
       });
@@ -88,7 +88,7 @@ export class CertificateEditionComponent implements OnChanges {
     const message = `Esta operación abrirá el certificado.<br><br>¿Abro el certificado?`;
 
     this.messageBox.confirm(message, 'Abrir certificado')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) this.openCertificate();
       });
@@ -111,7 +111,7 @@ export class CertificateEditionComponent implements OnChanges {
     this.submitted = true;
 
     this.certificationData.closeCertificate(this.transactionUID, this.certificate.uid)
-      .toPromise()
+      .firstValue()
       .then(x =>
           sendEvent(this.certificateEditionEvent, CertificateEditionEventType.CERTIFICATE_UPDATED,
             {certificate: x})
@@ -124,7 +124,7 @@ export class CertificateEditionComponent implements OnChanges {
     this.submitted = true;
 
     this.certificationData.openCertificate(this.transactionUID, this.certificate.uid)
-      .toPromise()
+      .firstValue()
       .then(x =>
         sendEvent(this.certificateEditionEvent, CertificateEditionEventType.CERTIFICATE_UPDATED,
           {certificate: x})

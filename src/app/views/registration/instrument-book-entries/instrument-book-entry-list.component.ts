@@ -83,7 +83,7 @@ export class InstrumentBookEntryListComponent implements OnChanges, OnDestroy {
       const message = this.getConfirmMessage(bookEntry);
 
       this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
-        .toPromise()
+        .firstValue()
         .then(x => {
           if (x) {
             this.submitted = true;

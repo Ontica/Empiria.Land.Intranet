@@ -100,7 +100,7 @@ export class RecordingActsListComponent implements OnChanges {
     const message = this.getConfirmMessage(recordingAct);
 
     this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           const payload = {

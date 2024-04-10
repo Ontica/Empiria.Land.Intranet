@@ -176,7 +176,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
                       `¿Todos los actos de la propiedad están registrados?`;
 
       this.messageBox.confirm(message, 'Cerrar la historia registral', 'AcceptCancel')
-        .toPromise()
+        .firstValue()
         .then(x => {
           if (x) {
             this.closeTractIndex();
@@ -191,7 +191,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
       const message = `Esta operación abrirá la historia registral para su edición.<br><br>¿Abro la historia?`;
 
       this.messageBox.confirm(message, 'Abrir la historia registral', 'AcceptCancel')
-        .toPromise()
+        .firstValue()
         .then(x => {
           if (x) {
             this.openTractIndex();
@@ -225,7 +225,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
   private confirmRedirectToBookEntryWindow(tractIndexEntry: TractIndexEntry) {
     this.messageBox.confirm(this.getConfirmMessageToRedirect(tractIndexEntry),
                             'Abrir inscripción en una nueva pestaña')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if(x) {
           this.urlViewer.openRouteInNewTab(this.bookEntryUrl, tractIndexEntry.recordingData.bookEntry);
@@ -245,7 +245,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
     this.submitted = true;
 
     this.recordingData.removeRecordingActFromTractIndex(recordableSubjectUID, recordingActUID)
-      .toPromise()
+      .firstValue()
       .then(x =>{
         this.messageBox.show('El acto jurídico fue eliminado correctamente.', 'Eliminar acto jurídico')
         sendEvent(this.recordableSubjectHistoryEvent, RecordableSubjectHistoryEventType.TRACT_INDEX_UPDATED,
@@ -259,7 +259,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
     this.submitted = true;
 
     this.recordingData.closeTractIndex(this.tractIndex.recordableSubject.uid)
-      .toPromise()
+      .firstValue()
       .then(x =>
         sendEvent(this.recordableSubjectHistoryEvent, RecordableSubjectHistoryEventType.TRACT_INDEX_UPDATED,
           {tractIndex: x})
@@ -272,7 +272,7 @@ export class RecordableSubjectHistoryComponent implements OnChanges, OnDestroy {
     this.submitted = true;
 
     this.recordingData.openTractIndex(this.tractIndex.recordableSubject.uid)
-      .toPromise()
+      .firstValue()
       .then(x =>
         sendEvent(this.recordableSubjectHistoryEvent, RecordableSubjectHistoryEventType.TRACT_INDEX_UPDATED,
           {tractIndex: x})

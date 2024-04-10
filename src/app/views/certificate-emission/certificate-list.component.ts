@@ -76,7 +76,7 @@ export class CertificateListComponent implements OnChanges {
     const message = this.getConfirmMessageToRemove(certificate);
 
     this.messageBox.confirm(message, 'Eliminar certificado', 'DeleteCancel')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           const payload = {

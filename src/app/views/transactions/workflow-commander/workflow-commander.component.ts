@@ -112,7 +112,7 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
     }
 
     this.messageBox.confirm(this.getConfirmMessage(), 'Cambiar estado', 'AcceptCancel')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           this.formWorkflow.formData.transactionUID = this.transactionList.map(t => t.uid);
@@ -158,7 +158,7 @@ export class WorkflowCommanderComponent implements OnInit, OnDestroy {
 
     this.helper.select<TransactionDescriptor>(TransactionStateSelector.TRANSACTION_FROM_COMMAND_EXECUTION,
       workflowCommand)
-      .toPromise()
+      .firstValue()
       .then(x => {
         this.handleTransactionDuplicate(data.searchUID, x.uid);
         this.transactionList = ArrayLibrary.insertItemTop(this.transactionList, x, 'uid');

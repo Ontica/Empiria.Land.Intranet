@@ -97,7 +97,7 @@ export class RequestedServiceEditorComponent implements OnInit {
         <br>¿Agrego este concepto al trámite?`;
 
       this.messageBox.confirm(message, 'Agregar un concepto al trámite')
-        .toPromise()
+        .firstValue()
         .then(x => {
           if (x) {
             sendEvent(this.requestedServiceEditorEvent,

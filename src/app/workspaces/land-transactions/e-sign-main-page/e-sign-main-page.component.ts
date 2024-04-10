@@ -255,7 +255,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     this.eSignData.searchESignRequestedTransactions(this.query)
-      .toPromise()
+      .firstValue()
       .then(x => this.transactionList = x)
       .finally(() => this.isLoading = false)
   }
@@ -265,7 +265,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
     this.isLoadingESignRequest = true;
 
     this.transactionData.getTransaction(transactionUID)
-      .toPromise()
+      .firstValue()
       .then(x => this.setTransaction(x))
       .finally(() => this.isLoadingESignRequest = false)
   }

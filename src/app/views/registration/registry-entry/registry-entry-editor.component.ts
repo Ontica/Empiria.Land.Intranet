@@ -170,7 +170,7 @@ export class  RegistryEntryEditorComponent implements OnChanges, OnDestroy {
 
     this.recordingDataService.getTractIndex(this.data.instrumentRecordingUID,
                                             this.data.recordingActUID)
-      .toPromise()
+      .firstValue()
       .then(x => this.setTractIndex(x))
       .catch(() => this.onClose())
       .finally(() => this.isLoading = false);

@@ -175,7 +175,7 @@ export class BookEntryEditionComponent implements OnChanges {
 
     this.recordingData
       .updateBookEntryInstrumentRecording(this.instrumentRecording.uid, this.bookEntryUID, bookEntryFields)
-      .toPromise()
+      .firstValue()
       .then(x => this.setInstrumentRecording(x))
       .finally(() => this.setSubmited(false));
   }
@@ -192,7 +192,7 @@ export class BookEntryEditionComponent implements OnChanges {
 
     this.recordingData
       .appendRecordingActToBookEntry(this.recordingBookUID, this.bookEntryUID, registrationCommand)
-      .toPromise()
+      .firstValue()
       .then(x => this.setInstrumentRecording(x))
       .finally(() => this.setSubmited(false));
   }
@@ -203,7 +203,7 @@ export class BookEntryEditionComponent implements OnChanges {
 
     this.recordingData
       .removeRecordingActFromBookEntry(this.recordingBookUID, this.bookEntryUID, recordingActUID)
-      .toPromise()
+      .firstValue()
       .then(x => this.setInstrumentRecording(x))
       .finally(() => this.setSubmited(false));
   }

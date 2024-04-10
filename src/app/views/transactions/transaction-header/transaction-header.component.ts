@@ -128,7 +128,7 @@ export class TransactionHeaderComponent implements OnChanges {
     <br><br>¿Creo la copia?`;
 
     this.messageBox.confirm(message, 'Crear una copia', 'AcceptCancel')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           sendEvent(this.transactionHeadertEvent, TransactionHeaderEventType.CLONE_TRANSACTION);
@@ -142,7 +142,7 @@ export class TransactionHeaderComponent implements OnChanges {
       <strong> ${this.transaction.transactionID}</strong>.<br><br>¿Elimino el trámite?`;
 
     this.messageBox.confirm(message, 'Eliminar trámite', 'DeleteCancel')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           sendEvent(this.transactionHeadertEvent, TransactionHeaderEventType.DELETE_TRANSACTION);
@@ -172,7 +172,7 @@ export class TransactionHeaderComponent implements OnChanges {
       <br><br>¿Cancelo esta orden de pago?`;
 
     this.messageBox.confirm(message, 'Cancelar orden de pago', 'DeleteCancel')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           sendEvent(this.transactionHeadertEvent, TransactionHeaderEventType.CANCEL_PAYMENT_ORDER);

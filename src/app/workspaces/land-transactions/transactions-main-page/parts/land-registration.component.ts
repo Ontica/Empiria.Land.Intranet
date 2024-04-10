@@ -237,7 +237,7 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
     this.helper.select<RecordingActTypeGroup[]>(
       RegistrationStateSelector.RECORDING_ACT_TYPES_LIST_FOR_INSTRUMENT,
       { instrumentUID: this.instrumentRecording.instrument.uid })
-      .toPromise()
+      .firstValue()
       .then(x => this.recordingActTypeGroupList = x);
   }
 

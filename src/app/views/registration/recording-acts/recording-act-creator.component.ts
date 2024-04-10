@@ -280,7 +280,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     this.isLoadingAmendmentRecordingActs = true;
 
     this.helper.select<TractIndex>(RecordableSubjectsStateSelector.AMENDABLE_RECORDING_ACTS, {query})
-      .toPromise()
+      .firstValue()
       .then(x => this.tractIndexSelected = x)
       .finally(() => this.isLoadingAmendmentRecordingActs = false);
   }
@@ -417,7 +417,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
     const title = 'Se está omitiendo la fecha de presentación';
     const message = `¿Está seguro que no hay forma de saber cuál fue la fecha de presentación de la ` +
       `<strong>Inscripción ${bookEntryNo} - Volumen ${recordingBookName}</strong>?`;
-    return this.messageBox.confirm(message, title).toPromise();
+    return this.messageBox.confirm(message, title).firstValue();
   }
 
 

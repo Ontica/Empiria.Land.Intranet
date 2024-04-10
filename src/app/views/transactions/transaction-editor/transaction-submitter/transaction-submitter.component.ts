@@ -85,7 +85,7 @@ export class TransactionSubmitterComponent implements OnChanges {
       <br><br>¿Cancelo este recibo de pago?`;
 
     this.messageBox.confirm(message, 'Cancelar recibo de pago', 'DeleteCancel')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           sendEvent(this.transactionSubmittertEvent, TransactionSubmitterEventType.CANCEL_PAYMENT_CLICKED);
@@ -100,7 +100,7 @@ export class TransactionSubmitterComponent implements OnChanges {
     <br><br>¿Recibo este trámite?`;
 
     this.messageBox.confirm(message, 'Recibir trámite', 'AcceptCancel')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           sendEvent(this.transactionSubmittertEvent,

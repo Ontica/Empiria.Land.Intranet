@@ -85,7 +85,7 @@ export class PartyListComponent implements OnChanges {
     const message = this.getConfirmMessage(party);
 
     this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           sendEvent(this.partyListEvent, PartyListEventType.REMOVE_PARTY, { partyUID: party.uid });

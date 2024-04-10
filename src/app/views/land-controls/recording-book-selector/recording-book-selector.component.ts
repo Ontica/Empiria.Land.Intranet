@@ -270,7 +270,7 @@ export class RecordingBookSelectorComponent implements OnInit, OnChanges, OnDest
 
     this.helper.select<BookEntryShortModel[]>(RecordableSubjectsStateSelector.RECORDING_BOOK_ENTRIES_LIST,
                                        { recordingBookUID: this.recordingBookSelected?.uid })
-      .toPromise()
+      .firstValue()
       .then(x => {
         this.recordingBookEntryList = x;
         this.isLoading = false;

@@ -131,7 +131,7 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     this.searchServicesData.searchRecordableSubject(query)
-      .toPromise()
+      .firstValue()
       .then(x => this.saveDataInState(query, x, true))
       .finally(() => this.isLoading = false);
   }
@@ -146,7 +146,7 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
     };
 
     this.searchServicesData.searchParties(partyQuery)
-      .toPromise()
+      .firstValue()
       .then(x => this.saveDataInState(query, x, true))
       .finally(() => this.isLoading = false);
   }
@@ -173,7 +173,7 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     this.helper.select<TractIndex>(RecordableSubjectsStateSelector.TRACT_INDEX, {recordableSubjectUID})
-      .toPromise()
+      .firstValue()
       .then(x => this.setSelectedTractIndex(x))
       .finally(() => this.isLoading = false);
   }

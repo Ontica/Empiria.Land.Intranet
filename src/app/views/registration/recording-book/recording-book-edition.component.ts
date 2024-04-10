@@ -182,7 +182,7 @@ export class RecordingBookEditionComponent implements OnInit {
     this.setSubmitted(true);
 
     this.recordingData.getRecordingBook(recordingBookUID)
-      .toPromise()
+      .firstValue()
       .then(x => this.setSelectedRecordingBook(x))
       .finally(() => this.setSubmitted(false));
   }
@@ -192,7 +192,7 @@ export class RecordingBookEditionComponent implements OnInit {
     this.setSubmitted(true);
 
     this.recordingData.createBookEntry(this.selectedRecordingBook.uid, bookEntryFields)
-      .toPromise()
+      .firstValue()
       .then(x => this.setSelectedRecordingBook(x))
       .finally(() => this.setSubmitted(false));
   }
@@ -202,7 +202,7 @@ export class RecordingBookEditionComponent implements OnInit {
     this.setSubmitted(true);
 
     this.recordingData.deleteBookEntry(bookEntry.recordingBookUID, bookEntry.uid)
-      .toPromise()
+      .firstValue()
       .then(x => {
         this.selectedRecordingBook = x;
 

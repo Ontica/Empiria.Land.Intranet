@@ -63,7 +63,7 @@ export class BookEntryListComponent implements OnChanges {
     const message = this.getConfirmMessage(bookEntry);
 
     this.messageBox.confirm(message, 'Eliminar registro', 'DeleteCancel')
-      .toPromise()
+      .firstValue()
       .then(x => {
         if (x) {
           sendEvent(this.bookEntryListEvent, BookEntryListEventType.DELETE_BOOK_ENTRY_CLICKED, {bookEntry});

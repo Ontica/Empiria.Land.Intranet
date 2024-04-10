@@ -149,7 +149,7 @@ export class RecordingActEditionComponent implements OnChanges {
 
     this.recordingData.getRecordingAct(this.instrumentRecordingUID,
                                        this.recordingActUID)
-      .toPromise()
+      .firstValue()
       .then(x => {
         this.setRecordingAct(x);
         this.setPrimaryPartyList();
@@ -170,7 +170,7 @@ export class RecordingActEditionComponent implements OnChanges {
     this.recordingData.updateRecordingAct(this.instrumentRecordingUID,
                                           this.recordingActUID,
                                           recordingActFields)
-      .toPromise()
+      .firstValue()
       .then(x => {
         this.emitRecordingActUpdated();
         this.setRecordingAct(x);
@@ -193,7 +193,7 @@ export class RecordingActEditionComponent implements OnChanges {
     this.recordingData.appendRecordingActParty(this.instrumentRecordingUID,
                                                this.recordingActUID,
                                                recordingActPartyFields)
-      .toPromise()
+      .firstValue()
       .then(x => {
         this.setRecordingAct(x);
         this.setPrimaryPartyList();
@@ -209,7 +209,7 @@ export class RecordingActEditionComponent implements OnChanges {
     this.recordingData.removeRecordingActParty(this.instrumentRecordingUID,
                                                this.recordingActUID,
                                                recordingActPartyUID)
-      .toPromise()
+      .firstValue()
       .then(x => {
         this.setRecordingAct(x);
         this.setPrimaryPartyList();

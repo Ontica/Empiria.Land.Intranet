@@ -104,7 +104,7 @@ export class TractIndexEntriesTableComponent implements OnChanges  {
       const message = this.getConfirmMessageToRemove(tractIndexEntry);
 
       this.messageBox.confirm(message, 'Eliminar acto jurídico', 'DeleteCancel')
-        .toPromise()
+        .firstValue()
         .then(x => {
           if (x) {
             sendEvent(this.tractIndexEntriesTableEvent,
