@@ -50,9 +50,14 @@
               <object [data]="file.url | safeUrl" type="{{file.type}}" class="object-file"
                 [style.width.%]="100"
                 [style.height.%]="100"
-                (load)="onLoad()">
+                (load)="onLoad()"
+                (error)="onFileError(file)">
 
               </object>
+
+              <div class="text-not-found" *ngIf="file.hasError">
+                Error al cargar el archivo.
+              </div>
 
             </ng-container>
 
@@ -65,12 +70,18 @@
                     cdkDrag cdkDragBoundary=".image-file"
                     [style.width.%]="imageZoom"
                     [src]="file.url | safeUrl"
-                    (load)="onLoad()">
+                    (load)="onLoad()"
+                    (error)="onFileError(file)">
 
                   <img #imageFile class="image-file" *ngIf="isImageModeOriginalSize"
                     [style.width.px]="imageWidthZoomed"
                     [src]="file.url | safeUrl"
-                    (load)="onLoad()">
+                    (load)="onLoad()"
+                    (error)="onFileError(file)">
+
+                  <div class="text-not-found" *ngIf="file.hasError">
+                    Error al cargar la imagen.
+                  </div>
 
               </div>
 

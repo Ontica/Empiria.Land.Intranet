@@ -52,6 +52,8 @@ export class FileViewerComponent implements OnChanges {
 
   imageWidthZoomed: number;
 
+  fileError = false;
+
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnChanges() {
@@ -87,12 +89,19 @@ export class FileViewerComponent implements OnChanges {
     this.multiple = false;
     this.selectedFileIndex = 0;
     this.selectedFile = null;
+    this.fileError = false;
   }
 
 
   getHintText() {
     return ( this.fileViewerData.hint ? this.fileViewerData.hint + ' &nbsp; &nbsp; | &nbsp; &nbsp; ' : '' ) +
       this.selectedFile?.name;
+  }
+
+
+  onFileError(file: FileData) {
+    file.hasError = true;
+    console.log('File Error: ', file.url);
   }
 
 

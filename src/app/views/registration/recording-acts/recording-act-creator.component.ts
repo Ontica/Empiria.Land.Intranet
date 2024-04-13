@@ -93,6 +93,7 @@ export class RecordingActCreatorComponent implements OnInit, OnDestroy {
 
   widthFirstColumn = '320px';
 
+
   constructor(private uiLayer: PresentationLayer,
               private messageBox: MessageBoxService) {
     this.helper = uiLayer.createSubscriptionHelper();

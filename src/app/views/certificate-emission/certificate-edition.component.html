@@ -18,7 +18,8 @@
 
           <object
             [data]="certificate.mediaLink.url | safeUrl"
-            class="object-preview mat-elevation-z1">
+            class="object-preview mat-elevation-z1"
+            (error)="onMediaLinkError()">
 
           </object>
 
@@ -26,9 +27,14 @@
 
       </div>
 
-      <div class="instruction-text" *ngIf="!certificate.mediaLink.url"
-        [style.width.%]="100" [style.height.%]="100" fxLayoutAlign="space-around center">
-        No se encontro el archivo del certificado.
+      <div *ngIf="!certificate.mediaLink.url || mediaLinkError"
+        class="instruction-text fx-center fx-items-center"
+        [style.width.%]="100" [style.height.%]="100">
+
+        {{ mediaLinkError ?
+           'Ocurrió un error al cargar el archivo.' :
+           'No se encontro el archivo del certificado.'}}
+
       </div>
 
       <mat-divider [style.margin]="'8px 0'"></mat-divider>

@@ -44,6 +44,8 @@ export class CertificateEditionComponent implements OnChanges {
 
   submitted = false;
 
+  mediaLinkError = false;
+
 
   constructor(private certificationData: CertificationDataService,
               private messageBox: MessageBoxService,
@@ -57,6 +59,12 @@ export class CertificateEditionComponent implements OnChanges {
 
   get isHtmlMediaFile() {
     return this.certificate.mediaLink.mediaType === MediaType.html;
+  }
+
+
+  onMediaLinkError() {
+    this.mediaLinkError = true;
+    console.log('File Error: ', this.certificate.mediaLink.url);
   }
 
 
