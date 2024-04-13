@@ -1,11 +1,11 @@
 <form #form="ngForm" empNgFormKeyDownEnter autocomplete="off" class="form-section form-container"
   [style.padding.px]="0" [style.margin.px]="0">
 
-  <div fxLayout="column" fxLayoutGap="0.5rem" fxLayoutGap.lt-sm="0.5rem">
+  <div class="fx-column-container fx-gap-half">
 
-      <div fxLayout="row" fxLayout.lt-sm="column">
+      <div class="fx-row-container">
 
-        <div fxFlex="50">
+        <div class="fx-item-half">
 
           <label>Tipo:</label>
 
@@ -19,7 +19,7 @@
 
         </div>
 
-        <div fxFlex="50" fxLayoutAlign="start end">
+        <div class="fx-item-half fx-items-end">
 
           <div class="input-search-container">
 
@@ -34,7 +34,7 @@
 
         </div>
 
-        <div fxFlex="none" fxLayoutAlign="start end" *ngIf="hasNestedEntries"
+        <div class="fx-item-none fx-items-end" *ngIf="hasNestedEntries"
           [style.paddingBottom.px]="6">
 
           <mat-checkbox

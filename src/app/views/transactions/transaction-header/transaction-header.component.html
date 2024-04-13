@@ -3,13 +3,13 @@
 
   <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
-  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+  <div class="fx-column-container fx-gap-half">
 
     <div class="section-title">Datos del interesado</div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex>
+      <div class="fx-item">
         <label>Interesado:</label>
         <input formControlName="name"
           type="text"
@@ -17,7 +17,7 @@
           [class.invalid-control]="formHelper.isControlInvalid(form.controls.name)">
       </div>
 
-      <div [fxFlex]="100/3">
+      <div class="fx-item-third sm-fx-item">
         <label>Correo electrónico:</label>
         <input formControlName="email"
           type="text"
@@ -29,9 +29,9 @@
 
     <div class="section-title">Información del trámite solicitado</div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div [fxFlex]="100/3">
+      <div class="fx-item-third sm-fx-item">
         <label>Tipo de trámite:</label>
         <emp-ng-select formControlName="type"
           [items]="transactionTypeList"
@@ -40,7 +40,7 @@
         </emp-ng-select>
       </div>
 
-      <div [fxFlex]="100/3">
+      <div class="fx-item-third sm-fx-item">
         <label>Tipo de documento:</label>
         <emp-ng-select formControlName="subtype"
           [placeholder]="form.controls.type.invalid ? 'Seleccione el tipo de trámite' : 'Seleccione'"
@@ -49,7 +49,7 @@
         </emp-ng-select>
       </div>
 
-      <div [fxFlex]="100/3">
+      <div class="fx-item-third sm-fx-item">
         <label>No. Instrumento:</label>
         <input formControlName="instrumentNo"
           type="text"
@@ -58,9 +58,9 @@
 
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex>
+      <div class="fx-item">
         <label>Tramitado por:</label>
         <emp-ng-select formControlName="agency"
           [config]="{clearable: true}"
@@ -69,7 +69,7 @@
         </emp-ng-select>
       </div>
 
-      <div [fxFlex]="100/3">
+      <div class="fx-item-third sm-fx-item">
         <label>Oficialía:</label>
         <emp-ng-select formControlName="filingOffice"
           [items]="filingOfficeList"
@@ -81,9 +81,9 @@
 
     <div class="section-title">Datos de facturación</div>
 
-     <div fxLayout="row" fxLayout.lt-md="column">
+     <div class="fx-row-container sm-fx-column-container">
 
-      <div [fxFlex]="200/3">
+      <div class="fx-item-two-third sm-fx-item">
         <label>Nombre o razón social:</label>
         <input formControlName="billTo"
           type="text"
@@ -92,7 +92,7 @@
           (change)="onBillingFieldsChange()">
       </div>
 
-      <div [fxFlex]="100/3">
+      <div class="fx-item-third sm-fx-item">
         <label>RFC:</label>
         <input formControlName="rfc"
           type="text"
@@ -103,17 +103,17 @@
 
     </div>
 
-    <mat-divider class="horizontal"></mat-divider>
+    <mat-divider class="horizontal-slim"></mat-divider>
 
-    <div fxLayout="row" *ngIf="isSaved && !editionMode">
+    <div class="fx-row-container" *ngIf="isSaved && !editionMode">
 
-      <div fxFlex="25" fxLayoutAlign="start">
+      <div class="fx-item">
         <button (click)="onCloneButtonClicked()" type="button" class="btn-action">
           Crear una copia
         </button>
       </div>
 
-      <div fxFlex="75" fxLayoutAlign="end">
+      <div class="fx-item-none fx-item-end">
 
         <button *ngIf="transaction.actions.can.printControlVoucher"
           type="submit" class="btn-action"
@@ -166,9 +166,9 @@
 
     </div>
 
-    <div fxLayout="row" *ngIf="editionMode">
+    <div class="fx-row-container" *ngIf="editionMode">
 
-      <div fxFlex="25" fxLayoutAlign="start">
+      <div class="fx-item">
 
         <button *ngIf="transaction.actions.can.delete"
            type="button" class="btn-warning"
@@ -178,7 +178,7 @@
 
       </div>
 
-      <div fxFlex="75" fxLayoutAlign="end">
+      <div class="fx-item-none fx-end">
 
         <button *ngIf="!isSaved || (isSaved && transaction.actions.can.edit)" type="submit"
           [class.btn]="!formHelper.isFormReady(form)"

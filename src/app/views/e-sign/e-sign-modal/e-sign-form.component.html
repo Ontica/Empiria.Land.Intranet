@@ -1,18 +1,18 @@
 <form [formGroup]="form" empNgFormKeyDownEnter autocomplete="off"
   class="form-section">
 
-  <div fxLayout="column" [style.margin-right.px]="-8">
+  <div class="fx-column-container" [style.margin-right.px]="-8">
 
-    <div fxLayout="column" fxLayoutGap="0.75rem">
+    <div class="fx-column-container fx-gap-three-quarter">
 
-      <div fxFlex>
+      <div class="fx-item">
         <label for="userID">Usuario de firma electrónica:</label>
         <input type="text" id="userID" name="userID" autocomplete="off" class="text-box"
           formControlName="userID"
           [class.invalid-control]="form.controls.userID.invalid && form.controls.userID.touched">
       </div>
 
-      <div fxFlex>
+      <div class="fx-item">
         <label for="password">Contraseña de firma electrónica:</label>
         <input [type]="showPassword ? 'text' : 'password'"
           id="password" name="password" autocomplete="one-time-code" class="text-box"
@@ -23,13 +23,12 @@
     </div>
 
 
-    <div fxFlex="none" [style.margin-top.px]="8">
+    <div class="fx-item-none">
 
       <mat-checkbox
         [checked]="showPassword"
         (click)="$event.stopPropagation"
-        (change)="onToggleShowPasswordClicked()"
-        color="warn">
+        (change)="onToggleShowPasswordClicked()">
         Mostrar contraseña
       </mat-checkbox>
 
@@ -47,9 +46,9 @@
     </mat-divider>
 
 
-    <div fxLayout="row" fxLayoutAlign="end center">
+    <div  class="fx-row-container fx-end fx-items-center">
 
-      <div fxFlex="none">
+      <div class="fx-item-none">
 
         <button type="sumbit"
           [class.btn]="!formHelper.isFormReady(form)"

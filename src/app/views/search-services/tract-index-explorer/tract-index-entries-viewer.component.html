@@ -1,13 +1,13 @@
-<div fxLayout="column" fxFlexFill [style.padding]="'8px 8px 0 8px'">
+<div class="fx-column-container-fill" [style.padding]="'8px 8px 0 8px'">
 
-  <emp-land-tract-index-entries-filter fxFlex="none"
+  <emp-land-tract-index-entries-filter class="fx-item-none"
     [tractIndexEntryType]="tractIndexEntryType"
     [hasNestedEntries]="hasNestedEntries"
     (tractIndexEntriesFilterEvent)="onTractIndexEntriesFilterEvent($event)">
 
   </emp-land-tract-index-entries-filter>
 
-  <emp-land-tract-index-entries-history fxFlex
+  <emp-land-tract-index-entries-history class="fx-item"
     [tractIndexEntriesList]="tractIndex.entries"
     [filter]="filter"
     [selectedTractIndexEntry]="selectedTractIndexEntry"

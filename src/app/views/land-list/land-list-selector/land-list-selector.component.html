@@ -2,14 +2,14 @@
 
 <div class="section-title">Lista de {{itemsType}}s</div>
 
-<div fxLayout="row" fxLayoutAlign="space-between end" style="min-height: 32px;">
+<div class="fx-row-container fx-space-between fx-items-end" style="min-height: 32px;">
 
-  <div fxFlex style="margin: auto 0;">
+  <div class="fx-item" style="margin: auto 0;">
     {{ itemsList.length + ' ' + itemsType +
      ( itemsList.length === 1 ? ' seleccionado' : 's seleccionados') }}
   </div>
 
-  <input type="search" class="text-box" [fxFlex]="100/3" fxHide.lt-sm="true"
+  <input type="search" class="text-box fx-item-third"
     *ngIf="canEdit" placeholder="Buscar {{itemsType}}s por clave y agregarlos a la lista"
     [(ngModel)]="searchUID" (search)="onChangeFilter()">
 

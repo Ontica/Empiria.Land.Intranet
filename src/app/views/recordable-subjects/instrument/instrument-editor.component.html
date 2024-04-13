@@ -3,13 +3,13 @@
 
   <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
-  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+  <div class="section-title" *ngIf="title">{{ title }}</div>
 
-    <div class="section-title" *ngIf="title">{{ title }}</div>
+  <div class="fx-column-container fx-gap-three-quarter sm-fx-gap-none">
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div [fxFlex]="100/3">
+      <div class="fx-item-third sm-fx-item">
         <label>Tipo de instrumento:</label>
         <emp-ng-select formControlName="type"
           [bindLabel]="'typeName'"
@@ -22,15 +22,15 @@
       </div>
 
       <ng-container *ngIf="!validateTypeSelected([InstrumentTypes.Resumen])">
-        <div [fxFlex]="100/3">
+        <div class="fx-item-third">
           <label>Fecha:</label>
           <emp-ng-datepicker formControlName="issueDate">
 
           </emp-ng-datepicker>
         </div>
 
-        <div [fxFlex]="100/3" fxLayoutAlign="end">
-          <div fxFlex="100px">
+        <div class="fx-item-third sm-fx-item fx-row-container fx-end">
+          <div class="fx-item-size" style="--size: 100px">
             <label>Número de hojas:</label>
             <input formControlName="sheetsCount" type="number" class="text-box"
               [class.invalid-control]="formHelper.isControlInvalid(form.controls.sheetsCount)">
@@ -42,9 +42,9 @@
 
     <ng-container *ngIf="typeSelected">
 
-      <div fxLayout="row" fxLayout.lt-md="column" *ngIf="!validateTypeSelected([InstrumentTypes.Resumen])">
+      <div class="fx-row-container sm-fx-column-container" *ngIf="!validateTypeSelected([InstrumentTypes.Resumen])">
 
-        <div fxFlex="100">
+        <div class="fx-item-size" style="--size: 100%">
           <ng-container [ngSwitch]="typeSelected">
             <label *ngSwitchCase="InstrumentTypes.DocumentoJuzgado">Autoridad:</label>
             <label *ngSwitchCase="InstrumentTypes.DocumentoTerceros">Expedido por:</label>
@@ -114,9 +114,9 @@
 
       </div>
 
-      <div fxLayout="row" fxLayout.lt-md="column">
+      <div class="fx-row-container sm-fx-column-container">
 
-        <div [fxFlex]="100/3" fxFlex.lt-md="100"
+        <div class="fx-item-third sm-fx-item"
           *ngIf="validateTypeSelected([InstrumentTypes.OficioNotaria,
                                        InstrumentTypes.DocumentoJuzgado,
                                        InstrumentTypes.DocumentoTerceros,
@@ -136,7 +136,7 @@
           </emp-ng-select>
         </div>
 
-        <div [fxFlex]="100/3" fxFlex.lt-md="100" *ngIf="!validateTypeSelected([InstrumentTypes.Resumen])">
+        <div class="fx-item-third sm-fx-item" *ngIf="!validateTypeSelected([InstrumentTypes.Resumen])">
 
           <ng-container [ngSwitch]="typeSelected">
             <label *ngSwitchCase="InstrumentTypes.EscrituraPublica">Escritura:</label>
@@ -151,7 +151,7 @@
             class="text-box uppercase">
         </div>
 
-        <div [fxFlex]="100/3" fxFlex.lt-md="100"
+        <div class="fx-item-third sm-fx-item"
           *ngIf="validateTypeSelected([InstrumentTypes.EscrituraPublica,
                                        InstrumentTypes.DocumentoJuzgado])">
           <ng-container [ngSwitch]="typeSelected">
@@ -163,9 +163,9 @@
             class="text-box uppercase">
         </div>
 
-        <div [fxFlex]="100/3" fxFlex.lt-md="100" fxLayoutAlign="end"
+        <div class="fx-item-third sm-fx-item fx-row-container fx-end"
           *ngIf="validateTypeSelected([InstrumentTypes.EscrituraPublica])">
-          <div fxFlex="100px">
+          <div class="fx-item-size" style="--size: 100px">
             <label>Folio del:</label>
             <input formControlName="folio"
               type="text"
@@ -173,7 +173,7 @@
               style="width: 90px;">
             </div>
 
-            <div fxFlex="100px">
+            <div class="fx-item-size" style="--size: 100px">
               <label>al:</label>
               <input formControlName="endFolio"
                 type="text"
@@ -182,7 +182,7 @@
             </div>
         </div>
 
-        <div [fxFlex]="100/3" fxFlex.lt-md="100"
+        <div class="fx-item-third sm-fx-item"
           *ngIf="validateTypeSelected([InstrumentTypes.TituloPropiedad])">
             <label>Folio:</label>
             <input formControlName="folio"
@@ -194,9 +194,9 @@
 
     </ng-container>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex>
+      <div class="fx-item">
         <label>Descripción del instrumento:</label>
         <emp-ng-text-editor formControlName="summary">
         </emp-ng-text-editor>
@@ -205,13 +205,13 @@
     </div>
 
     <mat-divider *ngIf="actions.can.editInstrument || actions.show.registrationStamps || addMode"
-      class="horizontal" >
+      class="horizontal-slim" >
 
     </mat-divider>
 
-    <div fxLayout="row">
+    <div class="fx-row-container">
 
-      <div [fxFlex]="100/3" fxLayoutAlign="start">
+      <div class="fx-item-third fx-start">
 
         <button *ngIf="actions.can.editInstrument && !addMode"
           (click)="enableEditor(!editionMode)"
@@ -221,7 +221,7 @@
 
       </div>
 
-      <div [fxFlex]="100/3" fxLayoutAlign="center center" *ngIf="showStatusField && editionMode">
+      <div class="fx-item-third fx-center fx-items-center" *ngIf="showStatusField && editionMode">
 
           <span class="pr-1">Marcar la inscripción como:</span>
 
@@ -233,7 +233,7 @@
 
       </div>
 
-      <div fxFlex fxLayoutAlign="end">
+      <div class="fx-item fx-row-container fx-end">
 
         <button *ngIf="editionMode && ( actions.can.editInstrument || addMode )"
           (click)="onSubmitClicked()"

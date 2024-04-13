@@ -3,35 +3,37 @@
 <form [formGroup]="form" [empNgSpinnerHost]="spinner" empNgFormKeyDownEnter
   autocomplete="off" class="form-section">
 
-  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+  <div class="fx-column-container fx-gap-half sm-fx-gap-none">
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex="255px" fxFlex.lt-md="none">
+      <div class="fx-item-size sm-fx-item-none" style="--size: 255px">
         <label>Folio real:</label>
 
-        <div fxLayout="row">
-          <input type="text" class="text-box" [fxFlex]="showElectronicHistoryButton ? '159px': '247px'"
+        <div class="fx-row-container">
+          <input type="text"
+            class="text-box fx-item-size" [ngStyle]="{'--size': showElectronicHistoryButton ? '159px': '247px'}"
             formControlName="electronicID">
-          <button type="button" class="btn" fxFlex="80px" *ngIf="showElectronicHistoryButton"
+          <button type="button" *ngIf="showElectronicHistoryButton"
+            class="btn fx-item-size" style="--size: 80px"
             [style.marginTop.px]="2" (click)="onElectronicHistoryClicked()">Historia</button>
         </div>
       </div>
 
-      <div fxFlex="calc(100% - 255px)">
+      <div class="fx-item-size sm-fx-item fx-row-container" style="--size: calc(100% - 255px)">
 
-        <div fxFlex>
+        <div class="fx-item">
           <label>Clave catastral:</label>
           <input type="text" class="text-box" formControlName="cadastralID"
             [class.invalid-control]="formHelper.isControlInvalid(form.controls.cadastralID)">
         </div>
 
-        <div fxFlex="100px" fxFlex.lt-md="none">
+        <div class="fx-item-size sm-fx-item-none" style="--size: 100px">
           <label>Vinculado el:</label>
           <input type="text" class="text-box" formControlName="cadastreLinkingDate">
         </div>
 
-        <div fxFlex="none" fxFlex.lt-md="none" *ngIf="!readonly">
+        <div class="fx-item-none" *ngIf="!readonly">
           <label>
             <a class="link" (click)="onCadastralCertificateClicked()">Cédula catastral:</a>
           </label>
@@ -46,9 +48,9 @@
 
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex="255px" fxFlex.lt-md="none">
+      <div class="fx-item-size sm-fx-item" style="--size: 255px">
         <label>Oficialía:</label>
         <emp-ng-select #districtControl formControlName="recorderOfficeUID"
           [items]="recorderOfficeList"
@@ -57,7 +59,7 @@
         </emp-ng-select>
       </div>
 
-      <div fxFlex="calc(100% - 255px)">
+      <div class="fx-item-size sm-fx-item" style="--size: calc(100% - 255px)">
         <label>Municipio:</label>
         <emp-ng-select formControlName="municipalityUID"
           [items]="municipalityList"
@@ -68,9 +70,9 @@
 
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex="255px" fxFlex.lt-md="none">
+      <div class="fx-item-size sm-fx-item" style="--size: 255px">
         <label>Tipo de predio:</label>
         <emp-ng-select formControlName="kind"
           [bindValue]="'name'"
@@ -79,19 +81,19 @@
         </emp-ng-select>
       </div>
 
-      <div fxFlex="calc(100% - 255px)">
+      <div class="fx-item-size sm-fx-item fx-row-container" style="--size: calc(100% - 255px)">
 
-        <div [fxFlex]="50">
+        <div class="fx-item-half">
           <label class="ellipsis">Superficie total:</label>
 
-          <div fxLayout="row">
+          <div class="fx-row-container">
 
-            <div fxFlex="50" fxFlex.lt-md="50">
+            <div class="fx-item-half">
               <input type="number" class="text-box" formControlName="lotSize"
                 [class.invalid-control]="formHelper.isControlInvalid(form.controls.lotSize)">
             </div>
 
-            <div fxFlex="50" fxFlex.lt-md="50">
+            <div class="fx-item-half">
               <emp-ng-select formControlName="lotSizeUnitUID"
                 [items]="lotSizeUnitList"
                 [showError]="formHelper.isControlInvalid(form.controls.lotSizeUnitUID)"
@@ -103,13 +105,13 @@
 
         </div>
 
-        <div [fxFlex]="25">
+        <div class="fx-item-quarter">
           <label class="ellipsis">Superficie construida (m2):</label>
           <input type="number" class="text-box" formControlName="buildingArea"
             [class.invalid-control]="formHelper.isControlInvalid(form.controls.buildingArea)">
         </div>
 
-        <div [fxFlex]="25">
+        <div class="fx-item-quarter">
           <label class="ellipsis">Indiviso (%):</label>
           <input type="number" class="text-box" formControlName="undividedPct"
             [class.invalid-control]="formHelper.isControlInvalid(form.controls.undividedPct)">
@@ -119,21 +121,21 @@
 
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex="255px" fxFlex.lt-md="none">
+      <div class="fx-item-size sm-fx-item" style="--size: 255px">
         <label class="ellipsis">Lote:</label>
         <input type="text" class="text-box" formControlName="lot">
       </div>
 
-      <div fxFlex="calc(100% - 255px)">
+      <div class="fx-item-size sm-fx-item fx-row-container" style="--size: calc(100% - 255px)">
 
-        <div [fxFlex]="25">
+        <div class="fx-item-quarter">
           <label class="ellipsis">Manzana:</label>
           <input type="text" class="text-box" formControlName="block">
         </div>
 
-        <div [fxFlex]="25">
+        <div class="fx-item-quarter">
           <label class="ellipsis">Sección:</label>
           <input type="text" class="text-box" formControlName="section">
         </div>
@@ -142,9 +144,9 @@
 
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex="100">
+      <div class="fx-item-one">
         <label>Descripción del predio (denominación y ubicación):</label>
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
           formControlName="description"
@@ -155,9 +157,9 @@
 
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex="100">
+      <div class="fx-item-one">
         <label>Medidas y colindancias:</label>
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
           formControlName="metesAndBounds"
@@ -168,9 +170,11 @@
 
     </div>
 
-    <div fxLayout="row">
+    <mat-divider class="horizontal-slim"></mat-divider>
 
-      <div fxFlex fxLayoutAlign="start center">
+    <div class="fx-row-container">
+
+      <div class="fx-item fx-start fx-items-center">
 
         <button *ngIf="editionMode" (click)="enableEditor(false)" class="btn">
           Descartar Cambios
@@ -178,7 +182,7 @@
 
       </div>
 
-      <div fxFlex fxLayoutAlign="center center">
+      <div class="fx-item fx-center fx-items-center">
 
         <ng-container>
 
@@ -198,7 +202,7 @@
 
       </div>
 
-      <div fxFlex fxLayoutAlign="end center">
+      <div class="fx-item fx-end fx-items-center">
 
         <button *ngIf="!readonly && !editionMode"
           class="btn-action"

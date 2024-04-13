@@ -1,9 +1,10 @@
-<div [style.height.%]="100" [ngClass.gt-md]="{'card-floating-container': cardFloatingEffect}">
+<div [style.height.%]="100"
+  [class.card-floating-container-gt-md]="cardFloatingEffect">
 
   <emp-ng-card
     [title]="cardTitle"
     [hint]="data.title"
-    [ngClass.gt-md]="{'card-floating-secondary': cardFloatingEffect}"
+    [class.card-floating-secondary-gt-md]="cardFloatingEffect"
     (cardClose)="onClose()">
 
     <mat-tab-group mat-stretch-tabs="false" (selectedTabChange)="onSelectedTabChange($event)">

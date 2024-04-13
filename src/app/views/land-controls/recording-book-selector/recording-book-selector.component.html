@@ -2,11 +2,11 @@
 
   <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>
 
-  <div fxLayout="column" fxLayoutGap="0.75rem">
+  <div class="fx-column-container fx-gap-quarter">
 
-    <div fxLayout="row">
+    <div class="fx-row-container">
 
-      <div fxFlex="20">
+      <div class="fx-item-size" style="--size: 20%;">
 
         <label>Oficialía:</label>
 
@@ -23,8 +23,9 @@
 
       </div>
 
-      <div [fxFlex]="showRecordingBookEntryField ? 'calc(80% - 322px)': '351px'"
-           [fxFlex.lt-sm]="showRecordingBookEntryField ? 'calc(80% - 322px)' : 'calc(80% - 126px)'">
+      <div class="fx-item-size sm-fx-item-size"
+        [ngStyle]="{'--size': showRecordingBookEntryField ? 'calc(80% - 322px)': '351px',
+                    '--sm-size': showRecordingBookEntryField ? 'calc(80% - 322px)' : 'calc(80% - 126px)'}">
 
         <label>Sección:</label>
 
@@ -41,7 +42,7 @@
 
       </div>
 
-      <div fxFlex="126px">
+      <div class="fx-item-size" style="--size: 126px;">
 
         <label>Volumen:</label>
 
@@ -63,7 +64,7 @@
 
       </div>
 
-      <div fxFlex="126px" *ngIf="showRecordingBookEntryField">
+      <div class="fx-item-size" style="--size: 126px;" *ngIf="showRecordingBookEntryField">
 
         <label>Inscripción:</label>
 
@@ -90,18 +91,18 @@
 
       </div>
 
-      <emp-land-recording-views-buttons fxflex="70px" *ngIf="showRecordingBookEntryField"
+      <emp-land-recording-views-buttons class="fx-item-size" style="--size: 70px;" *ngIf="showRecordingBookEntryField"
         [style.marginTop.px]="16">
 
       </emp-land-recording-views-buttons>
 
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="end center" *ngIf="showRecordingBookEntryField">
+    <div class="fx-row-container fx-end fx-items-center" *ngIf="showRecordingBookEntryField">
 
-      <div fxFlex="252px">
+      <div class="fx-item-size" style="--size: 252px">
 
-        <mat-checkbox fxlayout="row"
+        <mat-checkbox class="fx-row-container"
           [(ngModel)]="checkBookEntryInput"
           [ngModelOptions]="{standalone: true}"
           (change)="onCheckBookEntryInputChanged()">
@@ -110,13 +111,13 @@
 
       </div>
 
-      <div fxFlex="70px"></div>
+      <div class="fx-item-size" style="--size: 70px;"></div>
 
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="end center" *ngIf="checkBookEntryInput">
+    <div class="fx-row-container fx-end fx-items-center" *ngIf="checkBookEntryInput">
 
-      <div fxFlex="126px">
+      <div class="fx-item-size" style="--size: 126px">
         <label>Fecha de presentación:</label>
         <emp-ng-datepicker name="presentationTime"
           [(ngModel)]="presentationTime"
@@ -126,7 +127,7 @@
         </emp-ng-datepicker>
       </div>
 
-      <div fxFlex="126px">
+      <div class="fx-item-size" style="--size: 126px">
         <label>Fecha de registro:</label>
         <emp-ng-datepicker name="authorizationDate"
           [(ngModel)]="authorizationDate"
@@ -137,7 +138,7 @@
         </emp-ng-datepicker>
       </div>
 
-      <div fxFlex="70px"></div>
+      <div class="fx-item-size" style="--size: 70px;"></div>
 
     </div>
 

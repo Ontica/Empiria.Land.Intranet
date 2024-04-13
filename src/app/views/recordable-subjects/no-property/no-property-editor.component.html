@@ -3,22 +3,25 @@
 <form [formGroup]="form" [empNgSpinnerHost]="spinner" empNgFormKeyDownEnter
   autocomplete="off" class="form-section">
 
-  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+  <div class="fx-column-container fx-gap-three-quarter sm-fx-gap-none">
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex="290px" fxFlex.lt-md="none">
+      <div class="fx-item-size sm-fx-item" style="--size: 290px">
         <label>Folio electrónico:</label>
 
-        <div fxLayout="row">
-          <input type="text" class="text-box"  [fxFlex]="showElectronicHistoryButton ? '182px' : '282px'"
+        <div class="fx-row-container">
+          <input type="text" class="text-box fx-item-size"
+            [ngStyle]="{'--size': showElectronicHistoryButton ? '182px' : '282px'}"
             formControlName="electronicID">
-          <button type="button" class="btn" fxFlex="92px" *ngIf="showElectronicHistoryButton"
-            [style.marginTop.px]="2" (click)="onElectronicHistoryClicked()">Historia</button>
+          <button *ngIf="showElectronicHistoryButton"
+            type="button" class="btn fx-item-size" style="--size: 92px"
+            [style.marginTop.px]="2"
+            (click)="onElectronicHistoryClicked()">Historia</button>
         </div>
       </div>
 
-      <div fxFlex>
+      <div class="fx-item">
         <label>Oficialía:</label>
         <emp-ng-select formControlName="recorderOfficeUID"
           [items]="recorderOfficeList"
@@ -28,9 +31,9 @@
     </div>
 
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex="290px" fxFlex.lt-md="none">
+      <div class="fx-item-size sm-fx-item" style="--size: 290px">
         <label>Tipo:</label>
         <emp-ng-select
           formControlName="kind"
@@ -40,7 +43,7 @@
         </emp-ng-select>
       </div>
 
-      <div fxFlex="100">
+      <div class="fx-item-size sm-fx-item" style="--size: calc(100% - 290px)">
         <label>Nombre o denominación:</label>
 
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
@@ -51,8 +54,8 @@
 
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
-      <div fxFlex="100%">
+    <div class="fx-row-container sm-fx-column-container">
+      <div class="fx-item-one">
         <label *ngIf="!isAssociation">Descripción (opcional):</label>
 
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
@@ -63,9 +66,9 @@
       </div>
     </div>
 
-    <div fxLayout="row">
+    <div class="fx-row-container">
 
-      <div fxFlex fxLayoutAlign="start center">
+      <div class="fx-item fx-start fx-items-center">
 
         <button *ngIf="editionMode" (click)="enableEditor(false)" class="btn">
           Descartar Cambios
@@ -73,7 +76,7 @@
 
       </div>
 
-      <div fxFlex fxLayoutAlign="center center">
+      <div class="fx-item fx-center fx-items-center">
 
         <ng-container>
 
@@ -93,7 +96,7 @@
 
       </div>
 
-      <div fxFlex fxLayoutAlign="end center">
+      <div class="fx-item fx-end fx-items-center">
 
         <button *ngIf="!readonly && !editionMode" class="btn-action"
           (click)="enableEditor(true)">

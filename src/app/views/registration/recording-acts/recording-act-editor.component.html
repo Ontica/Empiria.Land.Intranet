@@ -1,10 +1,10 @@
 <form [formGroup]="form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
 
-  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+  <div class="fx-column-container fx-gap-half sm-fx-gap-none">
 
-    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between">
+    <div class="fx-row-container sm-fx-column-container fx-space-between">
 
-      <div fxFlex="30" fxFlex.lt-md="100">
+      <div class="fx-item-size sm-fx-item" style="--size: 30%">
 
         <label>Tipo de acto jurídico:</label>
 
@@ -15,7 +15,7 @@
 
       </div>
 
-      <div fxFlex="30" fxFlex.lt-md="100">
+      <div class="fx-item-size sm-fx-item" style="--size: 30%">
 
         <label>Clasificación del acto jurídico:</label>
 
@@ -31,17 +31,17 @@
 
       </div>
 
-      <div fxFlex="40">
+      <div class="fx-item-size sm-fx-item" style="--size: 40%">
 
-        <div fxLayout="row">
+        <div class="fx-row-container">
 
-          <label fxFlex="100">Monto de la operación:</label>
+          <label class="fx-item">Monto de la operación:</label>
 
         </div>
 
-        <div fxLayout="row">
+        <div class="fx-row-container">
 
-          <div fxFlex="50" fxFlex.lt-md="100">
+          <div class="fx-item-half sm-fx-item">
 
             <input formControlName="operationAmount" empNgCurrency
               [empNgCurrencyFractionDigitMax]="operationAmountDigitsMax"
@@ -52,7 +52,7 @@
 
           </div>
 
-          <div fxFlex="50" fxFlex.lt-md="100" fxLayoutAlign="start end">
+          <div class="fx-item-half sm-fx-item fx-start fx-items-end">
 
             <emp-ng-select formControlName="currencyUID"
               [items]="recordingAct.actions.editionValues.currencies"
@@ -70,9 +70,9 @@
 
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex>
+      <div class="fx-item">
 
         <label>Descripción o cláusulas del acto jurídico:</label>
 
@@ -92,18 +92,18 @@
 
         <div class="list-container">
 
-          <div fxLayout="row" class="uppercase bold-text" [style.marginBottom.px]="8">
+          <div class="fx-row-container uppercase bold-text" [style.marginBottom.px]="8">
             Acto jurídico a modificar o cancelar:
           </div>
 
-          <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="2rem" fxLayoutGap.lt-md="0.75rem">
+          <div class="fx-row-container sm-fx-column-container fx-gap-two sm-fx-gap-three-quarter">
 
-            <div fxFlex="none">
+            <div class="fx-item-none">
               <div class="label nowrap">Acto jurídico:</div>
               <div class="nowrap">{{recordingAct.amendedAct.name}}</div>
             </div>
 
-            <div fxFlex="none">
+            <div class="fx-item-none">
               <div class="label nowrap">Fecha de registro:</div>
               <div class="nowrap">
                 {{!recordingAct.amendedAct.recordingData.recordingTime ? '-' :
@@ -111,7 +111,7 @@
               </div>
             </div>
 
-            <div fxFlex="none">
+            <div class="fx-item-none">
               <div class="label nowrap">Fecha de presentación:</div>
               <div class="nowrap">
                 {{!recordingAct.amendedAct.recordingData.recordingTime ? '-' :
@@ -119,12 +119,13 @@
               </div>
             </div>
 
-            <div fxFlex>
+            <div class="fx-item">
               <div class="label">Descripción:</div>
               <div>{{recordingAct.amendedAct.description}}</div>
             </div>
 
-            <emp-land-recording-views-buttons fxFlex="70px" fxFlex.lt-md="none"
+            <emp-land-recording-views-buttons
+              class="fx-item-size sm-fx-item-none" style="--size: 70px"
               [recordingMedia]="recordingAct.amendedAct.recordingData.media">
 
             </emp-land-recording-views-buttons>
@@ -140,13 +141,13 @@
 
     <ng-container *ngIf="recordingAct.actions.isEditable">
 
-      <mat-divider class="horizontal" >
+      <mat-divider class="horizontal-slim" >
 
       </mat-divider>
 
-      <div fxLayout="row">
+      <div class="fx-row-container">
 
-        <div [fxFlex]="100/3" fxLayoutAlign="start">
+        <div class="fx-item-third">
 
           <button *ngIf="recordingAct.actions.isEditable && !readonly"
             (click)="enableEditor(!editionMode)"
@@ -156,7 +157,7 @@
 
         </div>
 
-        <div [fxFlex]="100/3" fxLayoutAlign="center center">
+        <div class="fx-item-third fx-center fx-items-center">
 
           <span class="pr-1">{{editionMode ? 'Marcar como:' : 'Marcado como:'}}</span>
 
@@ -172,7 +173,7 @@
 
         </div>
 
-        <div fxFlex fxLayoutAlign="end">
+        <div class="fx-item fx-end">
 
           <button *ngIf="editionMode"
             (click)="onSubmitClicked()"

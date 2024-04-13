@@ -21,9 +21,9 @@
 
     <mat-divider class="horizontal"></mat-divider>
 
-    <div fxLayout="row">
+    <div class="fx-row-container fx-end">
 
-      <div fxFlex fxLayoutAlign="end end" style="padding-right: 8px;">
+      <div class="fx-item-none" style="padding-right: 8px;">
 
         <button type="submit"
           [class.btn]="!formWorkflow.isValid || transactionList.length === 0"

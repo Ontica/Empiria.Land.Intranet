@@ -1,14 +1,14 @@
-<div fxLayout="column" fxFlexFill>
+<div class="fx-column-container-fill">
 
   <mat-divider>
 
   </mat-divider>
 
-  <div #listContainer fxFlex style="overflow-y: auto;">
+  <div #listContainer class="fx-item" style="overflow-y: auto;">
 
     <div *ngFor="let record of recordsList" class="list-item">
 
-      <emp-land-record-search-list-item fxFlex="100"
+      <emp-land-record-search-list-item class="fx-item"
         [record]="record"
         [recordSearchType]="recordSearchType"
         (recordSearchListItemEvent)="onRecordSearchListItemEvent($event)">

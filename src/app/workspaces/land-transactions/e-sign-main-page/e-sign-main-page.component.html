@@ -3,8 +3,8 @@
 <div class="explorer">
 
   <div class="primary"
-    [fxHide]="displayFileViewer"
-    [fxHide.lt-lg]="displayTransactionTabbedView || displayFileViewer || displayRegistryEntryEditor">
+    [class.hidden]="displayFileViewer"
+    [class.md-hide]="displayTransactionTabbedView || displayFileViewer || displayRegistryEntryEditor">
 
     <emp-land-explorer
       [title]="titleWithStatus"
@@ -24,9 +24,8 @@
   </div>
 
   <div *ngIf="displayFileViewer"
-    class="primary-resizable primary-floating"
-    [fxHide.lt-lg]="displayRegistryEntryEditor"
-    [ngClass.lt-lg]="'primary-resizable-disable'"
+    class="primary-resizable primary-resizable-disable-md primary-floating"
+    [class.md-hide]="displayRegistryEntryEditor"
     empNgResizable>
 
     <emp-land-file-viewer
@@ -41,8 +40,8 @@
 
   <div *ngIf="displayTransactionTabbedView"
     class="secondary"
-    [fxHide]="displayRegistryEntryEditor"
-    [fxHide.lt-lg]="displayRegistryEntryEditor || displayFileViewer">
+    [class.hidden]="displayRegistryEntryEditor"
+    [class.md-hide]="displayRegistryEntryEditor || displayFileViewer">
 
     <emp-land-transaction-tabbed-view
         [transaction]="selectedTransaction"

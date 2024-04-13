@@ -17,14 +17,14 @@
 
   <div class="card-body" [empNgSpinnerHost]="spinner">
 
-    <div fxLayout="column" fxFlexFill>
+    <div class="fx-column-container-fill">
 
       <emp-ng-spinner #spinner [visible]="isLoading">
 
       </emp-ng-spinner>
 
 
-      <emp-land-recording-book-selector fxFlex="none" class="list-selection-header"
+      <emp-land-recording-book-selector class="fx-item-none list-selection-header"
         [showRecordingBookEntryField]="false"
         [fieldsRequired]="false"
         [style.marginBottom.px]="4"
@@ -33,7 +33,7 @@
       </emp-land-recording-book-selector>
 
 
-      <div fxFlex style="overflow-y: auto;">
+      <div class="fx-item" style="overflow-y: auto;">
 
         <emp-ng-expansion-button *ngIf="displayRecordingBookEdition"
           [(panelState)]="panelAddState"

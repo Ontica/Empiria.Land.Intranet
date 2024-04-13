@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0.75rem">
+<div class="fx-row-container fx-space-between fx-items-center fx-gap-three-quarter">
 
   <ng-container *empNgHasPermission="createPermission">
 
@@ -21,31 +21,34 @@
 
 
   <emp-ng-select
-    fxFlex="170px"
     [(ngModel)]="recorderOffice" name="recorderOffice"
     [items]="recorderOfficeList"
     [required]="true"
     [showError]="!recorderOffice"
+    [style.width.px]="170"
+    [style.min-width.px]="170"
     placeholder="Seleccione la oficialía"
     (changes)="onFilterChanged()">
   </emp-ng-select>
 
 
   <emp-ng-select *ngIf="displayStatusSelect"
-    fxFlex="125px"
     [(ngModel)]="status" name="status"
     [config]="{ selectFirst: true }"
     [items]="statusList"
     [required]="true"
     [showError]="!status"
+    [style.width.px]="125"
+    [style.min-width.px]="125"
     (changes)="onFilterChanged()">
   </emp-ng-select>
 
 
-  <input type="search" class="text-box"
-    fxFlex="200px" fxHide.lt-sm="true"
-    placeholder="Buscar trámites"
+  <input type="search" class="text-box sm-hide"
     [(ngModel)]="keywords"
+    placeholder="Buscar trámites"
+    [style.width.px]="200"
+    [style.min-width.px]="200"
     (search)="onFilterChanged()">
 
 </div>

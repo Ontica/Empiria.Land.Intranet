@@ -1,7 +1,8 @@
-<div fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px" [style.height.%]="100">
+<div class="fx-column-container fx-space-between fx-gap-half"
+  [style.height.%]="100">
 
-  <div fxLayout="row" fxLayoutAlign="space-between center">
-    <div class="nowrap" fxLayoutAlign="start center">
+  <div class="fx-row-container fx-space-between fx-items-center">
+    <div class="nowrap fx-start fx-items-center">
       <a class="link bold-text" (click)="onRecordableSubjectClicked()">
         {{recordableSubject.electronicID}}
       </a>
@@ -27,11 +28,12 @@
     </div>
   </div>
 
-  <div fxLayout="row" [style.white-space]="'normal'">
-    <span fxFlex="100">{{displayRealEstate ? recordableSubject.description : recordableSubject.name}}</span>
+  <div class="fx-row-container" [style.white-space]="'normal'">
+    <span class="fx-item">{{displayRealEstate ? recordableSubject.description : recordableSubject.name}}</span>
   </div>
 
-  <div fxLayout="row" fxLayoutAlign="space-between" class="bold-text nowrap">
+  <div class="fx-row-container fx-space-between fx-items-center
+              bold-text nowrap">
     {{recordableSubject.recorderOffice.name}}
     <a class="link" *ngIf="displayCadastralData" (click)="onCadastralClicked()">Catastro: {{realEstate.cadastralID}}</a>
   </div>

@@ -1,40 +1,44 @@
-<emp-ng-select [ngModel]="recordableSubject"
-  [config]="{ clearable: true,
-              bindByValue: false,
-              minTermLength: recordableSubjectMinTermLength,
-              dropdownPosition: allWidth ? 'top' : 'auto'}"
-  [items]="recordableSubjectList$ | async"
-  [typeahead]="recordableSubjectInput$"
-  [loading]="recordableSubjectLoading"
-  [disabled]="disabled"
-  [showError]="showError"
-  [fxFlex]="allWidth ? 100 : 100/3"
-  [style.width.%]="100"
-  placeholder="Buscar"
-  (ngModelChange)="selectRecordableSubject($event)">
+<div class="fx-row-container">
 
-  <ng-template #labelTemplate let-item="item">
-    {{item.recordableSubject.electronicID}}
-    <span *ngIf="!!item.recordableSubject.kind">&nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordableSubject.kind}}</span>
-    <span *ngIf="!!item.name">&nbsp;&nbsp; | &nbsp;&nbsp; {{item.name}}</span>
-  </ng-template>
+  <emp-ng-select [ngModel]="recordableSubject"
+    [config]="{ clearable: true,
+                bindByValue: false,
+                minTermLength: recordableSubjectMinTermLength,
+                dropdownPosition: allWidth ? 'top' : 'auto'}"
+    [items]="recordableSubjectList$ | async"
+    [typeahead]="recordableSubjectInput$"
+    [loading]="recordableSubjectLoading"
+    [disabled]="disabled"
+    [showError]="showError"
+    [ngClass]="allWidth ? 'fx-item' : 'fx-item-third'"
+    [style.width.%]="100"
+    placeholder="Buscar"
+    (ngModelChange)="selectRecordableSubject($event)">
 
-  <ng-template #optionTemplate let-item="item">
+    <ng-template #labelTemplate let-item="item">
+      {{item.recordableSubject.electronicID}}
+      <span *ngIf="!!item.recordableSubject.kind">&nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordableSubject.kind}}</span>
+      <span *ngIf="!!item.name">&nbsp;&nbsp; | &nbsp;&nbsp; {{item.name}}</span>
+    </ng-template>
 
-    <div class="searcher-item-container">
+    <ng-template #optionTemplate let-item="item">
 
-      <emp-land-recordable-subject-view
-        [recordableSubject]="item.recordableSubject">
+      <div class="searcher-item-container">
 
-      </emp-land-recordable-subject-view>
+        <emp-land-recordable-subject-view
+          [recordableSubject]="item.recordableSubject">
 
-      <mat-divider [style.marginTop.px]="8">
+        </emp-land-recordable-subject-view>
 
-      </mat-divider>
+        <mat-divider [style.marginTop.px]="8">
 
-    </div>
+        </mat-divider>
+
+      </div>
 
 
-  </ng-template>
+    </ng-template>
 
-</emp-ng-select>
+  </emp-ng-select>
+
+</div>

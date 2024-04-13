@@ -1,13 +1,13 @@
-<form [formGroup]="form" empNgFormKeyDownEnter
-  fxLayout="column" autocomplete="off" class="form-section">
+<form [formGroup]="form" empNgFormKeyDownEnter autocomplete="off"
+  class="form-section fx-column-container">
 
   <mat-divider class="horizontal">
 
   </mat-divider>
 
-  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
-    <div fxLayout="row" fxLayout.lt-md="column">
-      <div fxFlex="100">
+  <div class="fx-column-container fx-gap-three-quarter sm-fx-gap-none">
+    <div class="fx-row-container sm-fx-column-container">
+      <div class="fx-item-one">
         <label>{{ isPerson ? 'Nombre Completo:' : 'Nombre o razón social' }}</label>
         <input formControlName="fullName"
           type="text"
@@ -16,8 +16,8 @@
       </div>
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
-      <div *ngIf="isPerson" fxFlex="50">
+    <div class="fx-row-container sm-fx-column-container">
+      <div *ngIf="isPerson" class="fx-item-half sm-fx-item">
         <label>CURP:</label>
         <input formControlName="curp"
           type="text"
@@ -25,7 +25,7 @@
           [class.invalid-control]="formHelper.isControlInvalid(form.controls.curp)">
       </div>
 
-      <div fxFlex="50">
+      <div class="fx-item-half sm-fx-item">
         <label>RFC:</label>
         <input formControlName="rfc"
           type="text"
@@ -34,8 +34,8 @@
       </div>
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
-      <div fxFlex="100">
+    <div class="fx-row-container sm-fx-column-container">
+      <div class="fx-item-one">
         <label>Otra información:</label>
         <textarea class="text-area uppercase" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
           formControlName="partyNotes">
@@ -44,8 +44,8 @@
       </div>
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
-      <div fxFlex="40">
+    <div class="fx-row-container sm-fx-column-container">
+      <div class="fx-item-size sm-fx-item" style="--size: 40%">
         <label>Participa como:</label>
         <emp-ng-select
           [config]="{groupBy: 'items'}"
@@ -59,7 +59,7 @@
 
       <ng-container [ngSwitch]="getRoleTypeSelected()">
         <ng-container *ngSwitchCase="'Primary'">
-          <div fxFlex="40">
+          <div class="fx-item-size sm-fx-item" style="--size: 40%">
             <label>Sobre:</label>
             <emp-ng-select
               [items]="partUnits"
@@ -71,7 +71,8 @@
             </emp-ng-select>
           </div>
 
-          <div fxFlex="20" *ngIf="isAmountRequired">
+          <div *ngIf="isAmountRequired"
+            class="fx-item-size sm-fx-item" style="--size: 20%">
             <label>Cantidad:</label>
             <input formControlName="partAmount" *ngIf="!isPartAmountFraction"
               type="number"
@@ -85,7 +86,7 @@
           </div>
         </ng-container>
         <ng-container *ngSwitchCase="'Secondary'">
-          <div fxFlex="60">
+          <div class="fx-item-size sm-fx-item" style="--size: 60%">
             <label>De:</label>
             <emp-ng-select
               bindLabel="fullName"
@@ -97,15 +98,15 @@
           </div>
         </ng-container>
         <ng-container *ngSwitchDefault>
-          <div fxFlex="60" fxLayoutAlign="center end">
+          <div class="fx-item-size sm-fx-item fx-center fx-items-end" style="--size: 60%">
             <p style="height: 28px;">Primero Seleccione un rol de la lista de la izquierda</p>
           </div>
         </ng-container>
       </ng-container>
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
-      <div fxFlex="100">
+    <div class="fx-row-container sm-fx-column-container">
+      <div class="fx-item-one">
         <label>Observaciones:</label>
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
           formControlName="notes">
@@ -118,9 +119,9 @@
 
   </mat-divider>
 
-  <div fxLayout="row">
+  <div class="fx-row-container fx-end">
 
-    <div fxFlex fxLayoutAlign="end">
+    <div class="fx-item-none">
 
       <button
         (click)="onSubmitClicked()"

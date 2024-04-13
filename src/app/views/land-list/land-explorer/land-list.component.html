@@ -1,7 +1,7 @@
-<div fxFlex style="overflow-y: auto;">
+<div class="fx-column-container fx-item" style="overflow-y: auto;">
 
   <div *ngFor="let item of itemsList"
-        class="list-item" [class.list-item-selected]="selectedItemUID === item.uid"
+        class="fx-row-container list-item" [class.list-item-selected]="selectedItemUID === item.uid"
         matRipple [matRippleTrigger]="trigger" matRippleColor="rgb(44, 57, 66, 0.05)">
 
     <div class="list-item-checkbox">

@@ -1,14 +1,14 @@
 <form [formGroup]="form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
 
-  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+  <div class="fx-column-container fx-gap-half">
 
     <div class="section-title">Recibir Trámite</div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
       <ng-container *ngIf="showPaymentReceiptEditor">
 
-        <div [fxFlex]="100/3">
+        <div class="fx-item-third sm-fx-item">
           <label>Recibo de pago:</label>
           <input formControlName="paymentReceiptNo" empNgInteger
             type="text"
@@ -16,7 +16,7 @@
             [class.invalid-control]="formHelper.isControlInvalid(form.controls.paymentReceiptNo)">
         </div>
 
-        <div fxFlex="100px" fxFlex.lt-md="none">
+        <div class="fx-item-size sm-fx-item" style="--size: 100px">
           <label>Importe del recibo:</label>
           <input formControlName="total" empNgCurrency
             type="text"
@@ -26,7 +26,7 @@
 
       </ng-container>
 
-      <div fxFlex fxLayoutAlign="end end" style="padding-bottom: 2px;">
+      <div class="fx-item fx-row-container fx-end fx-items-end" style="padding-bottom: 2px;">
 
         <button *ngIf="canEdit" type="submit"
           (click)="onSetPaymentClicked()"

@@ -1,8 +1,8 @@
-<div fxLayout="column" fxFlexFill>
+<div class="fx-column-container-fill">
 
   <ng-container *ngIf="!stampMediaError">
 
-    <div fxLayout="row" fxLayoutAlign="end" [style.paddingBottom.px]="8">
+    <div class="fx-row-container fx-end" [style.paddingBottom.px]="8">
 
       <button class="btn" (click)="onPrintStamp()">
         Imprimir
@@ -10,7 +10,7 @@
 
     </div>
 
-    <div class="preview-container" fxFlex *ngIf="displayStampMedia">
+    <div class="fx-item preview-container" *ngIf="displayStampMedia">
 
       <div class="object-preview-container">
 

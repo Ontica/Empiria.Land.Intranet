@@ -1,10 +1,10 @@
 <form [formGroup]="form" autocomplete="off" class="form-section">
 
-  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+  <div class="fx-column-container fx-gap-three-quarter sm-fx-item-none">
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div [fxFlex]="100/3">
+      <div class="fx-item-third">
         <label>Registrar en:</label>
         <emp-ng-select formControlName="recorderOffice"
           [items]="recorderOfficeList"
@@ -12,7 +12,7 @@
           (changes)="onRecorderOfficeChange($event)">
         </emp-ng-select>
       </div>
-      <div [fxFlex]="100/3">
+      <div class="fx-item-third">
         <label>Sección/Libro:</label>
         <emp-ng-select formControlName="recordingSection"
           [items]="recordingSectionList"
@@ -20,7 +20,7 @@
         </emp-ng-select>
       </div>
 
-      <div fxFlex fxLayoutAlign="end end" style="padding-bottom: 2px;">
+      <div class="fx-item fx-end fx-items-end" style="padding-bottom: 2px; margin-right: -8px;">
 
         <button type="submit"
           [class.btn]="!formHelper.isFormReady(form)"

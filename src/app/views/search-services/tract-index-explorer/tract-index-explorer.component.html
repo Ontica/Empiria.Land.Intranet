@@ -6,10 +6,10 @@
     [showCardHeaderFlat]="true"
     (cardClose)="onClose()">
 
-    <div fxLayout="row" fxFill>
+    <div class="fx-row-container-fill">
 
       <emp-land-tract-index-entries-viewer
-        fxFlex="800px" fxFlex.lt-lg="50"
+        class="fx-item-size sm-fx-item-half" style="--size: 800px"
         [tractIndex]="tractIndex"
         [selectedTractIndexEntry]="selectedTractIndexEntry"
         (tractIndexEntriesViewerEvent)="onTractIndexEntriesViewerEvent($event)">
@@ -17,7 +17,7 @@
       </emp-land-tract-index-entries-viewer>
 
 
-      <div fxFlex fxFlex.lt-lg="50" class="small-overflow-auto" [style.overflow]="'auto'"
+      <div class="fx-item sm-fx-item-half small-overflow-auto" [style.overflow]="'auto'"
         [empNgSpinnerHost]="spinner">
 
         <emp-ng-spinner #spinner [visible]="isLoading"></emp-ng-spinner>

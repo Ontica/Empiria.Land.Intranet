@@ -1,34 +1,30 @@
 <form [formGroup]="form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
 
-  <div fxLayout="row" fxLayout.lt-md="column">
+  <div class="fx-row-container">
 
-    <div [fxFlex]="100/3">
-      <div fxFlex="190px">
-        <label>Número de inscripción:</label>
-        <input autocomplete="off" formControlName="recordingNo" type="text" class="text-box"
-          style="width: 100px;" [class.invalid-control]="form.controls.recordingNo.invalid">
-      </div>
+    <div class="fx-item-third">
+      <label>Número de inscripción:</label>
+      <input autocomplete="off" formControlName="recordingNo"
+        type="text" class="text-box"
+        [style.width.px]="100"
+        [class.invalid-control]="form.controls.recordingNo.invalid">
     </div>
 
-    <div [fxFlex]="100/3">
-      <div fxFlex fxLayoutAlign="start">
-        <div fxFlex="126px">
-          <label>Fecha de presentación:</label>
-          <emp-ng-datepicker name="presentationTime" formControlName="presentationTime"
-            [showError]="form.controls.presentationTime.invalid">
+    <div class="fx-item-third sm-fx-item fx-row-container fx-space-between">
+      <div class="fx-item-none">
+        <label>Fecha de presentación:</label>
+        <emp-ng-datepicker name="presentationTime" formControlName="presentationTime"
+          [showError]="form.controls.presentationTime.invalid">
 
-          </emp-ng-datepicker>
-        </div>
+        </emp-ng-datepicker>
       </div>
 
-      <div fxFlex fxLayoutAlign="end">
-        <div fxFlex="126px">
-          <label>Fecha de registro:</label>
-          <emp-ng-datepicker name="authorizationDate" formControlName="authorizationDate"
-            [showError]="form.controls.authorizationDate.invalid">
+      <div class="fx-item-none">
+        <label>Fecha de registro:</label>
+        <emp-ng-datepicker name="authorizationDate" formControlName="authorizationDate"
+          [showError]="form.controls.authorizationDate.invalid">
 
-          </emp-ng-datepicker>
-        </div>
+        </emp-ng-datepicker>
       </div>
     </div>
   </div>

@@ -21,19 +21,19 @@
 
       <div class="card-body">
 
-        <div fxLayout="column" fxFlexFill [empNgSpinnerHost]="spinner">
+        <div class="fx-column-container-fill" [empNgSpinnerHost]="spinner">
 
           <emp-ng-spinner #spinner [visible]="isLoading" >
 
           </emp-ng-spinner>
 
-          <emp-land-record-search-filter fxFlex="none"
+          <emp-land-record-search-filter class="fx-item-none"
             [query]="data.recordSearchQuery"
             (recordSearchFilterEvent)="onRecordSearchFilterEvent($event)">
 
           </emp-land-record-search-filter>
 
-          <emp-land-record-search-list fxFlex
+          <emp-land-record-search-list class="fx-item"
             [recordsList]="data.records"
             [recordSearchType]="data.recordSearchQuery.type"
             [queryExecuted]="data.queryExecuted"

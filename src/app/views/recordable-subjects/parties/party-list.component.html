@@ -8,18 +8,18 @@
       <th mat-header-cell *matHeaderCellDef> Nombre </th>
       <td mat-cell *matCellDef="let row">
         <strong>{{row.party.fullName}}</strong>
-        <div class="grid-text-item" fxLayout="row" *ngFor="let group of secondaryPartiesGroupedByRoleList">
-          <div *ngIf="showRoleGroupByParty(group, row)">
+        <div class="grid-text-item" *ngFor="let group of secondaryPartiesGroupedByRoleList">
+          <ng-container *ngIf="showRoleGroupByParty(group, row)">
             <div class="label pr-1">{{group.name}}: </div>
             <ng-container *ngFor="let party of group.parties">
               <ng-container *ngIf="row.party.uid === party.associatedWith.uid">
-                <strong>{{party.party.fullName}}</strong>
+                <span>{{party.party.fullName}}</span>
                 <a class="link pl-1" *ngIf="!readonly"
                   (click)="removeParty(party)">Remover</a>
                 <br>
               </ng-container>
             </ng-container>
-          </div>
+          </ng-container>
         </div>
       </td>
     </ng-container>

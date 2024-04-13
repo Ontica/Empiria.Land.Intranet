@@ -1,13 +1,13 @@
-<div [fxFlex]="100" [@expandCollapse] *ngIf="itemsSelected.length > 0" fxFlex="none">
+<div class="fx-item" [@expandCollapse] *ngIf="itemsSelected.length > 0">
 
-  <div class="list-selection-header" fxLayoutAlign="start center">
+  <div class="list-selection-header fx-row-container fx-items-center">
 
-    <span fxFlex="none">¿Qué debo hacer con
+    <span class="fx-item-none">¿Qué debo hacer con
       <span *ngIf="itemsSelected.length === 1">el {{itemsType}}?</span>
       <span *ngIf="itemsSelected.length > 1">los {{itemsSelected.length}} {{itemsType}}s?</span>
     </span>
 
-    <div fxFlex="180px">
+    <div class="fx-item-size" style="--size: 180px;">
 
       <emp-ng-select name="operation"
         [config]="{bindByValue: false, selectFirst: true}"
@@ -17,7 +17,7 @@
 
     </div>
 
-    <div fxFlex="none">
+    <div class="fx-item-none">
 
       <button class="btn" (click)="onExecuteOperationClicked()">
         Ejecutar

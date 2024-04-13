@@ -1,8 +1,7 @@
 <div class="explorer">
 
   <div *ngIf="displayFileViewer"
-    class="primary-resizable"
-    ngClass.lt-lg="primary-resizable-disable"
+    class="primary-resizable primary-resizable-disable-md"
     empNgResizable>
 
     <emp-land-file-viewer
@@ -14,8 +13,8 @@
   </div>
 
   <div class="primary"
-    [fxHide]="displayFileViewer && displayBookEntryEdition"
-    [fxHide.lt-lg]="displayBookEntryEdition || displayFileViewer">
+    [class.hidden]="displayFileViewer && displayBookEntryEdition"
+    [class.md-hide]="displayBookEntryEdition || displayFileViewer">
 
     <emp-land-recording-book-edition
       (recordingBookEditionEvent)="onRecordingBookEditionEvent($event)">
@@ -26,8 +25,8 @@
 
   <div *ngIf="displayBookEntryEdition"
     class="secondary"
-    [fxHide]="displayRegistryEntryEditor"
-    [fxHide.lt-lg]="displayRegistryEntryEditor || displayFileViewer">
+    [class.hidden]="displayRegistryEntryEditor"
+    [class.md-hide]="displayRegistryEntryEditor || displayFileViewer">
 
     <emp-land-book-entry-edition #bookEntryEdition
       [recordingBookUID]="selectedBookEntry.recordingBookUID"

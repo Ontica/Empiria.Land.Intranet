@@ -1,43 +1,48 @@
-<div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="8px" fxLayoutGap.gt-xs="32px">
+<div class="fx-row-container sm-fx-column-container fx-gap-two sm-fx-gap-half">
 
-  <div fxFlex="35%">
+  <div class="fx-item-size" style="--size: 35%">
     <div class="label nowrap">Tipo de trámite</div>
     <div class="primary-text nowrap"><strong>{{transaction.subtype}}</strong></div>
     <div>{{transaction.type}}</div>
   </div>
 
-  <div fxFlex="25%">
+  <div class="fx-item-size" style="--size: 25%">
     <div *ngIf="transaction?.transactionID">
       <div class="label nowrap">Trámite RPP</div>
       <div>
         <div class="primary-text nowrap"><strong>{{transaction?.transactionID}}</strong>  &nbsp; {{transaction.internalControlNo}}</div>
 
-        <div *ngIf="transaction.presentationTime" fxLayout="row" class="nowrap">
-          <div class="underline-text" fxFlex="60px">Presentado:</div>
+        <div *ngIf="transaction.presentationTime" class="fx-row-container nowrap">
+
+          <div class="fx-item-size underline-text" style="--size: 60px">Presentado:</div>
           {{transaction?.presentationTime | dateTimeFormat: 'DMY HH:mm'}}
+
         </div>
-        <div *ngIf="transaction.registrationTime" fxLayout="row" class="nowrap">
-          <div class="underline-text" fxFlex="60px">Registrado:</div>
+
+        <div *ngIf="transaction.registrationTime" class="fx-row-container nowrap">
+
+          <div class="fx-item-size underline-text" style="--size: 60px">Registrado:</div>
           {{transaction?.registrationTime | dateTimeFormat: 'DMY HH:mm'}}
+
         </div>
       </div>
     </div>
   </div>
 
-  <div fxFlex="20%">
+  <div class="fx-item-size" style="--size: 20%">
     <div class="label nowrap">Lo tiene:</div>
     <div class="primary-text"><strong>{{transaction.assignedToName}}</strong></div>
     <div>{{transaction.statusName}}</div>
   </div>
 
-  <div fxFlex="15%">
+  <div class="fx-item-size" style="--size: 15%">
     <ng-container *ngIf="transaction.nextStatusName !== 'No determinado'">
       <div class="label nowrap">Siguiente estado:</div>
       <div>{{transaction.nextStatusName}}</div>
     </ng-container>
   </div>
 
-  <div fxFlex="30px">
+  <div class="fx-item-size" style="--size: 30px">
     <div class="primary-text nowrap">
 
       <emp-ng-menu [items]="listOptions" [config]="{hideMenuIfOneItem: true}"

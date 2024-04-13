@@ -1,15 +1,20 @@
-<div fxLayout="row" class="navigator">
+<div class="navigator
+            fx-row-container fx-items-center">
 
-  <div fxFlex class="navigator-page-selection" fxLayoutAlign="start center">
+  <div class="navigator-page-selection
+              fx-item fx-star fx-items-center">
 
     <ng-container *ngIf="showFileTool">
 
-      <div fxFlex="90px" fxLayoutAlign="start center" class="navigator-page-selection">
+      <div class="navigator-page-selection
+                  fx-item-none fx-star fx-items-center"
+           [style.width.px]="90">
         Ir al archivo:
       </div>
 
-      <emp-ng-select fxFlex="100px" bindValue="value" bindLabel="value"
-        [(ngModel)]="selectedIndex"
+      <emp-ng-select [style.width.px]="100"
+        bindValue="value" bindLabel="value" name="indexSelect"
+        [(ngModel)]="selectedIndex" [ngModelOptions]="{standalone: true}"
         [items]="pagesList"
         (changes)="selectFileByIndex($event.value)">
 
@@ -20,7 +25,8 @@
   </div>
 
 
-  <div [fxFlex]="100/3" fxLayoutAlign="center center" class="navigator-arrows">
+  <div class="navigator-arrows
+              fx-item-third fx-center fx-items-center">
 
     <ng-container *ngIf="showFileTool">
 
@@ -41,14 +47,18 @@
   </div>
 
 
-  <div [fxFlex]="100/3" fxLayoutAlign="end center" class="navigator-zoom">
+  <div class="navigator-zoom
+              fx-item-third fx-end fx-items-center">
 
     <ng-container *ngIf="showZoom">
 
       <div [style.width.px]="50" class="text-align-left">Zoom:</div>
 
-      <mat-slider [(ngModel)]="zoom" thumbLabel [step]="zoomStep" [min]="zoomMin"
-        [max]="zoomMax" tickInterval="5" (change)="onZoomChange($event)">
+      <mat-slider tickInterval="5"
+        [step]="zoomStep" [min]="zoomMin" [max]="zoomMax"
+        (change)="onZoomChange($event)">
+
+        <input matSliderThumb [(ngModel)]="zoom">
 
       </mat-slider>
 

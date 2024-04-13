@@ -1,8 +1,7 @@
 
-<div fxLayout="column" fxFlexFill>
+<div class="fx-column-container-fill">
 
   <div class="section-title">Historia registral</div>
-
 
   <div class="tab-container scrollable-container mat-elevation-z1" [empNgSpinnerHost]="spinner">
 
@@ -29,9 +28,9 @@
 
     <mat-divider class="horizontal"></mat-divider>
 
-    <div fxLayout="row" [style.marginRight.px]="8">
+    <div class="fx-row-container fx-space-between fx-items-center" [style.marginRight.px]="8">
 
-      <div fxFlex fxLayoutAlign="start">
+      <div class="fx-item-none">
         <button type="button" class="btn" *ngIf="tractIndex.actions.canBeClosed"
           (click)="onCloseTractIndex()">
           Cerrar la historia registral
@@ -43,20 +42,21 @@
         </button>
       </div>
 
-      <form class="form-section" fxFlex fxLayoutAlign="center center" *ngIf="hasNestedEntries">
+      <div class="fx-item-none">
 
-        <mat-checkbox
+        <mat-checkbox *ngIf="hasNestedEntries"
           [(ngModel)]="checkNestedEntries"
           [ngModelOptions]="{standalone: true}"
           (click)="$event.stopPropagation">
           Anidar actos modificados
         </mat-checkbox>
 
-      </form>
+      </div>
 
-      <div fxFlex fxLayoutAlign="end" *ngIf="tractIndex.actions.canBeUpdated">
-        <button type="submit" class="btn-action"
-        (click)="onOpenRecordingActCreator()">
+      <div class="fx-item-none">
+        <button *ngIf="tractIndex.actions.canBeUpdated"
+          type="submit" class="btn-action"
+          (click)="onOpenRecordingActCreator()">
           Agregar un acto a la historia
         </button>
       </div>

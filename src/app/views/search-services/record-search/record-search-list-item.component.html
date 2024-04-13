@@ -1,6 +1,5 @@
 <div #RecordableSubjectType *ngIf="isSearchTypeByRecordableSubject"
-  fxLayout="row" fxLayout.lt-sm="column"
-  fxLayoutGap="32px" fxLayoutGap.lt-sm="16px"
+  class="fx-row-container fx-gap-two-and-fifth sm-fx-gap"
   [style.padding]="'8px'">
 
   <ng-container [ngTemplateOutlet]="recordableSubjectSection">
@@ -19,14 +18,13 @@
 
 
 <div #PartyType *ngIf="isSearchTypeByParty"
-  fxLayout="column" [style.padding]="'8px'">
+  class="fx-column-container" [style.padding]="'8px'">
 
-  <div fxLayout="row" [style.paddingBottom]="'8px'">
+  <div class="fx-row-container" [style.paddingBottom]="'8px'">
     <span class="bold-text" [style.fontSize]="'10pt'">{{party.party.fullName}}</span>
   </div>
 
-  <div fxLayout="row" fxLayout="row" fxLayout.lt-sm="column"
-    fxLayoutGap="32px" fxLayoutGap.lt-sm="16px">
+  <div class="fx-row-container fx-gap-two-and-fifth sm-fx-gap">
 
     <ng-container [ngTemplateOutlet]="partySection">
 
@@ -47,7 +45,7 @@
 
 <ng-template #recordableSubjectSection>
 
-  <div fxFlex="50%" fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px">
+  <div class="fx-item-half fx-column-container fx-space-between fx-gap-three-quarter">
 
     <emp-land-recordable-subject-view [style.height.%]="100"
       [recordableSubject]="item.recordableSubject"
@@ -62,17 +60,17 @@
 
 <ng-template #recordingSection>
 
-  <div fxFlex="25%" fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px">
+  <div class="fx-item-quarter fx-column-container fx-space-between fx-gap-three-quarter">
 
-    <div fxFlex="none">
+    <div class="fx-item-none">
       <div class="label nowrap">Último movimiento:</div>
       <div class="bold-text">-</div>
     </div>
 
-    <div fxFlex="none">
+    <div class="fx-item-none">
       <div class="label nowrap">Involucrados:</div>
       <div *ngFor="let related of relatedParties">- {{related.party.fullName}}</div>
-      <div *ngIf="!relatedParties || relatedParties.length === 0" fxLayout="row">-</div>
+      <div *ngIf="!relatedParties || relatedParties.length === 0" class="fx-row-container">-</div>
     </div>
 
   </div>
@@ -81,31 +79,31 @@
 
 <ng-template #recordSection>
 
-  <div fxFlex="25%" fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px">
+  <div class="fx-item-quarter fx-column-container fx-space-between fx-gap-three-quarter">
 
-    <div fxLayout="column">
+    <div class="fx-column-container">
       <a class="link bold-text nowrap" (click)="onRecordClicked()">{{item.record.recordID}}</a>
       <span class="bold-text">{{item.record.instrument}}</span>
       {{!!item.record.bookEntry ? item.record.bookEntry : '-'}}
     </div>
 
-    <div fxLayout="column">
-      <div fxLayout="row" fxLayoutAlign="space-between">
+    <div class="fx-column-container">
+      <div class="fx-row-container fx-space-between">
         <span class="label nowrap">Fecha de registro:</span>
         <span class="bold-text">{{!!item.record.recordingTime ? (item.record.recordingTime | dateTimeFormat) : '-'}}</span>
       </div>
 
-      <div fxLayout="row" fxLayoutAlign="end">
+      <div class="fx-row-container fx-end">
         {{item.record.recordedBy}}
       </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="space-between" class="nowrap">
-      <div fxLayout="column">
+    <div class="fx-row-container fx-space-beetween nowrap">
+      <div class="fx-item fx-column-container">
         <span class="label nowrap">Trámite:</span>
         <a class="link bold-text" (click)="onTransactionClicked()">{{item.record.transaction.transactionID}}</a>
       </div>
-      <div fxLayout="column" class="bold-text text-align-right">
+      <div class="fx-item fx-column-container bold-text text-align-right">
         {{!!item.record.presentationTime ? ( item.record.presentationTime  | dateTimeFormat ) : '-'}} <br>
         {{!!item.record.transaction.internalControlNo ? '(' + item.record.transaction.internalControlNo + ')' : '-'}}
       </div>
@@ -118,40 +116,40 @@
 
 <ng-template #partySection>
 
-  <div fxFlex="25%" fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="8px">
+  <div class="fx-item-quarter fx-column-container fx-space-between fx-gap-three-quarter">
 
-    <div fxLayout="row" class="bold-text">{{!!party.party.curp ? party.party.curp : '-' }}</div>
+    <div class="fx-row-container bold-text">{{!!party.party.curp ? party.party.curp : '-' }}</div>
 
-    <div fxLayout="column">
+    <div class="fx-column-container">
 
-      <div fxLayout="row" class="label nowrap">Acto y rol en el que participa:</div>
+      <div class="fx-row-container label nowrap">Acto y rol en el que participa:</div>
 
-      <div fxLayout="row" fxLayoutAlign="space-between" class="nowrap">
-        <div fxLayout="column">
+      <div class="fx-row-container nowrap fx-space-beetween">
+        <div class="fx-column-container">
           <a class="bold-text">{{party.recordingActType}}</a>
         </div>
-        <div fxLayout="column" class="text-align-right">
+        <div class="fx-column-container text-align-right">
           ({{party.role}})
         </div>
       </div>
 
     </div>
 
-    <div fxLayout="column">
+    <div class="fx-column-container">
 
-      <div fxLayout="row" class="label nowrap">Otros involucrados en el acto:</div>
+      <div class="fx-row-container label nowrap">Otros involucrados en el acto:</div>
 
       <div *ngFor="let related of relatedParties;"
-        fxLayout="row" fxLayoutAlign="space-between">
-        <div fxLayout="column">
+        class="fx-row-container fx-space-between">
+        <div class="fx-column-container">
           {{related.party.fullName}}
         </div>
-        <div fxLayout="column" class="text-align-right nowrap">
+        <div class="fx-column-container text-align-right nowrap">
           ({{related.role.name}})
         </div>
       </div>
 
-      <div *ngIf="!relatedParties || relatedParties.length === 0" fxLayout="row">-</div>
+      <div *ngIf="!relatedParties || relatedParties.length === 0" class="fx-row-container">-</div>
 
     </div>
 

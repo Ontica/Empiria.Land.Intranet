@@ -1,12 +1,13 @@
-  <div fxLayout="row" fxLayout.lt-md="column">
+  <div class="fx-row-container sm-fx-column-container">
 
-    <div fxFlex="100" fxLayoutAlign="start center">
+    <div class="fx-item-one fx-start fx-items-center">
 
-      <label fxFlex="60px">Buscar:</label>
+      <label class="fx-item-size" style="--size: 60px">Buscar:</label>
 
       <emp-ng-select
         [config]="{clearable: true,
                    bindByValue: false,
+                   virtualScroll: true,
                    addTag: true,
                    addTagText: 'Agregar Persona'}"
         [bindLabel]="'fullName'"
@@ -18,7 +19,7 @@
         (changes)="isNewParty($event) ?
           onNewPartySelectedChange($event) : onPartySelectedChange($event)"
         (clear)="onNewPartySelectedChange(null)"
-        style="width: calc(100% - 220px);">
+        class="fx-item-size" style="--size: calc(100% - 220px);">
 
         <ng-template #optionTemplate ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
           <div class="ellipsis" style="padding: 0.25rem 0;">
@@ -43,7 +44,7 @@
         [(ngModel)]="typeSelected"
         (changes)="onTypeSelectedChanged($event)"
         placeholder="( Todas )"
-        fxFlex="160px">
+        class="fx-item-size" style="--size: 160px">
       </emp-ng-select>
 
     </div>

@@ -5,14 +5,14 @@
     [hint]="hint"
     (cardClose)="onClose()">
 
-    <div fxLayout="column" fxFlexFill [empNgSpinnerHost]="spinner"
+    <div class="fx-column-container-fill" [empNgSpinnerHost]="spinner"
       [style.padding]="'0 16px 16px 16px'">
 
       <emp-ng-spinner #spinner [visible]="submitted">
 
       </emp-ng-spinner>
 
-      <div class="preview-container" fxFlex *ngIf="certificate.mediaLink.url">
+      <div class="preview-container fx-item" *ngIf="certificate.mediaLink.url">
 
         <div class="object-preview-container">
 
@@ -39,7 +39,7 @@
 
       <mat-divider [style.margin]="'8px 0'"></mat-divider>
 
-      <div fxLayout="row" fxLayoutAlign="end">
+      <div class="fx-item-none fx-end fx-items-center">
 
         <ng-container *ngIf="isHtmlMediaFile">
 

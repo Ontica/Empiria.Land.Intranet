@@ -1,10 +1,10 @@
 <form [formGroup]="form" empNgFormKeyDownEnter autocomplete="off" class="form-section">
 
-  <div fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="0.75rem" fxLayoutGap.lt-md="0">
+  <div class="fx-column-container fx-gap-half">
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div [fxFlex]="100/4">
+      <div class="fx-item-quarter sm-fx-item">
         <label>Tipo:</label>
         <emp-ng-select formControlName="serviceType"
           [items]="providedServiceTypeList"
@@ -13,7 +13,7 @@
         </emp-ng-select>
       </div>
 
-      <div [fxFlex]="100/2">
+      <div class="fx-item-half sm-fx-item">
         <label>Concepto:</label>
         <emp-ng-select formControlName="service"
           [items]="providedServiceList"
@@ -23,7 +23,7 @@
         </emp-ng-select>
       </div>
 
-      <div [fxFlex]="100/4">
+      <div class="fx-item-quarter sm-fx-item">
         <label>Fundamento:</label>
         <emp-ng-select formControlName="feeConcept"
           [bindLabel]="'legalBasis'"
@@ -37,9 +37,9 @@
 
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div [fxFlex]="100/4">
+      <div class="fx-item-quarter sm-fx-item">
         <label>Unidad:</label>
         <input formControlName="unit"
           type="text"
@@ -47,11 +47,12 @@
           placeholder="Seleccione el concepto">
       </div>
 
-      <div [fxFlex]="100/2">
+      <div class="fx-item-half sm-fx-item">
 
-        <div fxLayout="row">
+        <div class="fx-row-container">
 
-          <div [fxFlex]="60" *ngIf="feeConceptSelected.requiresTaxableBase">
+          <div *ngIf="feeConceptSelected.requiresTaxableBase"
+            class="fx-item-size" style="--size: 60%">
             <label>Base gravable:</label>
             <input formControlName="taxableBase" empNgCurrency
               type="text"
@@ -59,7 +60,7 @@
               [class.invalid-control]="formHelper.isControlInvalid(form.controls.taxableBase)">
           </div>
 
-          <div [fxFlex]="40">
+          <div class="fx-item-size" style="--size: 40%">
             <label>Cantidad:</label>
             <input formControlName="quantity" empNgInteger
               type="text"
@@ -73,9 +74,9 @@
 
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div class="fx-row-container sm-fx-column-container">
 
-      <div fxFlex>
+      <div class="fx-item">
         <label>Observaciones:</label>
         <textarea formControlName="notes" empNgTextareaAutoresize
           rows="1"
@@ -85,19 +86,15 @@
 
     </div>
 
-    <mat-divider class="horizontal"></mat-divider>
+    <mat-divider class="horizontal-slim"></mat-divider>
 
-    <div fxLayout="row">
+    <div class="fx-row-container fx-end">
 
-      <div fxFlex fxLayoutAlign="end">
-
-        <button (click)="onSubmitClicked()" type="submit"
-          [class.btn]="!formHelper.isFormReady(form)"
-          [class.btn-action]="formHelper.isFormReady(form)">
-          Agregar concepto
-        </button>
-
-      </div>
+      <button (click)="onSubmitClicked()" type="submit"
+        [class.btn]="!formHelper.isFormReady(form)"
+        [class.btn-action]="formHelper.isFormReady(form)">
+        Agregar concepto
+      </button>
 
     </div>
 
