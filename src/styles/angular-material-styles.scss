@@ -467,8 +467,8 @@ table.mat-mdc-table.emp-designer {
 .fill-table-container {
   overflow: auto;
   contain: strict;
-  height: calc(100% - 2px);
-  width: calc(100% - 8px);
+  height: 100%;
+  width: 100%;
 
   table.mat-mdc-table {
     margin: 0;
@@ -510,6 +510,11 @@ table.mat-mdc-table.emp-designer {
 
   &.vertical-inline {
     margin: 0 0.75rem;
+    height: $control-height;
+  }
+
+  &.vertical-slim {
+    margin: 0;
     height: $control-height;
   }
 }
