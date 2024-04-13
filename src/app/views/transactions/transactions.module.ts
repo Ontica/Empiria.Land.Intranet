@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AngularMaterialModule } from '@app/shared/angular-material.module';
-import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
 
 import { SharedModule } from '@app/shared/shared.module';
 
@@ -36,7 +35,6 @@ import { RequestedServiceListComponent } from './transaction-editor/requested-se
     ReactiveFormsModule,
 
     AngularMaterialModule,
-    AngularFlexLayoutModule,
     SharedModule,
 
     LandListModule,

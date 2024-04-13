@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SharedModule } from '@app/shared/shared.module';
-import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
 
 import { LandControlsModule } from '@app/views/land-controls/land.controls.module';
 import { RegistrationModule } from '@app/views/registration/registration.module';
@@ -26,7 +25,6 @@ import { HistoricRegistrationMainPageComponent } from './historic-registration-m
     CommonModule,
     ReactiveFormsModule,
 
-    AngularFlexLayoutModule,
     SharedModule,
 
     LandControlsModule,

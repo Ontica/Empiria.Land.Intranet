@@ -13,8 +13,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AngularMaterialModule } from '@app/shared/angular-material.module';
 
-import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
-
 import { SharedModule } from '@app/shared/shared.module';
 
 import { AccessControlModule } from '@app/views/_access-control/access-control.module';
@@ -37,7 +35,6 @@ import {
     FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,
-    AngularFlexLayoutModule,
     SharedModule,
 
     SystemManagementWorkspaceRoutingModule,

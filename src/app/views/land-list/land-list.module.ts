@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AngularMaterialModule } from '@app/shared/angular-material.module';
-import { AngularFlexLayoutModule } from '@app/shared/angular-flex-layout.module';
 import { SharedModule } from '@app/shared/shared.module';
 
 import { LandExplorerComponent } from './land-explorer/land-explorer.component';
@@ -30,7 +29,6 @@ import { TransactionListItemComponent } from './land-list-items/transaction-list
     ReactiveFormsModule,
 
     AngularMaterialModule,
-    AngularFlexLayoutModule,
     SharedModule,
   ],
   declarations: [
