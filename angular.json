@@ -28,8 +28,10 @@
           "options": {
             "allowedCommonJsDependencies": [
               "quill",
+              "quill-delta",
               "crypto-js",
-              "moment"
+              "moment",
+              "lodash/cloneDeep"
             ],
             "outputPath": "dist/land-intranet",
             "index": "src/index.html",

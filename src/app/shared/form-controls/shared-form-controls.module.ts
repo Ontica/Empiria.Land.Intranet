@@ -9,11 +9,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { AngularMaterialModule } from '../angular-material.module';
+
 import { QuillModule } from 'ngx-quill';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import { AngularMaterialModule } from '../angular-material.module';
-
+import { SharedDirectivesModule } from '../directives/shared-directives.module';
 import { SharedPipesModule } from '../pipes/shared-pipes.module';
 import { SharedContainersModule } from '../containers/shared-containers.module';
 import { IconSvgModule } from '../icon-svg.module';
@@ -22,10 +23,11 @@ import { ButtonCopyToClipboardComponent } from './button-copy-to-clipboard/butto
 import { CheckboxAllComponent } from './check-box-all/check-box-all.component';
 import { DatePickerComponent } from './date-picker/date-picker.component';
 import { DateRangePickerComponent } from './date-range-picker/date-range-picker.component';
-import { MonthPickerComponent } from './date-range-picker/month-picker/month-picker.component';
 import { FileControlComponent } from './file-control/file-control.component';
 import { FilePrintPreviewComponent } from './file-print-preview/file-print-preview.component';
+import { InputNumericComponent } from './input-numeric/input-numeric.component';
 import { MenuComponent } from './menu/menu.component';
+import { MonthPickerComponent } from './date-range-picker/month-picker/month-picker.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { SelectBoxComponent } from './select-box/select-box.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
@@ -38,10 +40,13 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
     FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,
+
+    QuillModule.forRoot(),
     NgSelectModule,
+
+    SharedDirectivesModule,
     SharedPipesModule,
     SharedContainersModule,
-    QuillModule.forRoot(),
     IconSvgModule,
   ],
 
@@ -50,10 +55,11 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
     CheckboxAllComponent,
     DatePickerComponent,
     DateRangePickerComponent,
-    MonthPickerComponent,
     FileControlComponent,
     FilePrintPreviewComponent,
+    InputNumericComponent,
     MenuComponent,
+    MonthPickerComponent,
     SearchBoxComponent,
     SelectBoxComponent,
     TextEditorComponent,
@@ -66,6 +72,7 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
     DateRangePickerComponent,
     FileControlComponent,
     FilePrintPreviewComponent,
+    InputNumericComponent,
     MenuComponent,
     SearchBoxComponent,
     SelectBoxComponent,

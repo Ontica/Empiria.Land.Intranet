@@ -149,8 +149,21 @@ $button-height: 28px;
 $checkbox-background-color: $primary-color;
 $checkbox-size: 28px;
 $checkbox-warning-background-color: $layout-secondary-color;
+
 $date-picker-width: 90px;
 $range-picker-width: 185px;
+$range-picker-month-cursor-hover: rgba(78, 100, 116, 0.3);
+$range-picker-month-in-range: rgba(78, 100, 116, 0.2);
+$range-picker-month-hover-selection: rgba(78, 100, 116, 0.3);
+$range-picker-month-edge-background: rgb(78, 100, 116);
+$range-picker-month-edge-color: white;
+
+$file-control-area-height: 30px;
+$file-control-area-width: 30px;
+$file-control-tag-area-width: 225px;
+$file-control-line-height: 24px;
+$file-control-space: 4px;
+$file-control-border-radius: 3px;
 
 $tag-default-background-color: hsl(205, 20%, 85%);
 $tag-default-color: hsl(205, 20%, 50%);

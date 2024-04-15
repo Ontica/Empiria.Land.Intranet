@@ -7,6 +7,7 @@
 
 import { Injectable } from '@angular/core';
 
+
 @Injectable()
 export class PrinterService {
 
@@ -18,8 +19,7 @@ export class PrinterService {
     }
   }
 
-
-  createProxyIframe() {
+  private createProxyIframe() {
     const proxyIframe = document.createElement('iframe');
     const body = document.getElementsByTagName('body')[0];
     body.appendChild(proxyIframe);
@@ -32,8 +32,7 @@ export class PrinterService {
     return proxyIframe;
   }
 
-
-  createContent(contentIframe, url) {
+  private createContent(contentIframe, url) {
     contentIframe.document.open();
 
     contentIframe.document.write(`
@@ -46,8 +45,7 @@ export class PrinterService {
     contentIframe.document.close();
   }
 
-
-  removeProxyIframe(proxyIframe) {
+  private removeProxyIframe(proxyIframe) {
     setTimeout(() => {
       proxyIframe.remove();
     }, 1000);

@@ -5,12 +5,9 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-export * from './array-library';
+import cloneDeep from 'lodash/cloneDeep';
 
-export * from './cloneDeep';
 
-export * from './event-emission';
-
-export * from './form-helper';
-
-export * from './format-library';
+export function clone<T>(source: T): T {
+  return cloneDeep(source);
+}

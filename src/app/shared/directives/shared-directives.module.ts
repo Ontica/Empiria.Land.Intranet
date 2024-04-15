@@ -13,6 +13,7 @@ import { EmpCurrencyDirective } from './currency.directive';
 import { EmpFormKeyDownEnterDirective } from './form-keydown-enter.directive';
 import { EmpFractionDirective } from './fraction.directive';
 import { EmpHasPermissionDirective } from './has-permission.directive';
+import { EmpInputKeysDirective } from './input-keys.directive';
 import { EmpIntegerDirective } from './integer.directive';
 import { EmpNumerationDirective } from './numeration.directive';
 import { EmpResizableDirective } from './resizable.directive';
@@ -31,6 +32,7 @@ import { EmpTextareaAutoresizeDirective } from './text-area-autoresize.directive
     EmpFormKeyDownEnterDirective,
     EmpFractionDirective,
     EmpHasPermissionDirective,
+    EmpInputKeysDirective,
     EmpIntegerDirective,
     EmpNumerationDirective,
     EmpResizableDirective,
@@ -43,6 +45,7 @@ import { EmpTextareaAutoresizeDirective } from './text-area-autoresize.directive
     EmpFormKeyDownEnterDirective,
     EmpFractionDirective,
     EmpHasPermissionDirective,
+    EmpInputKeysDirective,
     EmpIntegerDirective,
     EmpNumerationDirective,
     EmpResizableDirective,
