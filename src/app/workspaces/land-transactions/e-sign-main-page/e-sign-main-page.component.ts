@@ -89,6 +89,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.buildESignOperationsListByESignStatus();
+    this.unselectCurrentSelections();
     this.subscribeToFilterData();
     this.suscribeToSelectedViewersData();
   }
