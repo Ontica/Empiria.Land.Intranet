@@ -1,52 +1,51 @@
-  <div class="fx-row-container sm-fx-column-container">
+<div class="fx-row-container sm-fx-column-container fx-start fx-items-center">
 
-    <div class="fx-item-one fx-start fx-items-center">
+  <label class="fx-item-size sm-fx-item" style="--size: 60px">
+    Buscar:
+  </label>
 
-      <label class="fx-item-size" style="--size: 60px">Buscar:</label>
+  <emp-ng-select
+    [config]="{clearable: true,
+                bindByValue: false,
+                virtualScroll: true,
+                addTag: true,
+                addTagText: 'Agregar Persona'}"
+    [bindLabel]="'fullName'"
+    [bindValue]="null"
+    [items]="partyList$ | async"
+    [loading]="partyLoading"
+    [typeahead]="partyInput$"
+    [(ngModel)]="partySelected"
+    (changes)="isNewParty($event) ?
+      onNewPartySelectedChange($event) : onPartySelectedChange($event)"
+    (clear)="onNewPartySelectedChange(null)"
+    class="fx-item-size sm-fx-item" style="--size: calc(100% - 220px);">
 
-      <emp-ng-select
-        [config]="{clearable: true,
-                   bindByValue: false,
-                   virtualScroll: true,
-                   addTag: true,
-                   addTagText: 'Agregar Persona'}"
-        [bindLabel]="'fullName'"
-        [bindValue]="null"
-        [items]="partyList$ | async"
-        [loading]="partyLoading"
-        [typeahead]="partyInput$"
-        [(ngModel)]="partySelected"
-        (changes)="isNewParty($event) ?
-          onNewPartySelectedChange($event) : onPartySelectedChange($event)"
-        (clear)="onNewPartySelectedChange(null)"
-        class="fx-item-size" style="--size: calc(100% - 220px);">
+    <ng-template #optionTemplate ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+      <div class="ellipsis" style="padding: 0.25rem 0;">
+        {{item.fullName}}
+        <br>
+        <div *ngIf="item.curp !== ''" style="font-size: 0.7rem;">
+          CURP: {{item.curp}}
+        </div>
+        <div *ngIf="item.rfc !== ''" style="font-size: 0.7rem;">
+          RFC: {{item.rfc}}
+        </div>
+      </div>
+    </ng-template>
 
-        <ng-template #optionTemplate ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-          <div class="ellipsis" style="padding: 0.25rem 0;">
-            {{item.fullName}}
-            <br>
-            <div *ngIf="item.curp !== ''" style="font-size: 0.7rem;">
-              CURP: {{item.curp}}
-            </div>
-            <div *ngIf="item.rfc !== ''" style="font-size: 0.7rem;">
-              RFC: {{item.rfc}}
-            </div>
-          </div>
-        </ng-template>
+  </emp-ng-select>
 
-      </emp-ng-select>
+  <emp-ng-select
+    [config]="{clearable: true, bindByValue: false}"
+    [items]="typesList"
+    bindLabel="typeName"
+    bindValue="type"
+    [(ngModel)]="typeSelected"
+    (changes)="onTypeSelectedChanged($event)"
+    placeholder="( Todas )"
+    class="fx-item-size sm-fx-item" style="--size: 160px">
 
-      <emp-ng-select
-        [config]="{clearable: true, bindByValue: false}"
-        [items]="typesList"
-        bindLabel="typeName"
-        bindValue="type"
-        [(ngModel)]="typeSelected"
-        (changes)="onTypeSelectedChanged($event)"
-        placeholder="( Todas )"
-        class="fx-item-size" style="--size: 160px">
-      </emp-ng-select>
+  </emp-ng-select>
 
-    </div>
-
-  </div>
+</div>
