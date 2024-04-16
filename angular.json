@@ -87,18 +87,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "land-intranet:build"
+            "buildTarget": "land-intranet:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "land-intranet:build:production"
+              "buildTarget": "land-intranet:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "land-intranet:build"
+            "buildTarget": "land-intranet:build"
           }
         },
         "test": {

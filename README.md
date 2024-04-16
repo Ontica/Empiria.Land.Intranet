@@ -14,13 +14,13 @@ If you are interested in the former intranet version based on ASP .NET, please [
 
 ## Quick start
 
-This project is being built with Angular 14 and TypeScript 4.7.
+This project is being built with Angular 17.3.4 and TypeScript 5.2.2.
 
-It uses [Angular CLI](https://github.com/angular/angular-cli), so both the CLI and generated project, have dependencies that require Node 14.15.0 or higher, together with NPM 6 or higher.
+It uses [Angular CLI](https://github.com/angular/angular-cli), so both the CLI and generated project, have dependencies that require Node 18.18.2 or higher, together with NPM 9.8.1 or higher.
 
-**Make sure you have Node version >= 14.15.0 and NPM >= 6**
+**Make sure you have Node version >= 18.18.2 and NPM >= 9.8.1**
 
-**Then install [Angular CLI](https://github.com/angular/angular-cli)** (globally if possible), ensuring that you have installed **version 14** or higher.
+**Then install [Angular CLI](https://github.com/angular/angular-cli)** (globally if possible), ensuring that you have installed **version 17.3.1** or higher.
 
 ```bash
 # install Angular CLI globally
