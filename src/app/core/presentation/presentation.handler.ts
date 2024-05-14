@@ -177,7 +177,6 @@ export abstract class AbstractPresentationHandler implements PresentationHandler
 
 
   clearValues(): void {
-    debugger
     if (this.initialState) {
       this.initialState.forEach(x => this.stateItems.set(x.key, new BehaviorSubject(x.value)));
     }
