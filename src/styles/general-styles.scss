@@ -214,6 +214,10 @@ button.btn-margin-right {
   margin-right: 32px;
 }
 
+button.btn-filter-options {
+  width: 108px;
+}
+
 select.select-box {
   @include input-settings;
 }
@@ -380,11 +384,28 @@ textarea:focus {
   margin-right: 8px;
 }
 
+.instruction-text-slim {
+  font-size: 1em;
+  text-align: center;
+  padding: 0.5rem;
+  background: $control-disabled-background;
+  margin-right: 8px;
+}
+
 .bold-text {
   font-weight: 600;
 }
 
+.italic-text {
+  font-style: italic;
+}
+
 .underline-text {
+  text-decoration: underline;
+}
+
+.highlight-text {
+  color: $primary-color;
   text-decoration: underline;
 }
 
@@ -398,12 +419,12 @@ a.error-indicator-text:hover {
 }
 
 .warning-indicator-text {
-  color: $title-color;
+  color: $accent-color;
   text-decoration: underline;
 }
 
 a.warning-indicator-text:hover {
-  color: darken($title-color, 4%);
+  color: darken($accent-color, 4%);
 }
 
 .remove-min-width {
@@ -470,7 +491,7 @@ input[type="number"]:disabled {
 }
 
 .label {
-  opacity: 0.4;
+  opacity: 0.6;
 }
 
 .lowercase {
@@ -558,6 +579,12 @@ i.disabled {
     border: 1px solid $tag-error-background-color;
   }
 
+  &.tag-base-disabled {
+    background-color: $white;
+    color: darken($tag-disabled-background-color, 50%);
+    border: 1px solid darken($tag-disabled-background-color, 50%);
+  }
+
   &.tag-info {
     background-color: $tag-info-background-color;
     color: $white;
@@ -576,6 +603,11 @@ i.disabled {
   &.tag-error {
     background-color: $tag-error-background-color;
     color: $white;
+  }
+
+  &.tag-disabled {
+    background-color: $tag-disabled-background-color;
+    color: $tag-disabled-color;
   }
 
   &.tag-small {
@@ -622,6 +654,11 @@ a.tag {
     &.tag-error {
       background-color: darken($tag-error-background-color, 4%);
       color: $white;
+    }
+
+    &.tag-disabled {
+      background-color: darken($tag-disabled-background-color, 4%);
+      color: $tag-disabled-color;
     }
   }
 }
@@ -755,6 +792,23 @@ ul.default-list {
 }
 
 
+// .list-container {
+//   border: 1px solid $secondary-color-light;
+//   border-radius: 3px;
+//   padding: 8px;
+// }
+
+
+// .list-selection-item {
+//   padding: 8px 8px 8px 4px;
+// }
+
+
+// .list-selection-item:not(:last-child) {
+//   border-bottom: 1px dashed $secondary-color-light;
+// }
+
+
 .workarea-color {
   background: hsl(207, 91%, 98%);
 }
@@ -783,6 +837,12 @@ ul.default-list {
 .container-expand-all {
   max-height: 85vh;
   overflow-y: auto;
+}
+
+
+.container-full-size {
+  width: 100%;
+  height: 100%;
 }
 
 

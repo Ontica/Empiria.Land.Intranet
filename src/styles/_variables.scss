@@ -11,8 +11,8 @@
 $white: #fdfdfd !default;
 
 $primary-color: hsl(205, 20%, 30%) !default;
-$primary-color-light: hsl(205, 20%, 60%) !default;
-$primary-color-dark: hsl(205, 20%, 10%) !default;
+$primary-color-light: hsl(205, 20%, 50%) !default;
+$primary-color-dark: hsl(205, 20%, 20%) !default;
 
 $secondary-color: hsl(205, 20%, 22%) !default;
 $secondary-color-light: hsl(205, 20%, 40%) !default;
@@ -23,10 +23,11 @@ $warning-color: hsl(357, 47%, 51%) !default;
 $warning-color-light: hsl(357, 47%, 65%);
 $warning-color-dark: hsl(357, 47%, 35%) !default;
 
-$title-color: $primary-color !default;
-$title-border-color: $primary-color !default;
+$accent-color: hsl(205, 20%, 30%) !default;
+$accent-color-light: hsl(205, 20%, 50%) !default;
+$accent-color-dark: hsl(205, 20%, 20%) !default;
 
-$text-color: $secondary-color !default;
+$text-color: $secondary-color-semi-light !default;
 $text-color-light: $secondary-color-light !default;
 $text-color-dark: $secondary-color-dark !default;
 
@@ -85,9 +86,11 @@ $layout-gradient-initial-color: $warning-color-dark;
 $layout-gradient-final-color: $warning-color;
 $layout-secondary-color: $secondary-color;
 $layout-secondary-color-dark: $secondary-color-dark;
+$layout-margin-size: 16px;
 $toolbar-item-background: lighten($primary-color, 65);
 $toolbar-item-background-hover: lighten($primary-color, 60);
 $toolbar-icon-color: $primary-color;
+$toolbar-icon-color-hover: $primary-color;
 $toolbar-item-size: 34px;
 $toolbar-icon-size: 24px;
 
@@ -171,6 +174,8 @@ $tag-info-background-color: hsl(205, 20%, 50%);
 $tag-success-background-color: hsl(166, 26%, 52%) !default;
 $tag-warning-background-color: hsl(39, 81%, 70%) !default;
 $tag-error-background-color: hsl(357, 47%, 70%) !default;
+$tag-disabled-color: #212121 !default;
+$tag-disabled-background-color: $disabled-color !default;
 
 $list-selection-header-background-color: hsl(210, 20%, 90%) !default;
 $simple-list-background-color: hsl(210, 20%, 96%) !default;
@@ -181,24 +186,22 @@ $simple-list-background-color: hsl(210, 20%, 96%) !default;
 $grid-header-background-color: $primary-color !default;
 $grid-header-color: $secondary-text-color !default;
 $grid-footer-background-color: $disabled-color;
-$grid-odd-background-color: #f4f4f4 !default;
-$grid-even-background-color: $white;
-
-$grid-selected-background-color: hsl(205, 20%, 92%);
-$grid-nested-background-color: hsl(205, 20%, 92%);
-$grid-nested-border: 2px solid hsl(205, 20%, 60%);
-
-$grid-hover-background-color: hsl(205, 20%, 96%);
-$grid-selected-hover-background-color: hsl(205, 20%, 90%);
-$grid-nested-hover-background-color: hsl(205, 20%, 90%);
-
 $grid-border: 0;
+$grid-even-background-color: $white;
+$grid-odd-background-color: #f4f4f4 !default;
+$grid-hover-background-color: hsl(205, 20%, 96%);
+$grid-selected-background-color: hsl(205, 20%, 92%);
+$grid-selected-hover-background-color: hsl(205, 20%, 90%);
 $grid-header-height: 37px;
 $grid-row-height: 35px;
 $grid-entry-padding-vertical: 10px;
 $grid-entry-padding-horizontal: 10px;
 $grid-entry-padding-vertical-first: 10px;
 $grid-entry-padding-vertical-default: 8px;
+$grid-nested-background-color: hsl(205, 20%, 92%);
+$grid-nested-hover-background-color: hsl(205, 20%, 90%);
+$grid-nested-border-color: hsl(205, 20%, 60%);
+$grid-nested-border: 2px solid $grid-nested-border-color;
 
 //
 // Designer

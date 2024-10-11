@@ -90,7 +90,7 @@
 
 .mat-mdc-tab:not(.mat-mdc-tab-disabled) .mdc-tab-indicator__content--underline,
 .mat-mdc-tab-link:not(.mat-mdc-tab-disabled) .mdc-tab-indicator__content--underline {
-  border-color: $title-color;
+  border-color: $accent-color;
 }
 
 //
@@ -190,9 +190,9 @@ table.mat-mdc-table {
     padding: $grid-entry-padding-vertical $grid-entry-padding-horizontal $grid-entry-padding-vertical 0;
 
     &.mat-mdc-header-cell {
-      border-bottom: 2pt solid $title-color;
+      border-bottom: 2pt solid $accent-color;
       font-size: $font-size-grid-header;
-      line-height: normal; //13px;
+      line-height: 13px;
     }
 
     &.column-action-check {
@@ -200,11 +200,11 @@ table.mat-mdc-table {
     }
 
     &:first-of-type {
-      padding-left: $grid-entry-padding-vertical;
+      padding-left: $grid-entry-padding-vertical-first;
     }
 
     &:last-of-type {
-      padding-right: $grid-entry-padding-vertical !important;
+      padding-right: $grid-entry-padding-vertical-first !important;
     }
 
     &.column-action {
@@ -224,12 +224,12 @@ table.mat-mdc-table {
     line-height: $font-size-grid;
 
     &:first-of-type {
-      padding-left: $grid-entry-padding-vertical;
+      padding-left: $grid-entry-padding-vertical-first;
     }
 
     &.mat-mdc-cell:last-of-type,
     &.mat-mdc-footer-cell:last-of-type {
-      padding-right: $grid-entry-padding-vertical;
+      padding-right: $grid-entry-padding-vertical-first;
       width: auto;
     }
 
@@ -508,14 +508,18 @@ table.mat-mdc-table.emp-designer {
     height: $control-height;
   }
 
+  &.vertical-slim {
+    margin: 0 8px 0 0;
+    height: $control-height;
+  }
+
   &.vertical-inline {
     margin: 0 0.75rem;
     height: $control-height;
   }
 
-  &.vertical-slim {
-    margin: 0;
-    height: $control-height;
+  &.white {
+    border-top-color: rgba(255, 255, 255, 0.45);
   }
 }
 
@@ -704,8 +708,8 @@ table.mat-mdc-table.emp-designer {
 }
 
 .mat-mdc-menu-content,
-.mat-mdc-menu-content .mat-mdc-menu-item .mat-mdc-menu-item-text,
-.mat-mdc-menu-content .mat-mdc-menu-item .mdc-list-item__primary-text {
+.mat-mdc-menu-content .mat-mdc-menu-item .mdc-list-item__primary-text,
+.mat-mdc-menu-content .mat-mdc-menu-item .mat-mdc-menu-item-text {
   font-size: 9pt !important;
 }
 
@@ -784,9 +788,11 @@ table.mat-mdc-table.emp-designer {
       height: $checkbox-size !important;
     }
 
-    .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true]) ~ .mdc-checkbox__background {
-      background-color: $white !important;
-    }
+    .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])
+
+      ~ .mdc-checkbox__background {
+        background-color: $white !important;
+      }
 
   }
 

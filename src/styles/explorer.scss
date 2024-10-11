@@ -49,6 +49,16 @@
     margin-right: -15px;
   }
 
+  .primary-resizable-disable {
+    flex: 1 1 600px;
+    min-width: 400px;
+    max-width: 960px;
+  }
+
+  .primary-resizable-disable::after {
+    display: none;
+  }
+
 
   .primary-resizable-disable-md {
 
