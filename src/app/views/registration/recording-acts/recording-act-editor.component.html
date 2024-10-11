@@ -145,9 +145,9 @@
 
       </mat-divider>
 
-      <div class="fx-row-container">
+      <div class="fx-row-container fx-space-between">
 
-        <div class="fx-item-third">
+        <div class="fx-item-third fx-items-end fx-start">
 
           <button *ngIf="recordingAct.actions.isEditable && !readonly"
             (click)="enableEditor(!editionMode)"
@@ -173,7 +173,7 @@
 
         </div>
 
-        <div class="fx-item fx-end">
+        <div class="fx-item-third fx-items-end fx-end">
 
           <button *ngIf="editionMode"
             (click)="onSubmitClicked()"

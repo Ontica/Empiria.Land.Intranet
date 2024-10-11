@@ -8,7 +8,7 @@
 
     <div *ngFor="let record of recordsList" class="list-item">
 
-      <emp-land-record-search-list-item class="fx-item"
+      <emp-land-record-search-list-item class="fx-item" [style.width.%]="100"
         [record]="record"
         [recordSearchType]="recordSearchType"
         (recordSearchListItemEvent)="onRecordSearchListItemEvent($event)">
