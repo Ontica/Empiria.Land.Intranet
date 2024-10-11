@@ -10,7 +10,7 @@
 
         {{ fileViewerData.title ? fileViewerData.title : 'Visor de archivos' }}
 
-        <div class="card-hint" [innerHTML]="getHintText() | safeHtml">
+        <div class="card-hint" [innerHTML]="getHintText() | empSafeHtml">
 
         </div>
       </div>
@@ -47,7 +47,7 @@
 
             <ng-container *ngIf="!file.type.includes('image') && file === selectedFile">
 
-              <object [data]="file.url | safeUrl" type="{{file.type}}" class="object-file"
+              <object [data]="file.url | empSafeUrl" type="{{file.type}}" class="object-file"
                 [style.width.%]="100"
                 [style.height.%]="100"
                 (load)="onLoad()"
@@ -69,13 +69,13 @@
                   <img #imageFile class="image-file" *ngIf="isImageModeContainerSize"
                     cdkDrag cdkDragBoundary=".image-file"
                     [style.width.%]="imageZoom"
-                    [src]="file.url | safeUrl"
+                    [src]="file.url | empSafeUrl"
                     (load)="onLoad()"
                     (error)="onFileError(file)">
 
                   <img #imageFile class="image-file" *ngIf="isImageModeOriginalSize"
                     [style.width.px]="imageWidthZoomed"
-                    [src]="file.url | safeUrl"
+                    [src]="file.url | empSafeUrl"
                     (load)="onLoad()"
                     (error)="onFileError(file)">
 

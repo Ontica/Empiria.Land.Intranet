@@ -15,14 +15,14 @@
         <div *ngIf="transaction.presentationTime" class="fx-row-container nowrap">
 
           <div class="fx-item-size underline-text" style="--size: 60px">Presentado:</div>
-          {{transaction?.presentationTime | dateTimeFormat: 'DMY HH:mm'}}
+        {{transaction?.presentationTime | empDateTimeFormat: 'DMY HH:mm'}}
 
         </div>
 
         <div *ngIf="transaction.registrationTime" class="fx-row-container nowrap">
 
           <div class="fx-item-size underline-text" style="--size: 60px">Registrado:</div>
-          {{transaction?.registrationTime | dateTimeFormat: 'DMY HH:mm'}}
+        {{transaction?.registrationTime | empDateTimeFormat: 'DMY HH:mm'}}
 
         </div>
       </div>

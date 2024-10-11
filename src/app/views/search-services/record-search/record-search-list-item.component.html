@@ -90,7 +90,7 @@
     <div class="fx-column-container">
       <div class="fx-row-container fx-space-between">
         <span class="label nowrap">Fecha de registro:</span>
-        <span class="bold-text">{{!!item.record.recordingTime ? (item.record.recordingTime | dateTimeFormat) : '-'}}</span>
+        <span class="bold-text">{{!!item.record.recordingTime ? (item.record.recordingTime | empDateTimeFormat) : '-'}}</span>
       </div>
 
       <div class="fx-row-container fx-end">
@@ -104,7 +104,7 @@
         <a class="link bold-text" (click)="onTransactionClicked()">{{item.record.transaction.transactionID}}</a>
       </div>
       <div class="fx-item fx-column-container bold-text text-align-right">
-        {{!!item.record.presentationTime ? ( item.record.presentationTime  | dateTimeFormat ) : '-'}} <br>
+        {{!!item.record.presentationTime ? ( item.record.presentationTime  | empDateTimeFormat ) : '-'}} <br>
         {{!!item.record.transaction.internalControlNo ? '(' + item.record.transaction.internalControlNo + ')' : '-'}}
       </div>
     </div>

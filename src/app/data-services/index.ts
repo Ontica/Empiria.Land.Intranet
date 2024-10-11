@@ -20,7 +20,7 @@
 
 export * from './_access-control.data.service';
 
-export * from './file-services/file-download.service';
+export * from './_searcher.data.service';
 
 export * from './certification.data.service';
 

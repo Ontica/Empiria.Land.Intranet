@@ -128,7 +128,7 @@
 
                 {{item.name}}
                 <span *ngIf="!!item.recordingData.recordingTime">
-                  &nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordingData.recordingTime | dateTimeFormat}}
+                  &nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordingData.recordingTime | empDateTimeFormat}}
                 </span>
                 <span *ngIf="!!item.recordingData.recordID">
                   &nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordingData.recordID}}
@@ -145,7 +145,7 @@
                     <div class="fx-row-container bold-text">
                       {{item.name}}
                       <span *ngIf="!!item.recordingData.recordingTime">
-                        &nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordingData.recordingTime | dateTimeFormat}}
+                        &nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordingData.recordingTime | empDateTimeFormat}}
                       </span>
                       <span *ngIf="!!item.recordingData.recordID">
                         &nbsp;&nbsp; | &nbsp;&nbsp; {{item.recordingData.recordID}}

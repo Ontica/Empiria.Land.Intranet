@@ -31,13 +31,37 @@ export class ArrayLibrary {
   }
 
 
-  static getUniqueItems<T, K extends keyof T>(array: T[], key: K): T[] {
+  static getUniqueItems<T, K extends keyof T>(array: T[], key?: K): T[] {
     return array.reduce((acc, item) => {
-      if (!acc.find(x => x[key] === item[key])) {
-        acc.push(item);
+      if (key) {
+        if (!acc.find(x => x[key] === item[key])) {
+          acc.push(item);
+        }
+      } else {
+        if (!acc.includes(item)) {
+          acc.push(item);
+        }
       }
       return acc;
     }, []);
+  }
+
+
+  static sortByKey<T, K extends keyof T>(array: T[], key: K): T[] {
+    return array.sort((a, b) => {
+      const valueA = a[key];
+      const valueB = b[key];
+      if (valueA instanceof Date && valueB instanceof Date) {
+        return valueA.getTime() - valueB.getTime();
+      }
+      if (typeof valueA === 'string' && typeof valueB === 'string') {
+        return valueA.localeCompare(valueB);
+      }
+      if (typeof valueA === 'number' && typeof valueB === 'number') {
+        return valueA - valueB;
+      }
+      return 0;
+    });
   }
 
 

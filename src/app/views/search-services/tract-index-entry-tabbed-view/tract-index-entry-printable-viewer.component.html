@@ -15,7 +15,7 @@
       <div class="object-preview-container">
 
         <object class="object-preview mat-elevation-z1"
-          [data]="stampMedia.url | safeUrl"
+          [data]="stampMedia.url | empSafeUrl"
           (error)="onStampMediaError()">
 
         </object>

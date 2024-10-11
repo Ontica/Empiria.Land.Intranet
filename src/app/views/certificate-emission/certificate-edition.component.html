@@ -17,7 +17,7 @@
         <div class="object-preview-container">
 
           <object
-            [data]="certificate.mediaLink.url | safeUrl"
+            [data]="certificate.mediaLink.url | empSafeUrl"
             class="object-preview mat-elevation-z1"
             (error)="onMediaLinkError()">
 

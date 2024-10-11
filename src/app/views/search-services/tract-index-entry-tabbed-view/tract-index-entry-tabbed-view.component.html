@@ -4,7 +4,7 @@
 
     <div class="card-title">
       <span>{{cardTitle}}</span>
-      <div class="card-hint" [innerHTML]="cardHint | safeHtml"></div>
+      <div class="card-hint" [innerHTML]="cardHint | empSafeHtml"></div>
     </div>
 
     <div class="card-header-options" [style.paddingTop]="0">

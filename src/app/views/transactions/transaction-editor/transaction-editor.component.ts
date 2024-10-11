@@ -20,7 +20,7 @@ import { Agency, Transaction, EmptyTransaction, TransactionType, ProvidedService
 
 import { ArrayLibrary } from '@app/shared/utils';
 
-import { FilePrintPreviewComponent } from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
+import { FilePreviewComponent } from '@app/shared/containers/file-preview/file-preview.component';
 
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
 
@@ -37,7 +37,7 @@ import { RequestedServiceListEventType } from './requested-services/requested-se
 })
 export class TransactionEditorComponent implements OnChanges, OnInit, OnDestroy {
 
-  @ViewChild('filePrintPreview', { static: true }) filePrintPreview: FilePrintPreviewComponent;
+  @ViewChild('filePreview', { static: true }) filePreview: FilePreviewComponent;
 
   @Input() transaction: Transaction = EmptyTransaction;
 
@@ -288,22 +288,22 @@ export class TransactionEditorComponent implements OnChanges, OnInit, OnDestroy 
   }
 
   private printControlVoucher() {
-    this.openPrintViewer(this.transaction.controlVoucher.url,
+    this.openfileViewer(this.transaction.controlVoucher.url,
                          this.transaction.controlVoucher.mediaType);
   }
 
   private printPaymentOrder() {
-    this.openPrintViewer(this.transaction.paymentOrder.media.url,
+    this.openfileViewer(this.transaction.paymentOrder.media.url,
                          this.transaction.paymentOrder.media.mediaType);
   }
 
   private printSubmissionReceipt() {
-    this.openPrintViewer(this.transaction.submissionReceipt.url,
+    this.openfileViewer(this.transaction.submissionReceipt.url,
                         this.transaction.submissionReceipt.mediaType);
   }
 
-  private openPrintViewer(url: string, mediaType: string) {
-    this.filePrintPreview.open(url, mediaType);
+  private openfileViewer(url: string, mediaType: string) {
+    this.filePreview.open(url, mediaType);
   }
 
 }

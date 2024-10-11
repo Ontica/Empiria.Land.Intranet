@@ -18,9 +18,7 @@ import { RegistrationCommandType } from '@app/core/presentation/presentation-typ
 import { BookEntry, EmptyInstrumentRecording, InstrumentRecording } from '@app/models';
 import { MessageBoxService } from '@app/shared/containers/message-box';
 
-import {
-  FilePrintPreviewComponent
-} from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
+import { FilePreviewComponent } from '@app/shared/containers/file-preview/file-preview.component';
 
 
 @Component({
@@ -29,7 +27,7 @@ import {
 })
 export class InstrumentBookEntryListComponent implements OnChanges, OnDestroy {
 
-  @ViewChild('filePrintPreview', { static: true }) filePrintPreview: FilePrintPreviewComponent;
+  @ViewChild('filePreview', { static: true }) filePreview: FilePreviewComponent;
 
   @Input() instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
 
@@ -102,7 +100,7 @@ export class InstrumentBookEntryListComponent implements OnChanges, OnDestroy {
 
 
   printBookEntryStampMedia(bookEntry: BookEntry) {
-    this.filePrintPreview.open(bookEntry.stampMedia.url, bookEntry.stampMedia.mediaType);
+    this.filePreview.open(bookEntry.stampMedia.url, bookEntry.stampMedia.mediaType);
   }
 
 

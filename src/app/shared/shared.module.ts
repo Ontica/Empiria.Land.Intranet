@@ -17,6 +17,8 @@ import { SharedPipesModule } from './pipes/shared-pipes.module';
 
 import { PrinterService } from './utils/printer.service';
 import { UrlViewerService } from './services';
+import { FileDownloadService } from './utils';
+import { SAVER, getSaver } from './utils/saver.provider';
 
 
 @NgModule({
@@ -48,6 +50,8 @@ import { UrlViewerService } from './services';
     DecimalPipe,
     PrinterService,
     UrlViewerService,
+    FileDownloadService,
+    { provide: SAVER, useFactory: getSaver },
   ]
 
 })

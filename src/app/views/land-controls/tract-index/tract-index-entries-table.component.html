@@ -10,9 +10,9 @@
   <ng-container matColumnDef="issuedAndRequestedTime">
     <th mat-header-cell *matHeaderCellDef> Registrado el </th>
     <td mat-cell *matCellDef="let row" class="nowrap" [class.margin-left]="checkNestedEntries">
-      R: {{ !row.recordingData.recordingTime ? '-' : row.recordingData.recordingTime | dateTimeFormat }}
+      R: {{ !row.recordingData.recordingTime ? '-' : row.recordingData.recordingTime | empDateTimeFormat }}
       <br>
-      P: {{ !row.recordingData.presentationTime ? '-' : row.recordingData.presentationTime | dateTimeFormat }}
+      P: {{ !row.recordingData.presentationTime ? '-' : row.recordingData.presentationTime | empDateTimeFormat }}
     </td>
   </ng-container>
 

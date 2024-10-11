@@ -21,9 +21,7 @@ import { RegistrationAction, RegistrationCommandType, RegistrationStateSelector,
 import { InstrumentRecording, InstrumentFields, EmptyInstrumentRecording,
          RecordingActTypeGroup } from '@app/models';
 
-import {
-  FilePrintPreviewComponent
-} from '@app/shared/form-controls/file-print-preview/file-print-preview.component';
+import { FilePreviewComponent } from '@app/shared/containers/file-preview/file-preview.component';
 
 import {
   InstrumentEditorEventType
@@ -52,7 +50,7 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() transactionUID = '';
 
-  @ViewChild('filePrintPreview', { static: true }) filePrintPreview: FilePrintPreviewComponent;
+  @ViewChild('filePreview', { static: true }) filePreview: FilePreviewComponent;
 
   instrumentRecording: InstrumentRecording = EmptyInstrumentRecording;
 
@@ -119,8 +117,8 @@ export class LandRegistrationComponent implements OnInit, OnChanges, OnDestroy {
 
     switch (event.type) {
       case InstrumentEditorEventType.PRINT_REGISTRATION_STAMP_MEDIA:
-        this.filePrintPreview.open(this.instrumentRecording.stampMedia.url,
-                                   this.instrumentRecording.stampMedia.mediaType);
+        this.filePreview.open(this.instrumentRecording.stampMedia.url,
+                              this.instrumentRecording.stampMedia.mediaType);
         return;
 
       case InstrumentEditorEventType.UPDATE_INSTRUMENT:

@@ -8,6 +8,7 @@
 import { NgModule } from '@angular/core';
 
 import { AccessControlDataService } from './_access-control.data.service';
+import { SearcherDataService } from './_searcher.data.service';
 
 import { CertificationDataService } from './certification.data.service';
 import { ESignDataService } from './e-sign.data.service';
@@ -16,23 +17,18 @@ import { RecordingDataService } from './recording.data.service';
 import { SearchServicesDataService } from './search-services.data.service';
 import { TransactionDataService } from './transaction.data.service';
 
-import { FileDownloadService } from './file-services/file-download.service';
-import { getSaver, SAVER } from './file-services/saver.provider';
-
 
 @NgModule({
 
   providers: [
     AccessControlDataService,
+    SearcherDataService,
     CertificationDataService,
     ESignDataService,
-    FileDownloadService,
     RecordableSubjectsDataService,
     RecordingDataService,
     SearchServicesDataService,
     TransactionDataService,
-
-    { provide: SAVER, useFactory: getSaver }
   ]
 
 })

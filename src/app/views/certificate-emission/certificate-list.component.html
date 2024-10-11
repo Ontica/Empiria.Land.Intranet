@@ -31,7 +31,7 @@
     <ng-container matColumnDef="issueTime">
       <th mat-header-cell *matHeaderCellDef> Emisión </th>
       <td mat-cell *matCellDef="let row">
-        {{ !!row.issueTime ? (row.issueTime | dateTimeFormat) : 'No emitido' }}
+        {{ !!row.issueTime ? (row.issueTime | empDateTimeFormat) : 'No emitido' }}
       </td>
     </ng-container>
     <ng-container matColumnDef="status">

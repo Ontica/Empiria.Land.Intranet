@@ -9,7 +9,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { Entity, EventInfo, Identifiable, isEmpty } from '@app/core';
 
-import { expandCollapse } from '@app/shared/animations/animations';
+import { empExpandCollapse } from '@app/shared/utils/animations';
 
 import { sendEvent } from '@app/shared/utils';
 
@@ -22,7 +22,7 @@ export enum ListControlsEventType {
   selector: 'emp-land-list-controls',
   templateUrl: './land-list-controls.component.html',
   animations: [
-    expandCollapse
+    empExpandCollapse
   ],
 })
 export class ListControlsComponent {

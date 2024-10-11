@@ -17,7 +17,7 @@
 
     <ng-container matColumnDef="recordingTime">
       <th mat-header-cell *matHeaderCellDef> Fecha </th>
-      <td mat-cell *matCellDef="let row"> {{ row.recordingTime | dateTimeFormat: 'DMY HH:mm' }} </td>
+      <td mat-cell *matCellDef="let row"> {{ row.recordingTime | empDateTimeFormat: 'DMY HH:mm' }} </td>
     </ng-container>
     <ng-container matColumnDef="recorderOfficeName">
       <th mat-header-cell *matHeaderCellDef> Oficialía </th>
@@ -63,7 +63,7 @@
 
 </div>
 
-<emp-ng-file-print-preview #filePrintPreview
+<emp-ng-file-preview #filePreview
   title="Impresión de sello partida">
 
-</emp-ng-file-print-preview>
+</emp-ng-file-preview>
