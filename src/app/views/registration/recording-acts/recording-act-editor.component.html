@@ -2,25 +2,26 @@
 
   <div class="fx-column-container fx-gap-half sm-fx-gap-none">
 
-    <div class="fx-row-container sm-fx-column-container fx-space-between">
+    <div class="fx-row-container fx-wrap sm-fx-column-container fx-space-between">
 
       <div class="fx-item-size sm-fx-item" style="--size: 30%">
 
         <label>Tipo de acto jurídico:</label>
 
         <emp-ng-select formControlName="typeUID"
+          [config]="{ showTooltip: true }"
           [items]="recordingAct.actions.editionValues.recordingActTypes"
           [showError]="formHelper.isControlInvalid(form.controls.typeUID)">
         </emp-ng-select>
 
       </div>
 
-      <div class="fx-item-size sm-fx-item" style="--size: 30%">
+      <div class="fx-item-size sm-fx-item" style="--size: 70%">
 
         <label>Clasificación del acto jurídico:</label>
 
         <emp-ng-select formControlName="kind"
-          [config]="{ bindByValue: false }"
+          [config]="{ bindByValue: false, showTooltip: true }"
           [bindLabel]="null"
           [items]="recordingAct.actions.editionValues.kinds"
           [placeholder]="recordingAct.actions.editableFields.includes('Kinds') ?
@@ -31,7 +32,7 @@
 
       </div>
 
-      <div class="fx-item-size sm-fx-item" style="--size: 40%">
+      <div class="fx-item-one sm-fx-item">
 
         <div class="fx-row-container">
 
@@ -41,7 +42,7 @@
 
         <div class="fx-row-container">
 
-          <div class="fx-item-half sm-fx-item">
+          <div class="fx-item-size sm-fx-item" style="--size: 30%">
 
             <input formControlName="operationAmount" empNgCurrency
               [empNgCurrencyFractionDigitMax]="operationAmountDigitsMax"
@@ -52,7 +53,7 @@
 
           </div>
 
-          <div class="fx-item-half sm-fx-item fx-start fx-items-end">
+          <div class="fx-item-size sm-fx-item fx-start fx-items-end" style="--size: 35%">
 
             <emp-ng-select formControlName="currencyUID"
               [items]="recordingAct.actions.editionValues.currencies"
