@@ -14,9 +14,9 @@ import { DefaultExportationType, ExportationType } from '@app/models';
 import { sendEvent } from '@app/shared/utils';
 
 export enum ExportReportModalEventType {
-  CLOSE_MODAL_CLICKED = 'ExportReportModalComponent.Event.CloseModalClicked',
+  CLOSE_MODAL_CLICKED             = 'ExportReportModalComponent.Event.CloseModalClicked',
   NOT_READY_EXPORT_BUTTON_CLICKED = 'ExportReportModalComponent.Event.NotReadyExportButtonClicked',
-  EXPORT_BUTTON_CLICKED = 'ExportReportModalComponent.Event.ExportButtonClicked',
+  EXPORT_BUTTON_CLICKED           = 'ExportReportModalComponent.Event.ExportButtonClicked',
 }
 
 @Component({
@@ -24,11 +24,6 @@ export enum ExportReportModalEventType {
   templateUrl: './export-report-modal.component.html',
   styles: [`
     .export-instruction-text {
-      padding-bottom: 8px;
-    }
-
-    .export-message-text {
-      padding-top: 16px;
       padding-bottom: 8px;
     }
 
@@ -93,7 +88,7 @@ export class ExportReportModalComponent implements OnInit, OnChanges {
       this.working = true;
 
       sendEvent(this.exportReportModalEvent, ExportReportModalEventType.EXPORT_BUTTON_CLICKED,
-        { exportationType: this.selectedExportationType.uid });
+        {exportationType: this.selectedExportationType.uid});
 
     } else {
 
