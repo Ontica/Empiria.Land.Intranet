@@ -141,6 +141,9 @@ export const DEFAULT_PATH = DEFAULT_ROUTE.fullpath;
 export const LOGIN_PATH = ROUTES.security_login.fullpath;
 
 
+export const OLD_LOGIN_PATH = 'security';
+
+
 export const UNAUTHORIZED_PATH = ROUTES.unauthorized.path;
 
 

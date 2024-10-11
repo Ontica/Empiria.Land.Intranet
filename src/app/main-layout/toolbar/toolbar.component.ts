@@ -35,7 +35,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   private unsubscribe: Subject<void> = new Subject();
 
-  constructor(private store: PresentationState) {}
+  constructor(private store: PresentationState) { }
 
   ngOnInit() {
     this.store.select<Tool>(MainUIStateSelector.TOOL_SELECTED)
