@@ -10,9 +10,9 @@
 
       <div class="object-preview-container">
 
-        <object *ngIf="file.url"
+        <object *ngIf="fileUrl"
           class="object-preview mat-elevation-z1"
-          [data]="file.url | empSafeUrl"
+          [data]="fileUrl | empSafeUrl"
           (error)="onFileError()">
 
         </object>

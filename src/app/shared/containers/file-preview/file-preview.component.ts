@@ -5,11 +5,11 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { MediaType } from '@app/core';
 
-import { FileReport, FileType } from '@app/models';
+import { FileType } from '@app/models';
 
 
 @Component({
@@ -17,33 +17,31 @@ import { FileReport, FileType } from '@app/models';
   templateUrl: './file-preview.component.html',
   styleUrls: ['./file-preview.component.scss']
 })
-export class FilePreviewComponent implements OnChanges {
+export class FilePreviewComponent {
 
   @Input() title: string;
 
   @Input() hint: string;
 
-  @Input() file: FileReport;
+  fileUrl: string;
+
+  fileType: string;
 
   hasError = false;
 
   displayInModal = false;
 
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.file && !!this.file?.url) {
-      this.open(this.file.url, this.file.type);
-    }
-  }
-
-
   open(url: string, type: string) {
-    if (!this.isValidUrl(url)) {
+    this.setFileData(url, type);
+
+    if (!this.isValidUrl(this.fileUrl)) {
+      console.log('Invalid URL: ', this.fileUrl);
       return;
     }
 
-    if (this.canOpenWindow(type)) {
-      this.openWindow(url);
+    if (this.canOpenWindow(this.fileType)) {
+      this.openWindow(this.fileUrl);
       this.onClose();
       return;
     }
@@ -59,6 +57,12 @@ export class FilePreviewComponent implements OnChanges {
 
   onClose() {
     this.displayInModal = false;
+  }
+
+
+  private setFileData(url: string, type: string) {
+    this.fileUrl = url;
+    this.fileType = type;
   }
 
 
