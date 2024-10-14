@@ -9,7 +9,7 @@ import { Component, OnInit, OnDestroy, ViewChild, Input, OnChanges, SimpleChange
 
 import { combineLatest } from 'rxjs';
 
-import { Command, EventInfo, Identifiable, isEmpty } from '@app/core';
+import { Command, EventInfo, Identifiable, isEmpty, isValidMediaBase, MediaBase } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
@@ -117,23 +117,19 @@ export class TransactionEditorComponent implements OnChanges, OnInit, OnDestroy 
       case TransactionHeaderEventType.GENERATE_PAYMENT_ORDER:
 
         this.executeCommand<Transaction>(TransactionCommandType.GENERATE_PAYMENT_ORDER, payload)
-          .then(x => {
-            if (x.paymentOrder?.media.url) {
-              this.printPaymentOrder();
-            }
-          });
+          .then(() => this.validatePrintPaymentOrder());
 
         return;
 
       case TransactionHeaderEventType.PRINT_CONTROL_VOUCHER:
 
-        this.printControlVoucher();
+        this.openfileViewer(this.transaction.controlVoucher);
 
         return;
 
       case TransactionHeaderEventType.PRINT_PAYMENT_ORDER:
 
-        this.printPaymentOrder();
+        this.openfileViewer(this.transaction.paymentOrder?.media);
 
         return;
 
@@ -145,7 +141,7 @@ export class TransactionEditorComponent implements OnChanges, OnInit, OnDestroy 
 
       case TransactionHeaderEventType.PRINT_SUBMISSION_RECEIPT:
 
-        this.printSubmissionReceipt();
+        this.openfileViewer(this.transaction.submissionReceipt);
 
         return;
 
@@ -287,23 +283,16 @@ export class TransactionEditorComponent implements OnChanges, OnInit, OnDestroy 
       .finally(() => this.submitted = false);
   }
 
-  private printControlVoucher() {
-    this.openfileViewer(this.transaction.controlVoucher.url,
-                         this.transaction.controlVoucher.mediaType);
+  private validatePrintPaymentOrder() {
+    setTimeout(() => this.openfileViewer(this.transaction.paymentOrder?.media));
   }
 
-  private printPaymentOrder() {
-    this.openfileViewer(this.transaction.paymentOrder.media.url,
-                         this.transaction.paymentOrder.media.mediaType);
-  }
-
-  private printSubmissionReceipt() {
-    this.openfileViewer(this.transaction.submissionReceipt.url,
-                        this.transaction.submissionReceipt.mediaType);
-  }
-
-  private openfileViewer(url: string, mediaType: string) {
-    this.filePreview.open(url, mediaType);
+  private openfileViewer(file: MediaBase) {
+    if (isValidMediaBase(file)) {
+      console.error('Invalid file:', file)
+      return;
+    }
+    this.filePreview.open(file.url, file.mediaType);
   }
 
 }
