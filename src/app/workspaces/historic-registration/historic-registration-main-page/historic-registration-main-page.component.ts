@@ -9,11 +9,10 @@ import { Component, ViewChild } from '@angular/core';
 
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 
+import { EmptyFileViewerData, FileViewerData } from '@app/shared/form-controls';
+
 import { BookEntry, EmptyBookEntry, EmptyRegistryEntryData, isRegistryEntryDataValid,
          RegistryEntryData } from '@app/models';
-
-import { EmptyFileViewerData,
-         FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 import {
   BookEntryEditionComponent,

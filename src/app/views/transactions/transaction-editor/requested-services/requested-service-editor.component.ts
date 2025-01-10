@@ -11,12 +11,13 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { Assertion, EventInfo, Validate } from '@app/core';
 
+import { MessageBoxService } from '@app/shared/services';
+
+import { FormatLibrary, FormHelper, sendEvent } from '@app/shared/utils';
+
 import { EmptyFeeConcept, EmptyProvidedService, FeeConcept, ProvidedService, ProvidedServiceType,
          RequestedServiceFields } from '@app/models';
 
-import { MessageBoxService } from '@app/shared/containers/message-box';
-
-import { FormatLibrary, FormHelper, sendEvent } from '@app/shared/utils';
 
 export enum RequestedServiceEditorEventType {
   SUBMIT_REQUESTED_SERVICE_CLICKED = 'RequestedServiceEditorComponent.Event.SubmitRequestedServiceClicked',

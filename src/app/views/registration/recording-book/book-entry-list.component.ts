@@ -11,11 +11,12 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { DateStringLibrary, EventInfo } from '@app/core';
 
-import { BookEntry, EmptyBookEntry, EmptyRecordingBook, RecordingBook } from '@app/models';
-
-import { MessageBoxService } from '@app/shared/containers/message-box';
+import { MessageBoxService } from '@app/shared/services';
 
 import { sendEvent } from '@app/shared/utils';
+
+import { BookEntry, EmptyBookEntry, EmptyRecordingBook, RecordingBook } from '@app/models';
+
 
 export enum BookEntryListEventType {
   BOOK_ENTRY_CLICKED = 'BookEntryListComponent.Event.BookEntryClicked',

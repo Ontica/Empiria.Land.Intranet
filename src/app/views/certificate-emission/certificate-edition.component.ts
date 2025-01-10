@@ -9,15 +9,13 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 
 import { EventInfo, MediaType } from '@app/core';
 
+import { MessageBoxService, UrlViewerService } from '@app/shared/services';
+
+import { sendEvent } from '@app/shared/utils';
+
 import { CertificationDataService } from '@app/data-services';
 
 import { Certificate, EmptyCertificate } from '@app/models';
-
-import { MessageBoxService } from '@app/shared/containers/message-box';
-
-import { UrlViewerService } from '@app/shared/services';
-
-import { sendEvent } from '@app/shared/utils';
 
 
 export enum CertificateEditionEventType {

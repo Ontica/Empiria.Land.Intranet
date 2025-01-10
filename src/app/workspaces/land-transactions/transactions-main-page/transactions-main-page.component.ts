@@ -16,12 +16,12 @@ import { MainUIStateSelector, RecordableSubjectsStateSelector, RegistrationActio
 
 import { View } from '@app/main-layout';
 
+import { EmptyFileViewerData, FileViewerData } from '@app/shared/form-controls';
+
 import { TransactionDescriptor, Transaction, EmptyTransaction, TransactionQuery, EmptyTransactionQuery,
          mapTransactionStageFromViewName, mapTransactionStatusFromViewName, RegistryEntryData,
          EmptyRegistryEntryData, isRegistryEntryDataValid, TransactionsOperationList, LandExplorerTypes,
          TransactionViewCanReceive, TransactionViewCanCreate, RecorderOffice } from '@app/models';
-
-import { EmptyFileViewerData, FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 import { LandExplorerEventType } from '@app/views/land-list/land-explorer/land-explorer.component';
 

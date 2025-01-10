@@ -13,11 +13,11 @@ import { PresentationLayer } from '@app/core/presentation';
 
 import { RegistrationAction } from '@app/presentation/exported.presentation.types';
 
+import { MessageBoxService } from '@app/shared/services';
+
 import { CertificationDataService } from '@app/data-services';
 
 import { Certificate, CreateCertificateCommand, EmptyCertificate } from '@app/models';
-
-import { MessageBoxService } from '@app/shared/containers/message-box';
 
 import {
   CertificateCreatorEventType

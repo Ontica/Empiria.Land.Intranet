@@ -13,11 +13,12 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo } from '@app/core';
 
-import { RequestedService } from '@app/models';
-
-import { MessageBoxService } from '@app/shared/containers/message-box';
+import { MessageBoxService } from '@app/shared/services';
 
 import { sendEvent } from '@app/shared/utils';
+
+import { RequestedService } from '@app/models';
+
 
 export enum RequestedServiceListEventType {
   DELETE_REQUESTED_SERVICE_CLICKED = 'RequestedServiceListComponent.Event.DeleteRequestedServiceClicked',

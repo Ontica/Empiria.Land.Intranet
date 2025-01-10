@@ -7,7 +7,7 @@
 
 import { DateString, Empty, EmptyMediaBase, Identifiable, MediaBase } from '@app/core';
 
-import { FileData } from '@app/shared/form-controls/file-control/file-control-data';
+import { FileData } from '@app/shared/form-controls';
 
 import { EmptyInstrument, Instrument, InstrumentFields } from './instrument';
 
@@ -30,7 +30,6 @@ export const EmptyRecorderOffice: RecorderOffice = {
 };
 
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RecordingSection extends Identifiable {
 
 }

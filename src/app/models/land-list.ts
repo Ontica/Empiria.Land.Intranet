@@ -5,9 +5,9 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { DateString, Entity } from "@app/core";
+import { DateString, Entity } from '@app/core';
 
-import { TransactionStage, TransactionStatus } from "./transaction";
+import { TransactionStage, TransactionStatus } from './transaction';
 
 
 export enum LandExplorerTypes {

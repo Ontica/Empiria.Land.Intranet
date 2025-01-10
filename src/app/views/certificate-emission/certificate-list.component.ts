@@ -11,11 +11,12 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo } from '@app/core';
 
-import { Certificate, RegistryEntryData } from '@app/models';
-
-import { MessageBoxService } from '@app/shared/containers/message-box';
+import { MessageBoxService } from '@app/shared/services';
 
 import { sendEvent } from '@app/shared/utils';
+
+import { Certificate, RegistryEntryData } from '@app/models';
+
 
 export enum CertificateListEventType {
   SELECT_CERTIFICATE        = 'CertificateListComponent.Event.SelectCertificate',

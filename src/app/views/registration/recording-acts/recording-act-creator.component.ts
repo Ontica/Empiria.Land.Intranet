@@ -15,18 +15,19 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { RecordableSubjectsStateSelector } from '@app/presentation/exported.presentation.types';
 
-import { MessageBoxService } from '@app/shared/containers/message-box';
+import { MessageBoxService } from '@app/shared/services';
+
+import { FormHelper, sendEvent } from '@app/shared/utils';
 
 import { BookEntryShortModel, EmptyRegistrationCommandRule, EmptyTractIndex, EmptyTractIndexEntry,
          RecordableSubject, RecordableSubjectType, RecordingActSearchQuery, RecordingActType,
          RecordingActTypeGroup, RegistrationCommand, RegistrationCommandConfig, RegistrationCommandPayload,
          RegistrationCommandRule, TractIndex, TractIndexEntry } from '@app/models';
 
-import { FormHelper, sendEvent } from '@app/shared/utils';
-
 import {
   RecordingBookSelectorEventType
 } from '@app/views/land-controls/recording-book-selector/recording-book-selector.component';
+
 
 export enum RecordingActCreatorEventType {
   APPEND_RECORDING_ACT = 'RecordingActCreatorComponent.Event.AppendRecordingAct',

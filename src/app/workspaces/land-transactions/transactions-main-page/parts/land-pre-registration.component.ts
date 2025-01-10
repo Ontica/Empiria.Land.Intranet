@@ -17,9 +17,9 @@ import { TransactionAction, TransactionCommandType  } from '@app/core/presentati
 
 import { TransactionDataService } from '@app/data-services';
 
-import { EmptyPreprocessingData, PreprocessingData } from '@app/models';
+import { FileViewerData } from '@app/shared/form-controls';
 
-import { FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
+import { EmptyPreprocessingData, PreprocessingData } from '@app/models';
 
 import {
   TransactionFilesEventType

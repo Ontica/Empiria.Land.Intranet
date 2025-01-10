@@ -11,11 +11,12 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo, Identifiable } from '@app/core';
 
-import { RecordingActParty } from '@app/models';
-
-import { MessageBoxService } from '@app/shared/containers/message-box';
+import { MessageBoxService } from '@app/shared/services';
 
 import { ArrayLibrary, sendEvent } from '@app/shared/utils';
+
+import { RecordingActParty } from '@app/models';
+
 
 export enum PartyListEventType {
   REMOVE_PARTY = 'PartyListComponent.Event.RemoveParty',

@@ -8,8 +8,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges,
          Output, ViewChild } from '@angular/core';
 
-import { EmptyFileViewerData, FileData,
-         FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
+import { EmptyFileViewerData, FileData, FileViewerData } from '@app/shared/form-controls';
 
 export type ImageZoomMode = 'OriginalSize' | 'ContainerSize';
 

@@ -7,7 +7,7 @@
 
 import { DateString } from '@app/core';
 
-import { MediaFile } from './reporting';
+import { MediaFile } from './media-file';
 
 
 export interface Period {

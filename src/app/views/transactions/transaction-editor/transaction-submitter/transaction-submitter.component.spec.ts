@@ -13,9 +13,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatDialogModule } from '@angular/material/dialog';
 
-import { MessageBoxService } from '@app/shared/containers/message-box';
+import { MessageBoxService } from '@app/shared/services';
 
 import { TransactionSubmitterComponent } from './transaction-submitter.component';
+
 
 describe('TransactionSubmitterComponent', () => {
   let component: TransactionSubmitterComponent;

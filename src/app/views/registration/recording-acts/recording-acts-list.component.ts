@@ -12,13 +12,14 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo, Identifiable, isEmpty } from '@app/core';
 
+import { MessageBoxService } from '@app/shared/services';
+
+import { FormatLibrary, sendEvent } from '@app/shared/utils';
+
 import { EmptyInstrumentRecording, getRecordableObjectStatusName, getSizeUnitNameShort, InstrumentRecording,
          RecordableObjectStatus, RecordableSubject, RecordableSubjectType, RecordingActEntry,
          RegistryEntryData, SizeUnit, RegistryEntryView } from '@app/models';
 
-import { MessageBoxService } from '@app/shared/containers/message-box';
-
-import { FormatLibrary, sendEvent } from '@app/shared/utils';
 
 export enum RecordingActsListEventType {
   REMOVE_RECORDING_ACT      = 'RecordingActsListComponent.Event.RemoveRecordingAct',

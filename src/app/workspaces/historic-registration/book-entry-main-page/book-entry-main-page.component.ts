@@ -11,10 +11,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Assertion, EventInfo, SessionService } from '@app/core';
 
+import { MessageBoxService } from '@app/shared/services';
+
 import { BookEntryContext, EmptyBookEntryContext, EmptyRegistryEntryData,
          isRegistryEntryDataValid, RegistryEntryData } from '@app/models';
-
-import { MessageBoxService } from '@app/shared/containers/message-box';
 
 import {
   BookEntryEditionComponent,
@@ -24,6 +24,7 @@ import {
 import {
   RegistryEntryEditorEventType
 } from '@app/views/registration/registry-entry/registry-entry-editor.component';
+
 
 @Component({
   selector: 'emp-land-book-entry-main-page',

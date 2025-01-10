@@ -11,12 +11,13 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { Assertion } from '@app/core';
 
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+
+import { FormHelper } from '@app/shared/utils';
 
 import { EmptyApplicableCommand, EmptyWorkflowStatus, ApplicableCommand, WorkflowPayload, WorkflowStatus,
          WorkflowCommandType } from '@app/models';
 
-import { FormHelper } from '@app/shared/utils';
 
 interface WorkflowCommandConfigFormModel extends FormGroup<{
   command: FormControl<string>;

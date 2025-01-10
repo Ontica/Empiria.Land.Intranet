@@ -14,7 +14,7 @@ import { ManualBookEntryFields, EmptyRecordingBook,
 
 import { RecordingDataService } from '@app/data-services';
 
-import { FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
+import { FileViewerData } from '@app/shared/form-controls';
 
 import { sendEvent } from '@app/shared/utils';
 

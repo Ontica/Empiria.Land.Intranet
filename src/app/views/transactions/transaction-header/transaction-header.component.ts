@@ -13,12 +13,13 @@ import { Validators, FormGroup, FormControl, FormBuilder } from '@angular/forms'
 
 import { Assertion, EventInfo, Identifiable, isEmpty } from '@app/core';
 
+import { MessageBoxService } from '@app/shared/services';
+
+import { ArrayLibrary, FormHelper, sendEvent } from '@app/shared/utils';
+
 import { Agency, Transaction, EmptyTransaction, TransactionType, TransactionSubtype,
          TransactionFields } from '@app/models';
 
-import { MessageBoxService } from '@app/shared/containers/message-box';
-
-import { ArrayLibrary, FormHelper, sendEvent } from '@app/shared/utils';
 
 export enum TransactionHeaderEventType {
   SAVE_TRANSACTION         = 'TransactionHeaderComponent.Event.SaveTransactionClicked',

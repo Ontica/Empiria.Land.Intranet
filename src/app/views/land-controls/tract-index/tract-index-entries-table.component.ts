@@ -11,11 +11,12 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { EventInfo, isEmpty } from '@app/core';
 
-import { TractIndexEntry} from '@app/models';
-
-import { MessageBoxService } from '@app/shared/containers/message-box';
+import { MessageBoxService } from '@app/shared/services';
 
 import { sendEvent } from '@app/shared/utils';
+
+import { TractIndexEntry} from '@app/models';
+
 
 export enum TractIndexEntriesTableEventType {
   TRACT_INDEX_ENTRY_CLICKED    = 'TractIndexEntriesTableComponent.Event.TractIndexEntryClicked',

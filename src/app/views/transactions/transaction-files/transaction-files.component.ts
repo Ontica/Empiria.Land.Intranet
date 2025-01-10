@@ -10,13 +10,11 @@ import { Component, EventEmitter, Input, OnChanges, Output, QueryList, SimpleCha
 
 import { EventInfo } from '@app/core';
 
-import { InstrumentMediaContent, mapToFileDataFromMediaFile, MediaFile } from '@app/models';
-
-import { FileData, FileControlActions } from '@app/shared/form-controls/file-control/file-control-data';
-
-import { FileControlComponent } from '@app/shared/form-controls/file-control/file-control.component';
+import { FileData, FileControlActions, FileControlComponent } from '@app/shared/form-controls';
 
 import { sendEvent } from '@app/shared/utils';
+
+import { InstrumentMediaContent, mapToFileDataFromMediaFile, MediaFile } from '@app/models';
 
 
 export enum TransactionFilesEventType {

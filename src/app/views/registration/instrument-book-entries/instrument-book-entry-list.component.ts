@@ -13,12 +13,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Command } from '@app/core';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
 import { RegistrationCommandType } from '@app/core/presentation/presentation-types';
 
-import { BookEntry, EmptyInstrumentRecording, InstrumentRecording } from '@app/models';
-import { MessageBoxService } from '@app/shared/containers/message-box';
+import { MessageBoxService } from '@app/shared/services';
 
-import { FilePreviewComponent } from '@app/shared/containers/file-preview/file-preview.component';
+import { FilePreviewComponent } from '@app/shared/containers';
+
+import { BookEntry, EmptyInstrumentRecording, InstrumentRecording } from '@app/models';
 
 
 @Component({

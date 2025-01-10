@@ -5,10 +5,10 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-import { DateString, EmptyMediaBase, MediaBase } from "@app/core";
+import { DateString, EmptyMediaBase, MediaBase } from '@app/core';
 
 import { EmptyRecordableSubject, EmptyRecordingContext, RecordableSubject, RecordableSubjectType,
-         RecordingContext } from "./recordable-subjects";
+         RecordingContext } from './recordable-subjects';
 
 
 export interface CertificateType {

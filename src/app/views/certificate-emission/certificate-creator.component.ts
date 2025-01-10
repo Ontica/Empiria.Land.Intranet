@@ -16,7 +16,7 @@ import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
 import { FormHelper, sendEvent } from '@app/shared/utils';
 
-import { MessageBoxService } from '@app/shared/containers/message-box';
+import { MessageBoxService } from '@app/shared/services';
 
 import { CertificationDataService } from '@app/data-services';
 
@@ -26,6 +26,7 @@ import { CertificateRules, CertificateType, CreateCertificateCommand, CreateCert
 import {
   RecordingBookSelectorEventType
 } from '@app/views/land-controls/recording-book-selector/recording-book-selector.component';
+
 
 export enum CertificateCreatorEventType {
   CREATE_CERTIFICATE = 'CertificateCreatorComponent.Event.CreateCertificate',

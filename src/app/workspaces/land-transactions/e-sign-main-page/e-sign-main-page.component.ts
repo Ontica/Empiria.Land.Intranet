@@ -16,13 +16,12 @@ import { RecordableSubjectsStateSelector, RegistrationAction, RegistrationStateS
 
 import { ESignDataService, TransactionDataService } from '@app/data-services';
 
+import { EmptyFileViewerData, FileViewerData } from '@app/shared/form-controls';
+
 import { ESignRequestsQuery, EmptyESignRequestsQuery, ESignStatus, EmptyTransaction, Transaction,
          TransactionDescriptor, LandExplorerTypes, ESignStatusList, RegistryEntryData, EmptyRegistryEntryData,
          isRegistryEntryDataValid, ESignOperationType, buildESignOperationsListByESignStatus,
          RecorderOffice } from '@app/models';
-
-import { EmptyFileViewerData,
-         FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 import { LandExplorerEventType } from '@app/views/land-list/land-explorer/land-explorer.component';
 

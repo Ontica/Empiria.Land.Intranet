@@ -20,7 +20,7 @@ import { Agency, Transaction, EmptyTransaction, TransactionType, ProvidedService
 
 import { ArrayLibrary } from '@app/shared/utils';
 
-import { FilePreviewComponent } from '@app/shared/containers/file-preview/file-preview.component';
+import { FilePreviewComponent } from '@app/shared/containers';
 
 import { TransactionHeaderEventType } from '../transaction-header/transaction-header.component';
 
@@ -283,9 +283,11 @@ export class TransactionEditorComponent implements OnChanges, OnInit, OnDestroy 
       .finally(() => this.submitted = false);
   }
 
+
   private validatePrintPaymentOrder() {
     setTimeout(() => this.openfileViewer(this.transaction.paymentOrder?.media));
   }
+
 
   private openfileViewer(file: MediaBase) {
     if (isValidMediaBase(file)) {

@@ -9,15 +9,16 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 
 import { CurrencyPipe } from '@angular/common';
 
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { Assertion, EventInfo, Validate } from '@app/core';
 
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MessageBoxService } from '@app/shared/services';
+
+import { FormatLibrary, FormHelper, sendEvent } from '@app/shared/utils';
 
 import { EmptyPayment, PaymentFields, PaymentOrder } from '@app/models';
 
-import { MessageBoxService } from '@app/shared/containers/message-box';
-
-import { FormatLibrary, FormHelper, sendEvent } from '@app/shared/utils';
 
 export enum TransactionSubmitterEventType {
   SET_PAYMENT_CLICKED        = 'TransactionSubmitterComponent.Event.SetPaymentClicked',

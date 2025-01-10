@@ -10,19 +10,17 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleCha
 
 import { Assertion, EventInfo, isEmpty } from '@app/core';
 
+import { ROUTES } from '@app/main-layout';
+
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
+
+import { MessageBoxService, UrlViewerService } from '@app/shared/services';
+
+import { sendEvent } from '@app/shared/utils';
 
 import { RecordingDataService } from '@app/data-services';
 
-import { ROUTES } from '@app/main-layout';
-
 import { EmptyTractIndex, EmptyTractIndexEntry, TractIndex, TractIndexEntry } from '@app/models';
-
-import { MessageBoxService } from '@app/shared/containers/message-box';
-
-import { UrlViewerService } from '@app/shared/services';
-
-import { sendEvent } from '@app/shared/utils';
 
 import {
   TractIndexEntriesTableEventType
@@ -32,11 +30,11 @@ import { RecordingActCreatorModalEventType } from '../recording-acts/recording-a
 
 import { RecordingActEditionModalEventType } from '../recording-acts/recording-act-edition-modal.component';
 
+
 export enum RecordableSubjectHistoryEventType {
   TRACT_INDEX_UPDATED = 'RecordableSubjectHistoryComponent.Event.TractIndexUpdated',
   TRACT_INDEX_REFRESH = 'RecordableSubjectHistoryComponent.Event.TractIndexRefresh',
 }
-
 
 interface TractIndexEntryDataTable extends TractIndexEntry {
   number?: string;

@@ -13,15 +13,17 @@ import { Subscription } from 'rxjs';
 
 import { PresentationLayer, SubscriptionHelper } from '@app/core/presentation';
 
-import { RecordingDataService } from '@app/data-services';
-
 import { RegistrationAction, RegistrationCommandType, RegistrationStateSelector,
          TransactionAction } from '@app/core/presentation/presentation-types';
 
+import { FilePreviewComponent } from '@app/shared/containers';
+
+import { FileViewerData } from '@app/shared/form-controls';
+
+import { RecordingDataService } from '@app/data-services';
+
 import { InstrumentRecording, InstrumentFields, EmptyInstrumentRecording,
          RecordingActTypeGroup } from '@app/models';
-
-import { FilePreviewComponent } from '@app/shared/containers/file-preview/file-preview.component';
 
 import {
   InstrumentEditorEventType
@@ -38,8 +40,6 @@ import {
 import {
   TransactionFilesEventType
 } from '@app/views/transactions/transaction-files/transaction-files.component';
-
-import { FileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 
 @Component({
