@@ -21,9 +21,10 @@ import { ExpansionButtonComponent } from './expansion-button/expansion-button.co
 import { FilePreviewComponent } from './file-preview/file-preview.component';
 
 import { MessageBoxComponent } from './message-box/message-box.component';
+
 import { MessageBoxService } from './message-box/message.box.service';
 
-import { ModalWindowComponent } from './modal-window/modal-window';
+import { ModalWindowComponent } from './modal-window/modal-window.component';
 
 
 @NgModule({

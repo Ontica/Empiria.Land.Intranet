@@ -15,8 +15,6 @@ import { PresentationState } from '@app/core/presentation';
 
 import { MainUIStateAction, MainUIStateSelector } from '@app/presentation/exported.presentation.types';
 
-import { MessageBoxService } from '@app/shared/containers/message-box';
-
 import { PERMISSIONS, TOOL_TYPES, Tool } from '../config-data';
 
 

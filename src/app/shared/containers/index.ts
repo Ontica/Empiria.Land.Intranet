@@ -5,16 +5,4 @@
  * See LICENSE.txt in the project root for complete license information.
  */
 
-@import '../../../styles/variables';
-
-
-.footer {
-  background: white;
-  padding: $layout-margin-size;
-}
-
-.footer-info {
-  text-align: center;
-  min-height: 20px;
-  font-size: 10pt;
-}
+export * from './file-preview/file-preview.component';

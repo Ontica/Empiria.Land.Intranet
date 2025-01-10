@@ -15,10 +15,11 @@ import { TransactionDataService } from '@app/data-services';
 
 import { ArrayLibrary } from '@app/shared/utils';
 
+import { EmptyFileViewerData } from '@app/shared/form-controls';
+
 import { TransactionQuery, TransactionDescriptor, EmptyTransaction, EmptyTransactionQuery,
          mapTransactionDescriptorFromTransaction } from '@app/models';
 
-import { EmptyFileViewerData } from '@app/shared/form-controls/file-control/file-control-data';
 
 
 export enum ActionType {

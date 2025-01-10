@@ -9,6 +9,8 @@ import { Component, Input } from '@angular/core';
 
 import { MediaType } from '@app/core';
 
+import { FileDownloadService } from '@app/shared/services';
+
 import { FileType } from '@app/models';
 
 
@@ -29,24 +31,50 @@ export class FilePreviewComponent {
 
   hasError = false;
 
-  displayInModal = false;
+  displayModal = false;
+
+
+  constructor(private fileDownload: FileDownloadService) { }
+
+
+  get isUrlValid(): boolean {
+    return this.fileUrl !== null && this.fileUrl !== undefined && this.fileUrl !== '';
+  }
+
+
+  get isHTML(): boolean {
+    return this.fileType === MediaType.html ||
+           this.fileType === FileType.HTML ||
+           this.fileType.toLowerCase() === 'html';
+  }
+
+
+  get isPDF(): boolean {
+    return this.fileType === MediaType.pdf ||
+           this.fileType === FileType.Pdf ||
+           this.fileType.toLowerCase() === 'pdf';
+  }
 
 
   open(url: string, type: string) {
     this.setFileData(url, type);
 
-    if (!this.isValidUrl(this.fileUrl)) {
+    if (!this.isUrlValid) {
       console.log('Invalid URL: ', this.fileUrl);
       return;
     }
 
-    if (this.canOpenWindow(this.fileType)) {
+    if (this.isHTML) {
       this.openWindow(this.fileUrl);
-      this.onClose();
       return;
     }
 
-    this.openModal();
+    if (this.isPDF) {
+      this.openModal();
+      return;
+    }
+
+    this.downloadFile();
   }
 
 
@@ -55,8 +83,8 @@ export class FilePreviewComponent {
   }
 
 
-  onClose() {
-    this.displayInModal = false;
+  onCloseClicked() {
+    this.displayModal = false;
   }
 
 
@@ -66,17 +94,9 @@ export class FilePreviewComponent {
   }
 
 
-  private isValidUrl(url: string): boolean {
-    return url !== null && url !== undefined && url !== '';
-  }
-
-
-  private canOpenWindow(type: string): boolean {
-    return type === MediaType.html || type === FileType.HTML;
-  }
-
-
   private openWindow(url: string, width: number = 1100, height: number = 600) {
+    this.onCloseClicked();
+
     const top = Math.floor((screen.height / 2) - (height / 2));
     const left = Math.floor((screen.width / 2) - (width / 2));
 
@@ -87,7 +107,12 @@ export class FilePreviewComponent {
 
   private openModal() {
     this.hasError = false;
-    this.displayInModal = true;
+    this.displayModal = true;
+  }
+
+
+  private downloadFile() {
+    this.fileDownload.download(this.fileUrl);
   }
 
 }

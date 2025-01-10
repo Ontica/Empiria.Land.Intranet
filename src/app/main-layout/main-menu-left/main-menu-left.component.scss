@@ -23,6 +23,7 @@
   li {
     color: $secondary-color-light;
     white-space: nowrap;
+    padding: 0.5rem 1.5rem;
 
     a,
     a:visited {
@@ -44,15 +45,11 @@
   }
 
   .menu-layout {
-    display: flex;
     font-size: 0.9rem;
-    padding: 0.5rem 1.5rem;
   }
 
   .menu-view {
-    display: flex;
     font-size: 0.8rem;
-    padding: 0.5rem 1.5rem;
   }
 
 }

@@ -32,8 +32,8 @@ const DefaultModalDialogConfig: ModalDialogConfig = {
 
 @Component({
   selector: 'emp-ng-modal-window',
-  templateUrl: './modal-window.html',
-  styleUrls: ['./modal-window.scss']
+  templateUrl: './modal-window.component.html',
+  styleUrls: ['./modal-window.component.scss']
 })
 export class ModalWindowComponent {
 

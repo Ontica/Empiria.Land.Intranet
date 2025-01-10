@@ -23,20 +23,22 @@ import { DataTableQuery } from '@app/models';
 export interface SelectBoxTypeaheadConfig {
   bindByValue?: boolean;
   clearable?: boolean;
+  minTermLength?: number;
   multiple?: boolean;
   searchByQuery?: boolean;
+  showTooltip?: boolean;
   virtualScroll?: boolean;
-  minTermLength?: number;
 }
 
 
 const DefaultSelectBoxTypeaheadConfig: SelectBoxTypeaheadConfig = {
   bindByValue: true,
   clearable: false,
+  minTermLength: 4,
   multiple: false,
   searchByQuery: false,
+  showTooltip: false,
   virtualScroll: false,
-  minTermLength: 4,
 };
 
 @Component({
@@ -166,6 +168,11 @@ export class SelectBoxTypeaheadComponent implements ControlValueAccessor, OnInit
   }
 
 
+  clearSearcherData(withInitialValue: boolean = false) {
+    this.subscribeSearcherList(withInitialValue);
+  }
+
+
   resetValue() {
     this.formControl.reset(null);
   }
@@ -181,8 +188,9 @@ export class SelectBoxTypeaheadComponent implements ControlValueAccessor, OnInit
   }
 
 
-  private subscribeSearcherList() {
-    let initialList$: Observable<any[]> = of(isEmpty(this.initialValue) ? [] : [this.initialValue]);
+  private subscribeSearcherList(withInitialValue: boolean = true) {
+    const setInitialValue = withInitialValue && !isEmpty(this.initialValue);
+    let initialList$: Observable<any[]> = of(setInitialValue ? [this.initialValue] : []);
 
     this.searcherList$ = concat(
       initialList$,

@@ -15,9 +15,7 @@ import { SharedFormControlsModule } from './form-controls/shared-form-controls.m
 import { SharedIndicatorsModule } from './indicators/shared-indicators.module';
 import { SharedPipesModule } from './pipes/shared-pipes.module';
 
-import { PrinterService } from './utils/printer.service';
-import { UrlViewerService } from './services';
-import { FileDownloadService } from './utils';
+import { FileDownloadService, PrinterService, UrlViewerService } from './services';
 import { SAVER, getSaver } from './utils/saver.provider';
 
 

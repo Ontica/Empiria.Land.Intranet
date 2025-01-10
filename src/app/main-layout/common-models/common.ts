@@ -17,6 +17,7 @@ export interface AppData {
 
 
 export interface AppLayout {
+  displayLoginRight: boolean;
   displayLogo: boolean;
   displayNavbarHeader: boolean;
   displayNavbarHint: boolean;
@@ -43,12 +44,8 @@ export interface AppConfig {
 }
 
 
-export type LayoutType = 'Transactions' | 'Search' | 'HistoricRegistration' | 'SystemManagement' |
-                         'Unauthorized';
-
-
-export interface Layout {
-  name: LayoutType;
+export interface Layout<T> {
+  name: T;
   views: View[];
   hint: string;
   defaultTitle: string;

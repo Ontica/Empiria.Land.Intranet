@@ -4,6 +4,7 @@
  *
  * See LICENSE.txt in the project root for complete license information.
  */
+
 @use '@angular/material' as mat;
 
 // variables
@@ -35,6 +36,7 @@ $emp-land-app-foreground: (
   slider-off: rgba(black, 0.26),
   slider-off-active: rgba(black, 0.38),
 );
+
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -71,7 +73,8 @@ $emp-land-primary-palette: (
     A200: rgba($emp-land-text-color, 0.8),
     A400: rgba($emp-land-text-color, 0.8),
     A700: rgba($emp-land-text-color, 0.8),
-  ));
+  )
+);
 
 $emp-land-accent-palette: (
   50: hsl(205, 20%, 46%),
@@ -104,7 +107,8 @@ $emp-land-accent-palette: (
     A200: rgba($emp-land-text-color, 0.8),
     A400: rgba($emp-land-text-color, 0.8),
     A700: rgba($emp-land-text-color, 0.8),
-  ));
+  )
+);
 
 $emp-land-warn-palette: (
   50: hsl(357, 47%, 85%),
@@ -137,7 +141,8 @@ $emp-land-warn-palette: (
     A200: rgba($emp-land-text-color, 0.8),
     A400: rgba($emp-land-text-color, 0.8),
     A700: rgba($emp-land-text-color, 0.8),
-  ));
+  )
+);
 
 $emp-land-app-primary: mat.define-palette($emp-land-primary-palette, 500);
 
@@ -148,7 +153,8 @@ $emp-land-app-warn: mat.define-palette($emp-land-warn-palette, 500);
 // Create the theme object (a Sass map containing all of the palettes).
 $emp-land-app-theme: mat.define-light-theme(
   (
-    color: (
+    color:
+    (
       primary: $emp-land-app-primary,
       accent: $emp-land-app-accent,
       warn: $emp-land-app-warn,

@@ -14,8 +14,6 @@ export * from './routes-config';
 
 export * from './layout-config';
 
-export * from './tools-config';
-
-export * from './value-selectors';
-
 export * from './views-config';
+
+export * from './tools-config';

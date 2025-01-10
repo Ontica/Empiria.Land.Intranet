@@ -17,11 +17,16 @@ import {
 } from './views-config';
 
 
-export const APP_VIEWS: View[] = TransactionViews.concat(HistoricRegistrationViews,
-                                                         SystemManagementViews,
-                                                         UnauthorizedViews);
 
-export const APP_LAYOUTS: Layout[] = [
+export type LAYOUT_TYPE = 'Transactions' | 'Search' | 'HistoricRegistration' | 'SystemManagement' |
+                          'Unauthorized';
+
+
+export const APP_VIEWS: View[] = UnauthorizedViews.concat(TransactionViews,
+                                                          HistoricRegistrationViews,
+                                                          SystemManagementViews);
+
+export const APP_LAYOUTS: Layout<LAYOUT_TYPE>[] = [
   {
     name: 'Transactions',
     views: TransactionViews,
