@@ -9,7 +9,8 @@ import { Injectable } from '@angular/core';
 
 import { Assertion, EmpObservable, HttpService } from '@app/core';
 
-import { ESignCommand, ESignCredentials, ESignRequestsQuery, LandEntity } from '@app/models';
+import { ESignTransactionCommand, ESignDocumentCommand, ESignCredentials, ESignRequestsQuery,
+         LandEntity } from '@app/models';
 
 import { Cryptography } from '@app/core/security/cryptography';
 
@@ -38,62 +39,6 @@ export class ESignDataService {
   }
 
 
-  async signMyTransactionDocuments(command: ESignCommand): Promise<void> {
-    Assertion.assertValue(command, 'command');
-    Assertion.assertValue(command.commandType, 'command.commandType');
-    Assertion.assertValue(command.credentials, 'command.credentials');
-    Assertion.assertValue(command.transactionUIDs, 'command.transactionUIDs');
-
-    command.credentials = await
-      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
-
-    return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/sign', command)
-      .firstValue();
-  }
-
-
-  async revokeMyTransactionDocuments(command: ESignCommand): Promise<void> {
-    Assertion.assertValue(command, 'command');
-    Assertion.assertValue(command.commandType, 'command.commandType');
-    Assertion.assertValue(command.credentials, 'command.credentials');
-    Assertion.assertValue(command.transactionUIDs, 'command.transactionUIDs');
-
-    command.credentials = await
-      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
-
-    return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/revoke', command)
-      .firstValue();
-  }
-
-
-  async refuseMyTransactionDocuments(command: ESignCommand): Promise<void> {
-    Assertion.assertValue(command, 'command');
-    Assertion.assertValue(command.commandType, 'command.commandType');
-    Assertion.assertValue(command.credentials, 'command.credentials');
-    Assertion.assertValue(command.transactionUIDs, 'command.transactionUIDs');
-
-    command.credentials = await
-      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
-
-    return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/refuse', command)
-      .firstValue();
-  }
-
-
-  async unrefuseMyTransactionDocuments(command: ESignCommand): Promise<void> {
-    Assertion.assertValue(command, 'command');
-    Assertion.assertValue(command.commandType, 'command.commandType');
-    Assertion.assertValue(command.credentials, 'command.credentials');
-    Assertion.assertValue(command.transactionUIDs, 'command.transactionUIDs');
-
-    command.credentials = await
-      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
-
-    return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/unrefuse', command)
-      .firstValue();
-  }
-
-
   async generateCredentialsWithToken(userUID: string, password: string): Promise<ESignCredentials> {
     Assertion.assertValue(userUID, 'userUID');
     Assertion.assertValue(password, 'password');
@@ -110,6 +55,118 @@ export class ESignDataService {
     credentials.password = Cryptography.encryptAES2(password, token);
 
     return credentials;
+  }
+
+
+  async signMyTransactionDocuments(command: ESignTransactionCommand): Promise<void> {
+    Assertion.assertValue(command, 'command');
+    Assertion.assertValue(command.commandType, 'command.commandType');
+    Assertion.assertValue(command.credentials, 'command.credentials');
+    Assertion.assertValue(command.transactionUIDs, 'command.transactionUIDs');
+
+    command.credentials = await
+      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
+
+    return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/sign', command)
+      .firstValue();
+  }
+
+
+  async revokeMyTransactionDocuments(command: ESignTransactionCommand): Promise<void> {
+    Assertion.assertValue(command, 'command');
+    Assertion.assertValue(command.commandType, 'command.commandType');
+    Assertion.assertValue(command.credentials, 'command.credentials');
+    Assertion.assertValue(command.transactionUIDs, 'command.transactionUIDs');
+
+    command.credentials = await
+      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
+
+    return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/revoke', command)
+      .firstValue();
+  }
+
+
+  async refuseMyTransactionDocuments(command: ESignTransactionCommand): Promise<void> {
+    Assertion.assertValue(command, 'command');
+    Assertion.assertValue(command.commandType, 'command.commandType');
+    Assertion.assertValue(command.credentials, 'command.credentials');
+    Assertion.assertValue(command.transactionUIDs, 'command.transactionUIDs');
+
+    command.credentials = await
+      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
+
+    return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/refuse', command)
+      .firstValue();
+  }
+
+
+  async unrefuseMyTransactionDocuments(command: ESignTransactionCommand): Promise<void> {
+    Assertion.assertValue(command, 'command');
+    Assertion.assertValue(command.commandType, 'command.commandType');
+    Assertion.assertValue(command.credentials, 'command.credentials');
+    Assertion.assertValue(command.transactionUIDs, 'command.transactionUIDs');
+
+    command.credentials = await
+      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
+
+    return this.http.post<void>('v5/land/electronic-sign/execute-task/transactions/mine/unrefuse', command)
+      .firstValue();
+  }
+
+
+  async signMyDocuments(command: ESignDocumentCommand): Promise<void> {
+    Assertion.assertValue(command, 'command');
+    Assertion.assertValue(command.commandType, 'command.commandType');
+    Assertion.assertValue(command.credentials, 'command.credentials');
+    Assertion.assertValue(command.documentUIDs, 'command.documentUIDs');
+
+    command.credentials = await
+      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
+
+    return this.http.post<void>('v5/land/electronic-sign/execute-task/documents/mine/sign', command)
+      .firstValue();
+  }
+
+
+  async revokeMyDocuments(command: ESignDocumentCommand): Promise<void> {
+    Assertion.assertValue(command, 'command');
+    Assertion.assertValue(command.commandType, 'command.commandType');
+    Assertion.assertValue(command.credentials, 'command.credentials');
+    Assertion.assertValue(command.documentUIDs, 'command.documentUIDs');
+
+    command.credentials = await
+      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
+
+    return this.http.post<void>('v5/land/electronic-sign/execute-task/documents/mine/revoke', command)
+      .firstValue();
+  }
+
+
+  async refuseMyDocuments(command: ESignDocumentCommand): Promise<void> {
+    Assertion.assertValue(command, 'command');
+    Assertion.assertValue(command.commandType, 'command.commandType');
+    Assertion.assertValue(command.credentials, 'command.credentials');
+    Assertion.assertValue(command.documentUIDs, 'command.documentUIDs');
+
+    command.credentials = await
+      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
+
+    return this.http.post<void>('v5/land/electronic-sign/execute-task/documents/mine/refuse', command)
+      .firstValue();
+  }
+
+
+  async unrefuseMyDocuments(command: ESignDocumentCommand): Promise<void> {
+    Assertion.assertValue(command, 'command');
+    Assertion.assertValue(command.commandType, 'command.commandType');
+    Assertion.assertValue(command.credentials, 'command.credentials');
+    Assertion.assertValue(command.documentUIDs, 'command.documentUIDs');
+
+    command.credentials = await
+      this.generateCredentialsWithToken(command.credentials.userID, command.credentials.password);
+
+    return this.http.post<void>('v5/land/electronic-sign/execute-task/documents/mine/unrefuse', command)
+      .firstValue();
   }
 
 }

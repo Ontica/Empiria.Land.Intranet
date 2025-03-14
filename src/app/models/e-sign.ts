@@ -120,8 +120,15 @@ export interface ESignCredentials {
 }
 
 
-export interface ESignCommand {
+export interface ESignTransactionCommand {
   commandType: ESignOperationType;
-  credentials: ESignCredentials,
+  credentials: ESignCredentials;
   transactionUIDs: string[];
+}
+
+
+export interface ESignDocumentCommand {
+  commandType: ESignOperationType;
+  credentials: ESignCredentials;
+  documentUIDs: string[];
 }

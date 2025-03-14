@@ -13,7 +13,8 @@ import { sendEvent } from '@app/shared/utils';
 
 import { ESignDataService } from '@app/data-services';
 
-import { ESignCommand, ESignCredentials, ESignOperationType, LandEntity, LandExplorerTypes } from '@app/models';
+import { ESignTransactionCommand, ESignDocumentCommand, ESignCredentials, ESignOperationType, LandEntity,
+         LandExplorerTypes } from '@app/models';
 
 import { ESignFormEventType } from './e-sign-form.component';
 
@@ -70,7 +71,7 @@ export class ESignModalComponent implements OnInit {
         Assertion.assertValue(event.payload.credentials.password, 'event.payload.credentials.password');
 
         const promise =
-          this.validaOperationToExecuteByExplorerType(event.payload.credentials as ESignCredentials);
+          this.validateOperationToExecuteByExplorerType(event.payload.credentials as ESignCredentials);
 
         if (!!promise) {
           this.executeOperation(promise);
@@ -85,19 +86,20 @@ export class ESignModalComponent implements OnInit {
   }
 
 
-  private validaOperationToExecuteByExplorerType(credentials: ESignCredentials): Promise<void> {
+  private validateOperationToExecuteByExplorerType(credentials: ESignCredentials): Promise<void> {
     switch (this.explorerType) {
       case LandExplorerTypes.ESIGN_TRANSACTION:
-        return this.validaTransactionOperationToExecute(credentials);
+        return this.validateTransactionOperationToExecute(credentials);
       case LandExplorerTypes.ESIGN_DOCUMENT:
+        return this.validateDocumentOperationToExecute(credentials);
       default:
         return null;
     }
   }
 
 
-  private validaTransactionOperationToExecute(credentials: ESignCredentials): Promise<void> {
-    const command = this.buildCommandToExecute(credentials);
+  private validateTransactionOperationToExecute(credentials: ESignCredentials): Promise<void> {
+    const command = this.buildESignTransactionCommand(credentials);
 
     switch (this.operation.uid as ESignOperationType) {
       case ESignOperationType.Sign: return this.eSignData.signMyTransactionDocuments(command);
@@ -111,14 +113,44 @@ export class ESignModalComponent implements OnInit {
   }
 
 
-  private buildCommandToExecute(credentials: ESignCredentials): ESignCommand {
+  private validateDocumentOperationToExecute(credentials: ESignCredentials): Promise<void> {
+    const command = this.buildESignDocumentCommand(credentials);
+
+    switch (this.operation.uid as ESignOperationType) {
+      case ESignOperationType.Sign: return this.eSignData.signMyDocuments(command);
+      case ESignOperationType.Revoke: return this.eSignData.revokeMyDocuments(command);
+      case ESignOperationType.Refuse: return this.eSignData.refuseMyDocuments(command);
+      case ESignOperationType.Unrefuse: return this.eSignData.unrefuseMyDocuments(command);
+      default:
+        console.log(`Unhandled user interface operation ${this.operation.uid}`);
+        return null;
+    }
+  }
+
+
+  private buildESignTransactionCommand(credentials: ESignCredentials): ESignTransactionCommand {
     Assertion.assertValue(this.operation.uid, 'operation');
-    Assertion.assertValue(this.itemsList.length > 0, 'transactions');
+    Assertion.assertValue(this.itemsList.length > 0, 'transactionUIDs');
     Assertion.assertValue(credentials, 'credentials');
 
-    const command: ESignCommand = {
+    const command: ESignTransactionCommand = {
       commandType: this.operation.uid as ESignOperationType,
       transactionUIDs: this.itemsList.map(x => x.uid),
+      credentials,
+    };
+
+    return command;
+  }
+
+
+  private buildESignDocumentCommand(credentials: ESignCredentials): ESignDocumentCommand {
+    Assertion.assertValue(this.operation.uid, 'operation');
+    Assertion.assertValue(this.itemsList.length > 0, 'documentUIDs');
+    Assertion.assertValue(credentials, 'credentials');
+
+    const command: ESignDocumentCommand = {
+      commandType: this.operation.uid as ESignOperationType,
+      documentUIDs: this.itemsList.map(x => x.uid),
       credentials,
     };
 
