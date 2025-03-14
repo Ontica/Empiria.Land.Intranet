@@ -19,7 +19,7 @@ import { ListComponent } from './land-explorer/land-list.component';
 
 import { ListSelectorComponent } from './land-list-selector/land-list-selector.component';
 
-import { TransactionListItemComponent } from './land-list-items/transaction-list-item.component';
+import { LandListItemComponent } from './land-list-items/land-list-item.component';
 
 
 @NgModule({
@@ -38,7 +38,7 @@ import { TransactionListItemComponent } from './land-list-items/transaction-list
     ListComponent,
     ListSelectorComponent,
 
-    TransactionListItemComponent,
+    LandListItemComponent,
   ],
   exports: [
     LandExplorerComponent,

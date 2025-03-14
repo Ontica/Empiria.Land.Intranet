@@ -40,6 +40,7 @@ type TransactionModalOptions = 'CreateTransactionEditor' | 'ExecuteCommand' | 'E
 })
 export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
+  explorerType = LandExplorerTypes.TRANSACTION;
   currentView: View;
 
   transactionsOperationList = TransactionsOperationList;
@@ -63,8 +64,6 @@ export class TransactionsMainPageComponent implements OnInit, OnDestroy {
 
   isLoading = false;
   isLoadingTransaction = false;
-
-  landExplorerTypes = LandExplorerTypes;
 
   subscriptionHelper: SubscriptionHelper;
 

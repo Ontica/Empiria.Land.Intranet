@@ -4,19 +4,22 @@
 
   <div class="primary"
     [class.hidden]="displayFileViewer"
-    [class.md-hide]="displayTransactionTabbedView || displayFileViewer || displayRegistryEntryEditor">
+    [class.md-hide]="displayTabbedView || displayFileViewer || displayRegistryEntryEditor">
 
     <emp-land-explorer
+      [explorerType]="selectedLandExplorerType"
       [title]="titleWithStatus"
-      [explorerType]="landExplorerTypes.ESign"
-      [recorderOfficeList]="recorderOfficeList"
+      [itemsTypeName]="itemTypeName"
       [query]="query"
-      [itemsList]="transactionList"
-      [selectedItemUID]="selectedTransaction.uid ?? null"
-      [isLoading]="isLoading"
-      [statusList]="eSignStatusList"
+      [recorderOfficeList]="recorderOfficeList"
+      [explorerTypesList]="explorerTypesList"
+      [statusList]="statusList"
+      [operationsList]="operationList"
+      [itemsList]="itemsList"
+      [selectedItemUID]="selectedItem.uid ?? null"
       [canSelectStatus]="true"
-      [operationsList]="eSignOperationList"
+      [canSelectExplorerType]="true"
+      [isLoading]="isLoading"
       (landExplorerEvent)="onESignExplorerEvent($event)">
 
     </emp-land-explorer>
@@ -38,14 +41,14 @@
   </div>
 
 
-  <div *ngIf="displayTransactionTabbedView"
+  <div *ngIf="displayTabbedView"
     class="secondary"
     [class.hidden]="displayRegistryEntryEditor"
     [class.md-hide]="displayRegistryEntryEditor || displayFileViewer">
 
     <emp-land-transaction-tabbed-view
-        [transaction]="selectedTransaction"
-        (closeEvent)="onCloseTransactionEditor()">
+        [transaction]="selectedItem"
+        (closeEvent)="onCloseItemEditor()">
 
     </emp-land-transaction-tabbed-view>
 
@@ -70,20 +73,21 @@
 <emp-ng-modal-window *ngIf="displayWorkflowCommanderOption"
                      [config]="{width:'920px'}">
 
-    <emp-land-workflow-commander
-      [transactionList]="displayWorkflowCommanderOption === WorkflowCommanderOptions.ReceiveTransactions ? [] : selectedTransactions"
-      [canEditList]="displayWorkflowCommanderOption !== WorkflowCommanderOptions.ExecuteCommand"
-      [applyEffects]=" false"
-      (workflowCommanderEvent)="onWorkflowCommanderEvent($event)">
+  <emp-land-workflow-commander
+    [transactionList]="displayWorkflowCommanderOption === WorkflowCommanderOptions.ReceiveTransactions ? [] : selectedItems"
+    [canEditList]="displayWorkflowCommanderOption !== WorkflowCommanderOptions.ExecuteCommand"
+    [applyEffects]=" false"
+    (workflowCommanderEvent)="onWorkflowCommanderEvent($event)">
 
-    </emp-land-workflow-commander>
+  </emp-land-workflow-commander>
 
 </emp-ng-modal-window>
 
 
 <emp-land-e-sign-modal *ngIf="displayESignOption"
+  [explorerType]="selectedLandExplorerType"
   [operation]="displayESignOption"
-  [transactionList]="selectedTransactions"
+  [itemsList]="selectedItems"
   (eSignModalEvent)="onESignModalEvent($event)">
 
 </emp-land-e-sign-modal>

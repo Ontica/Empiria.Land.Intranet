@@ -8,7 +8,8 @@
 
     <emp-land-explorer
       [title]="currentView?.title"
-      [explorerType]="landExplorerTypes.Transaction"
+      [itemsTypeName]="currentView?.title.toLowerCase()"
+      [explorerType]="explorerType"
       [recorderOfficeList]="recorderOfficeList"
       [query]="query"
       [itemsList]="transactionList"

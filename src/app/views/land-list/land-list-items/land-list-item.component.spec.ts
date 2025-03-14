@@ -7,22 +7,22 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { TransactionListItemComponent } from './transaction-list-item.component';
+import { LandListItemComponent } from './land-list-item.component';
 
 
-describe('TransactionListItemComponent', () => {
-  let component: TransactionListItemComponent;
-  let fixture: ComponentFixture<TransactionListItemComponent>;
+describe('LandListItemComponent', () => {
+  let component: LandListItemComponent;
+  let fixture: ComponentFixture<LandListItemComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TransactionListItemComponent ]
+      declarations: [ LandListItemComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TransactionListItemComponent);
+    fixture = TestBed.createComponent(LandListItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

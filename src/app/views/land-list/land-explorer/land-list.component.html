@@ -22,17 +22,18 @@
         </strong>
       </div>
 
-      <emp-land-transaction-list-item
-        [transaction]="getTransaction(item)"
+      <emp-land-list-item
+        [explorerType]="explorerType"
+        [item]="getTransaction(item)"
         (optionsClick)="onItemOperationClicked(item)">
-      </emp-land-transaction-list-item>
+      </emp-land-list-item>
 
     </div>
 
   </div>
 
   <div *ngIf="itemsList.length === 0" class="text-not-found" [style.padding.rem]="3">
-    <p>{{ isLoading ? 'Cargando ' + itemsType + 's...' : 'No se encontraron ' + itemsType + 's.'}}</p>
+    <p>{{ isLoading ? 'Cargando ' + itemsType + '...' : 'No se encontraron ' + itemsType + '.'}}</p>
   </div>
 
 </div>

@@ -19,9 +19,10 @@ import { ESignDataService, TransactionDataService } from '@app/data-services';
 import { EmptyFileViewerData, FileViewerData } from '@app/shared/form-controls';
 
 import { ESignRequestsQuery, EmptyESignRequestsQuery, ESignStatus, EmptyTransaction, Transaction,
-         TransactionDescriptor, LandExplorerTypes, ESignStatusList, RegistryEntryData, EmptyRegistryEntryData,
-         isRegistryEntryDataValid, ESignOperationType, buildESignOperationsListByESignStatus,
-         RecorderOffice } from '@app/models';
+         LandExplorerTypes, ESignStatusList, RegistryEntryData, EmptyRegistryEntryData,
+         isRegistryEntryDataValid, ESignOperationType, RecorderOffice, ESignLandExplorerTypesList,
+         LandEntity, buildESignDocumentsOperationsListByStatus,
+         buildESignTransactionsOperationsListByStatus } from '@app/models';
 
 import { LandExplorerEventType } from '@app/views/land-list/land-explorer/land-explorer.component';
 
@@ -48,22 +49,21 @@ enum WorkflowCommanderOptions {
 })
 export class ESignMainPageComponent implements OnInit, OnDestroy {
 
-  eSignStatusList = ESignStatusList;
-
-  eSignOperationList = [];
-
-  recorderOfficeList: RecorderOffice[] = [];
-
   query: ESignRequestsQuery = EmptyESignRequestsQuery;
 
-  transactionList: TransactionDescriptor[] = [];
+  recorderOfficeList: RecorderOffice[] = [];
+  explorerTypesList = ESignLandExplorerTypesList;
+  statusList = ESignStatusList;
+  operationList = [];
+  itemsList: LandEntity[] = [];
 
-  selectedTransaction: Transaction = EmptyTransaction;
-  selectedTransactions: TransactionDescriptor[] = [];
+  selectedLandExplorerType = LandExplorerTypes.ESIGN_TRANSACTION;
+  selectedItem: Transaction = EmptyTransaction;
+  selectedItems: LandEntity[] = [];
   selectedFileViewerData: FileViewerData = EmptyFileViewerData;
   selectedRegistryEntryData: RegistryEntryData = EmptyRegistryEntryData;
 
-  displayTransactionTabbedView = false;
+  displayTabbedView = false;
   displayWorkflowCommanderOption: WorkflowCommanderOptions = null;
   displayESignOption: Identifiable = null;
   displayFileViewer = false;
@@ -71,8 +71,6 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   isLoading = false;
   isLoadingESignRequest = false;
-
-  landExplorerTypes = LandExplorerTypes;
 
   WorkflowCommanderOptions = WorkflowCommanderOptions;
 
@@ -87,7 +85,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.buildESignOperationsListByESignStatus();
+    this.buildOperationsListByStatus();
     this.unselectCurrentSelections();
     this.subscribeToFilterData();
     this.suscribeToSelectedViewersData();
@@ -100,12 +98,18 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
 
   get titleWithStatus() {
-    const status = this.eSignStatusList.find(x => x.uid === this.query.status);
+    const status = this.statusList.find(x => x.uid === this.query.status);
     if (isEmpty(status)) {
       return 'Firma electrónica';
     } else {
-      return `Firma electrónica <span class="tag tag-info tag-medium">${status.name}</span>`;
+      return `Firma electrónica <span class="tag tag-info tag-small">${status.name}</span>`;
     }
+  }
+
+
+  get itemTypeName() {
+    const explorerType = this.explorerTypesList.find(x => x.uid === this.selectedLandExplorerType);
+    return explorerType?.name?.toLowerCase() ?? '';
   }
 
 
@@ -117,21 +121,23 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
         return;
 
       case LandExplorerEventType.FILTER_CHANGED:
+        this.selectedLandExplorerType = event.payload.explorerType ?? null;
         this.setESignQuery(event.payload.recorderOfficeUID ?? '',
                            event.payload.status ?? ESignStatus.Unsigned,
                            event.payload.keywords ?? '');
-        this.buildESignOperationsListByESignStatus();
-        this.searchESignRequestedTransactions();
+        this.buildOperationsListByStatus();
+        this.validateSearchESignRequested();
+        this.unselectCurrentItem();
         return;
 
       case LandExplorerEventType.ITEM_SELECTED:
         Assertion.assertValue(event.payload.item.uid, 'event.payload.item.uid');
-        this.getTransaction(event.payload.item.uid);
+        this.validateGetESignRequestedItem(event.payload.item.uid);
         return;
 
       case LandExplorerEventType.ITEM_EXECUTE_OPERATION:
         this.displayWorkflowCommanderOption = WorkflowCommanderOptions.ExecuteCommand;
-        this.selectedTransactions = [event.payload.item];
+        this.selectedItems = [event.payload.item];
         return;
 
       case LandExplorerEventType.ITEMS_EXECUTE_OPERATION:
@@ -170,10 +176,9 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
       case WorkflowCommanderEventType.WORKFLOW_COMMAND_EXECUTED:
         this.displayWorkflowCommanderOption = null;
 
-        this.unselectCurrentTransaction();
+        this.unselectCurrentItem();
         this.unselectRegistryEntryEditor();
-
-        this.searchESignRequestedTransactions();
+        this.validateSearchESignRequested();
         return;
 
       default:
@@ -192,7 +197,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
       case ESignModalEventType.OPERATION_EXECUTED:
         this.closeESignModal();
-        this.searchESignRequestedTransactions();
+        this.validateSearchESignRequested();
         return;
 
       default:
@@ -202,8 +207,8 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  onCloseTransactionEditor() {
-    this.unselectCurrentTransaction();
+  onCloseItemEditor() {
+    this.unselectCurrentItem();
   }
 
 
@@ -212,8 +217,18 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private buildESignOperationsListByESignStatus() {
-    this.eSignOperationList = buildESignOperationsListByESignStatus(this.query.status);
+  private buildOperationsListByStatus() {
+    switch (this.selectedLandExplorerType) {
+      case LandExplorerTypes.ESIGN_TRANSACTION:
+        this.operationList = buildESignTransactionsOperationsListByStatus(this.query.status);
+        return;
+      case LandExplorerTypes.ESIGN_DOCUMENT:
+        this.operationList = buildESignDocumentsOperationsListByStatus(this.query.status);
+        return;
+      default:
+        this.operationList = [];
+        return;
+    }
   }
 
 
@@ -232,7 +247,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
       this.setESignQuery(defaultRecorderOfficeUID,
                         this.query.status,
                         this.query.keywords);
-      this.searchESignRequestedTransactions();
+      this.validateSearchESignRequested();
     }
   }
 
@@ -246,27 +261,64 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private searchESignRequestedTransactions() {
+  private validateSearchESignRequested() {
     if (!this.query.recorderOfficeUID) {
-      this.transactionList = [];
+      this.itemsList = [];
       return;
     }
 
+    switch (this.selectedLandExplorerType) {
+      case LandExplorerTypes.ESIGN_TRANSACTION:
+        this.searchESignRequestedTransactions();
+        return;
+      case LandExplorerTypes.ESIGN_DOCUMENT:
+        this.searchESignRequestedDocuments();
+        return;
+      default:
+        this.itemsList = [];
+        return;
+    }
+  }
+
+
+  private validateGetESignRequestedItem(itemUID: string) {
+    switch (this.selectedLandExplorerType) {
+      case LandExplorerTypes.ESIGN_TRANSACTION:
+        this.getTransaction(itemUID);
+        return;
+      default:
+
+        return;
+    }
+  }
+
+
+  private searchESignRequestedTransactions() {
     this.isLoading = true;
 
     this.eSignData.searchESignRequestedTransactions(this.query)
       .firstValue()
-      .then(x => this.transactionList = x)
+      .then(x => this.itemsList = x)
       .finally(() => this.isLoading = false)
   }
 
 
-  private getTransaction(transactionUID: string) {
+  private searchESignRequestedDocuments() {
+    this.isLoading = true;
+
+    this.eSignData.searchESignRequestedDocuments(this.query)
+      .firstValue()
+      .then(x => this.itemsList = x)
+      .finally(() => this.isLoading = false);
+  }
+
+
+  private getTransaction(itemUID: string) {
     this.isLoadingESignRequest = true;
 
-    this.transactionData.getTransaction(transactionUID)
+    this.transactionData.getTransaction(itemUID)
       .firstValue()
-      .then(x => this.setTransaction(x))
+      .then(x => this.setSelectedItem(x))
       .finally(() => this.isLoadingESignRequest = false)
   }
 
@@ -278,9 +330,9 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private setTransaction(transaction: Transaction) {
-    this.selectedTransaction = transaction;
-    this.displayTransactionTabbedView = !isEmpty(this.selectedTransaction);
+  private setSelectedItem(item: Transaction) {
+    this.selectedItem = item;
+    this.displayTabbedView = !isEmpty(this.selectedItem);
     this.unselectCurrentSelections();
   }
 
@@ -303,8 +355,8 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private unselectCurrentTransaction() {
-    this.setTransaction(EmptyTransaction);
+  private unselectCurrentItem() {
+    this.setSelectedItem(EmptyTransaction);
   }
 
 
@@ -318,8 +370,8 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private validateOperationToExecute(operation: Identifiable, transactions: TransactionDescriptor[]) {
-    this.selectedTransactions = transactions;
+  private validateOperationToExecute(operation: Identifiable, items: LandEntity[]) {
+    this.selectedItems = items;
 
     switch (operation.uid as ESignOperationType) {
       case ESignOperationType.UpdateStatus:
@@ -342,7 +394,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
   private closeESignModal() {
     this.displayESignOption = null;
-    this.selectedTransactions = [];
+    this.selectedItems = [];
   }
 
 }

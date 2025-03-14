@@ -13,7 +13,7 @@ import { sendEvent } from '@app/shared/utils';
 
 import { ESignDataService } from '@app/data-services';
 
-import { ESignCommand, ESignCredentials, ESignOperationType, TransactionDescriptor } from '@app/models';
+import { ESignCommand, ESignCredentials, ESignOperationType, LandEntity, LandExplorerTypes } from '@app/models';
 
 import { ESignFormEventType } from './e-sign-form.component';
 
@@ -28,9 +28,11 @@ export enum ESignModalEventType {
 })
 export class ESignModalComponent implements OnInit {
 
+  @Input() explorerType = LandExplorerTypes.ESIGN_TRANSACTION;
+
   @Input() operation: Identifiable = Empty;
 
-  @Input() transactionList: TransactionDescriptor[] = [];
+  @Input() itemsList: LandEntity[] = [];
 
   @Output() eSignModalEvent = new EventEmitter<EventInfo>();
 
@@ -47,11 +49,7 @@ export class ESignModalComponent implements OnInit {
 
 
   ngOnInit() {
-    if (this.transactionList.length === 1) {
-      this.title = this.operation.name + ' (' + this.transactionList.length + ' trámite seleccionado)'
-    } else {
-      this.title = this.operation.name + ' (' + this.transactionList.length + ' trámites seleccionados)'
-    }
+    this.setTitleText();
   }
 
 
@@ -71,7 +69,8 @@ export class ESignModalComponent implements OnInit {
         Assertion.assertValue(event.payload.credentials.userID, 'event.payload.credentials.userID');
         Assertion.assertValue(event.payload.credentials.password, 'event.payload.credentials.password');
 
-        const promise = this.validaOperationToExecute(event.payload.credentials as ESignCredentials);
+        const promise =
+          this.validaOperationToExecuteByExplorerType(event.payload.credentials as ESignCredentials);
 
         if (!!promise) {
           this.executeOperation(promise);
@@ -86,22 +85,25 @@ export class ESignModalComponent implements OnInit {
   }
 
 
-  private validaOperationToExecute(credentials: ESignCredentials): Promise<void> {
+  private validaOperationToExecuteByExplorerType(credentials: ESignCredentials): Promise<void> {
+    switch (this.explorerType) {
+      case LandExplorerTypes.ESIGN_TRANSACTION:
+        return this.validaTransactionOperationToExecute(credentials);
+      case LandExplorerTypes.ESIGN_DOCUMENT:
+      default:
+        return null;
+    }
+  }
+
+
+  private validaTransactionOperationToExecute(credentials: ESignCredentials): Promise<void> {
     const command = this.buildCommandToExecute(credentials);
 
     switch (this.operation.uid as ESignOperationType) {
-      case ESignOperationType.Sign:
-        return this.eSignData.signMyTransactionDocuments(command);
-
-      case ESignOperationType.Revoke:
-        return this.eSignData.revokeMyTransactionDocuments(command);
-
-      case ESignOperationType.Refuse:
-        return this.eSignData.refuseMyTransactionDocuments(command);
-
-      case ESignOperationType.Unrefuse:
-        return this.eSignData.unrefuseMyTransactionDocuments(command);
-
+      case ESignOperationType.Sign: return this.eSignData.signMyTransactionDocuments(command);
+      case ESignOperationType.Revoke: return this.eSignData.revokeMyTransactionDocuments(command);
+      case ESignOperationType.Refuse: return this.eSignData.refuseMyTransactionDocuments(command);
+      case ESignOperationType.Unrefuse: return this.eSignData.unrefuseMyTransactionDocuments(command);
       default:
         console.log(`Unhandled user interface operation ${this.operation.uid}`);
         return null;
@@ -111,12 +113,12 @@ export class ESignModalComponent implements OnInit {
 
   private buildCommandToExecute(credentials: ESignCredentials): ESignCommand {
     Assertion.assertValue(this.operation.uid, 'operation');
-    Assertion.assertValue(this.transactionList.length > 0, 'transactions');
+    Assertion.assertValue(this.itemsList.length > 0, 'transactions');
     Assertion.assertValue(credentials, 'credentials');
 
     const command: ESignCommand = {
       commandType: this.operation.uid as ESignOperationType,
-      transactionUIDs: this.transactionList.map(x => x.uid),
+      transactionUIDs: this.itemsList.map(x => x.uid),
       credentials,
     };
 
@@ -131,6 +133,14 @@ export class ESignModalComponent implements OnInit {
       .then(() => sendEvent(this.eSignModalEvent, ESignModalEventType.OPERATION_EXECUTED))
       .catch(error => this.exceptionMsg = error.error.message)
       .finally(() => this.submitted = false);
+  }
+
+
+  private setTitleText() {
+    const itemTypeText = this.explorerType === LandExplorerTypes.ESIGN_TRANSACTION ? 'trámite' : 'documento';
+    const itemCountText = this.itemsList.length;
+    const itemsSelectionText = this.itemsList.length === 1 ? itemTypeText + ' seleccionado' : itemTypeText + 's seleccionados';
+    this.title = `${this.operation.name} (${itemCountText} ${itemsSelectionText})`;
   }
 
 }

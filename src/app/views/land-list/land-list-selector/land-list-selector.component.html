@@ -27,12 +27,12 @@
         </strong>
       </div>
 
-      <emp-land-transaction-list-item
-        [transaction]="getTransaction(item)"
+      <emp-land-list-item
+        [item]="getTransaction(item)"
         [listOptions]="listOptions"
         (optionsClick)="removeFromList(item)">
 
-      </emp-land-transaction-list-item>
+      </emp-land-list-item>
 
     </div>
 

@@ -17,10 +17,10 @@
       <div [innerHTML]="title"></div>
 
       <div class="card-hint" empNgProgressText
-        loadingText="Cargando trámites"
+        [loadingText]="'Cargando ' +  itemsTypeName"
         [finalText]="selection.hasValue() ?
-          selection.selected.length + ' de ' + itemsList.length + ' trámites seleccionados':
-          itemsList.length + ' trámites encontrados'"
+          selection.selected.length + ' de ' + itemsList.length + ' ' +itemsTypeName + ' seleccionados':
+          itemsList.length + ' ' + itemsTypeName + ' encontrados'"
         [isLoading]="isLoading">
       </div>
 
@@ -31,7 +31,9 @@
       <emp-land-list-actions
         [query]="query"
         [recorderOfficeList]="recorderOfficeList"
+        [explorerTypesList]="explorerTypesList"
         [statusList]="statusList"
+        [displayExplorerTypeSelect]="canSelectExplorerType"
         [displayStatusSelect]="canSelectStatus"
         [displayReceiveButton]="canReceive"
         [displayCreateButton]="canCreate"
@@ -59,6 +61,8 @@
       </emp-land-list-controls>
 
       <emp-land-list
+        [explorerType]="explorerType"
+        [itemsType]="itemsTypeName"
         [itemsList]="itemsList"
         [selectedItemUID]="selectedItemUID ?? null"
         [selection]="selection"

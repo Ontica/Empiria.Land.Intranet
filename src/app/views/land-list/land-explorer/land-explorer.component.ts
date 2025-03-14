@@ -39,21 +39,27 @@ export class LandExplorerComponent implements OnChanges {
 
   @Input() title = 'Trámites';
 
-  @Input() explorerType = LandExplorerTypes.Transaction;
+  @Input() itemsTypeName = 'trámites';
+
+  @Input() query: LandQuery = EmptyLandQuery;
+
+  @Input() explorerType = LandExplorerTypes.TRANSACTION;
+
+  @Input() recorderOfficeList: RecorderOffice[] = [];
+
+  @Input() explorerTypesList: Identifiable[] = [];
+
+  @Input() operationsList: Identifiable[] = [];
+
+  @Input() statusList: Identifiable[] = [];
 
   @Input() itemsList: LandEntity[] = [];
 
   @Input() selectedItemUID: string = null;
 
-  @Input() query: LandQuery = EmptyLandQuery;
-
-  @Input() operationsList: Identifiable[] = [];
-
-  @Input() recorderOfficeList: RecorderOffice[] = [];
-
-  @Input() statusList: Identifiable[] = [];
-
   @Input() canSelectStatus: boolean = false;
+
+  @Input() canSelectExplorerType: boolean = false;
 
   @Input() canReceive: boolean = false;
 

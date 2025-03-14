@@ -172,17 +172,7 @@ export const EmptyAction: TransactionActions = {
 
 
 export interface TransactionDescriptor extends LandEntity {
-  type: string;
-  subtype: string;
-  transactionID: string;
-  requestedBy: string;
-  presentationTime: DateString;
-  registrationTime: DateString;
-  internalControlNo: string;
-  statusName: string;
-  assignedToName: string;
-  nextStatusName: string;
-  nextAssignedToName: string;
+
 }
 
 

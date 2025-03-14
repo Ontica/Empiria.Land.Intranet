@@ -13,7 +13,7 @@ import { Empty, Entity, EventInfo } from '@app/core';
 
 import { sendEvent } from '@app/shared/utils';
 
-import { LandEntity, TransactionDescriptor } from '@app/models';
+import { LandEntity, LandExplorerTypes, TransactionDescriptor } from '@app/models';
 
 export enum ListEventType {
   ITEM_SELECTED          = 'ListComponent.Event.ItemSelected',
@@ -25,6 +25,8 @@ export enum ListEventType {
   templateUrl: './land-list.component.html',
 })
 export class ListComponent {
+
+  @Input() explorerType = LandExplorerTypes.TRANSACTION;
 
   @Input() itemsType: string = 'trámite';
 

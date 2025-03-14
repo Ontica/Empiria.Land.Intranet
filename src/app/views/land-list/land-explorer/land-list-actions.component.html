@@ -1,4 +1,4 @@
-<div class="fx-row-container fx-space-between fx-items-center fx-gap-three-quarter">
+<div class="fx-row-container fx-space-between fx-items-center fx-gap-half">
 
   <ng-container *empNgHasPermission="createPermission">
 
@@ -32,14 +32,26 @@
   </emp-ng-select>
 
 
+  <emp-ng-select *ngIf="displayExplorerTypeSelect"
+    [(ngModel)]="explorerType" name="explorerType"
+    [config]="{ selectFirst: true }"
+    [items]="explorerTypesList"
+    [required]="true"
+    [showError]="!explorerType"
+    [style.width.px]="118"
+    [style.min-width.px]="118"
+    (changes)="onFilterChanged()">
+  </emp-ng-select>
+
+
   <emp-ng-select *ngIf="displayStatusSelect"
     [(ngModel)]="status" name="status"
     [config]="{ selectFirst: true }"
     [items]="statusList"
     [required]="true"
     [showError]="!status"
-    [style.width.px]="125"
-    [style.min-width.px]="125"
+    [style.width.px]="110"
+    [style.min-width.px]="110"
     (changes)="onFilterChanged()">
   </emp-ng-select>
 
@@ -47,8 +59,8 @@
   <input type="search" class="text-box sm-hide"
     [(ngModel)]="keywords"
     placeholder="Buscar trámites"
-    [style.width.px]="200"
-    [style.min-width.px]="200"
+    [style.width.px]="180"
+    [style.min-width.px]="180"
     (search)="onFilterChanged()">
 
 </div>

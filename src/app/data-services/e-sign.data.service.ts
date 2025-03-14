@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 
 import { Assertion, EmpObservable, HttpService } from '@app/core';
 
-import { ESignCommand, ESignCredentials, ESignRequestsQuery, TransactionDescriptor } from '@app/models';
+import { ESignCommand, ESignCredentials, ESignRequestsQuery, LandEntity } from '@app/models';
 
 import { Cryptography } from '@app/core/security/cryptography';
 
@@ -20,12 +20,21 @@ export class ESignDataService {
   constructor(private http: HttpService) { }
 
 
-  searchESignRequestedTransactions(query: ESignRequestsQuery): EmpObservable<TransactionDescriptor[]> {
+  searchESignRequestedTransactions(query: ESignRequestsQuery): EmpObservable<LandEntity[]> {
     Assertion.assertValue(query, 'query');
 
     const path = `v5/land/electronic-sign/requests/transactions/mine`;
 
-    return this.http.post<TransactionDescriptor[]>(path, query);
+    return this.http.post<LandEntity[]>(path, query);
+  }
+
+
+  searchESignRequestedDocuments(query: ESignRequestsQuery): EmpObservable<LandEntity[]> {
+    Assertion.assertValue(query, 'query');
+
+    const path = `v5/land/electronic-sign/requests/documents/mine`;
+
+    return this.http.post<LandEntity[]>(path, query);
   }
 
 

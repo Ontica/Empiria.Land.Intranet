@@ -7,7 +7,13 @@
 
 import { Identifiable } from '@app/core';
 
-import { LandQuery } from './land-list';
+import { LandEntity, LandExplorerTypes, LandQuery } from './land-list';
+
+
+export const ESignLandExplorerTypesList: Identifiable[] = [
+  { uid: LandExplorerTypes.ESIGN_TRANSACTION, name: 'Trámites' },
+  { uid: LandExplorerTypes.ESIGN_DOCUMENT,    name: 'Documentos' },
+];
 
 
 export enum ESignStatus {
@@ -46,6 +52,11 @@ export enum ESignOperationType {
   Revoke       = 'Revoke',
   Refuse       = 'Refuse',
   Unrefuse     = 'Unrefuse',
+};
+
+
+export interface SignableDocumentDescriptor extends LandEntity {
+  documentID: string;
 }
 
 
@@ -58,7 +69,18 @@ export const ESignOperationsList: Identifiable[] = [
 ];
 
 
-export function buildESignOperationsListByESignStatus(status: ESignStatus): Identifiable[] {
+export function buildESignDocumentsOperationsListByStatus(status: ESignStatus): Identifiable[] {
+  switch (status) {
+    case ESignStatus.Signed: return [{ uid: ESignOperationType.Revoke, name: 'Revocar firma' }];
+    case ESignStatus.Refused: return [];
+    case ESignStatus.Unsigned:
+    case ESignStatus.Revoked:
+    default: return [{ uid: ESignOperationType.Sign, name: 'Firmar' }];
+  }
+}
+
+
+export function buildESignTransactionsOperationsListByStatus(status: ESignStatus): Identifiable[] {
   switch (status) {
     case ESignStatus.Unsigned:
 

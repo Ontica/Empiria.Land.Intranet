@@ -30,11 +30,15 @@ export class ListActionsComponent implements OnChanges {
 
   @Input() query: LandQuery = EmptyLandQuery;
 
-  @Input() statusList: Identifiable[] = [];
-
   @Input() recorderOfficeList: RecorderOffice[] = [];
 
+  @Input() explorerTypesList: Identifiable[] = [];
+
+  @Input() statusList: Identifiable[] = [];
+
   @Input() displayStatusSelect: boolean = false;
+
+  @Input() displayExplorerTypeSelect: boolean = false;
 
   @Input() displayReceiveButton: boolean = false;
 
@@ -47,6 +51,8 @@ export class ListActionsComponent implements OnChanges {
   recorderOffice = '';
 
   status = '';
+
+  explorerType = '';
 
   keywords = '';
 
@@ -63,8 +69,14 @@ export class ListActionsComponent implements OnChanges {
 
 
   onFilterChanged() {
-    sendEvent(this.listActionsEvent, ListActionsEventType.FILTER_CHANGED,
-      { recorderOfficeUID: this.recorderOffice, status: this.status, keywords: this.keywords });
+    const payload = {
+      explorerType: this.explorerType,
+      recorderOfficeUID: this.recorderOffice,
+      status: this.status,
+      keywords: this.keywords
+    };
+
+    sendEvent(this.listActionsEvent, ListActionsEventType.FILTER_CHANGED, payload);
   }
 
 

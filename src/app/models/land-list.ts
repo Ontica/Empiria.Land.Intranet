@@ -11,8 +11,9 @@ import { TransactionStage, TransactionStatus } from './transaction';
 
 
 export enum LandExplorerTypes {
-  Transaction = 'Transaction',
-  ESign       = 'ESign',
+  TRANSACTION       = 'TRANSACTION',
+  ESIGN_TRANSACTION = 'ESIGN_TRANSACTION',
+  ESIGN_DOCUMENT    = 'ESIGN_DOCUMENT',
 }
 
 
@@ -20,6 +21,15 @@ export interface LandEntity extends Entity {
   uid: string;
   requestedBy: string;
   registrationTime: DateString;
+  type: string;
+  subtype: string;
+  transactionID: string;
+  presentationTime: DateString;
+  internalControlNo: string;
+  statusName: string;
+  nextStatusName: string;
+  assignedToName: string;
+  nextAssignedToName: string;
 }
 
 

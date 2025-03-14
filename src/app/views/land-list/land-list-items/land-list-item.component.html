@@ -1,58 +1,66 @@
 <div class="fx-row-container sm-fx-column-container fx-gap-size sm-fx-gap-half" style="--gap-size: 1.5rem">
 
   <div class="fx-item sm-fx-item-none">
-    <div class="label nowrap">Tipo de trámite</div>
-    <div class="primary-text"><strong>{{transaction.subtype}}</strong></div>
-    <div>{{transaction.type}}</div>
+
+    <div class="label nowrap">{{displayDocument ? item.type : 'Tipo de trámite'}}</div>
+    <div class="primary-text"><strong>{{item.subtype}}</strong></div>
+    <div>{{displayDocument ? documentID : item.type}}</div>
+
   </div>
 
   <div class="fx-item-size sm-fx-item-none" style="--size: 160px">
-    <div *ngIf="transaction?.transactionID">
+
+    <div *ngIf="item?.transactionID">
       <div class="label nowrap">Trámite RPP</div>
 
       <div class="primary-text">
-        <strong>{{transaction?.transactionID}}</strong>  &nbsp; {{transaction.internalControlNo}}
+        <strong>{{item?.transactionID}}</strong>  &nbsp; {{item.internalControlNo}}
       </div>
 
-      <div *ngIf="transaction.presentationTime" class="fx-row-container nowrap">
+      <div *ngIf="item.presentationTime" class="fx-row-container nowrap">
 
         <div class="fx-item-size underline-text" style="--size: 60px">Presentado:</div>
-        {{transaction?.presentationTime | empDateTimeFormat: 'DMY HH:mm'}}
+        {{item?.presentationTime | empDateTimeFormat: 'DMY HH:mm'}}
 
       </div>
 
-      <div *ngIf="transaction.registrationTime" class="fx-row-container nowrap">
+      <div *ngIf="item.registrationTime" class="fx-row-container nowrap">
 
         <div class="fx-item-size underline-text" style="--size: 60px">Registrado:</div>
-        {{transaction?.registrationTime | empDateTimeFormat: 'DMY HH:mm'}}
+        {{item?.registrationTime | empDateTimeFormat: 'DMY HH:mm'}}
 
       </div>
 
     </div>
+
   </div>
 
   <div class="fx-item-size sm-fx-item-none" style="--size: 20%">
+
     <div class="label nowrap">Lo tiene:</div>
-    <div class="primary-text"><strong>{{transaction.assignedToName}}</strong></div>
-    <div>{{transaction.statusName}}</div>
+    <div class="primary-text"><strong>{{item.assignedToName}}</strong></div>
+    <div>{{item.statusName}}</div>
+
   </div>
 
   <div class="fx-item-size sm-fx-item-none" style="--size: 80px">
-    <ng-container *ngIf="transaction.nextStatusName !== 'No determinado'">
+
+    <ng-container *ngIf="item.nextStatusName !== 'No determinado'">
       <div class="label nowrap">Siguiente estado:</div>
-      <div>{{transaction.nextStatusName}}</div>
+      <div>{{item.nextStatusName}}</div>
     </ng-container>
+
   </div>
 
   <div class="fx-item-size sm-fx-item-none" style="--size: 30px">
-    <div class="primary-text nowrap">
 
+    <div class="primary-text nowrap" *ngIf="!displayDocument">
       <emp-ng-menu [items]="listOptions" [config]="{hideMenuIfOneItem: true}"
-        (selected)="onClickTransactionOptions($event)">
+        (selected)="onClickItemOptions($event)">
 
       </emp-ng-menu>
-
     </div>
+
   </div>
 
 </div>
