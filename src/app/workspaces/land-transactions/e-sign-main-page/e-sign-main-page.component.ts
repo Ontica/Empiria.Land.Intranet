@@ -132,7 +132,7 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
 
       case LandExplorerEventType.ITEM_SELECTED:
         Assertion.assertValue(event.payload.item.uid, 'event.payload.item.uid');
-        this.validateGetESignRequestedItem(event.payload.item.uid);
+        this.validateGetESignRequestedItem(event.payload.item);
         return;
 
       case LandExplorerEventType.ITEM_EXECUTE_OPERATION:
@@ -281,13 +281,13 @@ export class ESignMainPageComponent implements OnInit, OnDestroy {
   }
 
 
-  private validateGetESignRequestedItem(itemUID: string) {
+  private validateGetESignRequestedItem(item: LandEntity) {
     switch (this.selectedLandExplorerType) {
       case LandExplorerTypes.ESIGN_TRANSACTION:
-        this.getTransaction(itemUID);
+      case LandExplorerTypes.ESIGN_DOCUMENT:
+        this.getTransaction(item.transactionID);
         return;
       default:
-
         return;
     }
   }

@@ -4,7 +4,7 @@
 
   <div class="primary"
     [class.hidden]="displayFileViewer"
-    [class.md-hide]="displayTabbedView || displayFileViewer || displayRegistryEntryEditor">
+    [class.std-hide]="displayTabbedView || displayFileViewer || displayRegistryEntryEditor">
 
     <emp-land-explorer
       [explorerType]="selectedLandExplorerType"
@@ -28,7 +28,7 @@
 
   <div *ngIf="displayFileViewer"
     class="primary-resizable primary-resizable-disable-md primary-floating"
-    [class.md-hide]="displayRegistryEntryEditor"
+    [class.std-hide]="displayRegistryEntryEditor"
     empNgResizable>
 
     <emp-land-file-viewer
@@ -44,7 +44,7 @@
   <div *ngIf="displayTabbedView"
     class="secondary"
     [class.hidden]="displayRegistryEntryEditor"
-    [class.md-hide]="displayRegistryEntryEditor || displayFileViewer">
+    [class.std-hide]="displayRegistryEntryEditor || displayFileViewer">
 
     <emp-land-transaction-tabbed-view
         [transaction]="selectedItem"
