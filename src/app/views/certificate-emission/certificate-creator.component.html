@@ -79,11 +79,22 @@
     <div class="fx-row-container" *ngIf="certificateRulesSelected.giveRealEstateDescription">
 
       <div class="fx-item">
-        <label> Datos manifestados en la constancia de inscripción expedida por el ayuntamiento: </label>
+        <label> Descripción del predio: </label>
         <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
           formControlName="realEstateDescription"
           [class.invalid-control]="formHelper.isControlInvalid(form.controls.realEstateDescription)">
+        </textarea>
+      </div>
 
+    </div>
+
+    <div class="fx-row-container" *ngIf="certificateRulesSelected.giveRealEstateDescription">
+
+      <div class="fx-item">
+        <label> Datos manifestados en la constancia de inscripción expedida por el ayuntamiento: </label>
+        <textarea class="text-area" empNgTextareaAutoresize [maxHeightTextarea]="null" rows="1"
+          formControlName="realEstateCadastralNotes"
+          [class.invalid-control]="formHelper.isControlInvalid(form.controls.realEstateCadastralNotes)">
         </textarea>
       </div>
 

@@ -43,6 +43,7 @@ interface CertificateFormModel extends FormGroup<{
   authorizationDate: FormControl<string>;
   personName: FormControl<string>;
   realEstateDescription: FormControl<string>;
+  realEstateCadastralNotes: FormControl<string>;
 }> {}
 
 @Component({
@@ -183,6 +184,7 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
       authorizationDate: [''],
       personName: [''],
       realEstateDescription: [''],
+      realEstateCadastralNotes:  ['']
     });
   }
 
@@ -270,8 +272,10 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
 
     if (this.certificateRulesSelected.giveRealEstateDescription) {
       this.formHelper.setControlValidators(this.form.controls.realEstateDescription, Validators.required);
+      this.formHelper.setControlValidators(this.form.controls.realEstateCadastralNotes, Validators.required);
     } else {
       this.formHelper.clearControlValidators(this.form.controls.realEstateDescription);
+      this.formHelper.clearControlValidators(this.form.controls.realEstateCadastralNotes);
     }
   }
 
@@ -358,6 +362,7 @@ export class CertificateCreatorComponent implements OnInit, OnChanges, OnDestroy
 
     if (this.certificateRulesSelected.giveRealEstateDescription) {
       data.realEstateDescription = formModel.realEstateDescription ?? '';
+      data.realEstateCadastralNotes = formModel.realEstateCadastralNotes ?? '';
     }
 
     this.validateSelectBookEntryRule(data);

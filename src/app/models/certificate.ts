@@ -100,4 +100,5 @@ export interface CreateCertificateCommandPayload {
   authorizationDate?: DateString;
   personName?: string;
   realEstateDescription?: string;
+  realEstateCadastralNotes?: string
 }
